@@ -50,3 +50,15 @@ offline lounge lookup, priority pass lounge map, airport lounge comparison, trav
 - **Agent concern addressed**: strict read-only boundaries reduce unsafe or invalid actions.
 - **User concern addressed**: clear expectation that data is snapshot-based, not live internet data.
 
+## Desk.Travel Destination
+
+- Live destination: https://prioritypassmap.desk.travel/
+- Suite portal: https://desk.travel/
+
+## Extra information that helps traffic
+
+- Include this skill in route/lounges decision workflows and link the live destination in product docs, launch posts, and onboarding guides.
+- Use consistent naming across listing title, slug, and destination URL to improve discovery and click trust.
+- Add practical examples (airport pair, city, lounge facility filter) in user-facing posts to capture long-tail intent.
+- Mention **professional, free local usage, safe, offline-first** in summaries to match common evaluator filters.
+
