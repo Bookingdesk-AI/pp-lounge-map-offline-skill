@@ -1,11 +1,34 @@
 ---
 name: pp-lounge-map-offline
 description: Use this skill when you need offline or air-gapped access to the bundled Priority Pass lounge catalog. Trigger it for local lounge lookup, facility filtering, airport briefs, and lounge comparisons when network access is unavailable or disallowed. Do not use it for data rebuilds, deploys, remote MCP endpoints, arbitrary shell execution, or any workflow that depends on live internet access.
+metadata:
+  {
+    "openclaw":
+      {
+        "requires": { "bins": ["node", "npm"] },
+        "install":
+          [
+            {
+              "id": "node",
+              "kind": "node",
+              "package": "@modelcontextprotocol/sdk",
+              "label": "Install MCP runtime dependencies (run npm install in bundle root)",
+            },
+          ],
+      },
+  }
 ---
 
 # PP Lounge Map Offline
 
 Use this skill when the task is about the bundled offline lounge snapshot.
+
+## Runtime requirements
+
+- Node.js 20+ available on PATH (`node`).
+- Install package dependencies in the bundle root before running runtime scripts:
+  - `npm install`
+- Required packages are declared in `package.json` (`@modelcontextprotocol/sdk`, `zod`).
 
 ## Quick start
 
@@ -16,7 +39,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 ## Safety boundary
 
 - This skill is local and read-only at runtime.
-- It must not use network access.
+- It must not use network access (except local process startup/dependency install done by operator).
 - It must not ask for API keys or secrets.
 - It must not reference sibling workbooks, remote MCP endpoints, or deploy workflows.
 - If the bundled snapshot does not contain the needed answer, say so instead of inventing newer data.
