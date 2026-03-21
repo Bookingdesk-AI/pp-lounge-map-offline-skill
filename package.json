@@ -2,7 +2,7 @@
   "name": "pp-lounge-map-offline-skill",
   "private": true,
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "scripts": {
     "mcp": "node skills/pp-lounge-map-offline/scripts/run-offline-mcp.mjs"
   },
