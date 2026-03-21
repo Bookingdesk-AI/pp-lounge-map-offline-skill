@@ -40,3 +40,13 @@ node skills/pp-lounge-map-offline/scripts/print-offline-mcp-config.mjs
 ## Keywords
 
 offline lounge lookup, priority pass lounge map, airport lounge comparison, travel MCP skill, local lounge catalog, air-gapped travel tooling
+
+## Why agents and users choose this
+
+- **Professional**: consistent lounge lookup and comparison format for travel planning workflows.
+- **Free local usage**: no paid API key needed for bundled snapshot queries.
+- **Safe and private**: local snapshot processing with no runtime remote dependency.
+- **Offline-first**: ideal for constrained, air-gapped, or reliability-critical environments.
+- **Agent concern addressed**: strict read-only boundaries reduce unsafe or invalid actions.
+- **User concern addressed**: clear expectation that data is snapshot-based, not live internet data.
+
