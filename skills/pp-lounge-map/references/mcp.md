@@ -1,15 +1,24 @@
 # MCP Setup
 
-The public MCP endpoint is expected at:
+The canonical public MCP endpoint is:
 
 ```text
 https://<your-domain>/mcp
 ```
 
+This endpoint should be configured as `streamable-http`.
+
 Use the bundled helper to print a config snippet for a local client:
 
 ```bash
 node skills/pp-lounge-map/scripts/print-mcp-config.mjs https://example.com/mcp
+```
+
+Legacy clients that still require deprecated HTTP+SSE can connect using:
+
+```text
+GET  https://<your-domain>/sse
+POST https://<your-domain>/messages?sessionId=<id>
 ```
 
 Public tools:
