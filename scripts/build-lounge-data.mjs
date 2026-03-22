@@ -4,12 +4,12 @@ import { fileURLToPath } from 'node:url';
 import Papa from 'papaparse';
 import XLSX from 'xlsx';
 
+import { resolveSourceWorkbookConfig } from './lib/source-workbook.mjs';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
-const sourcePath =
-  process.env.SOURCE_XLSX ||
-  path.resolve(projectRoot, '..', 'pps', 'PP Lounge Data_20260226.xlsx');
+const { sourcePath } = resolveSourceWorkbookConfig(projectRoot, process.env);
 const outputGeoJsonPath = path.resolve(projectRoot, 'public', 'data', 'lounges.geojson');
 const outputMetaPath = path.resolve(projectRoot, 'public', 'data', 'meta.json');
 const geocodeCachePath = path.resolve(projectRoot, 'data', 'geocode-cache.json');
@@ -300,6 +300,14 @@ function createFeature(row, index, coordinates) {
 }
 
 async function main() {
+  try {
+    await fs.access(sourcePath);
+  } catch {
+    throw new Error(
+      `Source workbook not found at "${sourcePath}". Run "npm run release:prepare" or set SOURCE_XLSX to a readable workbook path.`,
+    );
+  }
+
   const workbook = XLSX.readFile(sourcePath);
   const loungeRows = readWorkbookRows(workbook, 'pp_lounges-2');
   const airportRows = readWorkbookRows(workbook, 'airports (1)');

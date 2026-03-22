@@ -1,7 +1,15 @@
-import { createHealthResponse, handleMcpRequest } from './server.js';
+import {
+  CatalogMcpAgent,
+  createHealthResponse,
+  handleLegacySseRequest,
+  handleMcpRequest,
+  isLegacyMessageRequest,
+  isLegacySseRequest,
+  isStreamableMcpRequest,
+} from './server.js';
 import { McpRateLimiter } from './rate-limit.js';
 
-export { McpRateLimiter };
+export { CatalogMcpAgent, McpRateLimiter };
 
 export default {
   async fetch(request, env, ctx) {
@@ -11,8 +19,12 @@ export default {
       return createHealthResponse();
     }
 
-    if (url.pathname === '/mcp') {
+    if (isStreamableMcpRequest(request)) {
       return handleMcpRequest(request, env, ctx);
+    }
+
+    if (isLegacySseRequest(request) || isLegacyMessageRequest(request)) {
+      return handleLegacySseRequest(request, env, ctx);
     }
 
     return new Response('Not Found', { status: 404 });

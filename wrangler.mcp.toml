@@ -2,11 +2,26 @@ name = "pp-lounge-map-mcp"
 main = "mcp/worker.js"
 compatibility_date = "2026-03-16"
 compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+routes = [
+  "prioritypassmap.desk.travel/mcp*",
+  "prioritypassmap.desk.travel/sse*",
+  "prioritypassmap.desk.travel/messages*",
+  "prioritypassmap.desk.travel/healthz",
+]
 
 [[durable_objects.bindings]]
 name = "MCP_RATE_LIMITER"
 class_name = "McpRateLimiter"
 
+[[durable_objects.bindings]]
+name = "PP_LOUNGE_MCP"
+class_name = "CatalogMcpAgent"
+
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["McpRateLimiter"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["CatalogMcpAgent"]

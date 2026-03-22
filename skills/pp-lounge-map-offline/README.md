@@ -52,8 +52,8 @@ offline lounge lookup, priority pass lounge map, airport lounge comparison, trav
 
 ## Desk.Travel Destination
 
-- Live destination: https://prioritypassmap.desk.travel/
-- Suite portal: https://desk.travel/
+- Live destination: available in the companion online listing.
+- Suite portal: available in the Desk.Travel product directory.
 
 ## Extra information that helps traffic
 
@@ -61,4 +61,3 @@ offline lounge lookup, priority pass lounge map, airport lounge comparison, trav
 - Use consistent naming across listing title, slug, and destination URL to improve discovery and click trust.
 - Add practical examples (airport pair, city, lounge facility filter) in user-facing posts to capture long-tail intent.
 - Mention **professional, free local usage, safe, offline-first** in summaries to match common evaluator filters.
-

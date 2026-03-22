@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 out
+.cache
+.wrangler
 *.local
 
 # Editor directories and files
