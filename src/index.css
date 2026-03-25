@@ -1,28 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg-base-1: #050f1c;
-  --bg-base-2: #0c2740;
-  --bg-base-3: #153a5c;
-  --glow-gold: rgba(212, 165, 116, 0.28);
-  --glow-cyan: rgba(74, 173, 212, 0.18);
-  --glow-violet: rgba(116, 109, 198, 0.14);
-
-  --surface-1: rgba(8, 26, 45, 0.9);
-  --surface-2: rgba(10, 35, 58, 0.8);
-  --line-soft: rgba(242, 249, 255, 0.2);
-  --text-main: #f6faff;
-  --text-muted: #c8d8ec;
-  --text-soft: #d6e4f4;
-  --brand-gold: #d9b572;
+  --bg-base-1: #081522;
+  --bg-base-2: #0d2032;
+  --bg-base-3: #142b40;
+  --surface-1: rgba(10, 23, 38, 0.96);
+  --surface-2: rgba(12, 28, 45, 0.94);
+  --line-soft: rgba(223, 233, 242, 0.12);
+  --line-strong: rgba(223, 233, 242, 0.2);
+  --text-main: #f5f1e7;
+  --text-soft: #d7e0ea;
+  --text-muted: #9aa8b7;
+  --brand-gold: #c9a45d;
+  --panel-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
 
   --duration-fast: 180ms;
-  --duration-medium: 350ms;
-  --duration-slow: 700ms;
+  --duration-medium: 260ms;
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-emphasis: cubic-bezier(0.22, 1, 0.36, 1);
 
-  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-sans: 'Manrope', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -47,11 +48,9 @@ body {
   color: var(--text-main);
   overflow: hidden;
   background:
-    radial-gradient(1100px 620px at 8% 4%, var(--glow-gold), transparent 66%),
-    radial-gradient(880px 540px at 96% 14%, rgba(201, 168, 120, 0.18), transparent 68%),
-    radial-gradient(960px 560px at 84% 90%, var(--glow-cyan), transparent 72%),
-    radial-gradient(740px 460px at 25% 82%, var(--glow-violet), transparent 70%),
-    linear-gradient(180deg, var(--bg-base-1) 0%, var(--bg-base-2) 48%, var(--bg-base-3) 100%);
+    radial-gradient(1200px 540px at 12% -5%, rgba(201, 164, 93, 0.12), transparent 62%),
+    radial-gradient(860px 520px at 88% 10%, rgba(67, 92, 122, 0.16), transparent 68%),
+    linear-gradient(180deg, var(--bg-base-1) 0%, var(--bg-base-2) 52%, var(--bg-base-3) 100%);
 }
 
 button,
