@@ -17,3 +17,10 @@ Frontmatter + reference verification:
   - `skills/pp-lounge-map-offline/SKILL.md`
   - `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md`
 - Missing references: none.
+
+## Run 2026-03-26T23:51:00Z - Phase A Security Review
+
+- Scope: skills/pp-lounge-map-offline + out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline
+- Secret-leak pattern scan: no credential-like literals detected (no API keys, tokens, passwords, private-key blocks, or personal absolute paths).
+- Offline trust-boundary review: loopback-only/offline guardrails present; no mandatory remote endpoint dependency found in skill instructions.
+- Pre-scan status: PASS (no actionable leakage findings).
