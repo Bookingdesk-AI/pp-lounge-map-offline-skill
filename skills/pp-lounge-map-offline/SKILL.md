@@ -43,6 +43,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - It must not ask for API keys or secrets.
 - It must not reference sibling workbooks, remote MCP endpoints, or deploy workflows.
 - It must only run against local transports (`stdio`, `127.0.0.1`, or `localhost`) unless the user explicitly asks to leave offline mode.
+- If asked for live lounge availability/status, explicitly state the bundled snapshot can be stale and requires an online source refresh.
 - If the bundled snapshot does not contain the needed answer, say so instead of inventing newer data.
 
 ## Available workflows
