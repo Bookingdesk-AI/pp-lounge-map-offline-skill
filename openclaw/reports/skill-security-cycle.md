@@ -24,3 +24,9 @@ Frontmatter + reference verification:
 - Secret-leak pattern scan: no credential-like literals detected (no API keys, tokens, passwords, private-key blocks, or personal absolute paths).
 - Offline trust-boundary review: loopback-only/offline guardrails present; no mandatory remote endpoint dependency found in skill instructions.
 - Pre-scan status: PASS (no actionable leakage findings).
+
+## Run 2026-03-26T23:51:00Z - Phase B Fix Plan
+
+- Findings: No direct secret leakage found.
+- Severity: Low (hardening opportunity only).
+- Planned reversible improvement: Clarify that external URLs inside bundled catalog data are metadata only and must never trigger network fetches in offline runtime.
