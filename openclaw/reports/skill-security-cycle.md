@@ -30,3 +30,7 @@ Frontmatter + reference verification:
 - Findings: No direct secret leakage found.
 - Severity: Low (hardening opportunity only).
 - Planned reversible improvement: Clarify that external URLs inside bundled catalog data are metadata only and must never trigger network fetches in offline runtime.
+
+## Run 2026-03-26T23:51:00Z - Phase C Improve
+
+- Improvement shipped (1/1 for repo): Added guardrail that bundled catalog `url` fields are metadata only and must never be fetched in offline mode.
