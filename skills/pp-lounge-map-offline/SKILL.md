@@ -39,6 +39,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - It must not reference sibling workbooks, remote MCP endpoints, or deploy workflows.
 - It must only run against local transports (`stdio`, `127.0.0.1`, or `localhost`) unless the user explicitly asks to leave offline mode.
 - Treat `url` fields in the bundled catalog as display metadata only; never fetch them in offline mode.
+- If quoting catalog `url` values in responses, strip query strings and any credential-like fragments before echoing.
 - If asked for live lounge availability/status, explicitly state the bundled snapshot can be stale and requires an online source refresh.
 - Avoid exposing absolute local bundle paths (for example `/Users/...`) in standard answers; provide relative bundle paths unless debugging is explicitly requested.
 - If the user provides command snippets containing credential values (token, password, key), replace values with placeholders before echoing examples.
