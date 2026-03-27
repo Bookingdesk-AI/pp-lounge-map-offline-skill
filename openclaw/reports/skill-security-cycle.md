@@ -57,3 +57,6 @@ Frontmatter + reference verification:
 - Findings: no direct secret leakage in source or bundled offline skill docs.
 - Severity: low (hardening opportunity).
 - Planned reversible fix: add a guardrail to avoid exposing absolute local bundle paths in normal answers.
+
+## Run 2026-03-27 03:51 UTC — Phase C (Improve)
+- Improvement shipped (1/1 for repo): added guardrail to keep absolute local bundle paths out of normal answers (source + bundled skill kept in sync).
