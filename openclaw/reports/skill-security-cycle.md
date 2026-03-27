@@ -52,3 +52,8 @@ Frontmatter + reference verification:
 - Secret leakage scan across offline skill scope: no high-confidence credentials/private keys detected.
 - Local-personal-path scan: no leaked absolute personal paths in active SKILL docs or offline reference files.
 - Trust-boundary check: offline guidance remains loopback-first (`127.0.0.1` / `localhost` / `::1`); no required remote MCP endpoint for offline execution.
+
+## Run 2026-03-27 03:51 UTC — Phase B (Fix Plan)
+- Findings: no direct secret leakage in source or bundled offline skill docs.
+- Severity: low (hardening opportunity).
+- Planned reversible fix: add a guardrail to avoid exposing absolute local bundle paths in normal answers.
