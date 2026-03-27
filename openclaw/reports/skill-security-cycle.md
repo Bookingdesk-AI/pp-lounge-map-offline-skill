@@ -47,3 +47,8 @@ Frontmatter + reference verification:
 - Repeating blocker count: 0
 - PERSISTENT_BLOCKER: none
 - Mutation backoff mode: not required
+
+## Run 2026-03-27 03:51 UTC — Phase A (Security Review / Pre)
+- Secret leakage scan across offline skill scope: no high-confidence credentials/private keys detected.
+- Local-personal-path scan: no leaked absolute personal paths in active SKILL docs or offline reference files.
+- Trust-boundary check: offline guidance remains loopback-first (`127.0.0.1` / `localhost` / `::1`); no required remote MCP endpoint for offline execution.
