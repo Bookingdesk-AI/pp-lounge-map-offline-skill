@@ -6,6 +6,9 @@ This branch refreshes the lounge map frontend around a traveler-first comparison
 
 - Reworked desktop from a persistent three-column layout into a comparison-focused left rail plus map stage.
 - Simplified mobile into `Results`, `Filters`, and `Details`.
+- Stabilized the mobile map stage so the map no longer overflows the viewport and full-sheet panels stay below the header/search area.
+- Fixed mobile deep links so `selected`, `sheet`, and `mode` URL params hydrate into the intended lounge/details view.
+- Hardened the mobile sheet grab handle for touch drag gestures and restored desktop filter-label contrast.
 - Added result sorting with `Best match`, `Airport code`, `Country / city`, and `Type`.
 - Added a compare queue capped at 3 lounges.
 - Added explicit no-results recovery actions.

@@ -1720,12 +1720,16 @@ function App() {
       return;
     }
 
+    if (loading) {
+      return;
+    }
+
     const stillVisible = filteredFeatures.some((feature) => feature.properties.id === selectedId);
     if (!stillVisible) {
       setSelectedId(filteredFeatures[0]?.properties.id ?? null);
       setActiveSpotGroup(null);
     }
-  }, [filteredFeatures, selectedId]);
+  }, [filteredFeatures, loading, selectedId]);
 
   useEffect(() => {
     if (!query) {
@@ -1998,7 +2002,7 @@ function App() {
     sheetDragState.current.currentY = event.clientY;
   }, []);
 
-  const handleSheetPointerUp = useCallback((event: ReactPointerEvent<HTMLButtonElement>) => {
+  const finishSheetDrag = useCallback((event: ReactPointerEvent<HTMLButtonElement>) => {
     const drag = sheetDragState.current;
     sheetDragState.current = null;
 
@@ -2015,7 +2019,9 @@ function App() {
       }
     }
 
-    event.currentTarget.releasePointerCapture(event.pointerId);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
   }, [shiftSheetSnap]);
 
   const toggleDraftType = useCallback((type: string) => {
@@ -2041,10 +2047,14 @@ function App() {
       return;
     }
 
+    if (loading) {
+      return;
+    }
+
     if (!selectedFeature) {
       setMobileUI((current) => ({ ...current, sheetMode: 'results', sheetSnap: 'mid' }));
     }
-  }, [isMobile, mobileUI.sheetMode, selectedFeature]);
+  }, [isMobile, loading, mobileUI.sheetMode, selectedFeature]);
 
   const activeFilterChips = useMemo(() => {
     const chips: FilterSummaryChip[] = [];
@@ -2220,167 +2230,173 @@ function App() {
               onClose={() => setSelectedId(null)}
             />
           ) : null}
+
+          {isMobile ? (
+            <section className={`mobile-sheet sheet-${mobileUI.sheetSnap} mode-${mobileUI.sheetMode}`}>
+              <button
+                type="button"
+                className="sheet-grab"
+                onPointerDown={handleSheetPointerDown}
+                onPointerMove={handleSheetPointerMove}
+                onPointerUp={finishSheetDrag}
+                onPointerCancel={finishSheetDrag}
+                onLostPointerCapture={finishSheetDrag}
+                aria-label="Drag sheet"
+              >
+                <span />
+                <small>Swipe for more</small>
+              </button>
+
+              <div className="mobile-actions" role="toolbar" aria-label="Mobile map actions">
+                <button
+                  type="button"
+                  className={mobileUI.sheetMode === 'results' ? 'is-active' : ''}
+                  onClick={() =>
+                    setMobileUI((current) => ({ ...current, sheetMode: 'results', sheetSnap: 'mid' }))
+                  }
+                >
+                  Results
+                </button>
+                <button
+                  type="button"
+                  className={mobileUI.sheetMode === 'filters' ? 'is-active' : ''}
+                  onClick={openMobileFilters}
+                >
+                  Filters
+                </button>
+                <button
+                  type="button"
+                  className={mobileUI.sheetMode === 'details' ? 'is-active' : ''}
+                  disabled={!selectedFeature}
+                  onClick={() =>
+                    setMobileUI((current) => ({ ...current, sheetMode: 'details', sheetSnap: 'full' }))
+                  }
+                >
+                  Details
+                </button>
+              </div>
+
+              <div className="mobile-sheet-body">
+                {mobileUI.sheetMode === 'results' ? (
+                  <>
+                    <MobileQuickFilters
+                      types={types}
+                      selectedTypes={selectedTypes}
+                      selectedCountry={selectedCountry}
+                      selectedCity={selectedCity}
+                      visibleCount={filteredFeatures.length}
+                      selectedFilterCount={selectedFilterCount}
+                      quickFilterState={mobileUI.quickFilterState}
+                      onQuickTypeToggle={toggleQuickType}
+                      onOpenFilters={openMobileFilters}
+                    />
+                    <CompareTray
+                      compact
+                      comparedFeatures={comparedFeatures}
+                      selectedId={selectedId}
+                      onSelect={(id) => selectFeature(id)}
+                      onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+                    />
+                    <ResultsList
+                      key={`results-mobile-${filterSignature}`}
+                      features={filteredFeatures}
+                      selectedId={selectedId}
+                      hoveredId={hoveredId}
+                      comparedIds={comparedIdSet}
+                      compareLimitReached={compareLimitReached}
+                      onHover={setHoveredId}
+                      onSelect={(id) => selectFeature(id)}
+                      onToggleCompare={toggleCompare}
+                      onClearSearch={clearSearch}
+                      onClearFilters={clearAppliedFilters}
+                      search={search}
+                      selectedFilterCount={selectedFilterCount}
+                      initialBatch={24}
+                      batchSize={24}
+                      listContextKey={`mobile|${filterSignature}`}
+                    />
+                  </>
+                ) : null}
+
+                {mobileUI.sheetMode === 'filters' ? (
+                  <div className="mobile-filter-wrap">
+                    <label className="sort-control mobile-search-control">
+                      <span>Search</span>
+                      <input
+                        value={mobileFilterDraft.search}
+                        onChange={(event) =>
+                          setMobileFilterDraft((current) => ({ ...current, search: event.target.value }))
+                        }
+                        placeholder="Airport, city, lounge"
+                      />
+                    </label>
+
+                    <div className="control-group">
+                      <SortControl
+                        value={mobileFilterDraft.sort}
+                        onChange={(nextSort) =>
+                          setMobileFilterDraft((current) => ({ ...current, sort: nextSort }))
+                        }
+                      />
+                    </div>
+
+                    <FilterControls
+                      types={types}
+                      typeCounts={typeCounts}
+                      selectedTypes={mobileFilterDraft.types}
+                      selectedCountry={mobileFilterDraft.country}
+                      selectedCity={mobileFilterDraft.city}
+                      countries={countries}
+                      cityOptions={draftCityOptions}
+                      selectedFacilities={mobileFilterDraft.facilities}
+                      facilityOptions={facilityOptions}
+                      toggleType={toggleDraftType}
+                      toggleFacility={toggleDraftFacility}
+                      setSelectedCountry={(country) =>
+                        setMobileFilterDraft((current) => ({ ...current, country, city: 'ALL' }))
+                      }
+                      setSelectedCity={(city) =>
+                        setMobileFilterDraft((current) => ({ ...current, city }))
+                      }
+                    />
+
+                    <div className="mobile-filter-actions">
+                      <button type="button" className="secondary-action" onClick={resetMobileDraft}>
+                        Clear all
+                      </button>
+                      <button type="button" className="primary-action" onClick={applyMobileFilters}>
+                        Apply filters
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+
+                {mobileUI.sheetMode === 'details' ? (
+                  <div className="mobile-detail-wrap">
+                    <CompareTray
+                      compact
+                      comparedFeatures={comparedFeatures}
+                      selectedId={selectedId}
+                      onSelect={(id) => selectFeature(id)}
+                      onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+                    />
+                    <MobileDetailsView
+                      selectedFeature={selectedFeature}
+                      sameSpotFeatures={sameSpotFeatures}
+                      activeSpotGroup={activeSpotGroup}
+                      comparedIds={comparedIdSet}
+                      compareLimitReached={compareLimitReached}
+                      onSelect={(id) => selectFeature(id)}
+                      onDismissSpotGroup={dismissSpotGroup}
+                      onToggleCompare={toggleCompare}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </section>
+          ) : null}
         </section>
       </main>
-
-      {isMobile ? (
-        <section className={`mobile-sheet sheet-${mobileUI.sheetSnap} mode-${mobileUI.sheetMode}`}>
-          <button
-            type="button"
-            className="sheet-grab"
-            onPointerDown={handleSheetPointerDown}
-            onPointerMove={handleSheetPointerMove}
-            onPointerUp={handleSheetPointerUp}
-            aria-label="Drag sheet"
-          >
-            <span />
-            <small>Swipe for more</small>
-          </button>
-
-          <div className="mobile-actions" role="toolbar" aria-label="Mobile map actions">
-            <button
-              type="button"
-              className={mobileUI.sheetMode === 'results' ? 'is-active' : ''}
-              onClick={() => setMobileUI((current) => ({ ...current, sheetMode: 'results', sheetSnap: 'mid' }))}
-            >
-              Results
-            </button>
-            <button
-              type="button"
-              className={mobileUI.sheetMode === 'filters' ? 'is-active' : ''}
-              onClick={openMobileFilters}
-            >
-              Filters
-            </button>
-            <button
-              type="button"
-              className={mobileUI.sheetMode === 'details' ? 'is-active' : ''}
-              disabled={!selectedFeature}
-              onClick={() => setMobileUI((current) => ({ ...current, sheetMode: 'details', sheetSnap: 'full' }))}
-            >
-              Details
-            </button>
-          </div>
-
-          <div className="mobile-sheet-body">
-            {mobileUI.sheetMode === 'results' ? (
-              <>
-                <MobileQuickFilters
-                  types={types}
-                  selectedTypes={selectedTypes}
-                  selectedCountry={selectedCountry}
-                  selectedCity={selectedCity}
-                  visibleCount={filteredFeatures.length}
-                  selectedFilterCount={selectedFilterCount}
-                  quickFilterState={mobileUI.quickFilterState}
-                  onQuickTypeToggle={toggleQuickType}
-                  onOpenFilters={openMobileFilters}
-                />
-                <CompareTray
-                  compact
-                  comparedFeatures={comparedFeatures}
-                  selectedId={selectedId}
-                  onSelect={(id) => selectFeature(id)}
-                  onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
-                />
-                <ResultsList
-                  key={`results-mobile-${filterSignature}`}
-                  features={filteredFeatures}
-                  selectedId={selectedId}
-                  hoveredId={hoveredId}
-                  comparedIds={comparedIdSet}
-                  compareLimitReached={compareLimitReached}
-                  onHover={setHoveredId}
-                  onSelect={(id) => selectFeature(id)}
-                  onToggleCompare={toggleCompare}
-                  onClearSearch={clearSearch}
-                  onClearFilters={clearAppliedFilters}
-                  search={search}
-                  selectedFilterCount={selectedFilterCount}
-                  initialBatch={24}
-                  batchSize={24}
-                  listContextKey={`mobile|${filterSignature}`}
-                />
-              </>
-            ) : null}
-
-            {mobileUI.sheetMode === 'filters' ? (
-              <div className="mobile-filter-wrap">
-                <label className="sort-control mobile-search-control">
-                  <span>Search</span>
-                  <input
-                    value={mobileFilterDraft.search}
-                    onChange={(event) =>
-                      setMobileFilterDraft((current) => ({ ...current, search: event.target.value }))
-                    }
-                    placeholder="Airport, city, lounge"
-                  />
-                </label>
-
-                <div className="control-group">
-                  <SortControl
-                    value={mobileFilterDraft.sort}
-                    onChange={(nextSort) =>
-                      setMobileFilterDraft((current) => ({ ...current, sort: nextSort }))
-                    }
-                  />
-                </div>
-
-                <FilterControls
-                  types={types}
-                  typeCounts={typeCounts}
-                  selectedTypes={mobileFilterDraft.types}
-                  selectedCountry={mobileFilterDraft.country}
-                  selectedCity={mobileFilterDraft.city}
-                  countries={countries}
-                  cityOptions={draftCityOptions}
-                  selectedFacilities={mobileFilterDraft.facilities}
-                  facilityOptions={facilityOptions}
-                  toggleType={toggleDraftType}
-                  toggleFacility={toggleDraftFacility}
-                  setSelectedCountry={(country) =>
-                    setMobileFilterDraft((current) => ({ ...current, country, city: 'ALL' }))
-                  }
-                  setSelectedCity={(city) =>
-                    setMobileFilterDraft((current) => ({ ...current, city }))
-                  }
-                />
-
-                <div className="mobile-filter-actions">
-                  <button type="button" className="secondary-action" onClick={resetMobileDraft}>
-                    Clear all
-                  </button>
-                  <button type="button" className="primary-action" onClick={applyMobileFilters}>
-                    Apply filters
-                  </button>
-                </div>
-              </div>
-            ) : null}
-
-            {mobileUI.sheetMode === 'details' ? (
-              <div className="mobile-detail-wrap">
-                <CompareTray
-                  compact
-                  comparedFeatures={comparedFeatures}
-                  selectedId={selectedId}
-                  onSelect={(id) => selectFeature(id)}
-                  onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
-                />
-                <MobileDetailsView
-                  selectedFeature={selectedFeature}
-                  sameSpotFeatures={sameSpotFeatures}
-                  activeSpotGroup={activeSpotGroup}
-                  comparedIds={comparedIdSet}
-                  compareLimitReached={compareLimitReached}
-                  onSelect={(id) => selectFeature(id)}
-                  onDismissSpotGroup={dismissSpotGroup}
-                  onToggleCompare={toggleCompare}
-                />
-              </div>
-            ) : null}
-          </div>
-        </section>
-      ) : null}
     </div>
   );
 }
