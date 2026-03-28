@@ -1,17 +1,8 @@
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
-import {
-  MapContainer,
-  Marker,
-  TileLayer,
-  Tooltip,
-  useMap,
-  useMapEvents,
-} from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-cluster';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type {
-  ClusterClickMode,
   LoungeFeature,
   LoungeFeatureCollection,
   LoungeFeatureProperties,
@@ -21,17 +12,13 @@ import type {
   QuickFilterPreset,
   SheetSnap,
   SortOption,
-  SpotGroupState,
 } from './types';
+import {
+  LoungeClusterLayer,
+  type MapInteractionStatus,
+} from './map/cluster/LoungeClusterLayer';
+import { coordinateKey } from './map/cluster/coordinateKey';
 import './App.css';
-
-const TYPE_COLOR: Record<string, string> = {
-  LOUNGE: '#c9a45d',
-  EAT: '#87b7aa',
-  REST: '#8fa4cb',
-  REFRESH: '#85adc9',
-  UNWIND: '#b993af',
-};
 
 const SORT_LABELS: Record<SortOption, string> = {
   best_match: 'Best match',
@@ -45,9 +32,6 @@ const WORLD_ZOOM = 2;
 const MOBILE_MEDIA_QUERY = '(max-width: 980px)';
 const SHEET_ORDER: SheetSnap[] = ['peek', 'mid', 'full'];
 const COMPARE_LIMIT = 3;
-const CLUSTER_DISABLE_ZOOM = 10;
-
-const markerIconCache = new Map<string, L.DivIcon>();
 
 interface InitialUrlState {
   search: string;
@@ -68,11 +52,6 @@ interface MobileFilterDraft {
   city: string;
   facilities: string[];
   sort: SortOption;
-}
-
-interface ClusterLayerLike {
-  getAllChildMarkers: () => L.Marker[];
-  getBounds: () => L.LatLngBounds;
 }
 
 interface FilterSummaryChip {
@@ -142,34 +121,6 @@ function readInitialUrlState(): InitialUrlState {
     mode: normalizeMode(params.get('mode')),
     sort: normalizeSort(params.get('sort')),
   };
-}
-
-function coordinateKey(coordinates: [number, number]) {
-  const [lon, lat] = coordinates;
-  return `${lat.toFixed(5)}:${lon.toFixed(5)}`;
-}
-
-function coordinateKeyFromLatLng(latLng: L.LatLng) {
-  return `${latLng.lat.toFixed(5)}:${latLng.lng.toFixed(5)}`;
-}
-
-function markerIcon(type: string, active: boolean): L.DivIcon {
-  const key = `${type}-${active ? 'active' : 'idle'}`;
-  const cached = markerIconCache.get(key);
-  if (cached) {
-    return cached;
-  }
-
-  const color = TYPE_COLOR[type] ?? TYPE_COLOR.LOUNGE;
-  const icon = L.divIcon({
-    className: 'marker-wrap',
-    html: `<span class="marker-dot ${active ? 'is-active' : ''}" style="--dot:${color}"></span>`,
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-  });
-
-  markerIconCache.set(key, icon);
-  return icon;
 }
 
 function baseSortKey(feature: LoungeFeature) {
@@ -270,37 +221,6 @@ function sortFeatures(features: LoungeFeature[], sort: SortOption, query: string
   });
 }
 
-function toOffsetPosition(
-  coordinates: [number, number],
-  index: number,
-  total: number,
-  zoom: number,
-  seed: string,
-): [number, number] {
-  const [lon, lat] = coordinates;
-  if (total <= 1) {
-    return [lat, lon];
-  }
-
-  const ringSize = 8;
-  const ring = Math.floor(index / ringSize);
-  const indexInRing = index % ringSize;
-  const itemsInRing = Math.min(total - ring * ringSize, ringSize);
-
-  const seedValue = [...seed].reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const seedAngle = (seedValue % 360) * (Math.PI / 180);
-  const angle = seedAngle + (indexInRing / Math.max(itemsInRing, 1)) * Math.PI * 2;
-
-  const baseRadiusMeters = Math.max(42, (52000 / 2 ** Math.max(zoom, 2)) * (1 + ring * 0.65));
-  const metersPerDegreeLat = 111320;
-  const metersPerDegreeLon = 111320 * Math.max(Math.cos((lat * Math.PI) / 180), 0.15);
-
-  const latOffset = (Math.sin(angle) * baseRadiusMeters) / metersPerDegreeLat;
-  const lonOffset = (Math.cos(angle) * baseRadiusMeters) / metersPerDegreeLon;
-
-  return [lat + latOffset, lon + lonOffset];
-}
-
 function joinOrFallback(values: string[], fallback: string, limit = values.length) {
   if (values.length === 0) {
     return fallback;
@@ -338,16 +258,14 @@ function TypePill({
 function FitBounds({
   features,
   selectedId,
-  activeSpotGroup,
 }: {
   features: LoungeFeature[];
   selectedId: string | null;
-  activeSpotGroup: SpotGroupState | null;
 }) {
   const map = useMap();
 
   useEffect(() => {
-    if (selectedId || activeSpotGroup || features.length === 0) {
+    if (selectedId || features.length === 0) {
       return;
     }
 
@@ -368,7 +286,7 @@ function FitBounds({
       animate: true,
       duration: 0.75,
     });
-  }, [activeSpotGroup, features, map, selectedId]);
+  }, [features, map, selectedId]);
 
   return null;
 }
@@ -394,291 +312,18 @@ function FlyToSelection({
   return null;
 }
 
-function ClusteredMarkers({
-  features,
-  selectedId,
-  hoveredId,
-  activeSpotGroup,
-  onSelect,
-  onOpenSpotGroup,
-  onDismissSpotGroup,
-  onClusterMode,
-}: {
-  features: LoungeFeature[];
-  selectedId: string | null;
-  hoveredId: string | null;
-  activeSpotGroup: SpotGroupState | null;
-  onSelect: (id: string) => void;
-  onOpenSpotGroup: (next: SpotGroupState) => void;
-  onDismissSpotGroup: () => void;
-  onClusterMode: (mode: ClusterClickMode) => void;
-}) {
-  const map = useMap();
-  const [zoom, setZoom] = useState(map.getZoom());
-
-  useMapEvents({
-    zoomend: () => {
-      setZoom(map.getZoom());
-    },
-  });
-
-  const featuresById = useMemo(
-    () => new Map(features.map((feature) => [feature.properties.id, feature])),
-    [features],
-  );
-
-  const featuresBySpot = useMemo(() => {
-    const grouped = new Map<string, LoungeFeature[]>();
-    for (const feature of features) {
-      const key = coordinateKey(feature.geometry.coordinates);
-      const current = grouped.get(key) ?? [];
-      current.push(feature);
-      grouped.set(key, current);
-    }
-
-    for (const [, entries] of grouped) {
-      entries.sort((a, b) => a.properties.name.localeCompare(b.properties.name));
-    }
-
-    return grouped;
-  }, [features]);
-
-  const activeSpotIds = useMemo(() => new Set(activeSpotGroup?.loungeIds ?? []), [activeSpotGroup]);
-
-  const explodedSpotIds = useMemo(() => {
-    if (activeSpotGroup || zoom < CLUSTER_DISABLE_ZOOM) {
-      return new Set<string>();
-    }
-
-    const ids = new Set<string>();
-    for (const [, groupedFeatures] of featuresBySpot) {
-      if (groupedFeatures.length <= 1) {
-        continue;
-      }
-
-      for (const feature of groupedFeatures) {
-        ids.add(feature.properties.id);
-      }
-    }
-
-    return ids;
-  }, [activeSpotGroup, featuresBySpot, zoom]);
-
-  const clusteredFeatures = useMemo(
-    () =>
-      features.filter(
-        (feature) =>
-          !activeSpotIds.has(feature.properties.id) && !explodedSpotIds.has(feature.properties.id),
-      ),
-    [features, activeSpotIds, explodedSpotIds],
-  );
-
-  const activeSpotFeatures = useMemo(() => {
-    if (!activeSpotGroup) {
-      return [];
-    }
-
-    return activeSpotGroup.loungeIds
-      .map((id) => featuresById.get(id))
-      .filter((feature): feature is LoungeFeature => Boolean(feature));
-  }, [activeSpotGroup, featuresById]);
-
-  const explodedSpotFeatures = useMemo(() => {
-    if (activeSpotGroup || zoom < CLUSTER_DISABLE_ZOOM) {
-      return [];
-    }
-
-    const exploded: Array<{ key: string; items: LoungeFeature[] }> = [];
-    for (const [key, groupedFeatures] of featuresBySpot) {
-      if (groupedFeatures.length > 1) {
-        exploded.push({ key, items: groupedFeatures });
-      }
-    }
-    return exploded;
-  }, [activeSpotGroup, featuresBySpot, zoom]);
-
-  const handleClusterClick = useCallback(
-    (rawEvent: unknown) => {
-      const event = rawEvent as L.LeafletEvent & { layer?: ClusterLayerLike };
-      const cluster = event.layer;
-      if (!cluster) {
-        return;
-      }
-
-      const childMarkers = cluster.getAllChildMarkers();
-      if (childMarkers.length === 0) {
-        return;
-      }
-
-      const coordinateKeys = new Set(
-        childMarkers.map((marker: L.Marker) => coordinateKeyFromLatLng(marker.getLatLng())),
-      );
-
-      if (coordinateKeys.size === 1) {
-        const onlyKey = childMarkers.length > 0 ? coordinateKeyFromLatLng(childMarkers[0].getLatLng()) : '';
-        const spotFeatures = featuresBySpot.get(onlyKey) ?? [];
-        const airportCodes = new Set(spotFeatures.map((feature) => feature.properties.airportCode));
-
-        if (spotFeatures.length > 1 && airportCodes.size === 1) {
-          const anchorLatLng = childMarkers[0].getLatLng();
-          onClusterMode('spot_stack');
-          onOpenSpotGroup({
-            key: onlyKey,
-            airportCode: spotFeatures[0].properties.airportCode,
-            anchor: [anchorLatLng.lng, anchorLatLng.lat],
-            loungeIds: spotFeatures.map((feature) => feature.properties.id),
-            openedAt: new Date().toISOString(),
-          });
-
-          map.flyTo([anchorLatLng.lat, anchorLatLng.lng], Math.max(map.getZoom(), 8), {
-            duration: 0.45,
-          });
-
-          return;
-        }
-      }
-
-      onClusterMode('zoom');
-      onDismissSpotGroup();
-      map.fitBounds(cluster.getBounds(), {
-        animate: true,
-        duration: 0.45,
-        padding: [38, 38],
-        maxZoom: Math.min(12, map.getMaxZoom()),
-      });
-    },
-    [featuresBySpot, map, onClusterMode, onDismissSpotGroup, onOpenSpotGroup],
-  );
-
-  return (
-    <>
-      <MarkerClusterGroup
-        chunkedLoading
-        showCoverageOnHover={false}
-        maxClusterRadius={50}
-        spiderfyOnMaxZoom={false}
-        zoomToBoundsOnClick={false}
-        disableClusteringAtZoom={CLUSTER_DISABLE_ZOOM}
-        eventHandlers={{
-          clusterclick: handleClusterClick,
-        }}
-      >
-        {clusteredFeatures.map((feature) => {
-          const id = feature.properties.id;
-          const [lon, lat] = feature.geometry.coordinates;
-          const active = id === selectedId || id === hoveredId;
-
-          return (
-            <Marker
-              key={id}
-              position={[lat, lon]}
-              icon={markerIcon(feature.properties.type, active)}
-              eventHandlers={{
-                click: () => onSelect(id),
-              }}
-            >
-              <Tooltip direction="top" offset={[0, -8]}>
-                <div className="map-tooltip">
-                  <strong>{feature.properties.name}</strong>
-                  <span>
-                    {feature.properties.airportCode} · {feature.properties.city || feature.properties.country}
-                  </span>
-                </div>
-              </Tooltip>
-            </Marker>
-          );
-        })}
-      </MarkerClusterGroup>
-
-      {activeSpotFeatures.map((feature, index) => {
-        const id = feature.properties.id;
-        const position = toOffsetPosition(
-          feature.geometry.coordinates,
-          index,
-          activeSpotFeatures.length,
-          zoom,
-          activeSpotGroup?.key ?? '',
-        );
-        const active = id === selectedId || id === hoveredId;
-
-        return (
-          <Marker
-            key={`stack-${id}`}
-            position={position}
-            icon={markerIcon(feature.properties.type, active)}
-            zIndexOffset={1600}
-            eventHandlers={{
-              click: () => onSelect(id),
-            }}
-          >
-            <Tooltip direction="top" offset={[0, -8]}>
-              <div className="map-tooltip">
-                <strong>{feature.properties.name}</strong>
-                <span>
-                  {feature.properties.airportCode} · {feature.properties.city || feature.properties.country}
-                </span>
-              </div>
-            </Tooltip>
-          </Marker>
-        );
-      })}
-
-      {explodedSpotFeatures.flatMap(({ key, items }) =>
-        items.map((feature, index) => {
-          const id = feature.properties.id;
-          const position = toOffsetPosition(
-            feature.geometry.coordinates,
-            index,
-            items.length,
-            zoom,
-            key,
-          );
-          const active = id === selectedId || id === hoveredId;
-
-          return (
-            <Marker
-              key={`exploded-${id}`}
-              position={position}
-              icon={markerIcon(feature.properties.type, active)}
-              zIndexOffset={1500}
-              eventHandlers={{
-                click: () => onSelect(id),
-              }}
-            >
-              <Tooltip direction="top" offset={[0, -8]}>
-                <div className="map-tooltip">
-                  <strong>{feature.properties.name}</strong>
-                  <span>
-                    {feature.properties.airportCode} · {feature.properties.city || feature.properties.country}
-                  </span>
-                </div>
-              </Tooltip>
-            </Marker>
-          );
-        }),
-      )}
-    </>
-  );
-}
-
 function MapView({
   features,
   selectedId,
   hoveredId,
-  activeSpotGroup,
   onSelect,
-  onOpenSpotGroup,
-  onDismissSpotGroup,
-  onClusterMode,
+  onInteractionStatusChange,
 }: {
   features: LoungeFeature[];
   selectedId: string | null;
   hoveredId: string | null;
-  activeSpotGroup: SpotGroupState | null;
   onSelect: (id: string) => void;
-  onOpenSpotGroup: (next: SpotGroupState) => void;
-  onDismissSpotGroup: () => void;
-  onClusterMode: (mode: ClusterClickMode) => void;
+  onInteractionStatusChange: (status: MapInteractionStatus) => void;
 }) {
   const selectedFeature = useMemo(
     () => features.find((feature) => feature.properties.id === selectedId),
@@ -699,18 +344,15 @@ function MapView({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
       />
 
-      <ClusteredMarkers
+      <LoungeClusterLayer
         features={features}
         selectedId={selectedId}
         hoveredId={hoveredId}
-        activeSpotGroup={activeSpotGroup}
         onSelect={onSelect}
-        onOpenSpotGroup={onOpenSpotGroup}
-        onDismissSpotGroup={onDismissSpotGroup}
-        onClusterMode={onClusterMode}
+        onInteractionStatusChange={onInteractionStatusChange}
       />
 
-      <FitBounds features={features} selectedId={selectedId} activeSpotGroup={activeSpotGroup} />
+      <FitBounds features={features} selectedId={selectedId} />
       <FlyToSelection selected={selectedFeature} />
     </MapContainer>
   );
@@ -1154,15 +796,11 @@ function ResultsList({
 function SameSpotList({
   selectedFeature,
   sameSpotFeatures,
-  activeSpotGroup,
   onSelect,
-  onDismissSpotGroup,
 }: {
   selectedFeature: LoungeFeature;
   sameSpotFeatures: LoungeFeature[];
-  activeSpotGroup: SpotGroupState | null;
   onSelect: (id: string) => void;
-  onDismissSpotGroup: () => void;
 }) {
   if (sameSpotFeatures.length <= 1) {
     return null;
@@ -1174,14 +812,9 @@ function SameSpotList({
         <p className="spot-group-title">
           {sameSpotFeatures.length} lounges at {selectedFeature.properties.airportCode}
         </p>
-        {activeSpotGroup ? (
-          <button type="button" className="secondary-action compact" onClick={onDismissSpotGroup}>
-            Close stack
-          </button>
-        ) : null}
       </div>
       <p className="support-copy">
-        Same-airport clusters expand into a stack so you can compare lounges without losing map position.
+        Close clusters spiderfy on the map, and this list keeps the same-airport options handy for comparison.
       </p>
       <div className="spot-group-list">
         {sameSpotFeatures.map((spot) => (
@@ -1205,21 +838,17 @@ function SameSpotList({
 function DetailPanel({
   selectedFeature,
   sameSpotFeatures,
-  activeSpotGroup,
   comparedIds,
   compareLimitReached,
   onSelect,
-  onDismissSpotGroup,
   onToggleCompare,
   onClose,
 }: {
   selectedFeature: LoungeFeature;
   sameSpotFeatures: LoungeFeature[];
-  activeSpotGroup: SpotGroupState | null;
   comparedIds: Set<string>;
   compareLimitReached: boolean;
   onSelect: (id: string) => void;
-  onDismissSpotGroup: () => void;
   onToggleCompare: (id: string) => void;
   onClose: () => void;
 }) {
@@ -1282,9 +911,7 @@ function DetailPanel({
         <SameSpotList
           selectedFeature={selectedFeature}
           sameSpotFeatures={sameSpotFeatures}
-          activeSpotGroup={activeSpotGroup}
           onSelect={onSelect}
-          onDismissSpotGroup={onDismissSpotGroup}
         />
       </div>
     </aside>
@@ -1292,10 +919,10 @@ function DetailPanel({
 }
 
 function MapLegend({
-  clusterClickMode,
+  interactionStatus,
   comparedCount,
 }: {
-  clusterClickMode: ClusterClickMode;
+  interactionStatus: MapInteractionStatus;
   comparedCount: number;
 }) {
   const [expanded, setExpanded] = useState(true);
@@ -1313,10 +940,10 @@ function MapLegend({
       </button>
       {expanded ? (
         <ul>
-          <li>Click a cluster to zoom. Matching lounges at one airport expand into a stack.</li>
+          <li>Click a cluster to zoom in, then spiderfy nearby lounges without leaving the map pane.</li>
           <li>
-            {clusterClickMode === 'spot_stack'
-              ? 'Stack view is active for the selected airport.'
+            {interactionStatus === 'spiderfied'
+              ? 'Spiderfy view is active for the current cluster.'
               : 'Cluster zoom mode is active.'}
           </li>
           <li>
@@ -1390,20 +1017,16 @@ function MobileQuickFilters({
 function MobileDetailsView({
   selectedFeature,
   sameSpotFeatures,
-  activeSpotGroup,
   comparedIds,
   compareLimitReached,
   onSelect,
-  onDismissSpotGroup,
   onToggleCompare,
 }: {
   selectedFeature: LoungeFeature | undefined;
   sameSpotFeatures: LoungeFeature[];
-  activeSpotGroup: SpotGroupState | null;
   comparedIds: Set<string>;
   compareLimitReached: boolean;
   onSelect: (id: string) => void;
-  onDismissSpotGroup: () => void;
   onToggleCompare: (id: string) => void;
 }) {
   if (!selectedFeature) {
@@ -1469,9 +1092,7 @@ function MobileDetailsView({
       <SameSpotList
         selectedFeature={selectedFeature}
         sameSpotFeatures={sameSpotFeatures}
-        activeSpotGroup={activeSpotGroup}
         onSelect={onSelect}
-        onDismissSpotGroup={onDismissSpotGroup}
       />
     </div>
   );
@@ -1496,8 +1117,7 @@ function App() {
 
   const [selectedId, setSelectedId] = useState<string | null>(initialUrlState.selectedId);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [activeSpotGroup, setActiveSpotGroup] = useState<SpotGroupState | null>(null);
-  const [clusterClickMode, setClusterClickMode] = useState<ClusterClickMode>('zoom');
+  const [mapInteractionStatus, setMapInteractionStatus] = useState<MapInteractionStatus>('clusters');
   const [compareIds, setCompareIds] = useState<string[]>([]);
 
   const [isMobile, setIsMobile] = useState(() => window.matchMedia(MOBILE_MEDIA_QUERY).matches);
@@ -1516,7 +1136,6 @@ function App() {
   });
 
   const sheetDragState = useRef<{ startY: number; currentY: number } | null>(null);
-  const filterSignatureRef = useRef('');
 
   useEffect(() => {
     const media = window.matchMedia(MOBILE_MEDIA_QUERY);
@@ -1662,22 +1281,6 @@ function App() {
     return sortFeatures(narrowed, sort, query);
   }, [geoFilteredFeatures, query, selectedTypes, sort]);
 
-  const featuresBySpot = useMemo(() => {
-    const grouped = new Map<string, LoungeFeature[]>();
-    for (const feature of filteredFeatures) {
-      const key = coordinateKey(feature.geometry.coordinates);
-      const current = grouped.get(key) ?? [];
-      current.push(feature);
-      grouped.set(key, current);
-    }
-
-    for (const [, entries] of grouped) {
-      entries.sort((a, b) => a.properties.name.localeCompare(b.properties.name));
-    }
-
-    return grouped;
-  }, [filteredFeatures]);
-
   const featuresById = useMemo(
     () => new Map(features.map((feature) => [feature.properties.id, feature])),
     [features],
@@ -1691,18 +1294,23 @@ function App() {
   }, [features, filteredFeatures, selectedId]);
 
   const sameSpotFeatures = useMemo(() => {
-    if (activeSpotGroup) {
-      return activeSpotGroup.loungeIds
-        .map((id) => featuresById.get(id))
-        .filter((feature): feature is LoungeFeature => Boolean(feature));
-    }
-
     if (!selectedFeature) {
       return [];
     }
 
-    return featuresBySpot.get(coordinateKey(selectedFeature.geometry.coordinates)) ?? [selectedFeature];
-  }, [activeSpotGroup, featuresById, featuresBySpot, selectedFeature]);
+    const selectedCoordinate = coordinateKey(selectedFeature.geometry.coordinates);
+    const sameCoordinate = filteredFeatures
+      .filter((feature) => coordinateKey(feature.geometry.coordinates) === selectedCoordinate)
+      .sort((first, second) => first.properties.name.localeCompare(second.properties.name));
+
+    if (sameCoordinate.length > 1) {
+      return sameCoordinate;
+    }
+
+    return filteredFeatures
+      .filter((feature) => feature.properties.airportCode === selectedFeature.properties.airportCode)
+      .sort((first, second) => first.properties.name.localeCompare(second.properties.name));
+  }, [filteredFeatures, selectedFeature]);
 
   const comparedFeatures = useMemo(
     () =>
@@ -1727,7 +1335,6 @@ function App() {
     const stillVisible = filteredFeatures.some((feature) => feature.properties.id === selectedId);
     if (!stillVisible) {
       setSelectedId(filteredFeatures[0]?.properties.id ?? null);
-      setActiveSpotGroup(null);
     }
   }, [filteredFeatures, loading, selectedId]);
 
@@ -1745,20 +1352,6 @@ function App() {
     }
   }, [query, filteredFeatures]);
 
-  useEffect(() => {
-    if (!activeSpotGroup) {
-      return;
-    }
-
-    const stillVisible = activeSpotGroup.loungeIds.some((id) =>
-      filteredFeatures.some((feature) => feature.properties.id === id),
-    );
-
-    if (!stillVisible) {
-      setActiveSpotGroup(null);
-    }
-  }, [activeSpotGroup, filteredFeatures]);
-
   const filterSignature = useMemo(
     () =>
       [
@@ -1771,18 +1364,6 @@ function App() {
       ].join('|'),
     [search, selectedTypes, selectedCountry, selectedCity, selectedFacilities, sort],
   );
-
-  useEffect(() => {
-    if (!filterSignatureRef.current) {
-      filterSignatureRef.current = filterSignature;
-      return;
-    }
-
-    if (filterSignatureRef.current !== filterSignature) {
-      setActiveSpotGroup(null);
-      filterSignatureRef.current = filterSignature;
-    }
-  }, [filterSignature]);
 
   const typeCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -1879,11 +1460,8 @@ function App() {
   }, []);
 
   const selectFeature = useCallback(
-    (id: string, options?: { preserveSpotGroup?: boolean }) => {
+    (id: string) => {
       setSelectedId(id);
-      if (!options?.preserveSpotGroup) {
-        setActiveSpotGroup(null);
-      }
 
       if (isMobile) {
         setMobileUI((current) => ({
@@ -1895,26 +1473,6 @@ function App() {
     },
     [isMobile],
   );
-
-  const openSpotGroup = useCallback(
-    (next: SpotGroupState) => {
-      setActiveSpotGroup(next);
-      setSelectedId((current) => (current && next.loungeIds.includes(current) ? current : next.loungeIds[0] ?? null));
-
-      if (isMobile) {
-        setMobileUI((current) => ({
-          ...current,
-          sheetMode: 'details',
-          sheetSnap: 'full',
-        }));
-      }
-    },
-    [isMobile],
-  );
-
-  const dismissSpotGroup = useCallback(() => {
-    setActiveSpotGroup(null);
-  }, []);
 
   const toggleCompare = useCallback((id: string) => {
     setCompareIds((current) => {
@@ -1941,7 +1499,6 @@ function App() {
     setSelectedCity('ALL');
     setSelectedFacilities([]);
     setSort('country_city');
-    setActiveSpotGroup(null);
   }, []);
 
   const shiftSheetSnap = useCallback((direction: 1 | -1) => {
@@ -2207,25 +1764,20 @@ function App() {
               features={filteredFeatures}
               selectedId={selectedId}
               hoveredId={hoveredId}
-              activeSpotGroup={activeSpotGroup}
               onSelect={(id) => selectFeature(id)}
-              onOpenSpotGroup={openSpotGroup}
-              onDismissSpotGroup={dismissSpotGroup}
-              onClusterMode={setClusterClickMode}
+              onInteractionStatusChange={setMapInteractionStatus}
             />
           </div>
 
-          <MapLegend clusterClickMode={clusterClickMode} comparedCount={comparedFeatures.length} />
+          <MapLegend interactionStatus={mapInteractionStatus} comparedCount={comparedFeatures.length} />
 
           {selectedFeature ? (
             <DetailPanel
               selectedFeature={selectedFeature}
               sameSpotFeatures={sameSpotFeatures}
-              activeSpotGroup={activeSpotGroup}
               comparedIds={comparedIdSet}
               compareLimitReached={compareLimitReached}
               onSelect={(id) => selectFeature(id)}
-              onDismissSpotGroup={dismissSpotGroup}
               onToggleCompare={toggleCompare}
               onClose={() => setSelectedId(null)}
             />
@@ -2383,11 +1935,9 @@ function App() {
                     <MobileDetailsView
                       selectedFeature={selectedFeature}
                       sameSpotFeatures={sameSpotFeatures}
-                      activeSpotGroup={activeSpotGroup}
                       comparedIds={comparedIdSet}
                       compareLimitReached={compareLimitReached}
                       onSelect={(id) => selectFeature(id)}
-                      onDismissSpotGroup={dismissSpotGroup}
                       onToggleCompare={toggleCompare}
                     />
                   </div>

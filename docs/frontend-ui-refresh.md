@@ -17,8 +17,10 @@ This branch refreshes the lounge map frontend around a traveler-first comparison
 
 ## Map Interaction Updates
 
-- Preserved the original same-airport cluster burst behavior: clicking a cluster whose markers share one airport/coordinate opens a radial burst instead of only zooming.
-- Extended that behavior so same-coordinate lounges remain individually visible when clustering disables at close zoom.
+- Replaced the custom same-spot burst/offset-marker path with a modular cluster subsystem under `src/map/cluster/`.
+- Restored native `Leaflet.markercluster` zoom and spiderfy behavior inside the map pane, then layered in `Leaflet.MarkerCluster.Freezable` so tightly packed lounges stay explorable at close zoom without sudden disappear/reflow.
+- Kept same-airport comparison in the side panel by deriving related lounges from the selected feature instead of temporary map-expansion state.
+- Added custom dark-theme cluster badges and tightened the small-badge typography so count labels render cleanly at production sizes.
 - Added a collapsible map guide panel.
 
 ## Verification
