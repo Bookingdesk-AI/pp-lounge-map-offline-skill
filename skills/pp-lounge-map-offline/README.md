@@ -33,6 +33,7 @@ node skills/pp-lounge-map-offline/scripts/print-offline-mcp-config.mjs
 ## Security & trust boundary
 
 - Uses bundled snapshot data only
+- Catalog `url` fields are metadata only (never fetch in offline mode); strip query strings and credential-like fragments before quoting.
 - No runtime internet fetch required
 - No secret/API key requirement
 - Read-only query workflows
