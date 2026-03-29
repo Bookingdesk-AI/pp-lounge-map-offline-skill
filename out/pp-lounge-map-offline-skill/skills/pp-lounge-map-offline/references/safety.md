@@ -11,6 +11,7 @@ It may:
 It must not:
 
 - call remote MCP endpoints
+- use non-loopback transports for MCP access (allow only `stdio`, `127.0.0.1`, or `localhost` unless the user explicitly exits offline mode)
 - fetch network resources
 - ask for secrets
 - trigger deploys or data rebuilds
