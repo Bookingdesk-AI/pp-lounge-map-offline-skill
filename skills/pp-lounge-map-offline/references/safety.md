@@ -12,6 +12,7 @@ It must not:
 
 - call remote MCP endpoints
 - use non-loopback transports for MCP access (allow only `stdio`, `127.0.0.1`, or `localhost` unless the user explicitly exits offline mode)
+- bind helper scripts/services to non-loopback hosts (for example `0.0.0.0`) unless the user explicitly approves leaving offline trust boundaries
 - fetch network resources
 - ask for secrets
 - trigger deploys or data rebuilds
