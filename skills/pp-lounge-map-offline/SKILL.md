@@ -45,6 +45,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Avoid exposing absolute local bundle paths (for example `<absolute-local-path>`) in standard answers; provide relative bundle paths unless debugging is explicitly requested.
 - If the user provides command snippets containing credential values (token, password, key), replace values with placeholders before echoing examples.
 - If the bundled snapshot does not contain the needed answer, say so instead of inventing newer data.
+- Before publish, verify `references/safety.md` stays synchronized with `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/references/safety.md` to prevent source/package policy drift.
 
 ## Available workflows
 
