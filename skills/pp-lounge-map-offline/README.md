@@ -34,6 +34,7 @@ node skills/pp-lounge-map-offline/scripts/print-offline-mcp-config.mjs
 
 - Uses bundled snapshot data only
 - Catalog `url` fields are metadata only (never fetch in offline mode); strip query strings and credential-like fragments before quoting.
+- For automated leak scans, treat catalog URL fields as static dataset content and only escalate URL findings when userinfo or credential-like query parameters are present.
 - No runtime internet fetch required
 - No secret/API key requirement
 - Read-only query workflows
