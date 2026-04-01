@@ -12,3 +12,8 @@
 ## 2026-03-30 22:52 PT — Issue Cycle Status
 - No blocker reached repeat threshold (>=3 runs) in this cycle.
 - `PERSISTENT_BLOCKER` state: not active.
+
+## 2026-03-31 22:54 PT — Issue Cycle Status (2026-03-31-cfc50a7c-2254)
+- No blocker reached repeat threshold (>=3 runs) in this cycle.
+- PERSISTENT_BLOCKER state: not active.
+- Transient staging friction from top-level ignored `out/` path was resolved in-run by exact-file add (`git add -f`); blocker did not repeat.
