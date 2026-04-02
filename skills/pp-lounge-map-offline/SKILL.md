@@ -44,6 +44,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Treat obfuscated loopback endpoint hosts (for example integer/octal/hex IP literals, IPv4-mapped aliases, or percent-encoded host forms) as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat hostname endpoints as local only when the host is exactly `localhost`; require explicit leave-offline confirmation for lookalike or custom hostnames (for example `localhost.localdomain` or `devbox.lan`).
 - Treat trailing-dot localhost forms (for example `localhost.`) as out-of-boundary unless the user explicitly asks to leave offline mode.
+- Treat wildcard-DNS loopback aliases (for example `*.nip.io`, `*.sslip.io`, or `*.xip.io`) as non-local unless the user explicitly asks to leave offline mode.
 - Treat `url` fields in the bundled catalog as display metadata only; never fetch them in offline mode.
 - If catalog or endpoint URLs must be shown for diagnostics, normalize to origin form and suppress userinfo/query/fragment before logging or responding.
 - For automated security scans, treat `skills/pp-lounge-map-offline/assets/catalog.json` URL entries as static dataset content, not outbound-call instructions.
