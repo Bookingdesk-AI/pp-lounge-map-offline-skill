@@ -45,6 +45,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Treat hostname endpoints as local only when the host is exactly `localhost`; require explicit leave-offline confirmation for lookalike or custom hostnames (for example `localhost.localdomain` or `devbox.lan`).
 - Treat trailing-dot localhost forms (for example `localhost.`) as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat `url` fields in the bundled catalog as display metadata only; never fetch them in offline mode.
+- If catalog or endpoint URLs must be shown for diagnostics, normalize to origin form and suppress userinfo/query/fragment before logging or responding.
 - For automated security scans, treat `skills/pp-lounge-map-offline/assets/catalog.json` URL entries as static dataset content, not outbound-call instructions.
 - If quoting catalog `url` values in responses, strip query strings and any credential-like fragments before echoing.
 - If asked for live lounge availability/status, explicitly state the bundled snapshot can be stale and requires an online source refresh.
