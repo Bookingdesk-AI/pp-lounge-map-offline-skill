@@ -24,3 +24,8 @@
 - URL boundary check: 2 external URL refs remain and are discovery metadata/docs only for offline bundle context.
 - SKILL verification: both source and bundled SKILL files have valid frontmatter and all relative references resolve.
 
+## Phase E — Issue Cycle
+
+- No blocker repeated 3+ runs in this cycle.
+- Persistent blocker file update not required this run (`openclaw/reports/skill-security-issues.md` unchanged).
+
