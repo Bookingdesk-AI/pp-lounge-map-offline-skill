@@ -18,3 +18,9 @@
 - Applied 1 reversible hardening improvement:
   - `skills/pp-lounge-map-offline/README.md`: added explicit URL-sanitization guardrail (strip userinfo/query/fragment) when quoting hosted discovery links.
 
+## Phase D — Review + Verify
+
+- Post-edit re-scan: 0 secret findings in scoped skill paths.
+- URL boundary check: 2 external URL refs remain and are discovery metadata/docs only for offline bundle context.
+- SKILL verification: both source and bundled SKILL files have valid frontmatter and all relative references resolve.
+
