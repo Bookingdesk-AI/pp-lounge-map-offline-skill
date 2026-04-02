@@ -10,6 +10,11 @@
 
 ## Phase B — Fix Plan
 
-- Finding P1 (low): bundled README exposes hosted discovery links; risk is operator confusion between discovery URLs and offline runtime surfaces.
-- Minimal reversible fix: add one explicit guardrail line in `out/pp-lounge-map-offline-skill/README.md` to keep runtime local (`stdio`/loopback) unless user explicitly exits offline mode.
+- Finding P1 (low): offline skill README has hosted discovery-link context that benefits from explicit URL-sanitization guidance to prevent unsafe copy/paste.
+- Minimal reversible fix: add one explicit guardrail line in `skills/pp-lounge-map-offline/README.md` to strip userinfo/query/fragment segments when quoting hosted links.
+
+## Phase C — Improvement Shipped (Bounded)
+
+- Applied 1 reversible hardening improvement:
+  - `skills/pp-lounge-map-offline/README.md`: added explicit URL-sanitization guardrail (strip userinfo/query/fragment) when quoting hosted discovery links.
 

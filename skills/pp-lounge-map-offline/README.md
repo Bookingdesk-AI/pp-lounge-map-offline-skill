@@ -56,6 +56,7 @@ offline lounge lookup, priority pass lounge map, airport lounge comparison, trav
 
 - Reference-only discovery links; offline runtime should stay local (`stdio`, `127.0.0.1`, `localhost`) unless the user explicitly asks to leave offline mode.
 - Do not treat hosted endpoints as runtime defaults for this offline bundle.
+- If quoting hosted links in docs or logs, strip userinfo/query/fragment segments before echoing.
 - Live destination: available in the companion online listing.
 - Suite portal: available in the Desk.Travel product directory.
 
