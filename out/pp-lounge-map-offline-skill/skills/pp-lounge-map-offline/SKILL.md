@@ -52,7 +52,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Require explicit local transport schemes (`stdio`, `http`, `https`) and loopback hosts; treat `ws`/`wss`/scheme-less endpoint forms as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat `url` fields in the bundled catalog as display metadata only; never fetch them in offline mode.
 - If catalog or endpoint URLs must be shown for diagnostics, normalize to origin form and suppress userinfo/query/fragment before logging or responding.
-- Treat endpoint URLs that include URL userinfo (for example `http://user:pass@localhost/...`) as secret-bearing and out-of-boundary in offline mode; use redacted placeholders instead.
+- Treat endpoint URLs that include URL userinfo (for example `http://<user>:<pass>@localhost/...`) as secret-bearing and out-of-boundary in offline mode; use redacted placeholders instead.
 - For automated security scans, treat `skills/pp-lounge-map-offline/assets/catalog.json` URL entries as static dataset content, not outbound-call instructions.
 - If quoting catalog `url` values in responses, strip query strings and any credential-like fragments before echoing.
 - If asked for live lounge availability/status, explicitly state the bundled snapshot can be stale and requires an online source refresh.
