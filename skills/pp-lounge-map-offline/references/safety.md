@@ -20,6 +20,7 @@ It must not:
 - treat bundled `url` fields as network fetch instructions
 - use catalog `url` fields as health-check/probe targets (diagnostics must stay on local transports/endpoints)
 - quote catalog `url` values with credential-like fragments or query strings unredacted
+- treat endpoint URL userinfo (including percent-encoded userinfo delimiters such as `%40`/`%3A` before `@`) as secret-bearing/out-of-boundary and redact it in offline responses
 - treat non-HTTP(S) catalog URL schemes (for example `javascript:` or `data:`) as executable content; they are invalid metadata in offline mode
 - claim that the bundled snapshot is live data
 
