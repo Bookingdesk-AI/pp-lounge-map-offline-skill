@@ -37,7 +37,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - It must not use network access (except local process startup/dependency install done by operator).
 - It must not ask for API keys or secrets.
 - It must not reference sibling workbooks, remote MCP endpoints, or deploy workflows.
-- It must only run against local transports (`stdio`, `127.0.0.1`, or `localhost`) unless the user explicitly asks to leave offline mode.
+- It must only run against local transports (`stdio`, `127.0.0.1`, `localhost`, or `::1`) unless the user explicitly asks to leave offline mode.
 - Treat `0.0.0.0` bind/listen addresses as non-client targets; do not use them as runtime endpoint URLs unless the user explicitly asks to leave offline mode.
 - Treat transport aliases outside those local forms (for example `file://`, unix-socket aliases, or ssh-style host aliases) as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat non-loopback literal IP endpoint hosts (for example RFC1918 private ranges, link-local ranges, or IPv6 ULA ranges) as out-of-boundary unless the user explicitly asks to leave offline mode.
