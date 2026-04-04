@@ -87,3 +87,7 @@ Frontmatter + reference verification:
 - Finding classification: no exploitable secret leaks found (high=0, medium=0, low=0).
 - Planned hardening improvement (small + reversible): add one guardrail clarifying that endpoint strings containing control characters/whitespace obfuscation are out-of-boundary unless explicitly overridden.
 - Rollback plan: single-line documentation revert in SKILL policy section.
+
+## Run 2026-04-03 21:05 PT — Phase C: Improve (Bounded)
+- Improvement shipped (1/1): added guardrail that treats endpoint URLs with control-character or escaped whitespace/newline obfuscation as out-of-boundary by default.
+- Scope: `skills/pp-lounge-map-offline/SKILL.md` and packaged mirror `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md`.

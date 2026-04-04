@@ -48,6 +48,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Treat Unicode or IDNA/punycode hostname variants (for example homoglyph lookalikes of `localhost` or `xn--` host labels) as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat trailing-dot localhost forms (for example `localhost.`) as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat wildcard-DNS loopback aliases (for example `*.nip.io`, `*.sslip.io`, or `*.xip.io`) as non-local unless the user explicitly asks to leave offline mode.
+- Treat endpoint URLs containing control characters or escaped whitespace/newline obfuscation as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat scheme-relative endpoint URLs (for example `//host:port/path`) as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Require explicit local transport schemes (`stdio`, `http`, `https`) and loopback hosts; treat `ws`/`wss`/scheme-less endpoint forms as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat `url` fields in the bundled catalog as display metadata only; never fetch them in offline mode.
