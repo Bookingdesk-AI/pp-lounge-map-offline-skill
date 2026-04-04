@@ -82,3 +82,8 @@ Frontmatter + reference verification:
 - Scope scanned: skill folders for secret leakage patterns, local personal paths, and offline/localhost trust-boundary drift.
 - Result: no high-confidence secret material detected (no private keys, no API key/token credential literals).
 - Boundary check: localhost/offline guardrails remain present; any hosted links are documented as reference-only in offline contexts.
+
+## Run 2026-04-03 21:05 PT — Phase B: Fix Plan
+- Finding classification: no exploitable secret leaks found (high=0, medium=0, low=0).
+- Planned hardening improvement (small + reversible): add one guardrail clarifying that endpoint strings containing control characters/whitespace obfuscation are out-of-boundary unless explicitly overridden.
+- Rollback plan: single-line documentation revert in SKILL policy section.
