@@ -25,3 +25,8 @@
 - Secret scan result: no credential-like literals detected in scoped skill folders.
 - Trust boundary check: local-only/offline guardrails present in source and packaged skill docs.
 
+### Phase B - Fix Plan
+- Findings: none.
+- Hardening improvement candidate: add guardrail coverage for percent-encoded port delimiter obfuscation in endpoint authorities (`%3A` / `%253A`) and keep source/package docs in sync.
+- Severity: low (defense-in-depth documentation hardening).
+
