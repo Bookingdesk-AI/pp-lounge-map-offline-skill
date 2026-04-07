@@ -59,6 +59,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Treat endpoint URLs that include URL userinfo (for example `http://<user>:<pass>@localhost/...`) as secret-bearing and out-of-boundary in offline mode; use redacted placeholders instead.
 - Treat endpoint authorities with percent-encoded userinfo delimiters (for example `%40` or `%3A` before `@`) as obfuscated credential-bearing forms and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint authorities with repeated `@` delimiters as credential-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
+- Treat endpoint authorities containing percent-encoded port delimiters (for example `%3A` or `%253A` after host labels) as authority-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint authorities containing percent-encoded slash or backslash delimiters (for example `%2F` or `%5C`) as authority-smuggling obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint authorities containing double-encoded authority delimiters (for example `%2540`, `%252F`, or `%255C`) as layered-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint URLs as out-of-boundary when one-pass or two-pass URL decoding introduces new authority delimiters (`@`, `:`, `/`, `\`) or changes host/scheme semantics unless the user explicitly asks to leave offline mode.

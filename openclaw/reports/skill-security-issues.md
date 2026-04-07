@@ -30,3 +30,6 @@
 - Hardening improvement candidate: add guardrail coverage for percent-encoded port delimiter obfuscation in endpoint authorities (`%3A` / `%253A`) and keep source/package docs in sync.
 - Severity: low (defense-in-depth documentation hardening).
 
+### Phase C - Improve (Shipped)
+- Applied 1 reversible hardening change: added explicit `%3A`/`%253A` encoded-port authority obfuscation guardrail in both source and packaged `pp-lounge-map-offline` SKILL docs.
+
