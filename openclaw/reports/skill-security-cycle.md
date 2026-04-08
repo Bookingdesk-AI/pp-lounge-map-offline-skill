@@ -139,3 +139,10 @@ Frontmatter + reference verification:
 - Secret-leak scan result: 0 high-confidence hits (no API keys/tokens/password assignments/private-key blocks).
 - Local personal-path scan result: 0 hits for absolute personal path patterns.
 - Trust-boundary check: source + packaged SKILL both retain offline local-transport policy (`stdio`, `127.0.0.1`, `localhost`, `::1`); no remote runtime dependency detected.
+
+
+## Run 2026-04-08 10:20 PDT / 2026-04-08 17:20 UTC — Phase B: Fix Plan [cron:cfc50a7c-66f2-4b9f-94a5-c8fc42e8b645]
+- Findings: no exploitable secret leakage detected in source + packaged pp offline skill paths.
+- Severity classification: high=0, medium=0, low=0 (hardening-only opportunity).
+- Minimal reversible fix planned: Add one reversible guardrail to classify Unicode fullwidth authority delimiters (`＠`, `：`, `／`, `＼`, `？`, `＃`) as delimiter-obfuscation and out-of-boundary unless explicitly overridden.
+- Rollback: remove one synced guardrail bullet from source + packaged `skills/pp-lounge-map-offline/SKILL.md`.
