@@ -146,3 +146,8 @@ Frontmatter + reference verification:
 - Severity classification: high=0, medium=0, low=0 (hardening-only opportunity).
 - Minimal reversible fix planned: Add one reversible guardrail to classify Unicode fullwidth authority delimiters (`＠`, `：`, `／`, `＼`, `？`, `＃`) as delimiter-obfuscation and out-of-boundary unless explicitly overridden.
 - Rollback: remove one synced guardrail bullet from source + packaged `skills/pp-lounge-map-offline/SKILL.md`.
+
+
+## Run 2026-04-08 10:20 PDT / 2026-04-08 17:20 UTC — Phase C: Improve (Bounded) [cron:cfc50a7c-66f2-4b9f-94a5-c8fc42e8b645]
+- Improvement shipped (1/1 repo): Added one reversible guardrail classifying Unicode fullwidth authority delimiters (`＠`, `：`, `／`, `＼`, `？`, `＃`) as delimiter-obfuscation and out-of-boundary unless explicitly leaving offline mode.
+- Files changed: `skills/pp-lounge-map-offline/SKILL.md` and packaged mirror `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md`.
