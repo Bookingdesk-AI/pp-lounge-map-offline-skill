@@ -107,3 +107,10 @@ Frontmatter + reference verification:
 - Scope scanned: `skills/pp-lounge-map-offline` and `out/pp-lounge-map-offline-skill`.
 - Secret-leak scan result: no high-confidence credential/private-key literals detected (API keys/tokens/password assignments/private-key blocks).
 - Trust-boundary check: offline local-transport-only policy remains intact in source + packaged SKILL; external Priority Pass URLs are catalog metadata only.
+
+
+## Run 2026-04-07 23:49 PDT / 2026-04-08 06:49 UTC — Phase B: Fix Plan [cron:cfc50a7c-66f2-4b9f-94a5-c8fc42e8b645]
+- Findings: no exploitable secret leakage detected in `skills/pp-lounge-map-offline` + packaged `out/pp-lounge-map-offline-skill`.
+- Severity classification: high=0, medium=0, low=0 (hardening-only opportunity).
+- Minimal reversible fix planned: Add one guardrail that treats percent-encoded IPv6 bracket delimiters (`%5B`, `%5D`, `%255B`, `%255D`) as authority-obfuscation and out-of-boundary unless explicit trust-boundary override is confirmed.
+- Rollback: single-line SKILL guardrail removal per touched file.
