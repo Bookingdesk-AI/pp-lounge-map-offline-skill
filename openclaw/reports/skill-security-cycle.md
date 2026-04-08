@@ -114,3 +114,8 @@ Frontmatter + reference verification:
 - Severity classification: high=0, medium=0, low=0 (hardening-only opportunity).
 - Minimal reversible fix planned: Add one guardrail that treats percent-encoded IPv6 bracket delimiters (`%5B`, `%5D`, `%255B`, `%255D`) as authority-obfuscation and out-of-boundary unless explicit trust-boundary override is confirmed.
 - Rollback: single-line SKILL guardrail removal per touched file.
+
+
+## Run 2026-04-07 23:49 PDT / 2026-04-08 06:49 UTC — Phase C: Improve (Bounded) [cron:cfc50a7c-66f2-4b9f-94a5-c8fc42e8b645]
+- Improvement shipped (1/1 repo): Added one reversible guardrail (source + packaged SKILL) to classify percent-encoded IPv6 bracket delimiters (`%5B`, `%5D`, `%255B`, `%255D`) as authority-obfuscation unless explicitly leaving offline mode.
+- Change scope is docs/policy-only and fully reversible by removing the inserted guardrail line.
