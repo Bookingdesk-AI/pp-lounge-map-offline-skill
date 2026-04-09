@@ -176,3 +176,7 @@ Frontmatter + reference verification:
 - Severity classification: high=0, medium=0, low=0 (hardening-only opportunity).
 - Minimal reversible fix planned: add one synced guardrail defining `decode-order-ambiguity` as the deterministic reason category when decode-pass ordering can move an endpoint across multiple obfuscation classes.
 - Rollback: remove one synced guardrail bullet from source + packaged `skills/pp-lounge-map-offline/SKILL.md`.
+
+## Run 2026-04-08 23:48 PDT / 2026-04-09 06:48 UTC — Phase C: Improve (Bounded) [cron:cfc50a7c-66f2-4b9f-94a5-c8fc42e8b645]
+- Improvement shipped (1/1 repo): added one synced reversible guardrail introducing deterministic `decode-order-ambiguity` classification when decode-pass ordering can shift endpoint obfuscation category.
+- Files changed: source + packaged `skills/pp-lounge-map-offline/SKILL.md`.
