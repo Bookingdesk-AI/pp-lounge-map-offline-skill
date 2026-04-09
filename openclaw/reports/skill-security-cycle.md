@@ -170,3 +170,9 @@ Frontmatter + reference verification:
 - Secret-leak scan result: 0 high-confidence hits (no private-key blocks, hardcoded API keys/tokens/password assignments, or cloud credential signatures).
 - Local personal-path scan result: 0 hits for absolute personal path patterns.
 - Trust-boundary check: source + packaged skill copies both retain offline/local transport guardrails (`stdio`, `127.0.0.1`, `localhost`, `::1`), with non-local targets still requiring explicit leave-offline confirmation.
+
+## Run 2026-04-08 23:48 PDT / 2026-04-09 06:48 UTC — Phase B: Fix Plan [cron:cfc50a7c-66f2-4b9f-94a5-c8fc42e8b645]
+- Findings: no exploitable secret leakage detected in source + packaged pp offline skill paths.
+- Severity classification: high=0, medium=0, low=0 (hardening-only opportunity).
+- Minimal reversible fix planned: add one synced guardrail defining `decode-order-ambiguity` as the deterministic reason category when decode-pass ordering can move an endpoint across multiple obfuscation classes.
+- Rollback: remove one synced guardrail bullet from source + packaged `skills/pp-lounge-map-offline/SKILL.md`.
