@@ -9,3 +9,15 @@
 - Proposed hardening improvement (low-risk, reversible): add explicit rule to reject Unicode dot variants in host labels (`U+3002`, `U+FF0E`, `U+FF61`) as hostname-obfuscation unless trust-boundary override is explicitly confirmed.
 - Change scope cap: one documentation guardrail line per repo skill surface.
 
+### Phase C - Improve (Bounded)
+- Improvement shipped: added Unicode dot-equivalent host separator guardrail (, , ) to tighten hostname-obfuscation rejection logic.
+- Reversibility: documentation-only change in skills/pp-lounge-map-offline/SKILL.md (+ out/pp-lounge-map-offline-skill mirror sync); can be reverted cleanly in one commit.
+- Batch limit check: one improvement applied for this repo in this run.
+
+### Phase C - Improve (Bounded)
+- Improvement shipped: added Unicode dot-equivalent host separator guardrail (`U+3002`, `U+FF0E`, `U+FF61`) to tighten hostname-obfuscation rejection logic.
+- Reversibility: documentation-only change; can be reverted cleanly in one commit.
+- Batch limit check: one improvement applied for this repo in this run.
+
+- Changed path(s): skills/pp-lounge-map-offline/SKILL.md (+ out/pp-lounge-map-offline-skill mirror sync)
+
