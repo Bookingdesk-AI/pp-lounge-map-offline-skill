@@ -37,3 +37,17 @@ Applied (1/1 for repo):
 
 Reversibility:
 - Single-line policy addition mirrored across source/package SKILL files; easy rollback via one-line revert per file.
+
+## Phase D — Review + Verify
+
+Post-edit re-scan:
+- Secret leakage pattern scan: 0 matches (source + packaged SKILL)
+- Absolute personal path leakage: 0 matches
+
+SKILL verification:
+- Frontmatter format: valid for source and packaged SKILL files
+- Referenced local files: all present
+- Source/package `references/safety.md` sync check: pass
+
+Status:
+- Security/trust-boundary posture remains intact after edit.
