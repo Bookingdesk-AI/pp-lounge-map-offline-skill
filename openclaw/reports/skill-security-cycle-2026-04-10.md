@@ -15,3 +15,17 @@ Trust-boundary assessment:
 - Runtime safety boundary remains local/offline-first.
 - `my.prioritypass.com` URLs are bundled catalog metadata, with explicit guardrail language to avoid outbound fetch in offline mode.
 - No default instruction found that would require non-local runtime endpoints.
+
+## Phase B — Fix Plan
+
+Findings:
+- No credential/secret leakage findings in scoped files.
+- No localhost/offline trust-boundary bypass findings in default instructions.
+
+Severity classification:
+- High: none
+- Medium: none
+- Low: none
+
+Planned bounded improvement (reversible):
+- Add one guardrail line requiring reason-category-only diagnostics (no raw endpoint echo) when rejecting obfuscated endpoint forms.
