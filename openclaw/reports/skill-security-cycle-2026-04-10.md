@@ -29,3 +29,11 @@ Severity classification:
 
 Planned bounded improvement (reversible):
 - Add one guardrail line requiring reason-category-only diagnostics (no raw endpoint echo) when rejecting obfuscated endpoint forms.
+
+## Phase C — Improve (Bounded)
+
+Applied (1/1 for repo):
+- Updated source and packaged SKILL files to require reason-category-only diagnostics when rejecting obfuscated endpoint forms (no raw endpoint echo).
+
+Reversibility:
+- Single-line policy addition mirrored across source/package SKILL files; easy rollback via one-line revert per file.
