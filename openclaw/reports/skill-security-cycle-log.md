@@ -21,3 +21,9 @@
 
 - Changed path(s): skills/pp-lounge-map-offline/SKILL.md (+ out/pp-lounge-map-offline-skill mirror sync)
 
+### Phase D - Review + Verify
+- Post-edit secret/path scan: clean (no credential-like patterns, no local personal path leakage in scoped folders).
+- SKILL frontmatter verification: valid (`name`, `description`, and fenced YAML frontmatter detected).
+- Reference verification: all relative markdown references resolve to existing files.
+- Local/offline trust boundary language remains explicit and intact after edits.
+
