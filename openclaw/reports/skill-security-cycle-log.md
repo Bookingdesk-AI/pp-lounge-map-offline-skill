@@ -4,3 +4,8 @@
 - Personal-path scan status: no absolute local personal path leakage detected in scoped skill folders.
 - Trust-boundary check: localhost/loopback offline guardrails are present and explicit override language remains intact.
 
+### Phase B - Fix Plan
+- Findings classified: none (no high/medium/low secret leakage findings in scope).
+- Proposed hardening improvement (low-risk, reversible): add explicit rule to reject Unicode dot variants in host labels (`U+3002`, `U+FF0E`, `U+FF61`) as hostname-obfuscation unless trust-boundary override is explicitly confirmed.
+- Change scope cap: one documentation guardrail line per repo skill surface.
+
