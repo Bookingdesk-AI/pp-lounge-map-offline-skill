@@ -56,6 +56,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Treat scheme-relative endpoint URLs (for example `//host:port/path`) as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Require explicit local transport schemes (`stdio`, `http`, `https`) and loopback hosts; treat `ws`/`wss`/`data`/`blob`/scheme-less endpoint forms as out-of-boundary unless the user explicitly asks to leave offline mode.
 - For `http`/`https` local endpoints, require the canonical MCP path `/mcp` after normalization; treat alternate or encoded path variants as out-of-boundary unless the user explicitly asks to leave offline mode.
+- If a local endpoint probe returns an HTTP redirect, do not follow it unless the normalized redirect target remains loopback and preserves the canonical `/mcp` boundary.
 - Treat `url` fields in the bundled catalog as display metadata only; never fetch them in offline mode.
 - If catalog or endpoint URLs must be shown for diagnostics, normalize to origin form and suppress userinfo/query/fragment before logging or responding.
 - Treat endpoint URLs that include URL userinfo (for example `http://<user>:<pass>@localhost/...`) as secret-bearing and out-of-boundary in offline mode; use redacted placeholders instead.
