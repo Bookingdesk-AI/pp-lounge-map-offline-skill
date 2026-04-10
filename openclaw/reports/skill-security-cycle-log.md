@@ -27,3 +27,8 @@
 - Reference verification: all relative markdown references resolve to existing files.
 - Local/offline trust boundary language remains explicit and intact after edits.
 
+### Phase E - Issue Cycle
+- Blocker trend: no blocker has repeated for 3+ consecutive runs in this repo scope.
+- Persistent blocker action: not triggered (no `PERSISTENT_BLOCKER` entry written this run).
+- Mutation-throttle policy: unchanged; continue bounded single-improvement batches per repo per run.
+
