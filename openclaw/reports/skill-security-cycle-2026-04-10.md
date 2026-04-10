@@ -51,3 +51,10 @@ SKILL verification:
 
 Status:
 - Security/trust-boundary posture remains intact after edit.
+
+## Phase E — Issue Cycle
+
+- Repeated-blocker threshold check (>=3 runs): not met.
+- `PERSISTENT_BLOCKER`: not active.
+- Observed transient `git add out/...` ignored-prefix staging friction; recovered with tracked-file staging (`git add -u -- <path>`). Current run count remains below persistent threshold.
+- `openclaw/reports/skill-security-issues.md` append: not required this run.
