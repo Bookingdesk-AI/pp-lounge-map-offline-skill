@@ -36,3 +36,9 @@
 ### SKILL frontmatter + references
 - Source and packaged SKILL frontmatter blocks detected and structurally valid.
 - Referenced relative files from both SKILL markdown link sets exist (`missing_refs: []` for source + packaged).
+
+## Phase E — Issue Cycle
+
+- Repeated blocker threshold check (>=3 runs): none triggered.
+- `PERSISTENT_BLOCKER` state: not active.
+- Mutation strategy: normal bounded mode retained.
