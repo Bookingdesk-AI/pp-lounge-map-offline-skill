@@ -20,3 +20,10 @@
 - Severity classification: **low** (hardening opportunity only).
 - Planned minimal reversible fix (1 change): add an explicit guardrail that treats Unicode whitespace in endpoint authorities/hosts as hostname-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Reversibility: single-line policy-doc change mirrored in source + packaged SKILL docs.
+
+## Phase C — Improve (Bounded)
+
+- Improvement shipped (1/1 for this repo): added Unicode whitespace hostname-obfuscation guardrail to source + packaged SKILL docs.
+- Files updated: `skills/pp-lounge-map-offline/SKILL.md`, `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md`.
+- Scope remains documentation-only and reversible.
+- Batch accounting: 1 improvement consumed in this repo.
