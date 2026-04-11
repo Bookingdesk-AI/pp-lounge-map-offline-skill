@@ -199,3 +199,8 @@ Frontmatter + reference verification:
 - Scan noise observed: placeholder credential example (`http://<user>:<pass>@...`) in source + packaged SKILL triggers userinfo pattern.
 - Trust boundary check: offline/local-only boundary is explicit; catalog URLs are marked metadata-only.
 
+### Phase B - Fix Plan
+- Finding P1 (low): source + packaged SKILL use `http://<user>:<pass>@...` credential-shaped placeholder that triggers secret-pattern scans.
+- Minimal reversible fix: replace with `http://<credentials>@...` in both source and packaged SKILL mirrors.
+- No high/medium findings.
+
