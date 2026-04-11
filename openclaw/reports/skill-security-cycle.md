@@ -215,3 +215,8 @@ Frontmatter + reference verification:
 - Secret/local-path leakage findings: 0
 - Non-loopback URL hits: 3512 (catalog metadata mirrors to my.prioritypass.com; runtime files remain loopback-only)
 - Runtime trust-boundary check: localhost/127.0.0.1-only endpoints verified in runtime config/scripts.
+
+### Phase B - Fix Plan
+- Findings classification: no high/medium secret leakage findings.
+- Low: non-loopback URL hits are dominated by bundled catalog metadata (`assets/catalog.json`) and packaged mirror references; runtime boundaries remain local.
+- Planned minimal reversible improvement (1/1): add empty-label loopback lookalike guardrail (`.localhost`, `localhost..`, `127..0.0.1`) in source + packaged SKILL mirrors.
