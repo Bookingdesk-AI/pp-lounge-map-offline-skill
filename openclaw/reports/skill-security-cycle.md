@@ -229,3 +229,8 @@ Frontmatter + reference verification:
 - Post-scan non-loopback URL hits: 3512 (documentation/data-only scope retained).
 - SKILL frontmatter check: pass.
 - Referenced file existence check: pass .
+
+### Phase E - Issue Cycle
+- Repeated blocker threshold (>=3 runs): not triggered in this run.
+- PERSISTENT_BLOCKER: not active.
+- Mutation mode: normal bounded mode retained.
