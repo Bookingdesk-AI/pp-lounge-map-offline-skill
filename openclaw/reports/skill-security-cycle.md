@@ -220,3 +220,6 @@ Frontmatter + reference verification:
 - Findings classification: no high/medium secret leakage findings.
 - Low: non-loopback URL hits are dominated by bundled catalog metadata (`assets/catalog.json`) and packaged mirror references; runtime boundaries remain local.
 - Planned minimal reversible improvement (1/1): add empty-label loopback lookalike guardrail (`.localhost`, `localhost..`, `127..0.0.1`) in source + packaged SKILL mirrors.
+
+### Phase C - Improvement Shipped
+- Improvement shipped (1/1): tightened URL-obfuscation guidance in source+packaged SKILL mirrors (credential placeholder normalization + empty-label/repeated-dot hostname-obfuscation guardrail).

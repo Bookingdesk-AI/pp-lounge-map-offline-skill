@@ -49,6 +49,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Treat hostname endpoints as local only when the host is exactly `localhost`; require explicit leave-offline confirmation for lookalike or custom hostnames (for example `localhost.localdomain` or `devbox.lan`).
 - Treat Unicode or IDNA/punycode hostname variants (for example homoglyph lookalikes of `localhost` or `xn--` host labels) as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat trailing-dot localhost forms (for example `localhost.`) as out-of-boundary unless the user explicitly asks to leave offline mode.
+- Treat endpoint hosts containing empty DNS labels or repeated-dot separators (for example `.localhost`, `localhost..`, or `127..0.0.1`) as hostname-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat wildcard-DNS loopback aliases (for example `*.nip.io`, `*.sslip.io`, or `*.xip.io`) as non-local unless the user explicitly asks to leave offline mode.
 - Treat endpoint URLs containing control characters or escaped whitespace/newline obfuscation as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint hosts containing bidirectional-control or zero-width Unicode code points (for example `U+200B`, `U+200C`, `U+200D`, `U+202A`-`U+202E`, or `U+2066`-`U+2069`) as hostname-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
@@ -59,7 +60,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - If a local endpoint probe returns an HTTP redirect, do not follow it unless the normalized redirect target remains loopback and preserves the canonical `/mcp` boundary.
 - Treat `url` fields in the bundled catalog as display metadata only; never fetch them in offline mode.
 - If catalog or endpoint URLs must be shown for diagnostics, normalize to origin form and suppress userinfo/query/fragment before logging or responding.
-- Treat endpoint URLs that include URL userinfo (for example `http://<user>:<pass>@localhost/...`) as secret-bearing and out-of-boundary in offline mode; use redacted placeholders instead.
+- Treat endpoint URLs that include URL userinfo (for example `http://<credentials>@localhost/...`) as secret-bearing and out-of-boundary in offline mode; use redacted placeholders instead.
 - Treat endpoint authorities with percent-encoded userinfo delimiters (for example `%40` or `%3A` before `@`) as obfuscated credential-bearing forms and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint authorities with repeated `@` delimiters as credential-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint authorities containing percent-encoded port delimiters (for example `%3A` or `%253A` after host labels) as authority-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
