@@ -191,3 +191,11 @@ Frontmatter + reference verification:
 - Repeating blocker threshold check (>=3 consecutive runs): none triggered.
 - PERSISTENT_BLOCKER: not active.
 - Mutation mode: normal bounded mode retained; no `openclaw/reports/skill-security-issues.md` append required this run.
+## Run cfc50a7c-66f2-4b9f-94a5-c8fc42e8b645 @ 2026-04-11 06:13 UTC
+
+### Phase A - Security Review (Pre)
+- Scope: skills/pp-lounge-map-offline + out/pp-lounge-map-offline-skill
+- High-confidence secret leaks: none found.
+- Scan noise observed: placeholder credential example (`http://<user>:<pass>@...`) in source + packaged SKILL triggers userinfo pattern.
+- Trust boundary check: offline/local-only boundary is explicit; catalog URLs are marked metadata-only.
+
