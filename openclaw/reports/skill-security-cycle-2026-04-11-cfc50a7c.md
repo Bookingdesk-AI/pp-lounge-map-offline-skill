@@ -13,3 +13,10 @@
 ### Trust boundary check
 - Offline skill boundary remains local-only and read-only; no non-loopback operational endpoint instructions detected in source or packaged skill docs.
 - Pre-scan status: boundary policy appears intact.
+
+## Phase B — Fix Plan
+
+- Findings: no direct secret leakage findings in scoped files.
+- Severity classification: **low** (hardening opportunity only).
+- Planned minimal reversible fix (1 change): add an explicit guardrail that treats Unicode whitespace in endpoint authorities/hosts as hostname-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
+- Reversibility: single-line policy-doc change mirrored in source + packaged SKILL docs.
