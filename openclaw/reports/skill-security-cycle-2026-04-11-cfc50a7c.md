@@ -27,3 +27,12 @@
 - Files updated: `skills/pp-lounge-map-offline/SKILL.md`, `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md`.
 - Scope remains documentation-only and reversible.
 - Batch accounting: 1 improvement consumed in this repo.
+
+## Phase D — Review + Verify
+
+### Post-edit re-scan
+- Post-edit secret scan over source + packaged skill docs found **0** high-confidence credential leaks.
+
+### SKILL frontmatter + references
+- Source and packaged SKILL frontmatter blocks detected and structurally valid.
+- Referenced relative files from both SKILL markdown link sets exist (`missing_refs: []` for source + packaged).
