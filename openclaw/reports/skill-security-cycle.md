@@ -204,3 +204,14 @@ Frontmatter + reference verification:
 - Minimal reversible fix: replace with `http://<credentials>@...` in both source and packaged SKILL mirrors.
 - No high/medium findings.
 
+### Phase C - Improvement Shipped
+- Improvement (1/1 for repo): replaced credential-shaped examples with `http://<credentials>@...` in both source and packaged SKILL files to keep mirror parity and reduce secret-scan false positives.
+
+
+## Run 2026-04-11T0313 (pp-lounge-map)
+### Phase A - Security Snapshot (Pre)
+- Scope: `skills/pp-lounge-map-offline + out/pp-lounge-map-offline-skill`
+- Files scanned: 24
+- Secret/local-path leakage findings: 0
+- Non-loopback URL hits: 3512 (catalog metadata mirrors to my.prioritypass.com; runtime files remain loopback-only)
+- Runtime trust-boundary check: localhost/127.0.0.1-only endpoints verified in runtime config/scripts.
