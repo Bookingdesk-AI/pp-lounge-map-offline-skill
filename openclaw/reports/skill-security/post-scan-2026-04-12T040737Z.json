@@ -1,0 +1,46 @@
+{
+  "run": "2026-04-12T040737Z",
+  "repo": "/Users/kh/Coding/pp-lounge-map",
+  "secretScanMatches": [],
+  "frontmatter": {
+    "skills/pp-lounge-map-offline/SKILL.md": {
+      "valid": true
+    },
+    "out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md": {
+      "valid": true
+    }
+  },
+  "missingReferences": [],
+  "checkedReferences": [
+    {
+      "skill": "skills/pp-lounge-map-offline/SKILL.md",
+      "ref": "references/mcp.md",
+      "exists": true
+    },
+    {
+      "skill": "skills/pp-lounge-map-offline/SKILL.md",
+      "ref": "references/safety.md",
+      "exists": true
+    },
+    {
+      "skill": "skills/pp-lounge-map-offline/SKILL.md",
+      "ref": "references/publishing.md",
+      "exists": true
+    },
+    {
+      "skill": "out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md",
+      "ref": "references/mcp.md",
+      "exists": true
+    },
+    {
+      "skill": "out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md",
+      "ref": "references/safety.md",
+      "exists": true
+    },
+    {
+      "skill": "out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md",
+      "ref": "references/publishing.md",
+      "exists": true
+    }
+  ]
+}
