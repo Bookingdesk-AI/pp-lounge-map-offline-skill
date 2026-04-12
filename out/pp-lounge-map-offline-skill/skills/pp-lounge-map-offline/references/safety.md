@@ -28,3 +28,10 @@ If a request needs fresher data than the bundled snapshot provides, say that the
 
 Packaging hygiene:
 - Keep this safety file synchronized with `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/references/safety.md` before publishing to avoid safety-policy drift between source and packaged bundles.
+
+Self-check command:
+- Before publish, run a scoped secret/path scan and report metadata only (path + line), never raw secret-like substrings:
+
+```bash
+rg -n --hidden -S '(AKIA[0-9A-Z]{16}|-----BEGIN (RSA|EC|OPENSSH|PGP|PRIVATE) KEY-----|xox[baprs]-|ghp_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{20,}|AIza[0-9A-Za-z\-_]{35}|sk-[A-Za-z0-9]{20,}|(?i)(api[_-]?key|secret|token|password)\s*[:=]\s*[^ ]+|/Users/[A-Za-z0-9._-]+)' skills/pp-lounge-map-offline out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline
+```
