@@ -18,3 +18,11 @@
 - Planned hardening improvement (low, reversible): add an explicit guardrail to redact `/Volumes/...` absolute local paths in standard responses (unless user explicitly requests local-debug path detail).
 - Rationale: complements existing `/Users`, `/home`, `/private/{var,tmp}` protections and reduces accidental disclosure from external drives.
 - Packaging note: mirror the same SKILL guardrail in `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md` to keep source/package policy aligned.
+
+## Phase C — Improvement Applied (bounded)
+
+- Applied 1/1 planned hardening change for this repo.
+- Change: expanded absolute-path redaction guardrail to explicitly include `/Volumes/...` alongside existing local absolute-path examples.
+- Files changed:
+  - `skills/pp-lounge-map-offline/SKILL.md`
+  - `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md`
