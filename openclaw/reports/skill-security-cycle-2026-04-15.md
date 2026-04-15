@@ -10,3 +10,8 @@
 - Personal path leakage scan: only generic placeholder examples (`/Users/...`, `/home/...`, `/private/var/...`) in policy guidance; no host-specific personal path values.
 - Trust boundary review: local-only/offline guardrails are present in both source and packaged SKILL docs.
 - Catalog contains many external `url` fields in bundled JSON data; current policy correctly treats these as static metadata (not outbound-call instructions).
+
+## Phase B - Fix Plan
+- Findings: no high/medium secret leakage findings in source/packaged skill docs.
+- Improvement candidate (low, defense-in-depth): expand explicit scheme denylist text to include `javascript:` and `ftp:` endpoint forms in both source + packaged SKILL docs.
+- Reversible fix plan: edit one guardrail bullet and mirror the change across `skills/pp-lounge-map-offline` and `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline`.
