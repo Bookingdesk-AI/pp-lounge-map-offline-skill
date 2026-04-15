@@ -21,3 +21,8 @@
   - `skills/pp-lounge-map-offline/SKILL.md`
   - `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md`
 - Change type: documentation-only hardening, reversible in one-line mirrored edit.
+
+## Phase D - Review + Verify (Post)
+- Post-edit secret scan: 0 credential-pattern hits in source and packaged skill folders.
+- Frontmatter check: source + packaged `SKILL.md` frontmatter both valid (`name` + `description` present).
+- Reference check: all relative links from both source + packaged `SKILL.md` files resolve to existing files.
