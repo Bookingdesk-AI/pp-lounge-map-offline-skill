@@ -26,3 +26,8 @@
 - Post-edit secret scan: 0 credential-pattern hits in source and packaged skill folders.
 - Frontmatter check: source + packaged `SKILL.md` frontmatter both valid (`name` + `description` present).
 - Reference check: all relative links from both source + packaged `SKILL.md` files resolve to existing files.
+
+## Phase E - Issue Cycle
+- Repeated blocker threshold check (>=3 consecutive runs): not triggered.
+- PERSISTENT_BLOCKER status: not active.
+- Action: no blocker note appended to `openclaw/reports/skill-security-issues.md`; continue normal bounded mutation mode.
