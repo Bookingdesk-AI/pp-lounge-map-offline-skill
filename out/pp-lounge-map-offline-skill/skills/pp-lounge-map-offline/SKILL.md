@@ -56,7 +56,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Treat endpoint hosts containing bidirectional-control or zero-width Unicode code points (for example `U+200B`, `U+200C`, `U+200D`, `U+202A`-`U+202E`, or `U+2066`-`U+2069`) as hostname-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint URLs containing encoded NUL or encoded line-break bytes (for example `%00`, `%0d`, or `%0a`) as parser-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat scheme-relative endpoint URLs (for example `//host:port/path`) as out-of-boundary unless the user explicitly asks to leave offline mode.
-- Require explicit local transport schemes (`stdio`, `http`, `https`) and loopback hosts; treat `ws`/`wss`/`data`/`blob`/scheme-less endpoint forms as out-of-boundary unless the user explicitly asks to leave offline mode.
+- Require explicit local transport schemes (`stdio`, `http`, `https`) and loopback hosts; treat `ws`/`wss`/`data`/`blob`/`javascript`/`ftp`/scheme-less endpoint forms as out-of-boundary unless the user explicitly asks to leave offline mode.
 - For `http`/`https` local endpoints, require the canonical MCP path `/mcp` after normalization; treat alternate or encoded path variants as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat loopback MCP endpoint ports outside the expected local default (`8788`) as trust-boundary sensitive; require explicit user confirmation before use to avoid hitting unrelated local services.
 - If a local endpoint probe returns an HTTP redirect, do not follow it unless the normalized redirect target remains loopback and preserves the canonical `/mcp` boundary.

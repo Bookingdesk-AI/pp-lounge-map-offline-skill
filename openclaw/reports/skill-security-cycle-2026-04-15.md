@@ -15,3 +15,9 @@
 - Findings: no high/medium secret leakage findings in source/packaged skill docs.
 - Improvement candidate (low, defense-in-depth): expand explicit scheme denylist text to include `javascript:` and `ftp:` endpoint forms in both source + packaged SKILL docs.
 - Reversible fix plan: edit one guardrail bullet and mirror the change across `skills/pp-lounge-map-offline` and `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline`.
+
+## Phase C - Improve (Shipped)
+- Improvement shipped (1/1 for repo): expanded local endpoint scheme denylist to include `javascript:` and `ftp:` in both source and packaged SKILL docs.
+  - `skills/pp-lounge-map-offline/SKILL.md`
+  - `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md`
+- Change type: documentation-only hardening, reversible in one-line mirrored edit.
