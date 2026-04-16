@@ -43,6 +43,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Treat non-loopback literal IP endpoint hosts (for example RFC1918 private ranges, link-local ranges, or IPv6 ULA ranges) as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat obfuscated loopback endpoint hosts (for example integer/octal/hex IP literals, IPv4-mapped aliases, or percent-encoded host forms) as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint hosts with encoded host-label separators (for example `%2e` or `%252e` used in place of `.`) as hostname-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
+- Treat endpoint hosts that mix raw and encoded host-label separators (for example `local.%252ehost` or `local%2ehost`) as hostname-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint hosts containing Unicode dot-equivalent host separators (for example `U+3002`, `U+FF0E`, or `U+FF61`) as hostname-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat shorthand loopback IPv4 host forms (for example `127.1` or `127.0.1`) as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat IPv6 loopback zone-index host forms (for example `[::1%lo0]`) as out-of-boundary unless the user explicitly asks to leave offline mode.
