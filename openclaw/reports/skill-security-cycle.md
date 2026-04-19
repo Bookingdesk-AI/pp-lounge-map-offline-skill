@@ -242,3 +242,9 @@ Frontmatter + reference verification:
 - Secret scan result: no credential-like hard-secret matches found.
 - Personal path scan result: only generic placeholder examples found in SKILL.md (`/Users/...`, `/home/...`, `/private/var/...`) used as defensive guidance.
 - Trust-boundary result: offline-only/local transport restrictions are explicit in source and packaged skill copies.
+
+## Run 2026-04-19T03:46:00Z - Phase B: Fix Plan
+- Findings:
+  - None (no high/medium/low secret leakage findings).
+- Planned hardening improvement (low risk, reversible):
+  - Add a guardrail that requires redacting `Authorization`, `Cookie`, and `Set-Cookie` header values from logs/diagnostics before sharing output (source + packaged skill copy).
