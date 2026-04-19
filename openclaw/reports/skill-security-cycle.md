@@ -248,3 +248,9 @@ Frontmatter + reference verification:
   - None (no high/medium/low secret leakage findings).
 - Planned hardening improvement (low risk, reversible):
   - Add a guardrail that requires redacting `Authorization`, `Cookie`, and `Set-Cookie` header values from logs/diagnostics before sharing output (source + packaged skill copy).
+
+## Run 2026-04-19T03:46:00Z - Phase C: Improvement Shipped
+- Added one reversible guardrail in both source/package skill copies:
+  - `skills/pp-lounge-map-offline/SKILL.md`
+  - `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md`
+  - Guardrail: redact credential-bearing `Authorization`/`Cookie`/`Set-Cookie` header values before sharing diagnostics.
