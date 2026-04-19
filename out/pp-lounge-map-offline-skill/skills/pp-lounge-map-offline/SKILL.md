@@ -87,7 +87,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Avoid exposing absolute local bundle paths (for example `<absolute-local-path>`, `/Users/...`, `/home/...`, `/private/var/...`, or `/Volumes/...`) in standard answers; provide relative bundle paths unless debugging is explicitly requested.
 - If the user provides command snippets containing credential values (token, password, key), replace values with placeholders before echoing examples.
 - Avoid broad environment/config dumps (`env`, `printenv`, full `.env` cat) in troubleshooting; request only scoped variable names and redact values with placeholders.
-- Redact credential-bearing header values (for example `Authorization`, `Cookie`, and `Set-Cookie`) before sharing command output, traces, or diagnostics.
+- Redact credential-bearing header values (for example `Authorization`, `Proxy-Authorization`, `Cookie`, and `Set-Cookie`) before sharing command output, traces, or diagnostics.
 - Before publish, verify `references/safety.md` stays synchronized with `skills/pp-lounge-map-offline/references/safety.md` to prevent source/package policy drift.
 - If the bundled snapshot does not contain the needed answer, say so instead of inventing newer data.
 
