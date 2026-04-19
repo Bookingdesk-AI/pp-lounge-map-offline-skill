@@ -254,3 +254,8 @@ Frontmatter + reference verification:
   - `skills/pp-lounge-map-offline/SKILL.md`
   - `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md`
   - Guardrail: redact credential-bearing `Authorization`/`Cookie`/`Set-Cookie` header values before sharing diagnostics.
+
+## Run 2026-04-19T03:46:00Z - Phase D: Review + Verify
+- Post-edit secret scan: no hard-secret leakage patterns found in source/package copies.
+- Frontmatter validation: `name` + `description` present with valid `---` delimiters in both SKILL files.
+- Reference validation: relative refs resolve for both source/package copies (`references/mcp.md`, `references/safety.md`, `references/publishing.md`).
