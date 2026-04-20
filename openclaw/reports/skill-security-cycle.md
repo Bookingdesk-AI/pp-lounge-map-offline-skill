@@ -269,3 +269,8 @@ Frontmatter + reference verification:
 - Findings: no credential/secret leakage indicators found (0 high, 0 medium, 0 low).
 - Trust boundary check: offline safety policy remains strict (local/stdio transports only by default; hosted endpoints disallowed unless explicit leave-offline confirmation).
 - Trust-boundary notes: catalog  fields remain treated as static dataset metadata (not execution targets).
+### Phase B - Fix Plan [2026-04-20 05:15 UTC]
+- Finding set: no secret leakage findings in source or packaged offline skill folders.
+- Severity classification: high=0, medium=0, low=0.
+- Planned hardening improvement (minimal + reversible): add one synchronized guardrail in source + packaged SKILL docs to classify percent-encoded ampersand authority delimiters (`%26`, `%2526`) as parameter-smuggling obfuscation and out-of-boundary unless explicit leave-offline confirmation is provided.
+- Rollback plan: remove one synced guardrail bullet from source + packaged `skills/pp-lounge-map-offline/SKILL.md`.
