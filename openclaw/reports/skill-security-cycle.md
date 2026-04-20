@@ -274,3 +274,8 @@ Frontmatter + reference verification:
 - Severity classification: high=0, medium=0, low=0.
 - Planned hardening improvement (minimal + reversible): add one synchronized guardrail in source + packaged SKILL docs to classify percent-encoded ampersand authority delimiters (`%26`, `%2526`) as parameter-smuggling obfuscation and out-of-boundary unless explicit leave-offline confirmation is provided.
 - Rollback plan: remove one synced guardrail bullet from source + packaged `skills/pp-lounge-map-offline/SKILL.md`.
+### Phase C - Improve (Shipped) [2026-04-20 05:15 UTC]
+- Improvement shipped (1/1 repo, reversible): added synchronized source/package guardrail coverage for percent-encoded ampersand authority delimiters (`%26`, `%2526`) as parameter-smuggling obfuscation unless explicit leave-offline confirmation is provided.
+- Files changed:
+  - skills/pp-lounge-map-offline/SKILL.md
+  - out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/SKILL.md
