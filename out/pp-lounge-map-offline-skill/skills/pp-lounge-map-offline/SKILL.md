@@ -64,6 +64,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Treat `url` fields in the bundled catalog as display metadata only; never fetch them in offline mode.
 - If catalog or endpoint URLs must be shown for diagnostics, normalize to origin form and suppress userinfo/query/fragment before logging or responding.
 - Treat endpoint URLs that include URL userinfo (for example `http://<credentials>@localhost/...`) as secret-bearing and out-of-boundary in offline mode; use redacted placeholders instead.
+- Avoid exposing absolute local filesystem paths in normal answers; prefer repo-relative paths unless the user explicitly asks for local debugging details.
 - Treat endpoint authorities with percent-encoded userinfo delimiters (for example `%40` or `%3A` before `@`) as obfuscated credential-bearing forms and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint authorities with repeated `@` delimiters as credential-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint authorities containing percent-encoded port delimiters (for example `%3A` or `%253A` after host labels) as authority-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
@@ -77,6 +78,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Treat endpoint authorities containing Unicode compatibility characters whose NFKC/NFKD normalization can collapse into structural delimiters (`@`, `:`, `/`, `\`, `.`, `?`, `#`) as delimiter-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint URLs as out-of-boundary when one-pass or two-pass URL decoding introduces new authority delimiters (`@`, `:`, `/`, `\`) or changes host/scheme semantics unless the user explicitly asks to leave offline mode.
 - Treat endpoint URLs as out-of-boundary when one-pass or two-pass URL decoding introduces query (`?`) or fragment (`#`) delimiters before the canonical local path boundary unless the user explicitly asks to leave offline mode.
+- Treat endpoint hosts containing percent-encoded dotless-decimal shorthand forms (for example `%31%32%37.1`) as hostname-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - If mixed raw/encoded query and fragment delimiters (for example `%3F` with `%23`, or `?` with `%23`) could change delimiter precedence before the canonical local path boundary across decode passes, classify the diagnostic reason as `delimiter-precedence-ambiguity` and treat the endpoint as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint URL path segments that look token-like (for example JWT-style `x.y.z` blobs or long opaque IDs) as secret-bearing; redact those segments before logging or echoing diagnostics.
 - Treat endpoint URLs containing encoded or mixed dot-segment traversal forms (for example `%2e`, `%2e%2e`, `/./`, or `/../`) as path-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
@@ -89,8 +91,8 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - If the user provides command snippets containing credential values (token, password, key), replace values with placeholders before echoing examples.
 - Avoid broad environment/config dumps (`env`, `printenv`, full `.env` cat) in troubleshooting; request only scoped variable names and redact values with placeholders.
 - Redact credential-bearing header values (for example `Authorization`, `Proxy-Authorization`, `Cookie`, and `Set-Cookie`) before sharing command output, traces, or diagnostics.
-- Before publish, verify `references/safety.md` stays synchronized with `skills/pp-lounge-map-offline/references/safety.md` to prevent source/package policy drift.
 - If the bundled snapshot does not contain the needed answer, say so instead of inventing newer data.
+- Before publish, verify `references/safety.md` stays synchronized with `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/references/safety.md` to prevent source/package policy drift.
 
 ## Available workflows
 
