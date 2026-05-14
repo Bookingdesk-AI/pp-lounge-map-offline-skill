@@ -92,6 +92,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Avoid broad environment/config dumps (`env`, `printenv`, full `.env` cat) in troubleshooting; request only scoped variable names and redact values with placeholders.
 - Redact credential-bearing header values (for example `Authorization`, `Proxy-Authorization`, `Cookie`, and `Set-Cookie`) before sharing command output, traces, or diagnostics.
 - Before publish/update, run a bounded secret scan on `skills/pp-lounge-map-offline` (for example `rg -n --hidden --no-ignore '(AKIA|AIza|ghp_|xox[baprs]-|BEGIN .* PRIVATE KEY|token\s*=|api[_-]?key\s*=|secret\s*=)'`) and fail closed until hits are triaged.
+- When summarizing secret-scan outcomes, provide only aggregate hit counts and file/line metadata; never include matched credential-like substrings in diagnostics.
 - If the bundled snapshot does not contain the needed answer, say so instead of inventing newer data.
 - Before publish, verify `references/safety.md` stays synchronized with `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/references/safety.md` to prevent source/package policy drift.
 
