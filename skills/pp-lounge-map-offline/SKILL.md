@@ -94,7 +94,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Before publish/update, run a bounded secret scan on `skills/pp-lounge-map-offline` (for example `rg -n --hidden --no-ignore '(AKIA|AIza|ghp_|xox[baprs]-|BEGIN .* PRIVATE KEY|token\s*=|api[_-]?key\s*=|secret\s*=)'`) and fail closed until hits are triaged.
 - When summarizing secret-scan outcomes, provide only aggregate hit counts and file/line metadata; never include matched credential-like substrings in diagnostics.
 - If the bundled snapshot does not contain the needed answer, say so instead of inventing newer data.
-- Before publish, verify `references/safety.md` stays synchronized with `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/references/safety.md` to prevent source/package policy drift.
+- Before publish, if a packaged mirror exists under `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/references/`, verify `safety.md` stays synchronized; if the mirror is absent in current repo state, skip this check without failing the offline source review.
 - Before publish, verify `references/mcp.md` and `references/publishing.md` are present in both source and packaged skill paths to prevent offline/runtime guidance drift.
 
 ## Available workflows
