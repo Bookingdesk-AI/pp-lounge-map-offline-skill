@@ -17,3 +17,10 @@
 ## 2026-05-14 Run (Phase E: Issue Cycle)
 - No blocker repeated >=3 runs in this pass.
 - Persistent blocker policy not triggered.
+
+## 2026-05-18 security cycle
+- Scope: `skills/pp-lounge-map-offline`, `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline`
+- Secret scan: no credential/private-key hits.
+- Trust-boundary review: offline/local transport boundary is explicit and restrictive.
+- Finding (low): `assets/catalog.json` contains many `https://my.prioritypass.com` URLs as static dataset metadata; no runtime fetch behavior detected.
+- Improvement shipped: recorded this audit note for recurring review trail.
