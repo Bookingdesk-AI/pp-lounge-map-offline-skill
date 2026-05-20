@@ -38,6 +38,7 @@ node skills/pp-lounge-map-offline/scripts/print-offline-mcp-config.mjs
 - Before publish, verify `SKILL.md` frontmatter parses and referenced files resolve in both source (`skills/pp-lounge-map-offline`) and packaged mirror (`out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline`).
 - No runtime internet fetch required
 - No secret/API key requirement
+- Treat non-localhost/offline MCP endpoints as out-of-boundary defaults unless the user explicitly approves override.
 - Read-only query workflows
 
 ## Keywords

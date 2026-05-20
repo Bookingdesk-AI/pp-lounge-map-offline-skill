@@ -299,3 +299,7 @@ Frontmatter + reference verification:
 - Severity: LOW (no live secret leakage found; opportunity hardening only).
 - Minimal reversible fix: add explicit pre-publish checklist item to validate no URL userinfo (`user:pass@host`) and no token-like query values in examples.
 - Rollback: single-line doc removal in README if needed.
+
+## 2026-05-19 Phase C - Improvement Applied
+- Improvement: added explicit non-localhost endpoint trust-boundary guardrail to `skills/pp-lounge-map-offline/README.md`.
+- Scope: documentation hardening only; reversible via single-line revert.
