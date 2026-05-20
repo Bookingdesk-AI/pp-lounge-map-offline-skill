@@ -294,3 +294,8 @@ Frontmatter + reference verification:
 - Secret-leak regex scan executed for key/token/password/private-key/personal-path patterns.
 - Result: no concrete secret material detected; matches are policy text and scan instructions.
 - Trust boundary check: localhost/offline-only constraints are present in SKILL/README guidance.
+
+## 2026-05-19 Phase B - Fix Plan
+- Severity: LOW (no live secret leakage found; opportunity hardening only).
+- Minimal reversible fix: add explicit pre-publish checklist item to validate no URL userinfo (`user:pass@host`) and no token-like query values in examples.
+- Rollback: single-line doc removal in README if needed.
