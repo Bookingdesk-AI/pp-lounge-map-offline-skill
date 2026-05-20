@@ -288,3 +288,9 @@ Frontmatter + reference verification:
 - Repeated blocker threshold check (>=3 consecutive runs): none triggered.
 - `PERSISTENT_BLOCKER` state: not active.
 - Mutation mode: normal bounded mode retained; no blocker-escalation append to `openclaw/reports/skill-security-issues.md` required this run.
+
+## 2026-05-19 Phase A - Security Review
+- Scope: offline travel skill folders only.
+- Secret-leak regex scan executed for key/token/password/private-key/personal-path patterns.
+- Result: no concrete secret material detected; matches are policy text and scan instructions.
+- Trust boundary check: localhost/offline-only constraints are present in SKILL/README guidance.
