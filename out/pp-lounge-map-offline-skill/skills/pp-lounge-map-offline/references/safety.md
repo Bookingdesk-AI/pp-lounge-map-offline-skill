@@ -14,6 +14,7 @@ It must not:
 - use non-loopback transports for MCP access (allow only `stdio`, `127.0.0.1`, or `localhost` unless the user explicitly exits offline mode)
 - treat wildcard-DNS loopback aliases (for example `*.nip.io`, `*.sslip.io`, `*.xip.io`) as non-local unless the user explicitly exits offline mode
 - bind helper scripts/services to non-loopback hosts (for example `0.0.0.0`) unless the user explicitly approves leaving offline trust boundaries
+- treat scheme-relative endpoint forms (for example `//localhost:8787/mcp`) as out-of-boundary unless the user explicitly exits offline mode
 - fetch network resources
 - ask for secrets
 - trigger deploys or data rebuilds
