@@ -9,3 +9,6 @@
 - Finding classification: no confirmed secret leakage; localhost/offline trust boundaries intact.
 - Severity: LOW (quality hardening opportunity only).
 - Planned minimal reversible fix: add one repository-local security scan helper script to standardize future checks.
+
+## Phase C (Improve)
+- Added `openclaw/scripts/scan-offline-skill-secrets.sh` as a small reversible hardening helper for consistent local secret scans.
