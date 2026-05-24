@@ -12,3 +12,7 @@
 
 ## Phase C (Improve)
 - Added `openclaw/scripts/scan-offline-skill-secrets.sh` as a small reversible hardening helper for consistent local secret scans.
+
+## Phase D (Review + Verify)
+- Re-ran secret scan helper after edits.
+- Re-verified frontmatter structure and checked referenced files exist.
