@@ -35,7 +35,7 @@ node skills/pp-lounge-map-offline/scripts/print-offline-mcp-config.mjs
 - Uses bundled snapshot data only
 - Catalog `url` fields are metadata only (never fetch in offline mode); strip query strings and credential-like fragments before quoting.
 - For automated leak scans, treat catalog URL fields as static dataset content and only escalate URL findings when userinfo or credential-like query parameters are present.
-- Before publish, verify `SKILL.md` frontmatter parses and referenced files resolve in both source (`skills/pp-lounge-map-offline`) and packaged mirror (`out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline`).
+- Before publish, verify `SKILL.md` frontmatter parses and referenced files resolve in source (`skills/pp-lounge-map-offline`); if packaged mirror path (`out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline`) exists, run the same check there.
 - Keep secret/path scans bounded to skill docs/config paths (`*.md`, `*.yaml`, `*.yml`, `*.json`) and run dataset-content audits separately to prevent large snapshot payload noise from masking real leaks.
 - No runtime internet fetch required
 - No secret/API key requirement
