@@ -67,6 +67,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - If catalog or endpoint URLs must be shown for diagnostics, normalize to origin form and suppress userinfo/query/fragment before logging or responding.
 - Treat endpoint URLs that include URL userinfo (for example `http://<credentials>@localhost/...`) as secret-bearing and out-of-boundary in offline mode; use redacted placeholders instead.
 - Avoid exposing absolute local filesystem paths in normal answers; prefer repo-relative paths unless the user explicitly asks for local debugging details.
+- Before publish/update, verify SKILL frontmatter has non-empty `name` and `description` keys so offline bundles stay policy-complete.
 - Treat endpoint authorities with percent-encoded userinfo delimiters (for example `%40` or `%3A` before `@`) as obfuscated credential-bearing forms and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint authorities with repeated `@` delimiters as credential-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint authorities containing percent-encoded port delimiters (for example `%3A` or `%253A` after host labels) as authority-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
