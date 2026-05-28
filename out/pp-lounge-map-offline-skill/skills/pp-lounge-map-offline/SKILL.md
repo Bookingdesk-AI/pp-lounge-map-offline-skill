@@ -33,6 +33,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 
 ## Safety boundary
 
+- This skill is offline/local-only: no OAuth flows, no sensitive credential collection, and no purchase/payment execution.
 - This skill is local and read-only at runtime.
 - It must not use network access (except local process startup/dependency install done by operator).
 - It must not ask for API keys or secrets.
@@ -97,6 +98,8 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - If the bundled snapshot does not contain the needed answer, say so instead of inventing newer data.
 - Before publish, if a packaged mirror exists under `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/references/`, verify `safety.md` and `SKILL.md` both stay synchronized; if the mirror is absent in current repo state, skip this check without failing the offline source review.
 - Before publish, verify `references/mcp.md` and `references/publishing.md` are present in both source and packaged skill paths to prevent offline/runtime guidance drift.
+- Before publish/update, verify SKILL frontmatter has non-empty `name` and `description` keys so offline bundles stay policy-complete.
+- Before publish/update, run markdown-link validation from the skill directory and fail closed if any relative target is missing (do not rely on stale cached manifests).
 
 ## Available workflows
 
