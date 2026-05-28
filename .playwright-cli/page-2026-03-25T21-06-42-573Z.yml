@@ -1,0 +1,433 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6]: Priority Pass
+      - heading "Global Lounge Atlas" [level=1] [ref=e7]
+      - paragraph [ref=e8]: Compare 1754 lounges across 140 countries.
+    - generic [ref=e9]:
+      - generic [ref=e10]: Search airport, city, or lounge
+      - textbox "Search airport, city, or lounge" [ref=e11]:
+        - /placeholder: "Example: AUA, New York, Plaza Premium"
+  - main [ref=e12]:
+    - generic [ref=e860]:
+      - generic [ref=e862]:
+        - generic:
+          - generic:
+            - button "3" [ref=e1041] [cursor=pointer]:
+              - generic [ref=e1042]: "3"
+            - button "37" [ref=e1043] [cursor=pointer]:
+              - generic [ref=e1044]: "37"
+            - button "2" [ref=e1045] [cursor=pointer]:
+              - generic [ref=e1046]: "2"
+            - button "20" [ref=e1047] [cursor=pointer]:
+              - generic [ref=e1048]: "20"
+            - button "73" [ref=e1049] [cursor=pointer]:
+              - generic [ref=e1050]: "73"
+            - button "2" [ref=e1051] [cursor=pointer]:
+              - generic [ref=e1052]: "2"
+            - button "5" [ref=e1053] [cursor=pointer]:
+              - generic [ref=e1054]: "5"
+            - button [ref=e1055] [cursor=pointer]
+            - button "23" [ref=e1057] [cursor=pointer]:
+              - generic [ref=e1058]: "23"
+            - button "3" [ref=e1059] [cursor=pointer]:
+              - generic [ref=e1060]: "3"
+            - button "3" [ref=e1061] [cursor=pointer]:
+              - generic [ref=e1062]: "3"
+            - button "8" [ref=e1063] [cursor=pointer]:
+              - generic [ref=e1064]: "8"
+            - button "2" [ref=e1065] [cursor=pointer]:
+              - generic [ref=e1066]: "2"
+            - button "5" [ref=e1067] [cursor=pointer]:
+              - generic [ref=e1068]: "5"
+            - button "26" [ref=e1069] [cursor=pointer]:
+              - generic [ref=e1070]: "26"
+            - button "15" [ref=e1071] [cursor=pointer]:
+              - generic [ref=e1072]: "15"
+            - button "32" [ref=e1073] [cursor=pointer]:
+              - generic [ref=e1074]: "32"
+            - button "26" [ref=e1075] [cursor=pointer]:
+              - generic [ref=e1076]: "26"
+            - button "131" [ref=e1077] [cursor=pointer]:
+              - generic [ref=e1078]: "131"
+            - button "13" [ref=e1079] [cursor=pointer]:
+              - generic [ref=e1080]: "13"
+            - button "92" [ref=e1081] [cursor=pointer]:
+              - generic [ref=e1082]: "92"
+            - button "108" [ref=e1083] [cursor=pointer]:
+              - generic [ref=e1084]: "108"
+            - button "59" [ref=e1085] [cursor=pointer]:
+              - generic [ref=e1086]: "59"
+            - button "19" [ref=e1087] [cursor=pointer]:
+              - generic [ref=e1088]: "19"
+            - button "52" [ref=e1089] [cursor=pointer]:
+              - generic [ref=e1090]: "52"
+            - button "39" [ref=e1091] [cursor=pointer]:
+              - generic [ref=e1092]: "39"
+            - button "145" [ref=e1093] [cursor=pointer]:
+              - generic [ref=e1094]: "145"
+            - button "67" [ref=e1095] [cursor=pointer]:
+              - generic [ref=e1096]: "67"
+            - button "4" [ref=e1097] [cursor=pointer]:
+              - generic [ref=e1098]: "4"
+            - button "70" [ref=e1099] [cursor=pointer]:
+              - generic [ref=e1100]: "70"
+            - button "20" [ref=e1101] [cursor=pointer]:
+              - generic [ref=e1102]: "20"
+            - button "41" [ref=e1103] [cursor=pointer]:
+              - generic [ref=e1104]: "41"
+            - button "3" [ref=e1105] [cursor=pointer]:
+              - generic [ref=e1106]: "3"
+            - button "87" [ref=e1107] [cursor=pointer]:
+              - generic [ref=e1108]: "87"
+            - button "46" [ref=e1109] [cursor=pointer]:
+              - generic [ref=e1110]: "46"
+            - button "7" [ref=e1111] [cursor=pointer]:
+              - generic [ref=e1112]: "7"
+            - button "2" [ref=e1113] [cursor=pointer]:
+              - generic [ref=e1114]: "2"
+            - button "57" [ref=e1115] [cursor=pointer]:
+              - generic [ref=e1116]: "57"
+            - button "150" [ref=e1117] [cursor=pointer]:
+              - generic [ref=e1118]: "150"
+            - button "218" [ref=e1119] [cursor=pointer]:
+              - generic [ref=e1120]: "218"
+            - button "38" [ref=e1121] [cursor=pointer]:
+              - generic [ref=e1122]: "38"
+        - generic [ref=e945]:
+          - link "Leaflet" [ref=e946] [cursor=pointer]:
+            - /url: https://leafletjs.com
+            - img [ref=e947]
+            - text: Leaflet
+          - text: "| ©"
+          - link "OpenStreetMap" [ref=e951] [cursor=pointer]:
+            - /url: https://www.openstreetmap.org/copyright
+          - text: ©
+          - link "CARTO" [ref=e952] [cursor=pointer]:
+            - /url: https://carto.com/
+      - generic [ref=e953]:
+        - paragraph [ref=e954]: Map guide
+        - list [ref=e955]:
+          - listitem [ref=e956]: Click a cluster to zoom. Matching lounges at one airport expand into a stack.
+          - listitem [ref=e957]: Cluster zoom mode is active.
+          - listitem [ref=e958]: Use Compare to shortlist up to three lounges.
+  - generic [ref=e1123]:
+    - button "Drag sheet" [ref=e1124]:
+      - generic [ref=e1126]: Swipe for more
+    - toolbar "Mobile map actions" [ref=e1127]:
+      - button "Results" [ref=e1128] [cursor=pointer]
+      - button "Filters" [ref=e1129] [cursor=pointer]
+      - button "Details" [disabled] [ref=e1130]
+    - generic [ref=e1131]:
+      - generic [ref=e1132]:
+        - generic [ref=e1133]:
+          - paragraph [ref=e1134]: 1754 lounges visible
+          - button "Open filters" [ref=e1135] [cursor=pointer]
+        - generic [ref=e1136]:
+          - button "EAT" [ref=e1137] [cursor=pointer]
+          - button "LOUNGE" [ref=e1138] [cursor=pointer]
+          - button "REFRESH" [ref=e1139] [cursor=pointer]
+          - button "REST" [ref=e1140] [cursor=pointer]
+          - button "UNWIND" [ref=e1141] [cursor=pointer]
+        - generic [ref=e1142]:
+          - generic [ref=e1143]: "Country: All"
+          - generic [ref=e1144]: "City: All"
+      - generic [ref=e1145]:
+        - generic [ref=e1146]:
+          - generic [ref=e1147]:
+            - paragraph [ref=e1148]: Compare
+            - heading "Shortlist up to 3 lounges" [level=2] [ref=e1149]
+          - generic [ref=e1150]: 0 / 3
+        - paragraph [ref=e1151]: Save lounges to compare opening hours, facilities, and access conditions side by side.
+      - generic [ref=e1152]:
+        - article [ref=e1153]:
+          - button "LOUNGE TIA Scanderbeg VIP Lounge Tirana International Airport Mother Teresa Rinas 24 hours daily Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1154] [cursor=pointer]:
+            - generic [ref=e1155]:
+              - generic [ref=e1156]: LOUNGE
+              - generic [ref=e1157]: TIA
+            - heading "Scanderbeg VIP Lounge" [level=3] [ref=e1158]
+            - paragraph [ref=e1159]: Tirana International Airport Mother Teresa
+            - generic [ref=e1160]:
+              - generic [ref=e1161]: Rinas
+              - generic [ref=e1162]: 24 hours daily
+            - generic [ref=e1163]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1165] [cursor=pointer]
+        - article [ref=e1166]:
+          - 'button "EAT TIA Segafredo Bar Cafe Tirana International Airport Mother Teresa Rinas 24 hours daily Note: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting. Renowned Italian brand that offers a captivating blend of beach-like decor and delectable food and drinks options. With its unique ambiance, this cafe has become a favourite destination among food enthusiasts. Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1167] [cursor=pointer]':
+            - generic [ref=e1168]:
+              - generic [ref=e1169]: EAT
+              - generic [ref=e1170]: TIA
+            - heading "Segafredo Bar Cafe" [level=3] [ref=e1171]
+            - paragraph [ref=e1172]: Tirana International Airport Mother Teresa
+            - generic [ref=e1173]:
+              - generic [ref=e1174]: Rinas
+              - generic [ref=e1175]: "24 hours daily Note: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting. Renowned Italian brand that offers a captivating blend of beach-like decor and delectable food and drinks options. With its unique ambiance, this cafe has become a favourite destination among food enthusiasts."
+            - generic [ref=e1176]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1178] [cursor=pointer]
+        - article [ref=e1179]:
+          - 'button "LOUNGE ANU Executive Lounge V. C. Bird International Airport Osbourn 11:00 - 18:00 daily. Note: Closed: 25 Dec. Air conditioning · Alcoholic drinks (Standard) · Alcoholic drinks (Premium-brand)" [ref=e1180] [cursor=pointer]':
+            - generic [ref=e1181]:
+              - generic [ref=e1182]: LOUNGE
+              - generic [ref=e1183]: ANU
+            - heading "Executive Lounge" [level=3] [ref=e1184]
+            - paragraph [ref=e1185]: V. C. Bird International Airport
+            - generic [ref=e1186]:
+              - generic [ref=e1187]: Osbourn
+              - generic [ref=e1188]: "11:00 - 18:00 daily. Note: Closed: 25 Dec."
+            - generic [ref=e1189]: Air conditioning · Alcoholic drinks (Standard) · Alcoholic drinks (Premium-brand)
+          - button "Compare" [ref=e1191] [cursor=pointer]
+        - article [ref=e1192]:
+          - button "LOUNGE EZE Ezeiza Lounge Ministro Pistarini International Airport Buenos Aires (Ezeiza) 24 hours daily Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1193] [cursor=pointer]:
+            - generic [ref=e1194]:
+              - generic [ref=e1195]: LOUNGE
+              - generic [ref=e1196]: EZE
+            - heading "Ezeiza Lounge" [level=3] [ref=e1197]
+            - paragraph [ref=e1198]: Ministro Pistarini International Airport
+            - generic [ref=e1199]:
+              - generic [ref=e1200]: Buenos Aires (Ezeiza)
+              - generic [ref=e1201]: 24 hours daily
+            - generic [ref=e1202]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1204] [cursor=pointer]
+        - article [ref=e1205]:
+          - button "LOUNGE EZE Star Alliance Lounge Buenos Aires Ministro Pistarini International Airport Buenos Aires (Ezeiza) 24 hours daily Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1206] [cursor=pointer]:
+            - generic [ref=e1207]:
+              - generic [ref=e1208]: LOUNGE
+              - generic [ref=e1209]: EZE
+            - heading "Star Alliance Lounge Buenos Aires" [level=3] [ref=e1210]
+            - paragraph [ref=e1211]: Ministro Pistarini International Airport
+            - generic [ref=e1212]:
+              - generic [ref=e1213]: Buenos Aires (Ezeiza)
+              - generic [ref=e1214]: 24 hours daily
+            - generic [ref=e1215]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1217] [cursor=pointer]
+        - article [ref=e1218]:
+          - button "LOUNGE CRD Comodoro by AMAE Lounge General E. Mosconi Airport Comodoro Rivadavia 06:30 - 22:00 daily Air conditioning · Alcoholic drinks (Standard) · Conference facilities" [ref=e1219] [cursor=pointer]:
+            - generic [ref=e1220]:
+              - generic [ref=e1221]: LOUNGE
+              - generic [ref=e1222]: CRD
+            - heading "Comodoro by AMAE Lounge" [level=3] [ref=e1223]
+            - paragraph [ref=e1224]: General E. Mosconi Airport
+            - generic [ref=e1225]:
+              - generic [ref=e1226]: Comodoro Rivadavia
+              - generic [ref=e1227]: 06:30 - 22:00 daily
+            - generic [ref=e1228]: Air conditioning · Alcoholic drinks (Standard) · Conference facilities
+          - button "Compare" [ref=e1230] [cursor=pointer]
+        - article [ref=e1231]:
+          - button "LOUNGE FTE W Lounge El Calafate Comandante Armando Tola International Airport El Calafate First flight - last flight Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1232] [cursor=pointer]:
+            - generic [ref=e1233]:
+              - generic [ref=e1234]: LOUNGE
+              - generic [ref=e1235]: FTE
+            - heading "W Lounge El Calafate" [level=3] [ref=e1236]
+            - paragraph [ref=e1237]: Comandante Armando Tola International Airport
+            - generic [ref=e1238]:
+              - generic [ref=e1239]: El Calafate
+              - generic [ref=e1240]: First flight - last flight
+            - generic [ref=e1241]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1243] [cursor=pointer]
+        - article [ref=e1244]:
+          - button "LOUNGE MDZ Mendoza by AMAE Lounge Governor Francisco Gabrielli International Airport Mendoza 07:00 - 22:30 daily Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1245] [cursor=pointer]:
+            - generic [ref=e1246]:
+              - generic [ref=e1247]: LOUNGE
+              - generic [ref=e1248]: MDZ
+            - heading "Mendoza by AMAE Lounge" [level=3] [ref=e1249]
+            - paragraph [ref=e1250]: Governor Francisco Gabrielli International Airport
+            - generic [ref=e1251]:
+              - generic [ref=e1252]: Mendoza
+              - generic [ref=e1253]: 07:00 - 22:30 daily
+            - generic [ref=e1254]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1256] [cursor=pointer]
+        - article [ref=e1257]:
+          - button "LOUNGE IGR Iguazu by AMAE Lounge Aeropuerto Internacional Cataratas Del Iguazú Puerto Iguazu 07:00 - 22:00 daily Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1258] [cursor=pointer]:
+            - generic [ref=e1259]:
+              - generic [ref=e1260]: LOUNGE
+              - generic [ref=e1261]: IGR
+            - heading "Iguazu by AMAE Lounge" [level=3] [ref=e1262]
+            - paragraph [ref=e1263]: Aeropuerto Internacional Cataratas Del Iguazú
+            - generic [ref=e1264]:
+              - generic [ref=e1265]: Puerto Iguazu
+              - generic [ref=e1266]: 07:00 - 22:00 daily
+            - generic [ref=e1267]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1269] [cursor=pointer]
+        - article [ref=e1270]:
+          - button "LOUNGE REL W Lounge Trelew Aeropuerto Almirante Marcos Zar Rawson First flight - last flight Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1271] [cursor=pointer]:
+            - generic [ref=e1272]:
+              - generic [ref=e1273]: LOUNGE
+              - generic [ref=e1274]: REL
+            - heading "W Lounge Trelew" [level=3] [ref=e1275]
+            - paragraph [ref=e1276]: Aeropuerto Almirante Marcos Zar
+            - generic [ref=e1277]:
+              - generic [ref=e1278]: Rawson
+              - generic [ref=e1279]: First flight - last flight
+            - generic [ref=e1280]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1282] [cursor=pointer]
+        - article [ref=e1283]:
+          - 'button "LOUNGE ROS AMAE Lounge Domestic Rosario International Airport Rosario 07:00 - 20:00 daily Note: Hours may vary according to flight schedules. DUE TO AIRPORT MAINTENANCE WORKS, THE LOUNGE IS TEMPORARILY CLOSED UNTIL 30DEC25. Air conditioning · Alcoholic drinks (Standard) · Alcoholic drinks age limit" [ref=e1284] [cursor=pointer]':
+            - generic [ref=e1285]:
+              - generic [ref=e1286]: LOUNGE
+              - generic [ref=e1287]: ROS
+            - heading "AMAE Lounge Domestic" [level=3] [ref=e1288]
+            - paragraph [ref=e1289]: Rosario International Airport
+            - generic [ref=e1290]:
+              - generic [ref=e1291]: Rosario
+              - generic [ref=e1292]: "07:00 - 20:00 daily Note: Hours may vary according to flight schedules. DUE TO AIRPORT MAINTENANCE WORKS, THE LOUNGE IS TEMPORARILY CLOSED UNTIL 30DEC25."
+            - generic [ref=e1293]: Air conditioning · Alcoholic drinks (Standard) · Alcoholic drinks age limit
+          - button "Compare" [ref=e1295] [cursor=pointer]
+        - article [ref=e1296]:
+          - 'button "LOUNGE ROS AMAE Lounge International Rosario International Airport Rosario 21:00 - 02:00 daily Note: Hours may vary according to flight schedules. DUE TO AIRPORT MAINTENANCE WORKS, THE LOUNGE IS TEMPORARILY CLOSED UNTIL 30DEC25. Air conditioning · Alcoholic drinks (Standard) · Alcoholic drinks age limit" [ref=e1297] [cursor=pointer]':
+            - generic [ref=e1298]:
+              - generic [ref=e1299]: LOUNGE
+              - generic [ref=e1300]: ROS
+            - heading "AMAE Lounge International" [level=3] [ref=e1301]
+            - paragraph [ref=e1302]: Rosario International Airport
+            - generic [ref=e1303]:
+              - generic [ref=e1304]: Rosario
+              - generic [ref=e1305]: "21:00 - 02:00 daily Note: Hours may vary according to flight schedules. DUE TO AIRPORT MAINTENANCE WORKS, THE LOUNGE IS TEMPORARILY CLOSED UNTIL 30DEC25."
+            - generic [ref=e1306]: Air conditioning · Alcoholic drinks (Standard) · Alcoholic drinks age limit
+          - button "Compare" [ref=e1308] [cursor=pointer]
+        - article [ref=e1309]:
+          - button "LOUNGE SLA Salta by AMAE Lounge Martin Miguel De Guemes International Airport Salta 06:30 - 22:00 daily Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1310] [cursor=pointer]:
+            - generic [ref=e1311]:
+              - generic [ref=e1312]: LOUNGE
+              - generic [ref=e1313]: SLA
+            - heading "Salta by AMAE Lounge" [level=3] [ref=e1314]
+            - paragraph [ref=e1315]: Martin Miguel De Guemes International Airport
+            - generic [ref=e1316]:
+              - generic [ref=e1317]: Salta
+              - generic [ref=e1318]: 06:30 - 22:00 daily
+            - generic [ref=e1319]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1321] [cursor=pointer]
+        - article [ref=e1322]:
+          - button "LOUNGE BRC Bariloche by AMAE Lounge San Carlos De Bariloche Airport San Carlos de Bariloche 06:30 - 22:00 daily Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1323] [cursor=pointer]:
+            - generic [ref=e1324]:
+              - generic [ref=e1325]: LOUNGE
+              - generic [ref=e1326]: BRC
+            - heading "Bariloche by AMAE Lounge" [level=3] [ref=e1327]
+            - paragraph [ref=e1328]: San Carlos De Bariloche Airport
+            - generic [ref=e1329]:
+              - generic [ref=e1330]: San Carlos de Bariloche
+              - generic [ref=e1331]: 06:30 - 22:00 daily
+            - generic [ref=e1332]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1334] [cursor=pointer]
+        - article [ref=e1335]:
+          - 'button "LOUNGE JUJ Jujuy by AMAE Lounge Gobernador Horacio Guzman International Airport San Salvador de Jujuy 3 hours before first flight - last flight Note: Hours may vary according to flight schedules. Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1336] [cursor=pointer]':
+            - generic [ref=e1337]:
+              - generic [ref=e1338]: LOUNGE
+              - generic [ref=e1339]: JUJ
+            - heading "Jujuy by AMAE Lounge" [level=3] [ref=e1340]
+            - paragraph [ref=e1341]: Gobernador Horacio Guzman International Airport
+            - generic [ref=e1342]:
+              - generic [ref=e1343]: San Salvador de Jujuy
+              - generic [ref=e1344]: "3 hours before first flight - last flight Note: Hours may vary according to flight schedules."
+            - generic [ref=e1345]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1347] [cursor=pointer]
+        - article [ref=e1348]:
+          - button "LOUNGE USH W Lounge Ushuaia Malvinas Argentinas Airport Ushuaia First flight - last flight Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1349] [cursor=pointer]:
+            - generic [ref=e1350]:
+              - generic [ref=e1351]: LOUNGE
+              - generic [ref=e1352]: USH
+            - heading "W Lounge Ushuaia" [level=3] [ref=e1353]
+            - paragraph [ref=e1354]: Malvinas Argentinas Airport
+            - generic [ref=e1355]:
+              - generic [ref=e1356]: Ushuaia
+              - generic [ref=e1357]: First flight - last flight
+            - generic [ref=e1358]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1360] [cursor=pointer]
+        - article [ref=e1361]:
+          - button "LOUNGE EVN Business Lounge Zvartnots International Airport Yerevan 24 hours daily Air conditioning · Alcoholic drinks (Standard) · Conference facilities" [ref=e1362] [cursor=pointer]:
+            - generic [ref=e1363]:
+              - generic [ref=e1364]: LOUNGE
+              - generic [ref=e1365]: EVN
+            - heading "Business Lounge" [level=3] [ref=e1366]
+            - paragraph [ref=e1367]: Zvartnots International Airport
+            - generic [ref=e1368]:
+              - generic [ref=e1369]: Yerevan
+              - generic [ref=e1370]: 24 hours daily
+            - generic [ref=e1371]: Air conditioning · Alcoholic drinks (Standard) · Conference facilities
+          - button "Compare" [ref=e1373] [cursor=pointer]
+        - article [ref=e1374]:
+          - 'button "LOUNGE AUA International VIP Lounge Queen Beatrix International Airport Oranjestad 10:00 - 17:00 daily. Note: Hours may vary according to flight schedules. Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1375] [cursor=pointer]':
+            - generic [ref=e1376]:
+              - generic [ref=e1377]: LOUNGE
+              - generic [ref=e1378]: AUA
+            - heading "International VIP Lounge" [level=3] [ref=e1379]
+            - paragraph [ref=e1380]: Queen Beatrix International Airport
+            - generic [ref=e1381]:
+              - generic [ref=e1382]: Oranjestad
+              - generic [ref=e1383]: "10:00 - 17:00 daily. Note: Hours may vary according to flight schedules."
+            - generic [ref=e1384]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1386] [cursor=pointer]
+        - article [ref=e1387]:
+          - 'button "EAT ADL Coopers Alehouse Adelaide Airport Adelaide · Terminal 1 05: 00 - 22:00 daily Note: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting. Coopers Ale House - significant Bar operation in the Terminal serving Coopers beer on tap with à la carte meals on offer. Casual and dining with views of the tarmac and the Adelaide Hills. Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1388] [cursor=pointer]':
+            - generic [ref=e1389]:
+              - generic [ref=e1390]: EAT
+              - generic [ref=e1391]: ADL
+            - heading "Coopers Alehouse" [level=3] [ref=e1392]
+            - paragraph [ref=e1393]: Adelaide Airport
+            - generic [ref=e1394]:
+              - generic [ref=e1395]: Adelaide · Terminal 1
+              - generic [ref=e1396]: "05: 00 - 22:00 daily Note: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting. Coopers Ale House - significant Bar operation in the Terminal serving Coopers beer on tap with à la carte meals on offer. Casual and dining with views of the tarmac and the Adelaide Hills."
+            - generic [ref=e1397]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1399] [cursor=pointer]
+        - article [ref=e1400]:
+          - 'button "EAT ADL Pantry Adelaide Airport Adelaide · Terminal 1 04:00 - 22:00 daily Note: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting. Light meals, coffee, à la carte dining and Grab and Go provided at the Pantry as well as beer, wine and spirits. Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1401] [cursor=pointer]':
+            - generic [ref=e1402]:
+              - generic [ref=e1403]: EAT
+              - generic [ref=e1404]: ADL
+            - heading "Pantry" [level=3] [ref=e1405]
+            - paragraph [ref=e1406]: Adelaide Airport
+            - generic [ref=e1407]:
+              - generic [ref=e1408]: Adelaide · Terminal 1
+              - generic [ref=e1409]: "04:00 - 22:00 daily Note: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting. Light meals, coffee, à la carte dining and Grab and Go provided at the Pantry as well as beer, wine and spirits."
+            - generic [ref=e1410]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1412] [cursor=pointer]
+        - article [ref=e1413]:
+          - 'button "LOUNGE ADL Plaza Premium Lounge Adelaide Airport Adelaide · Terminal 1 Monday: 09:00 - 13:00 & 16:30 - 22:00 Tuesday: 08:00 - 12:00 Wednesday: 08:00 - 12:00 Thursday: 08:00 - 13:00 & 16:30 - 18:30 Friday: 08:00 - 12:00 & 16:30 - 22:00 Saturday: 08:00 - 13:00 & 16:30 - 18:30 Sunday: 08:00 - 12:00 & 16:30 - 22:00 Air conditioning · Alcoholic drinks (Standard) · Alcoholic drinks (Premium-brand)" [ref=e1414] [cursor=pointer]':
+            - generic [ref=e1415]:
+              - generic [ref=e1416]: LOUNGE
+              - generic [ref=e1417]: ADL
+            - heading "Plaza Premium Lounge" [level=3] [ref=e1418]
+            - paragraph [ref=e1419]: Adelaide Airport
+            - generic [ref=e1420]:
+              - generic [ref=e1421]: Adelaide · Terminal 1
+              - generic [ref=e1422]: "Monday: 09:00 - 13:00 & 16:30 - 22:00 Tuesday: 08:00 - 12:00 Wednesday: 08:00 - 12:00 Thursday: 08:00 - 13:00 & 16:30 - 18:30 Friday: 08:00 - 12:00 & 16:30 - 22:00 Saturday: 08:00 - 13:00 & 16:30 - 18:30 Sunday: 08:00 - 12:00 & 16:30 - 22:00"
+            - generic [ref=e1423]: Air conditioning · Alcoholic drinks (Standard) · Alcoholic drinks (Premium-brand)
+          - button "Compare" [ref=e1425] [cursor=pointer]
+        - article [ref=e1426]:
+          - button "LOUNGE ADL Plaza Premium Lounge Adelaide Airport Adelaide · Terminal 1 05:00 - 20:00 daily Air conditioning · Alcoholic drinks (Standard) · Alcoholic drinks (Premium-brand)" [ref=e1427] [cursor=pointer]:
+            - generic [ref=e1428]:
+              - generic [ref=e1429]: LOUNGE
+              - generic [ref=e1430]: ADL
+            - heading "Plaza Premium Lounge" [level=3] [ref=e1431]
+            - paragraph [ref=e1432]: Adelaide Airport
+            - generic [ref=e1433]:
+              - generic [ref=e1434]: Adelaide · Terminal 1
+              - generic [ref=e1435]: 05:00 - 20:00 daily
+            - generic [ref=e1436]: Air conditioning · Alcoholic drinks (Standard) · Alcoholic drinks (Premium-brand)
+          - button "Compare" [ref=e1438] [cursor=pointer]
+        - article [ref=e1439]:
+          - 'button "LOUNGE ADL REX Lounge Adelaide Airport Adelaide · Terminal 1 Monday: 05:00 - 19:00 Tuesday: 05:00 - 19:00 Wednesday: 05:00 - 19:00 Thursday: 05:00 - 19:00 Friday: 05:00 - 19:00 Saturday: 05:00 - 13:30 Sunday: 07:00 - 19:00 Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1440] [cursor=pointer]':
+            - generic [ref=e1441]:
+              - generic [ref=e1442]: LOUNGE
+              - generic [ref=e1443]: ADL
+            - heading "REX Lounge" [level=3] [ref=e1444]
+            - paragraph [ref=e1445]: Adelaide Airport
+            - generic [ref=e1446]:
+              - generic [ref=e1447]: Adelaide · Terminal 1
+              - generic [ref=e1448]: "Monday: 05:00 - 19:00 Tuesday: 05:00 - 19:00 Wednesday: 05:00 - 19:00 Thursday: 05:00 - 19:00 Friday: 05:00 - 19:00 Saturday: 05:00 - 13:30 Sunday: 07:00 - 19:00"
+            - generic [ref=e1449]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1451] [cursor=pointer]
+        - article [ref=e1452]:
+          - 'button "LOUNGE BNE Escape Lounges Brisbane Airport Brisbane · International Terminal 05:00 - 01:00 daily Note: Hours are subject to change. Food and beverages service stops 30 minutes before closing time. Air conditioning · Alcoholic drinks (Standard) · Digital card accepted" [ref=e1453] [cursor=pointer]':
+            - generic [ref=e1454]:
+              - generic [ref=e1455]: LOUNGE
+              - generic [ref=e1456]: BNE
+            - heading "Escape Lounges" [level=3] [ref=e1457]
+            - paragraph [ref=e1458]: Brisbane Airport
+            - generic [ref=e1459]:
+              - generic [ref=e1460]: Brisbane · International Terminal
+              - generic [ref=e1461]: "05:00 - 01:00 daily Note: Hours are subject to change. Food and beverages service stops 30 minutes before closing time."
+            - generic [ref=e1462]: Air conditioning · Alcoholic drinks (Standard) · Digital card accepted
+          - button "Compare" [ref=e1464] [cursor=pointer]
+        - generic [ref=e1465]:
+          - paragraph [ref=e1466]: Showing 24 of 1754
+          - button "Load more" [ref=e1467] [cursor=pointer]

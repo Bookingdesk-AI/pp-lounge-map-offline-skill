@@ -1,0 +1,73 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6]: Priority Pass
+      - heading "Global Lounge Atlas" [level=1] [ref=e7]
+      - paragraph [ref=e8]: 1754 lounges across 140 countries.
+    - generic [ref=e9]:
+      - generic [ref=e10]: Search airport, city, or lounge
+      - textbox "Search airport, city, or lounge" [ref=e11]:
+        - /placeholder: "Example: AUA, New York, Plaza Premium"
+  - main [ref=e12]:
+    - generic [ref=e486]:
+      - generic:
+        - generic:
+          - button "2" [ref=e865] [cursor=pointer]:
+            - generic [ref=e866]: "2"
+          - button "2" [ref=e867] [cursor=pointer]:
+            - generic [ref=e868]: "2"
+          - button [ref=e869] [cursor=pointer]
+          - button [ref=e871] [cursor=pointer]
+          - button [ref=e873] [cursor=pointer]
+          - button [ref=e875] [cursor=pointer]
+          - button [ref=e877] [cursor=pointer]
+          - button [ref=e879] [cursor=pointer]
+          - button [ref=e881] [cursor=pointer]
+      - generic [ref=e563]:
+        - link "Leaflet" [ref=e564] [cursor=pointer]:
+          - /url: https://leafletjs.com
+          - img [ref=e565]
+          - text: Leaflet
+        - text: "| ©"
+        - link "OpenStreetMap" [ref=e569] [cursor=pointer]:
+          - /url: https://www.openstreetmap.org/copyright
+        - text: ©
+        - link "CARTO" [ref=e570] [cursor=pointer]:
+          - /url: https://carto.com/
+  - generic [ref=e667]:
+    - button "Drag sheet" [ref=e668]:
+      - generic [ref=e670]: Swipe for more
+    - generic [ref=e671]:
+      - paragraph [ref=e672]: 1754 visible
+      - paragraph [ref=e673]: 0 active filters
+    - toolbar "Mobile map actions" [ref=e674]:
+      - button "Results" [ref=e675] [cursor=pointer]
+      - button "Filters" [ref=e676] [cursor=pointer]
+      - button "Selected" [ref=e677] [cursor=pointer]
+      - button "Reset" [ref=e678] [cursor=pointer]
+    - generic [ref=e884]:
+      - generic [ref=e885]:
+        - generic [ref=e886]:
+          - generic [ref=e887]: LOUNGE
+          - generic [ref=e888]: TIA
+        - heading "Scanderbeg VIP Lounge" [level=3] [ref=e889]
+        - paragraph [ref=e890]: Tirana International Airport Mother Teresa
+        - generic [ref=e891]: 24 hours daily
+      - group [ref=e892]:
+        - generic "Location" [ref=e893] [cursor=pointer]
+        - paragraph [ref=e894]: Rinas
+      - group [ref=e895]:
+        - generic "Conditions" [ref=e896] [cursor=pointer]
+      - group [ref=e897]:
+        - generic "Facilities" [ref=e898] [cursor=pointer]
+      - generic [ref=e899]:
+        - paragraph [ref=e901]: 2 lounges at TIA
+        - generic [ref=e902]:
+          - button "Scanderbeg VIP Lounge TIA · Rinas" [ref=e903] [cursor=pointer]:
+            - strong [ref=e904]: Scanderbeg VIP Lounge
+            - generic [ref=e905]: TIA · Rinas
+          - button "Segafredo Bar Cafe TIA · Rinas" [ref=e906] [cursor=pointer]:
+            - strong [ref=e907]: Segafredo Bar Cafe
+            - generic [ref=e908]: TIA · Rinas
+      - link "View Priority Pass details" [ref=e910] [cursor=pointer]:
+        - /url: https://my.prioritypass.com/en-GB/lounges/albania/tirana-international-nene-tereza/tia2-scanderbeg-vip-lounge

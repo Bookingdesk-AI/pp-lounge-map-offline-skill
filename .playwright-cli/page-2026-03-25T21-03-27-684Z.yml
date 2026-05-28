@@ -1,0 +1,372 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e6]:
+      - generic [ref=e7]:
+        - link "Desk.Travel" [ref=e8] [cursor=pointer]:
+          - /url: /en#top
+        - generic [ref=e9]:
+          - navigation [ref=e10]:
+            - link "Start Here" [ref=e11] [cursor=pointer]:
+              - /url: "#start-here"
+            - link "Live Tools" [ref=e12] [cursor=pointer]:
+              - /url: "#live-products"
+            - link "Workflow" [ref=e13] [cursor=pointer]:
+              - /url: "#workflow"
+            - link "Platforms" [ref=e14] [cursor=pointer]:
+              - /url: "#core-platforms"
+            - link "Join Waitlist" [ref=e15] [cursor=pointer]:
+              - /url: "#final-cta"
+            - link "AI Skills" [ref=e16] [cursor=pointer]:
+              - /url: /en/ai
+          - button "Language" [ref=e18] [cursor=pointer]:
+            - img [ref=e19]
+            - generic [ref=e24]: Language
+            - generic [ref=e25]: English
+    - main [ref=e26]:
+      - generic [ref=e28]:
+        - paragraph [ref=e29]: CONNECTED TRAVEL INTELLIGENCE
+        - heading "Plan lounges, routes, and award choices without losing your place." [level=1] [ref=e30]:
+          - text: Plan lounges, routes, and award choices
+          - generic [ref=e31]: without losing your place.
+        - paragraph [ref=e32]: Desk.Travel gives frequent travelers a calmer way to move from research to booking decisions, with live tools for lounges and route discovery and a growing suite for awards, loyalty, and flight intelligence.
+        - generic [ref=e33]:
+          - generic [ref=e34]: Pick the right lounge before a long layover
+          - generic [ref=e35]: Trace realistic route options in minutes
+          - generic [ref=e36]: See how award choices connect to the rest of the trip
+          - generic [ref=e37]: Keep loyalty, routing, and booking decisions in one flow
+        - generic [ref=e38]:
+          - link "Start With Your Next Task" [ref=e39] [cursor=pointer]:
+            - /url: "#start-here"
+          - link "Open Live Tools" [ref=e40] [cursor=pointer]:
+            - /url: "#live-products"
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - paragraph [ref=e43]: Start Here
+          - heading "Choose the next decision, then jump directly into the right tool." [level=2] [ref=e44]
+          - paragraph [ref=e45]: Open the right part of the suite for the decision you are making, then keep the rest of the trip connected.
+        - generic [ref=e47]:
+          - link "Plan a trip" [ref=e48] [cursor=pointer]:
+            - /url: "#core-platforms"
+            - img [ref=e49]
+            - text: Plan a trip
+          - link "Check routes" [ref=e51] [cursor=pointer]:
+            - /url: "#live-products"
+            - img [ref=e52]
+            - text: Check routes
+          - link "Compare awards" [ref=e55] [cursor=pointer]:
+            - /url: "#coming-soon-products"
+            - img [ref=e56]
+            - text: Compare awards
+          - link "Keep context" [ref=e58] [cursor=pointer]:
+            - /url: "#workflow"
+            - img [ref=e59]
+            - text: Keep context
+        - generic [ref=e65]:
+          - article [ref=e67]:
+            - paragraph [ref=e68]: Decision lane
+            - heading "Lounges" [level=3] [ref=e69]
+            - paragraph [ref=e70]: Map airport lounge options and coverage before and during travel days.
+            - link "Priority Pass Map" [ref=e72] [cursor=pointer]:
+              - /url: https://prioritypassmap.desk.travel/
+          - article [ref=e74]:
+            - paragraph [ref=e75]: Decision lane
+            - heading "Routes" [level=3] [ref=e76]
+            - paragraph [ref=e77]: Explore airline and airport networks to discover viable paths quickly.
+            - generic [ref=e78]:
+              - link "All Routes" [ref=e79] [cursor=pointer]:
+                - /url: https://all-routes.desk.travel/
+              - link "Circulus Map" [ref=e80] [cursor=pointer]:
+                - /url: https://circulusmap.desk.travel
+          - article [ref=e82]:
+            - paragraph [ref=e83]: Decision lane
+            - heading "Award Flights" [level=3] [ref=e84]
+            - paragraph [ref=e85]: Search and compare flight award inventory across loyalty ecosystems.
+            - link "Award Seats" [ref=e87] [cursor=pointer]:
+              - /url: "#award-seats"
+          - article [ref=e89]:
+            - paragraph [ref=e90]: Decision lane
+            - heading "Award Hotels" [level=3] [ref=e91]
+            - paragraph [ref=e92]: Find award hotel availability and compare redemption tradeoffs.
+            - link "Award Hotels" [ref=e94] [cursor=pointer]:
+              - /url: "#award-hotels"
+          - article [ref=e96]:
+            - paragraph [ref=e97]: Decision lane
+            - heading "Loyalty Credit" [level=3] [ref=e98]
+            - paragraph [ref=e99]: See where a fare class earns best before committing to a booking path.
+            - link "Credit Finder" [ref=e101] [cursor=pointer]:
+              - /url: "#credit-finder"
+          - article [ref=e103]:
+            - paragraph [ref=e104]: Decision lane
+            - heading "Flight Intel" [level=3] [ref=e105]
+            - paragraph [ref=e106]: Track seat, schedule, and cabin details when itinerary decisions tighten.
+            - link "Flight Intel" [ref=e108] [cursor=pointer]:
+              - /url: "#flight-intel"
+      - generic [ref=e109]:
+        - generic [ref=e110]:
+          - paragraph [ref=e111]: Live today
+          - heading "Open the products that already shorten the trip-planning loop." [level=2] [ref=e112]
+          - paragraph [ref=e113]: These tools are live now and designed to feed the next decision instead of forcing you to start over in another tab.
+        - generic [ref=e114]:
+          - article [ref=e116]:
+            - generic [ref=e117]:
+              - paragraph [ref=e118]: Lounges
+              - generic [ref=e119]: Live
+            - heading "Priority Pass Map" [level=3] [ref=e120]
+            - paragraph [ref=e121]: Find lounges and airport coverage faster with an interactive map surface.
+            - link "Open Priority Pass Map" [ref=e122] [cursor=pointer]:
+              - /url: https://prioritypassmap.desk.travel/
+              - text: Open Tool
+              - img [ref=e123]
+            - generic [ref=e125]:
+              - paragraph [ref=e126]: Related tools
+              - generic [ref=e127]:
+                - link "All Routes" [ref=e128] [cursor=pointer]:
+                  - /url: https://all-routes.desk.travel/
+                - link "Circulus Map" [ref=e129] [cursor=pointer]:
+                  - /url: https://circulusmap.desk.travel
+                - link "Flight Intel" [ref=e130] [cursor=pointer]:
+                  - /url: "#flight-intel"
+          - article [ref=e132]:
+            - generic [ref=e133]:
+              - paragraph [ref=e134]: Routes
+              - generic [ref=e135]: Live
+            - heading "All Routes" [level=3] [ref=e136]
+            - paragraph [ref=e137]: Explore route networks and see where an airport or carrier can actually take you.
+            - link "Open All Routes" [ref=e138] [cursor=pointer]:
+              - /url: https://all-routes.desk.travel/
+              - text: Open Tool
+              - img [ref=e139]
+            - generic [ref=e141]:
+              - paragraph [ref=e142]: Related tools
+              - generic [ref=e143]:
+                - link "Circulus Map" [ref=e144] [cursor=pointer]:
+                  - /url: https://circulusmap.desk.travel
+                - link "Priority Pass Map" [ref=e145] [cursor=pointer]:
+                  - /url: https://prioritypassmap.desk.travel/
+                - link "Award Seats" [ref=e146] [cursor=pointer]:
+                  - /url: "#award-seats"
+          - article [ref=e148]:
+            - generic [ref=e149]:
+              - paragraph [ref=e150]: Routes
+              - generic [ref=e151]: Live
+            - heading "Circulus Map" [level=3] [ref=e152]
+            - paragraph [ref=e153]: Inspect route patterns and network structure with a more exploratory map lens.
+            - link "Open Circulus Map" [ref=e154] [cursor=pointer]:
+              - /url: https://circulusmap.desk.travel
+              - text: Open Tool
+              - img [ref=e155]
+            - generic [ref=e157]:
+              - paragraph [ref=e158]: Related tools
+              - generic [ref=e159]:
+                - link "All Routes" [ref=e160] [cursor=pointer]:
+                  - /url: https://all-routes.desk.travel/
+                - link "Priority Pass Map" [ref=e161] [cursor=pointer]:
+                  - /url: https://prioritypassmap.desk.travel/
+                - link "Award Seats" [ref=e162] [cursor=pointer]:
+                  - /url: "#award-seats"
+        - generic [ref=e164]:
+          - generic [ref=e165]:
+            - paragraph [ref=e166]: 28K+
+            - paragraph [ref=e167]: Routes generated
+          - generic [ref=e168]:
+            - paragraph [ref=e169]: 300+
+            - paragraph [ref=e170]: Cities mapped
+          - generic [ref=e171]:
+            - paragraph [ref=e172]: 4.2M
+            - paragraph [ref=e173]: Traveler sessions
+      - generic [ref=e174]:
+        - generic [ref=e175]:
+          - paragraph [ref=e176]: Workflow
+          - heading "Desk.Travel is built to keep the next move in view." [level=2] [ref=e177]
+          - paragraph [ref=e178]: The suite works best as a handoff chain. Each product should make the next choice easier, not send you back to zero.
+        - article [ref=e180]:
+          - paragraph [ref=e181]: One connected travel workflow
+          - generic [ref=e182]:
+            - generic [ref=e183]:
+              - link "Priority Pass Map" [ref=e184] [cursor=pointer]:
+                - /url: https://prioritypassmap.desk.travel/
+              - img [ref=e185]
+            - generic [ref=e187]:
+              - link "All Routes" [ref=e188] [cursor=pointer]:
+                - /url: https://all-routes.desk.travel/
+              - img [ref=e189]
+            - generic [ref=e191]:
+              - link "Award Seats" [ref=e192] [cursor=pointer]:
+                - /url: "#final-cta"
+              - img [ref=e193]
+            - generic [ref=e195]:
+              - link "Award Hotels" [ref=e196] [cursor=pointer]:
+                - /url: "#final-cta"
+              - img [ref=e197]
+            - generic [ref=e199]:
+              - link "Credit Finder" [ref=e200] [cursor=pointer]:
+                - /url: "#final-cta"
+              - img [ref=e201]
+            - link "Flight Intel" [ref=e204] [cursor=pointer]:
+              - /url: "#final-cta"
+        - generic [ref=e205]:
+          - article [ref=e207]:
+            - paragraph [ref=e208]: Connected Flow
+            - heading "Start with one question, keep the answer connected" [level=3] [ref=e209]
+            - paragraph [ref=e210]: Each tool opens the next decision naturally, so you do not lose context when a trip gets more complex.
+          - article [ref=e212]:
+            - paragraph [ref=e213]: Faster Decisions
+            - heading "Move faster when the trip changes shape" [level=3] [ref=e214]
+            - paragraph [ref=e215]: Route maps, lounge coverage, and future award tools are designed to shorten the research loop instead of restarting it.
+          - article [ref=e217]:
+            - paragraph [ref=e218]: Calm Premium
+            - heading "A calmer interface for high-stakes travel calls" [level=3] [ref=e219]
+            - paragraph [ref=e220]: Desk.Travel favors clear hierarchy, fewer dead ends, and a steadier visual rhythm when you need to decide quickly.
+          - article [ref=e222]:
+            - paragraph [ref=e223]: Shared Identity
+            - heading "A shared system across specialist tools" [level=3] [ref=e224]
+            - paragraph [ref=e225]: Every live product can stay focused on its job while still feeling like part of the same travel workspace.
+      - generic [ref=e226]:
+        - generic [ref=e227]:
+          - paragraph [ref=e228]: Core platforms
+          - heading "Planning and booking operations stay anchored in dedicated workspaces." [level=2] [ref=e229]
+          - paragraph [ref=e230]: Desk.Travel keeps these core products visible so the rest of the research flow can stay connected around them.
+        - generic [ref=e231]:
+          - article [ref=e233]:
+            - paragraph [ref=e234]: Platform
+            - heading "Planner" [level=3] [ref=e235]
+            - paragraph [ref=e236]: Plan itineraries, pace, and priorities in one workspace.
+            - link "Open Planner" [ref=e237] [cursor=pointer]:
+              - /url: https://kontour.ai
+          - article [ref=e239]:
+            - paragraph [ref=e240]: Platform
+            - heading "Reservation Platform" [level=3] [ref=e241]
+            - paragraph [ref=e242]: Manage reservation details and booking operations centrally.
+            - link "Open Reservation Platform" [ref=e243] [cursor=pointer]:
+              - /url: https://bookingdesk.ai
+      - generic [ref=e244]:
+        - generic [ref=e245]:
+          - paragraph [ref=e246]: Coming next
+          - heading "Awards, loyalty, and flight intelligence are being added around the live suite." [level=2] [ref=e247]
+          - paragraph [ref=e248]: These modules are on deck so lounge, routing, booking, and loyalty decisions can sit in one calmer system.
+        - generic [ref=e249]:
+          - article [ref=e251]:
+            - generic [ref=e252]:
+              - paragraph [ref=e253]: Award Flights
+              - generic [ref=e254]: Planned
+            - heading "Award Seats" [level=3] [ref=e255]
+            - paragraph [ref=e256]: Search award-seat inventory and compare opportunities across transfer partners.
+            - generic [ref=e257]:
+              - link "Notify me about Award Seats" [ref=e258] [cursor=pointer]:
+                - /url: "#final-cta"
+                - text: Notify Me
+              - link "Explore Related" [ref=e259] [cursor=pointer]:
+                - /url: https://all-routes.desk.travel/
+          - article [ref=e261]:
+            - generic [ref=e262]:
+              - paragraph [ref=e263]: Award Hotels
+              - generic [ref=e264]: Planned
+            - heading "Award Hotels" [level=3] [ref=e265]
+            - paragraph [ref=e266]: Search hotel award options and compare value by night, points, and program.
+            - generic [ref=e267]:
+              - link "Notify me about Award Hotels" [ref=e268] [cursor=pointer]:
+                - /url: "#final-cta"
+                - text: Notify Me
+              - link "Explore Related" [ref=e269] [cursor=pointer]:
+                - /url: https://prioritypassmap.desk.travel/
+          - article [ref=e271]:
+            - generic [ref=e272]:
+              - paragraph [ref=e273]: Loyalty Credit
+              - generic [ref=e274]: Planned
+            - heading "Credit Finder" [level=3] [ref=e275]
+            - paragraph [ref=e276]: Compare where paid fares earn best across partner programs before you book.
+            - generic [ref=e277]:
+              - link "Notify me about Credit Finder" [ref=e278] [cursor=pointer]:
+                - /url: "#final-cta"
+                - text: Notify Me
+              - link "Explore Related" [ref=e279] [cursor=pointer]:
+                - /url: "#live-products"
+          - article [ref=e281]:
+            - generic [ref=e282]:
+              - paragraph [ref=e283]: Flight Intel
+              - generic [ref=e284]: Planned
+            - heading "Flight Intel" [level=3] [ref=e285]
+            - paragraph [ref=e286]: Track cabin inventory, fare classes, and operational details in one view.
+            - generic [ref=e287]:
+              - link "Notify me about Flight Intel" [ref=e288] [cursor=pointer]:
+                - /url: "#final-cta"
+                - text: Notify Me
+              - link "Explore Related" [ref=e289] [cursor=pointer]:
+                - /url: https://all-routes.desk.travel/
+      - generic [ref=e292]:
+        - paragraph [ref=e293]: Desk.Travel
+        - heading "Bring your next trip into one calmer workflow." [level=2] [ref=e294]
+        - paragraph [ref=e295]: Start with the right Desk.Travel tool now, then stay close to the next launch as lounges, routes, awards, and loyalty tools continue to connect.
+        - paragraph [ref=e296]: Live today for lounges and route discovery, with awards, credit, and flight intelligence queued next.
+        - generic [ref=e297]:
+          - link "Join Waitlist" [ref=e298] [cursor=pointer]:
+            - /url: "#coming-soon-products"
+          - link "Browse AI Skills" [ref=e299] [cursor=pointer]:
+            - /url: /en/ai
+    - contentinfo [ref=e300]:
+      - generic [ref=e301]:
+        - generic [ref=e302]:
+          - paragraph [ref=e303]: Desk.Travel
+          - paragraph [ref=e304]: A calmer travel portal where planning, lounge research, route discovery, and future award decisions move in one connected flow.
+          - generic [ref=e305]:
+            - generic [ref=e306]: 3 Live Products
+            - generic [ref=e307]: 4 Coming Next
+        - generic [ref=e308]:
+          - heading "Core Platforms" [level=3] [ref=e309]
+          - generic [ref=e310]:
+            - link "Planner Plan itineraries, pace, and priorities in one workspace." [ref=e311] [cursor=pointer]:
+              - /url: https://kontour.ai
+              - paragraph [ref=e312]: Planner
+              - paragraph [ref=e313]: Plan itineraries, pace, and priorities in one workspace.
+            - link "Reservation Platform Manage reservation details and booking operations centrally." [ref=e314] [cursor=pointer]:
+              - /url: https://bookingdesk.ai
+              - paragraph [ref=e315]: Reservation Platform
+              - paragraph [ref=e316]: Manage reservation details and booking operations centrally.
+        - generic [ref=e317]:
+          - heading "Suite Directory" [level=3] [ref=e318]
+          - generic [ref=e319]:
+            - link "Priority Pass Map(Live)" [ref=e320] [cursor=pointer]:
+              - /url: https://prioritypassmap.desk.travel/
+            - link "All Routes(Live)" [ref=e321] [cursor=pointer]:
+              - /url: https://all-routes.desk.travel/
+            - link "Circulus Map(Live)" [ref=e322] [cursor=pointer]:
+              - /url: https://circulusmap.desk.travel
+            - link "Award Seats(Soon)" [ref=e323] [cursor=pointer]:
+              - /url: "#final-cta"
+            - link "Award Hotels(Soon)" [ref=e324] [cursor=pointer]:
+              - /url: "#final-cta"
+            - link "Credit Finder(Soon)" [ref=e325] [cursor=pointer]:
+              - /url: "#final-cta"
+            - link "Flight Intel(Soon)" [ref=e326] [cursor=pointer]:
+              - /url: "#final-cta"
+      - generic [ref=e328]:
+        - paragraph [ref=e329]: Desk.Travel Suite Portal
+        - paragraph [ref=e330]: Cookie preferences and privacy controls stay available through the trust center.
+        - generic [ref=e331]:
+          - link "Privacy Policy" [ref=e332] [cursor=pointer]:
+            - /url: /en/privacy
+          - link "Terms of Service" [ref=e333] [cursor=pointer]:
+            - /url: /en/terms
+          - link "Cookie Notice" [ref=e334] [cursor=pointer]:
+            - /url: /en/cookies
+          - generic [ref=e335]: "|"
+          - link "Start Here" [ref=e336] [cursor=pointer]:
+            - /url: "#start-here"
+          - link "Live Tools" [ref=e337] [cursor=pointer]:
+            - /url: "#live-products"
+          - link "Workflow" [ref=e338] [cursor=pointer]:
+            - /url: "#workflow"
+          - link "Platforms" [ref=e339] [cursor=pointer]:
+            - /url: "#core-platforms"
+          - link "Join Waitlist" [ref=e340] [cursor=pointer]:
+            - /url: "#final-cta"
+  - dialog "Cookie consent" [ref=e341]:
+    - generic [ref=e342]:
+      - generic [ref=e343]:
+        - paragraph [ref=e344]: Trust Preferences
+        - paragraph [ref=e345]: Desk.Travel uses essential and security cookies to keep the site working safely. Optional analytics and marketing cookies stay off unless you choose to accept all.
+        - link "Review Cookie Notice" [ref=e346] [cursor=pointer]:
+          - /url: /en/cookies
+      - generic [ref=e347]:
+        - button "Essential Only" [ref=e348] [cursor=pointer]
+        - button "Accept All" [ref=e349] [cursor=pointer]

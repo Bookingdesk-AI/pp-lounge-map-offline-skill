@@ -1,0 +1,302 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6]: Priority Pass
+      - heading "Global Lounge Atlas" [level=1] [ref=e7]
+      - paragraph [ref=e8]: 1754 lounges across 140 countries.
+    - generic [ref=e9]:
+      - generic [ref=e10]: Search airport, city, or lounge
+      - textbox "Search airport, city, or lounge" [ref=e11]:
+        - /placeholder: "Example: AUA, New York, Plaza Premium"
+  - main [ref=e12]:
+    - generic [ref=e486]:
+      - generic:
+        - generic:
+          - button "3" [ref=e585] [cursor=pointer]:
+            - generic [ref=e586]: "3"
+          - button "37" [ref=e587] [cursor=pointer]:
+            - generic [ref=e588]: "37"
+          - button "2" [ref=e589] [cursor=pointer]:
+            - generic [ref=e590]: "2"
+          - button "20" [ref=e591] [cursor=pointer]:
+            - generic [ref=e592]: "20"
+          - button "73" [ref=e593] [cursor=pointer]:
+            - generic [ref=e594]: "73"
+          - button "2" [ref=e595] [cursor=pointer]:
+            - generic [ref=e596]: "2"
+          - button "5" [ref=e597] [cursor=pointer]:
+            - generic [ref=e598]: "5"
+          - button [ref=e599] [cursor=pointer]
+          - button "23" [ref=e601] [cursor=pointer]:
+            - generic [ref=e602]: "23"
+          - button "3" [ref=e603] [cursor=pointer]:
+            - generic [ref=e604]: "3"
+          - button "3" [ref=e605] [cursor=pointer]:
+            - generic [ref=e606]: "3"
+          - button "8" [ref=e607] [cursor=pointer]:
+            - generic [ref=e608]: "8"
+          - button "2" [ref=e609] [cursor=pointer]:
+            - generic [ref=e610]: "2"
+          - button "5" [ref=e611] [cursor=pointer]:
+            - generic [ref=e612]: "5"
+          - button "26" [ref=e613] [cursor=pointer]:
+            - generic [ref=e614]: "26"
+          - button "15" [ref=e615] [cursor=pointer]:
+            - generic [ref=e616]: "15"
+          - button "32" [ref=e617] [cursor=pointer]:
+            - generic [ref=e618]: "32"
+          - button "26" [ref=e619] [cursor=pointer]:
+            - generic [ref=e620]: "26"
+          - button "131" [ref=e621] [cursor=pointer]:
+            - generic [ref=e622]: "131"
+          - button "13" [ref=e623] [cursor=pointer]:
+            - generic [ref=e624]: "13"
+          - button "92" [ref=e625] [cursor=pointer]:
+            - generic [ref=e626]: "92"
+          - button "108" [ref=e627] [cursor=pointer]:
+            - generic [ref=e628]: "108"
+          - button "59" [ref=e629] [cursor=pointer]:
+            - generic [ref=e630]: "59"
+          - button "19" [ref=e631] [cursor=pointer]:
+            - generic [ref=e632]: "19"
+          - button "52" [ref=e633] [cursor=pointer]:
+            - generic [ref=e634]: "52"
+          - button "39" [ref=e635] [cursor=pointer]:
+            - generic [ref=e636]: "39"
+          - button "145" [ref=e637] [cursor=pointer]:
+            - generic [ref=e638]: "145"
+          - button "67" [ref=e639] [cursor=pointer]:
+            - generic [ref=e640]: "67"
+          - button "4" [ref=e641] [cursor=pointer]:
+            - generic [ref=e642]: "4"
+          - button "70" [ref=e643] [cursor=pointer]:
+            - generic [ref=e644]: "70"
+          - button "20" [ref=e645] [cursor=pointer]:
+            - generic [ref=e646]: "20"
+          - button "41" [ref=e647] [cursor=pointer]:
+            - generic [ref=e648]: "41"
+          - button "3" [ref=e649] [cursor=pointer]:
+            - generic [ref=e650]: "3"
+          - button "87" [ref=e651] [cursor=pointer]:
+            - generic [ref=e652]: "87"
+          - button "46" [ref=e653] [cursor=pointer]:
+            - generic [ref=e654]: "46"
+          - button "7" [ref=e655] [cursor=pointer]:
+            - generic [ref=e656]: "7"
+          - button "2" [ref=e657] [cursor=pointer]:
+            - generic [ref=e658]: "2"
+          - button "57" [ref=e659] [cursor=pointer]:
+            - generic [ref=e660]: "57"
+          - button "150" [ref=e661] [cursor=pointer]:
+            - generic [ref=e662]: "150"
+          - button "218" [ref=e663] [cursor=pointer]:
+            - generic [ref=e664]: "218"
+          - button "38" [ref=e665] [cursor=pointer]:
+            - generic [ref=e666]: "38"
+      - generic [ref=e563]:
+        - link "Leaflet" [ref=e564] [cursor=pointer]:
+          - /url: https://leafletjs.com
+          - img [ref=e565]
+          - text: Leaflet
+        - text: "| ©"
+        - link "OpenStreetMap" [ref=e569] [cursor=pointer]:
+          - /url: https://www.openstreetmap.org/copyright
+        - text: ©
+        - link "CARTO" [ref=e570] [cursor=pointer]:
+          - /url: https://carto.com/
+  - generic [ref=e667]:
+    - button "Drag sheet" [ref=e668]:
+      - generic [ref=e670]: Swipe for more
+    - generic [ref=e671]:
+      - paragraph [ref=e672]: 1754 visible
+      - paragraph [ref=e673]: 0 active filters
+    - toolbar "Mobile map actions" [ref=e674]:
+      - button "Results" [ref=e675] [cursor=pointer]
+      - button "Filters" [ref=e676] [cursor=pointer]
+      - button "Selected" [disabled] [ref=e677]
+      - button "Reset" [ref=e678] [cursor=pointer]
+    - generic [ref=e679]:
+      - generic [ref=e680]:
+        - generic [ref=e681]:
+          - button "EAT" [ref=e682] [cursor=pointer]
+          - button "LOUNGE" [ref=e683] [cursor=pointer]
+          - button "REFRESH" [ref=e684] [cursor=pointer]
+          - button "REST" [ref=e685] [cursor=pointer]
+          - button "UNWIND" [ref=e686] [cursor=pointer]
+        - generic [ref=e687]:
+          - 'button "Country: All" [ref=e688]'
+          - 'button "City: All" [ref=e689]'
+          - generic [ref=e690]: 1754 matches
+          - generic [ref=e691]: 0 filters
+      - generic [ref=e692]:
+        - article [ref=e693] [cursor=pointer]:
+          - generic [ref=e694]:
+            - generic [ref=e695]: LOUNGE
+            - generic [ref=e696]: TIA
+          - heading "Scanderbeg VIP Lounge" [level=3] [ref=e697]
+          - paragraph [ref=e698]: Tirana International Airport Mother Teresa · Rinas
+          - generic [ref=e699]: Unknown
+        - article [ref=e700] [cursor=pointer]:
+          - generic [ref=e701]:
+            - generic [ref=e702]: EAT
+            - generic [ref=e703]: TIA
+          - heading "Segafredo Bar Cafe" [level=3] [ref=e704]
+          - paragraph [ref=e705]: Tirana International Airport Mother Teresa · Rinas
+          - generic [ref=e706]: Unknown
+        - article [ref=e707] [cursor=pointer]:
+          - generic [ref=e708]:
+            - generic [ref=e709]: LOUNGE
+            - generic [ref=e710]: ANU
+          - heading "Executive Lounge" [level=3] [ref=e711]
+          - paragraph [ref=e712]: V. C. Bird International Airport · Osbourn
+          - generic [ref=e713]: Unknown
+        - article [ref=e714] [cursor=pointer]:
+          - generic [ref=e715]:
+            - generic [ref=e716]: LOUNGE
+            - generic [ref=e717]: EZE
+          - heading "Ezeiza Lounge" [level=3] [ref=e718]
+          - paragraph [ref=e719]: Ministro Pistarini International Airport · Buenos Aires (Ezeiza)
+          - generic [ref=e720]: Unknown
+        - article [ref=e721] [cursor=pointer]:
+          - generic [ref=e722]:
+            - generic [ref=e723]: LOUNGE
+            - generic [ref=e724]: EZE
+          - heading "Star Alliance Lounge Buenos Aires" [level=3] [ref=e725]
+          - paragraph [ref=e726]: Ministro Pistarini International Airport · Buenos Aires (Ezeiza)
+          - generic [ref=e727]: Unknown
+        - article [ref=e728] [cursor=pointer]:
+          - generic [ref=e729]:
+            - generic [ref=e730]: LOUNGE
+            - generic [ref=e731]: CRD
+          - heading "Comodoro by AMAE Lounge" [level=3] [ref=e732]
+          - paragraph [ref=e733]: General E. Mosconi Airport · Comodoro Rivadavia
+          - generic [ref=e734]: Unknown
+        - article [ref=e735] [cursor=pointer]:
+          - generic [ref=e736]:
+            - generic [ref=e737]: LOUNGE
+            - generic [ref=e738]: FTE
+          - heading "W Lounge El Calafate" [level=3] [ref=e739]
+          - paragraph [ref=e740]: Comandante Armando Tola International Airport · El Calafate
+          - generic [ref=e741]: Unknown
+        - article [ref=e742] [cursor=pointer]:
+          - generic [ref=e743]:
+            - generic [ref=e744]: LOUNGE
+            - generic [ref=e745]: MDZ
+          - heading "Mendoza by AMAE Lounge" [level=3] [ref=e746]
+          - paragraph [ref=e747]: Governor Francisco Gabrielli International Airport · Mendoza
+          - generic [ref=e748]: Unknown
+        - article [ref=e749] [cursor=pointer]:
+          - generic [ref=e750]:
+            - generic [ref=e751]: LOUNGE
+            - generic [ref=e752]: IGR
+          - heading "Iguazu by AMAE Lounge" [level=3] [ref=e753]
+          - paragraph [ref=e754]: Aeropuerto Internacional Cataratas Del Iguazú · Puerto Iguazu
+          - generic [ref=e755]: Unknown
+        - article [ref=e756] [cursor=pointer]:
+          - generic [ref=e757]:
+            - generic [ref=e758]: LOUNGE
+            - generic [ref=e759]: REL
+          - heading "W Lounge Trelew" [level=3] [ref=e760]
+          - paragraph [ref=e761]: Aeropuerto Almirante Marcos Zar · Rawson
+          - generic [ref=e762]: Unknown
+        - article [ref=e763] [cursor=pointer]:
+          - generic [ref=e764]:
+            - generic [ref=e765]: LOUNGE
+            - generic [ref=e766]: ROS
+          - heading "AMAE Lounge Domestic" [level=3] [ref=e767]
+          - paragraph [ref=e768]: Rosario International Airport · Rosario
+          - generic [ref=e769]: Unknown
+        - article [ref=e770] [cursor=pointer]:
+          - generic [ref=e771]:
+            - generic [ref=e772]: LOUNGE
+            - generic [ref=e773]: ROS
+          - heading "AMAE Lounge International" [level=3] [ref=e774]
+          - paragraph [ref=e775]: Rosario International Airport · Rosario
+          - generic [ref=e776]: Unknown
+        - article [ref=e777] [cursor=pointer]:
+          - generic [ref=e778]:
+            - generic [ref=e779]: LOUNGE
+            - generic [ref=e780]: SLA
+          - heading "Salta by AMAE Lounge" [level=3] [ref=e781]
+          - paragraph [ref=e782]: Martin Miguel De Guemes International Airport · Salta
+          - generic [ref=e783]: Unknown
+        - article [ref=e784] [cursor=pointer]:
+          - generic [ref=e785]:
+            - generic [ref=e786]: LOUNGE
+            - generic [ref=e787]: BRC
+          - heading "Bariloche by AMAE Lounge" [level=3] [ref=e788]
+          - paragraph [ref=e789]: San Carlos De Bariloche Airport · San Carlos de Bariloche
+          - generic [ref=e790]: Unknown
+        - article [ref=e791] [cursor=pointer]:
+          - generic [ref=e792]:
+            - generic [ref=e793]: LOUNGE
+            - generic [ref=e794]: JUJ
+          - heading "Jujuy by AMAE Lounge" [level=3] [ref=e795]
+          - paragraph [ref=e796]: Gobernador Horacio Guzman International Airport · San Salvador de Jujuy
+          - generic [ref=e797]: Unknown
+        - article [ref=e798] [cursor=pointer]:
+          - generic [ref=e799]:
+            - generic [ref=e800]: LOUNGE
+            - generic [ref=e801]: USH
+          - heading "W Lounge Ushuaia" [level=3] [ref=e802]
+          - paragraph [ref=e803]: Malvinas Argentinas Airport · Ushuaia
+          - generic [ref=e804]: Unknown
+        - article [ref=e805] [cursor=pointer]:
+          - generic [ref=e806]:
+            - generic [ref=e807]: LOUNGE
+            - generic [ref=e808]: EVN
+          - heading "Business Lounge" [level=3] [ref=e809]
+          - paragraph [ref=e810]: Zvartnots International Airport · Yerevan
+          - generic [ref=e811]: Unknown
+        - article [ref=e812] [cursor=pointer]:
+          - generic [ref=e813]:
+            - generic [ref=e814]: LOUNGE
+            - generic [ref=e815]: AUA
+          - heading "International VIP Lounge" [level=3] [ref=e816]
+          - paragraph [ref=e817]: Queen Beatrix International Airport · Oranjestad
+          - generic [ref=e818]: Unknown
+        - article [ref=e819] [cursor=pointer]:
+          - generic [ref=e820]:
+            - generic [ref=e821]: EAT
+            - generic [ref=e822]: ADL
+          - heading "Coopers Alehouse" [level=3] [ref=e823]
+          - paragraph [ref=e824]: Adelaide Airport · Adelaide
+          - generic [ref=e825]: Terminal 1
+        - article [ref=e826] [cursor=pointer]:
+          - generic [ref=e827]:
+            - generic [ref=e828]: EAT
+            - generic [ref=e829]: ADL
+          - heading "Pantry" [level=3] [ref=e830]
+          - paragraph [ref=e831]: Adelaide Airport · Adelaide
+          - generic [ref=e832]: Terminal 1
+        - article [ref=e833] [cursor=pointer]:
+          - generic [ref=e834]:
+            - generic [ref=e835]: LOUNGE
+            - generic [ref=e836]: ADL
+          - heading "Plaza Premium Lounge" [level=3] [ref=e837]
+          - paragraph [ref=e838]: Adelaide Airport · Adelaide
+          - generic [ref=e839]: Terminal 1
+        - article [ref=e840] [cursor=pointer]:
+          - generic [ref=e841]:
+            - generic [ref=e842]: LOUNGE
+            - generic [ref=e843]: ADL
+          - heading "Plaza Premium Lounge" [level=3] [ref=e844]
+          - paragraph [ref=e845]: Adelaide Airport · Adelaide
+          - generic [ref=e846]: Terminal 1
+        - article [ref=e847] [cursor=pointer]:
+          - generic [ref=e848]:
+            - generic [ref=e849]: LOUNGE
+            - generic [ref=e850]: ADL
+          - heading "REX Lounge" [level=3] [ref=e851]
+          - paragraph [ref=e852]: Adelaide Airport · Adelaide
+          - generic [ref=e853]: Terminal 1
+        - article [ref=e854] [cursor=pointer]:
+          - generic [ref=e855]:
+            - generic [ref=e856]: LOUNGE
+            - generic [ref=e857]: BNE
+          - heading "Escape Lounges" [level=3] [ref=e858]
+          - paragraph [ref=e859]: Brisbane Airport · Brisbane
+          - generic [ref=e860]: International Terminal
+        - generic [ref=e861]:
+          - paragraph [ref=e862]: Showing 24 of 1754
+          - button "Load more" [ref=e863] [cursor=pointer]

@@ -99,7 +99,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - If the bundled snapshot does not contain the needed answer, say so instead of inventing newer data.
 - Before publish, if a packaged mirror exists under `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/references/`, verify `safety.md` and `SKILL.md` both stay synchronized; if the mirror is absent in current repo state, skip this check without failing the offline source review.
 - Before publish, verify `references/mcp.md` and `references/publishing.md` are present in both source and packaged skill paths to prevent offline/runtime guidance drift.
-- Before publish/update, validate every relative markdown link in this SKILL resolves to an existing local file; fail closed if any target is missing.
+- Before publish/update, run markdown-link validation from the skill directory and fail closed if any relative target is missing (do not rely on stale cached manifests).
 
 ## Available workflows
 
