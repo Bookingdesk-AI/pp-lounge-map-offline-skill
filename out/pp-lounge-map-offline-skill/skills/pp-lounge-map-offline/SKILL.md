@@ -67,6 +67,7 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - If catalog or endpoint URLs must be shown for diagnostics, normalize to origin form and suppress userinfo/query/fragment before logging or responding.
 - Treat endpoint URLs that include URL userinfo (for example `http://<credentials>@localhost/...`) as secret-bearing and out-of-boundary in offline mode; use redacted placeholders instead.
 - Avoid exposing absolute local filesystem paths in normal answers; prefer repo-relative paths unless the user explicitly asks for local debugging details.
+- Before publish/update, verify SKILL frontmatter has non-empty `name` and `description` keys so offline bundles stay policy-complete.
 - Treat endpoint authorities with percent-encoded userinfo delimiters (for example `%40` or `%3A` before `@`) as obfuscated credential-bearing forms and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint authorities with repeated `@` delimiters as credential-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint authorities containing percent-encoded port delimiters (for example `%3A` or `%253A` after host labels) as authority-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
@@ -84,7 +85,9 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - If mixed raw/encoded query and fragment delimiters (for example `%3F` with `%23`, or `?` with `%23`) could change delimiter precedence before the canonical local path boundary across decode passes, classify the diagnostic reason as `delimiter-precedence-ambiguity` and treat the endpoint as out-of-boundary unless the user explicitly asks to leave offline mode.
 - Treat endpoint URL path segments that look token-like (for example JWT-style `x.y.z` blobs or long opaque IDs) as secret-bearing; redact those segments before logging or echoing diagnostics.
 - Treat endpoint URLs containing encoded or mixed dot-segment traversal forms (for example `%2e`, `%2e%2e`, `/./`, or `/../`) as path-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
+- Treat endpoint authorities containing raw backslash (`\`) or mixed slash/backslash delimiter patterns as parser-confusion obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - If decode-pass ordering could place the same endpoint into multiple obfuscation categories, use a deterministic `decode-order-ambiguity` reason category and avoid disclosing pass-by-pass parser behavior.
+- Treat localized-digit host/port forms (for example fullwidth digits in IPv4 or port literals) as endpoint-obfuscation and out-of-boundary unless the user explicitly asks to leave offline mode.
 - When rejecting endpoint obfuscation in diagnostics, report only the reason category (for example credential-obfuscation, authority-smuggling, parser-obfuscation, or path-obfuscation) and avoid echoing raw endpoint strings.
 - For automated security scans, treat `skills/pp-lounge-map-offline/assets/catalog.json` URL entries as static dataset content, not outbound-call instructions.
 - If quoting catalog `url` values in responses, strip query strings and any credential-like fragments before echoing.
@@ -95,10 +98,10 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Redact credential-bearing header values (for example `Authorization`, `Proxy-Authorization`, `Cookie`, and `Set-Cookie`) before sharing command output, traces, or diagnostics.
 - Before publish/update, run a bounded secret scan on `skills/pp-lounge-map-offline` (for example `rg -n --hidden --no-ignore '(AKIA|AIza|ghp_|xox[baprs]-|BEGIN .* PRIVATE KEY|token\s*=|api[_-]?key\s*=|secret\s*=)'`) and fail closed until hits are triaged.
 - When summarizing secret-scan outcomes, provide only aggregate hit counts and file/line metadata; never include matched credential-like substrings in diagnostics.
+- Before release/publish, verify every markdown reference link in `SKILL.md` resolves to an existing repo file; fail closed until broken links are fixed.
 - If the bundled snapshot does not contain the needed answer, say so instead of inventing newer data.
 - Before publish, if a packaged mirror exists under `out/pp-lounge-map-offline-skill/skills/pp-lounge-map-offline/references/`, verify `safety.md` and `SKILL.md` both stay synchronized; if the mirror is absent in current repo state, skip this check without failing the offline source review.
 - Before publish, verify `references/mcp.md` and `references/publishing.md` are present in both source and packaged skill paths to prevent offline/runtime guidance drift.
-- Before publish/update, verify SKILL frontmatter has non-empty `name` and `description` keys so offline bundles stay policy-complete.
 - Before publish/update, run markdown-link validation from the skill directory and fail closed if any relative target is missing (do not rely on stale cached manifests).
 
 ## Available workflows
