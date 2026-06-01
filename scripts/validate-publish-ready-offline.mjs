@@ -1,26 +1,43 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import {
   getOfflineSkillPaths,
   OFFLINE_ASSET_MAX_BYTES,
   OFFLINE_SKILL_NAME,
-} from './lib/offline-skill-build.mjs';
-import { validateSkillBundleWithOptions } from './lib/publish-safety.mjs';
+} from "./lib/offline-skill-build.mjs";
+import { validateSkillBundleWithOptions } from "./lib/publish-safety.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, '..');
+const projectRoot = path.resolve(__dirname, "..");
 
 async function main() {
-  const { skillDir } = getOfflineSkillPaths(projectRoot);
+  const { skillDir, exportDir } = getOfflineSkillPaths(projectRoot);
   const issues = await validateSkillBundleWithOptions({
     projectRoot,
     skillDir,
     expectedName: OFFLINE_SKILL_NAME,
     maxAssetBytes: OFFLINE_ASSET_MAX_BYTES,
-    assetRelativePath: path.join('assets', 'catalog.json'),
+    assetRelativePath: path.join("assets", "catalog.json"),
     forbidHttpUrlsInMarkdown: true,
+    validateRelativeMarkdownLinks: true,
+    requiredRelativePaths: [
+      "references/mcp.md",
+      "references/safety.md",
+      "references/publishing.md",
+      "scripts/run-offline-mcp.mjs",
+      "scripts/print-offline-mcp-config.mjs",
+      path.join("assets", "catalog.json"),
+    ],
+    mirrorSkillDir: path.join(exportDir, "skills", OFFLINE_SKILL_NAME),
+    synchronizedRelativePaths: [
+      "SKILL.md",
+      "README.md",
+      "references/mcp.md",
+      "references/safety.md",
+      "references/publishing.md",
+    ],
   });
 
   if (issues.length > 0) {
@@ -31,7 +48,7 @@ async function main() {
     return;
   }
 
-  console.log('publish-check: offline skill bundle passed.');
+  console.log("publish-check: offline skill bundle passed.");
 }
 
 main().catch((error) => {

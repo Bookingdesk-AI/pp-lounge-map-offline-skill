@@ -1,25 +1,106 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import fs from "node:fs/promises";
+import path from "node:path";
 
-const TEXT_FILE_EXTENSIONS = new Set(['.md', '.mjs', '.json', '.yaml', '.yml', '']);
+const TEXT_FILE_EXTENSIONS = new Set([
+  ".md",
+  ".mjs",
+  ".json",
+  ".yaml",
+  ".yml",
+  "",
+]);
 const FORBIDDEN_CONTENT_PATTERNS = [
   {
     pattern: /curl\s+[^|\n]+?\|\s*(sh|bash)/i,
-    message: 'Remote shell pipe detected.',
+    message: "Remote shell pipe detected.",
   },
   {
     pattern: /wget\s+[^|\n]+?\|\s*(sh|bash)/i,
-    message: 'Remote shell pipe detected.',
+    message: "Remote shell pipe detected.",
   },
   {
     pattern: /bash\s+<\(/i,
-    message: 'Process substitution shell install detected.',
+    message: "Process substitution shell install detected.",
   },
   {
     pattern: /\bOPENAI_API_KEY\b/,
-    message: 'API key instructions are not allowed in the public bundle.',
+    message: "API key instructions are not allowed in the public bundle.",
   },
 ];
+
+async function validateRequiredRelativePaths({
+  skillDir,
+  issues,
+  label = "bundle",
+}) {
+  for (const relativePath of arguments[0].requiredRelativePaths ?? []) {
+    try {
+      await fs.stat(path.join(skillDir, relativePath));
+    } catch {
+      issues.push(`Missing required ${label} file: ${relativePath}`);
+    }
+  }
+}
+
+async function validateMarkdownLinks({ skillDir, filePath, content, issues }) {
+  const linkPattern = /\[[^\]]+\]\(([^)]+)\)/gu;
+  for (const match of content.matchAll(linkPattern)) {
+    const target = match[1].trim();
+    if (
+      !target ||
+      target.startsWith("#") ||
+      /^[a-z][a-z0-9+.-]*:/iu.test(target)
+    )
+      continue;
+    const [withoutQuery] = target.split(/[?#]/u);
+    const resolved = path.resolve(path.dirname(filePath), withoutQuery);
+    const relativeFile = path.relative(skillDir, filePath);
+    if (!resolved.startsWith(skillDir + path.sep)) {
+      issues.push(
+        `Markdown link escapes skill bundle in ${relativeFile}: ${target}`,
+      );
+      continue;
+    }
+    try {
+      await fs.stat(resolved);
+    } catch {
+      issues.push(`Broken markdown link in ${relativeFile}: ${target}`);
+    }
+  }
+}
+
+async function validateSynchronizedFiles({
+  skillDir,
+  mirrorSkillDir,
+  synchronizedRelativePaths,
+  issues,
+}) {
+  if (!mirrorSkillDir) return;
+  try {
+    await fs.stat(mirrorSkillDir);
+  } catch {
+    issues.push(`Packaged mirror is missing: ${mirrorSkillDir}`);
+    return;
+  }
+
+  for (const relativePath of synchronizedRelativePaths) {
+    try {
+      const source = await fs.readFile(
+        path.join(skillDir, relativePath),
+        "utf8",
+      );
+      const mirror = await fs.readFile(
+        path.join(mirrorSkillDir, relativePath),
+        "utf8",
+      );
+      if (source !== mirror) {
+        issues.push(`Packaged mirror drift detected for ${relativePath}.`);
+      }
+    } catch {
+      issues.push(`Packaged mirror sync check could not read ${relativePath}.`);
+    }
+  }
+}
 
 async function walk(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true });
@@ -52,12 +133,16 @@ export async function validateSkillBundleWithOptions({
   maxAssetBytes,
   assetRelativePath,
   forbidHttpUrlsInMarkdown = false,
+  validateRelativeMarkdownLinks = false,
+  requiredRelativePaths = [],
+  mirrorSkillDir,
+  synchronizedRelativePaths = [],
 }) {
   const issues = [];
   const files = await walk(skillDir);
-  const homeDir = process.env.HOME || '';
+  const homeDir = process.env.HOME || "";
 
-  if (!files.some((filePath) => path.basename(filePath) === 'SKILL.md')) {
+  if (!files.some((filePath) => path.basename(filePath) === "SKILL.md")) {
     issues.push(`Missing SKILL.md in ${skillDir}.`);
   }
 
@@ -66,16 +151,21 @@ export async function validateSkillBundleWithOptions({
     const extname = path.extname(filePath);
 
     if (!TEXT_FILE_EXTENSIONS.has(extname)) {
-      issues.push(`Unexpected file extension in public bundle: ${relativePath}`);
+      issues.push(
+        `Unexpected file extension in public bundle: ${relativePath}`,
+      );
       continue;
     }
 
-    const content = await fs.readFile(filePath, 'utf8');
-    if (content.includes(projectRoot) || (homeDir && content.includes(homeDir))) {
+    const content = await fs.readFile(filePath, "utf8");
+    if (
+      content.includes(projectRoot) ||
+      (homeDir && content.includes(homeDir))
+    ) {
       issues.push(`Local path leak detected in ${relativePath}.`);
     }
 
-    if (content.includes('../pps') || content.includes('PP Lounge Data_')) {
+    if (content.includes("../pps") || content.includes("PP Lounge Data_")) {
       issues.push(`Private source reference detected in ${relativePath}.`);
     }
 
@@ -85,25 +175,50 @@ export async function validateSkillBundleWithOptions({
       }
     }
 
-    if (forbidHttpUrlsInMarkdown && path.extname(filePath) === '.md' && /https?:\/\//u.test(content)) {
-      issues.push(`Remote URL detected in offline documentation: ${relativePath}`);
+    if (
+      forbidHttpUrlsInMarkdown &&
+      path.extname(filePath) === ".md" &&
+      /https?:\/\//u.test(content)
+    ) {
+      issues.push(
+        `Remote URL detected in offline documentation: ${relativePath}`,
+      );
+    }
+
+    if (validateRelativeMarkdownLinks && path.extname(filePath) === ".md") {
+      await validateMarkdownLinks({ skillDir, filePath, content, issues });
     }
   }
 
-  const skillFile = path.join(skillDir, 'SKILL.md');
+  await validateRequiredRelativePaths({
+    skillDir,
+    requiredRelativePaths,
+    issues,
+  });
+  await validateSynchronizedFiles({
+    skillDir,
+    mirrorSkillDir,
+    synchronizedRelativePaths,
+    issues,
+  });
+
+  const skillFile = path.join(skillDir, "SKILL.md");
   try {
-    const skillText = await fs.readFile(skillFile, 'utf8');
+    const skillText = await fs.readFile(skillFile, "utf8");
     if (!/^---\n[\s\S]+?\n---/u.test(skillText)) {
-      issues.push('SKILL.md must include YAML frontmatter.');
+      issues.push("SKILL.md must include YAML frontmatter.");
     }
-    if (expectedName && !new RegExp(`name:\\s*${expectedName}`, 'u').test(skillText)) {
+    if (
+      expectedName &&
+      !new RegExp(`name:\\s*${expectedName}`, "u").test(skillText)
+    ) {
       issues.push(`SKILL.md must declare the ${expectedName} name.`);
     }
     if (!/description:/u.test(skillText)) {
-      issues.push('SKILL.md must declare a description.');
+      issues.push("SKILL.md must declare a description.");
     }
   } catch {
-    issues.push('SKILL.md could not be read.');
+    issues.push("SKILL.md could not be read.");
   }
 
   if (assetRelativePath && maxAssetBytes) {
