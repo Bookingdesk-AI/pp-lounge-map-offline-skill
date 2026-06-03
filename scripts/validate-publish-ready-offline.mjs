@@ -20,6 +20,7 @@ async function main() {
     expectedName: OFFLINE_SKILL_NAME,
     maxAssetBytes: OFFLINE_ASSET_MAX_BYTES,
     assetRelativePath: path.join("assets", "catalog.json"),
+    validateCatalogDisplayUrls: true,
     forbidHttpUrlsInMarkdown: true,
     validateRelativeMarkdownLinks: true,
     requiredRelativePaths: [
@@ -52,7 +53,7 @@ async function main() {
 
   if (evidence) {
     console.log(
-      `publish-check: offline skill bundle passed; files=${evidence.filesScanned}, markdownLinks=${evidence.markdownLinksChecked}, requiredPaths=${evidence.requiredPathsChecked}, synchronizedFiles=${evidence.synchronizedFilesChecked}, assetBytes=${evidence.assetBytes ?? "n/a"}/${evidence.maxAssetBytes ?? "n/a"}.`,
+      `publish-check: offline skill bundle passed; files=${evidence.filesScanned}, markdownLinks=${evidence.markdownLinksChecked}, requiredPaths=${evidence.requiredPathsChecked}, synchronizedFiles=${evidence.synchronizedFilesChecked}, catalogUrls=${evidence.catalogUrlsChecked}, assetBytes=${evidence.assetBytes ?? "n/a"}/${evidence.maxAssetBytes ?? "n/a"}.`,
     );
   } else {
     console.log("publish-check: offline skill bundle passed.");

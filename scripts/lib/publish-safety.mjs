@@ -143,6 +143,7 @@ export async function validateSkillBundleWithOptions({
   expectedName,
   maxAssetBytes,
   assetRelativePath,
+  validateCatalogDisplayUrls = false,
   forbidHttpUrlsInMarkdown = false,
   validateRelativeMarkdownLinks = false,
   requiredRelativePaths = [],
@@ -157,6 +158,7 @@ export async function validateSkillBundleWithOptions({
     synchronizedFilesChecked: 0,
     maxAssetBytes,
     assetBytes: null,
+    catalogUrlsChecked: 0,
   };
   const files = await walk(skillDir);
   const homeDir = process.env.HOME || "";
@@ -261,6 +263,37 @@ export async function validateSkillBundleWithOptions({
       }
     } catch {
       issues.push(`Expected asset missing: ${assetRelativePath}`);
+    }
+  }
+
+  if (validateCatalogDisplayUrls && assetRelativePath) {
+    const assetPath = path.join(skillDir, assetRelativePath);
+    try {
+      const catalog = JSON.parse(await fs.readFile(assetPath, "utf8"));
+      const lounges = Array.isArray(catalog.lounges) ? catalog.lounges : [];
+      for (const [index, lounge] of lounges.entries()) {
+        if (!lounge || typeof lounge.url !== "string" || lounge.url.length === 0) {
+          continue;
+        }
+        evidence.catalogUrlsChecked += 1;
+        let url;
+        try {
+          url = new URL(lounge.url);
+        } catch {
+          issues.push(`Catalog lounge ${index} has an unparsable display URL.`);
+          continue;
+        }
+        if (url.protocol !== "https:") {
+          issues.push(`Catalog lounge ${index} display URL must use https.`);
+        }
+        if (url.username || url.password || url.search || url.hash) {
+          issues.push(
+            `Catalog lounge ${index} display URL must not include userinfo, query, or fragment.`,
+          );
+        }
+      }
+    } catch (error) {
+      issues.push(`Catalog URL validation could not read ${assetRelativePath}: ${error.message}`);
     }
   }
 
