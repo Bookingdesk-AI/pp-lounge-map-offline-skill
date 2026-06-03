@@ -32,8 +32,10 @@ async function validateRequiredRelativePaths({
   skillDir,
   issues,
   label = "bundle",
+  evidence,
 }) {
   for (const relativePath of arguments[0].requiredRelativePaths ?? []) {
+    if (evidence) evidence.requiredPathsChecked += 1;
     try {
       await fs.stat(path.join(skillDir, relativePath));
     } catch {
@@ -42,7 +44,13 @@ async function validateRequiredRelativePaths({
   }
 }
 
-async function validateMarkdownLinks({ skillDir, filePath, content, issues }) {
+async function validateMarkdownLinks({
+  skillDir,
+  filePath,
+  content,
+  issues,
+  evidence,
+}) {
   const linkPattern = /\[[^\]]+\]\(([^)]+)\)/gu;
   for (const match of content.matchAll(linkPattern)) {
     const target = match[1].trim();
@@ -52,6 +60,7 @@ async function validateMarkdownLinks({ skillDir, filePath, content, issues }) {
       /^[a-z][a-z0-9+.-]*:/iu.test(target)
     )
       continue;
+    if (evidence) evidence.markdownLinksChecked += 1;
     const [withoutQuery] = target.split(/[?#]/u);
     const resolved = path.resolve(path.dirname(filePath), withoutQuery);
     const relativeFile = path.relative(skillDir, filePath);
@@ -74,6 +83,7 @@ async function validateSynchronizedFiles({
   mirrorSkillDir,
   synchronizedRelativePaths,
   issues,
+  evidence,
 }) {
   if (!mirrorSkillDir) return;
   try {
@@ -84,6 +94,7 @@ async function validateSynchronizedFiles({
   }
 
   for (const relativePath of synchronizedRelativePaths) {
+    if (evidence) evidence.synchronizedFilesChecked += 1;
     try {
       const source = await fs.readFile(
         path.join(skillDir, relativePath),
@@ -139,6 +150,14 @@ export async function validateSkillBundleWithOptions({
   synchronizedRelativePaths = [],
 }) {
   const issues = [];
+  const evidence = {
+    filesScanned: 0,
+    markdownLinksChecked: 0,
+    requiredPathsChecked: 0,
+    synchronizedFilesChecked: 0,
+    maxAssetBytes,
+    assetBytes: null,
+  };
   const files = await walk(skillDir);
   const homeDir = process.env.HOME || "";
 
@@ -158,6 +177,7 @@ export async function validateSkillBundleWithOptions({
     }
 
     const content = await fs.readFile(filePath, "utf8");
+    evidence.filesScanned += 1;
     if (
       content.includes(projectRoot) ||
       (homeDir && content.includes(homeDir))
@@ -186,7 +206,13 @@ export async function validateSkillBundleWithOptions({
     }
 
     if (validateRelativeMarkdownLinks && path.extname(filePath) === ".md") {
-      await validateMarkdownLinks({ skillDir, filePath, content, issues });
+      await validateMarkdownLinks({
+        skillDir,
+        filePath,
+        content,
+        issues,
+        evidence,
+      });
     }
   }
 
@@ -194,12 +220,14 @@ export async function validateSkillBundleWithOptions({
     skillDir,
     requiredRelativePaths,
     issues,
+    evidence,
   });
   await validateSynchronizedFiles({
     skillDir,
     mirrorSkillDir,
     synchronizedRelativePaths,
     issues,
+    evidence,
   });
 
   const skillFile = path.join(skillDir, "SKILL.md");
@@ -225,6 +253,7 @@ export async function validateSkillBundleWithOptions({
     try {
       const assetPath = path.join(skillDir, assetRelativePath);
       const stat = await fs.stat(assetPath);
+      evidence.assetBytes = stat.size;
       if (stat.size > maxAssetBytes) {
         issues.push(
           `Asset ${assetRelativePath} exceeds size budget: ${stat.size} bytes > ${maxAssetBytes} bytes.`,
@@ -235,5 +264,11 @@ export async function validateSkillBundleWithOptions({
     }
   }
 
+  Object.defineProperty(issues, "evidence", {
+    value: evidence,
+    enumerable: false,
+  });
+
   return issues;
 }
+

@@ -40,6 +40,8 @@ async function main() {
     ],
   });
 
+  const evidence = issues.evidence;
+
   if (issues.length > 0) {
     for (const issue of issues) {
       console.error(`publish-check: ${issue}`);
@@ -48,7 +50,13 @@ async function main() {
     return;
   }
 
-  console.log("publish-check: offline skill bundle passed.");
+  if (evidence) {
+    console.log(
+      `publish-check: offline skill bundle passed; files=${evidence.filesScanned}, markdownLinks=${evidence.markdownLinksChecked}, requiredPaths=${evidence.requiredPathsChecked}, synchronizedFiles=${evidence.synchronizedFilesChecked}, assetBytes=${evidence.assetBytes ?? "n/a"}/${evidence.maxAssetBytes ?? "n/a"}.`,
+    );
+  } else {
+    console.log("publish-check: offline skill bundle passed.");
+  }
 }
 
 main().catch((error) => {
