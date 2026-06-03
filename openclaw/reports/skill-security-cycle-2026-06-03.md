@@ -16,3 +16,13 @@ Findings:
 - Packaged mirror synchronization passed.
 
 Phase guard proof for this phase is the commit containing this report.
+
+## Phase B — Fix Plan
+
+Severity classification: LOW hardening opportunity; no confirmed secret leakage or offline-boundary break found.
+
+Selected bounded improvement: strengthen referenced-file/package integrity validation by checking that package-level README runtime commands stay aligned with `package.json`'s MCP entrypoint and reference the packaged local script.
+
+Non-goal: no runtime behavior changes, no deletion, no hosted endpoint enablement.
+
+Verification plan: rebuild the offline skill, re-run `npm run validate:publish:offline`, and run a bounded secret/path scan after implementation.
