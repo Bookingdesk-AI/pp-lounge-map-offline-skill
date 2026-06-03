@@ -59,6 +59,41 @@ async function validateOfflinePackageEntrypoint({ exportDir, issues, evidence })
   }
 }
 
+async function validateOfflinePackageReadmeEntrypoint({ exportDir, issues, evidence }) {
+  evidence.packageReadmeCommandsChecked = 0;
+
+  const packagePath = path.join(exportDir, "package.json");
+  const readmePath = path.join(exportDir, "README.md");
+  let packageJson;
+  let readmeText;
+  try {
+    packageJson = JSON.parse(await fs.readFile(packagePath, "utf8"));
+    readmeText = await fs.readFile(readmePath, "utf8");
+  } catch (error) {
+    issues.push(`Offline package README command integrity could not be checked: ${error.message}`);
+    return;
+  }
+
+  const mcpScript = packageJson?.scripts?.mcp;
+  if (typeof mcpScript !== "string" || mcpScript.length === 0) {
+    issues.push("Offline package README command integrity requires a non-empty package.json scripts.mcp entrypoint.");
+    return;
+  }
+
+  evidence.packageReadmeCommandsChecked += 1;
+  if (!readmeText.includes(mcpScript)) {
+    issues.push("Offline package README must document the exact package.json scripts.mcp command.");
+  }
+
+  const scriptRelativePath = mcpScript.startsWith("node ")
+    ? mcpScript.slice("node ".length).trim()
+    : mcpScript.trim();
+  evidence.packageReadmeCommandsChecked += 1;
+  if (!readmeText.includes(scriptRelativePath)) {
+    issues.push("Offline package README must reference the packaged local MCP script path.");
+  }
+}
+
 async function main() {
   const { skillDir, exportDir } = getOfflineSkillPaths(projectRoot);
   const issues = await validateSkillBundleWithOptions({
@@ -90,6 +125,7 @@ async function main() {
 
   const evidence = issues.evidence;
   await validateOfflinePackageEntrypoint({ exportDir, issues, evidence });
+  await validateOfflinePackageReadmeEntrypoint({ exportDir, issues, evidence });
 
   if (issues.length > 0) {
     for (const issue of issues) {
@@ -101,7 +137,7 @@ async function main() {
 
   if (evidence) {
     console.log(
-      `publish-check: offline skill bundle passed; files=${evidence.filesScanned}, markdownLinks=${evidence.markdownLinksChecked}, requiredPaths=${evidence.requiredPathsChecked}, synchronizedFiles=${evidence.synchronizedFilesChecked}, catalogUrls=${evidence.catalogUrlsChecked}, packageEntrypoints=${evidence.packageEntrypointsChecked ?? 0}, packageDependencies=${evidence.packageDependenciesChecked ?? 0}, assetBytes=${evidence.assetBytes ?? "n/a"}/${evidence.maxAssetBytes ?? "n/a"}.`,
+      `publish-check: offline skill bundle passed; files=${evidence.filesScanned}, markdownLinks=${evidence.markdownLinksChecked}, requiredPaths=${evidence.requiredPathsChecked}, synchronizedFiles=${evidence.synchronizedFilesChecked}, catalogUrls=${evidence.catalogUrlsChecked}, packageEntrypoints=${evidence.packageEntrypointsChecked ?? 0}, packageDependencies=${evidence.packageDependenciesChecked ?? 0}, packageReadmeCommands=${evidence.packageReadmeCommandsChecked ?? 0}, assetBytes=${evidence.assetBytes ?? "n/a"}/${evidence.maxAssetBytes ?? "n/a"}.`,
     );
   } else {
     console.log("publish-check: offline skill bundle passed.");
