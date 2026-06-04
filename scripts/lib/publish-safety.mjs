@@ -130,6 +130,34 @@ async function walk(dir) {
   return files;
 }
 
+function isHumanReadableSlug(segment) {
+  const words = segment.split("-").filter((part) => /^[a-z][a-z0-9]{1,}$/u.test(part));
+  return words.length >= 3;
+}
+
+function isTokenLikePathSegment(segment) {
+  if (!segment) return false;
+  let decoded;
+  try {
+    decoded = decodeURIComponent(segment);
+  } catch {
+    return true;
+  }
+  if (/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/u.test(decoded)) {
+    return true;
+  }
+  if (
+    decoded.length >= 48 &&
+    /^[A-Za-z0-9_-]+$/u.test(decoded) &&
+    !isHumanReadableSlug(decoded) &&
+    /[A-Za-z]/u.test(decoded) &&
+    /[0-9_-]/u.test(decoded)
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export async function validateSkillBundle({ projectRoot, skillDir }) {
   return validateSkillBundleWithOptions({
     projectRoot,
@@ -159,6 +187,7 @@ export async function validateSkillBundleWithOptions({
     maxAssetBytes,
     assetBytes: null,
     catalogUrlsChecked: 0,
+    catalogTokenLikePathSegmentsChecked: 0,
   };
   const files = await walk(skillDir);
   const homeDir = process.env.HOME || "";
@@ -290,6 +319,15 @@ export async function validateSkillBundleWithOptions({
           issues.push(
             `Catalog lounge ${index} display URL must not include userinfo, query, or fragment.`,
           );
+        }
+        for (const segment of url.pathname.split("/")) {
+          if (!segment) continue;
+          evidence.catalogTokenLikePathSegmentsChecked += 1;
+          if (isTokenLikePathSegment(segment)) {
+            issues.push(
+              `Catalog lounge ${index} display URL contains a token-like path segment; redact before packaging offline metadata.`,
+            );
+          }
         }
       }
     } catch (error) {

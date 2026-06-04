@@ -164,7 +164,7 @@ async function main() {
 
   if (evidence) {
     console.log(
-      `publish-check: offline skill bundle passed; files=${evidence.filesScanned}, markdownLinks=${evidence.markdownLinksChecked}, requiredPaths=${evidence.requiredPathsChecked}, synchronizedFiles=${evidence.synchronizedFilesChecked}, catalogUrls=${evidence.catalogUrlsChecked}, packageEntrypoints=${evidence.packageEntrypointsChecked ?? 0}, packageDependencies=${evidence.packageDependenciesChecked ?? 0}, packageReadmeCommands=${evidence.packageReadmeCommandsChecked ?? 0}, runtimeMirrorFiles=${evidence.runtimeMirrorFilesChecked ?? 0}, assetBytes=${evidence.assetBytes ?? "n/a"}/${evidence.maxAssetBytes ?? "n/a"}.`,
+      `publish-check: offline skill bundle passed; files=${evidence.filesScanned}, markdownLinks=${evidence.markdownLinksChecked}, requiredPaths=${evidence.requiredPathsChecked}, synchronizedFiles=${evidence.synchronizedFilesChecked}, catalogUrls=${evidence.catalogUrlsChecked}, catalogPathSegments=${evidence.catalogTokenLikePathSegmentsChecked ?? 0}, packageEntrypoints=${evidence.packageEntrypointsChecked ?? 0}, packageDependencies=${evidence.packageDependenciesChecked ?? 0}, packageReadmeCommands=${evidence.packageReadmeCommandsChecked ?? 0}, runtimeMirrorFiles=${evidence.runtimeMirrorFilesChecked ?? 0}, assetBytes=${evidence.assetBytes ?? "n/a"}/${evidence.maxAssetBytes ?? "n/a"}.`,
     );
   } else {
     console.log("publish-check: offline skill bundle passed.");

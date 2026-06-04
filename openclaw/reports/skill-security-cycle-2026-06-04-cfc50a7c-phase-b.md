@@ -27,3 +27,7 @@
 
 publish-check: offline skill bundle passed; files=11, markdownLinks=3, requiredPaths=6, synchronizedFiles=5, catalogUrls=1754, packageEntrypoints=2, packageDependencies=2, packageReadmeCommands=2, runtimeMirrorFiles=5, assetBytes=2021679/5242880..
 - Confirm output includes the expanded catalog URL evidence and existing source/mirror synchronization checks.
+
+## Phase C Implementation Result
+- Shipped secret/boundary validation improvement: catalog display URL validation now rejects JWT-style or long opaque token-like path segments while preserving human-readable slugs.
+- Verification: `npm run validate:publish:offline` passed with `catalogPathSegments=8770`.
