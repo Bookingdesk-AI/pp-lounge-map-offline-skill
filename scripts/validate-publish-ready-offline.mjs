@@ -94,6 +94,32 @@ async function validateOfflinePackageReadmeEntrypoint({ exportDir, issues, evide
   }
 }
 
+async function validatePackagedRuntimeMirror({ skillDir, exportDir, issues, evidence }) {
+  const runtimeRelativePaths = [
+    "scripts/run-offline-mcp.mjs",
+    "scripts/print-offline-mcp-config.mjs",
+    "scripts/runtime/catalog-core.mjs",
+    "scripts/runtime/contract.mjs",
+    "scripts/runtime/server-core.mjs",
+  ];
+  evidence.runtimeMirrorFilesChecked = 0;
+
+  for (const relativePath of runtimeRelativePaths) {
+    const sourcePath = path.join(skillDir, relativePath);
+    const mirrorPath = path.join(exportDir, "skills", OFFLINE_SKILL_NAME, relativePath);
+    evidence.runtimeMirrorFilesChecked += 1;
+    try {
+      const source = await fs.readFile(sourcePath, "utf8");
+      const mirror = await fs.readFile(mirrorPath, "utf8");
+      if (source !== mirror) {
+        issues.push(`Packaged runtime mirror drift detected for ${relativePath}.`);
+      }
+    } catch (error) {
+      issues.push(`Packaged runtime mirror check could not read ${relativePath}: ${error.message}`);
+    }
+  }
+}
+
 async function main() {
   const { skillDir, exportDir } = getOfflineSkillPaths(projectRoot);
   const issues = await validateSkillBundleWithOptions({
@@ -126,6 +152,7 @@ async function main() {
   const evidence = issues.evidence;
   await validateOfflinePackageEntrypoint({ exportDir, issues, evidence });
   await validateOfflinePackageReadmeEntrypoint({ exportDir, issues, evidence });
+  await validatePackagedRuntimeMirror({ skillDir, exportDir, issues, evidence });
 
   if (issues.length > 0) {
     for (const issue of issues) {
@@ -137,7 +164,7 @@ async function main() {
 
   if (evidence) {
     console.log(
-      `publish-check: offline skill bundle passed; files=${evidence.filesScanned}, markdownLinks=${evidence.markdownLinksChecked}, requiredPaths=${evidence.requiredPathsChecked}, synchronizedFiles=${evidence.synchronizedFilesChecked}, catalogUrls=${evidence.catalogUrlsChecked}, packageEntrypoints=${evidence.packageEntrypointsChecked ?? 0}, packageDependencies=${evidence.packageDependenciesChecked ?? 0}, packageReadmeCommands=${evidence.packageReadmeCommandsChecked ?? 0}, assetBytes=${evidence.assetBytes ?? "n/a"}/${evidence.maxAssetBytes ?? "n/a"}.`,
+      `publish-check: offline skill bundle passed; files=${evidence.filesScanned}, markdownLinks=${evidence.markdownLinksChecked}, requiredPaths=${evidence.requiredPathsChecked}, synchronizedFiles=${evidence.synchronizedFilesChecked}, catalogUrls=${evidence.catalogUrlsChecked}, packageEntrypoints=${evidence.packageEntrypointsChecked ?? 0}, packageDependencies=${evidence.packageDependenciesChecked ?? 0}, packageReadmeCommands=${evidence.packageReadmeCommandsChecked ?? 0}, runtimeMirrorFiles=${evidence.runtimeMirrorFilesChecked ?? 0}, assetBytes=${evidence.assetBytes ?? "n/a"}/${evidence.maxAssetBytes ?? "n/a"}.`,
     );
   } else {
     console.log("publish-check: offline skill bundle passed.");
