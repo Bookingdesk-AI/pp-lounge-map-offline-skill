@@ -9,6 +9,9 @@ const TEXT_FILE_EXTENSIONS = new Set([
   ".yml",
   "",
 ]);
+const OFFLINE_PUBLISH_REMEDIATION =
+  "Remediation: restore the missing source file or regenerate/sync the offline package with `npm run build:offline-skill` and `npm run skill:export:offline`, then rerun `npm run validate:publish:offline`.";
+
 const FORBIDDEN_CONTENT_PATTERNS = [
   {
     pattern: /curl\s+[^|\n]+?\|\s*(sh|bash)/i,
@@ -39,7 +42,9 @@ async function validateRequiredRelativePaths({
     try {
       await fs.stat(path.join(skillDir, relativePath));
     } catch {
-      issues.push(`Missing required ${label} file: ${relativePath}`);
+      issues.push(
+        `Missing required ${label} file: ${relativePath}. ${OFFLINE_PUBLISH_REMEDIATION}`,
+      );
     }
   }
 }
@@ -89,7 +94,9 @@ async function validateSynchronizedFiles({
   try {
     await fs.stat(mirrorSkillDir);
   } catch {
-    issues.push(`Packaged mirror is missing: ${mirrorSkillDir}`);
+    issues.push(
+      `Packaged mirror is missing. ${OFFLINE_PUBLISH_REMEDIATION}`,
+    );
     return;
   }
 
@@ -105,10 +112,14 @@ async function validateSynchronizedFiles({
         "utf8",
       );
       if (source !== mirror) {
-        issues.push(`Packaged mirror drift detected for ${relativePath}.`);
+        issues.push(
+          `Packaged mirror drift detected for ${relativePath}. ${OFFLINE_PUBLISH_REMEDIATION}`,
+        );
       }
     } catch {
-      issues.push(`Packaged mirror sync check could not read ${relativePath}.`);
+      issues.push(
+        `Packaged mirror sync check could not read ${relativePath}. ${OFFLINE_PUBLISH_REMEDIATION}`,
+      );
     }
   }
 }
