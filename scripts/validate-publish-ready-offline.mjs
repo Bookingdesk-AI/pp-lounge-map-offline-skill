@@ -59,6 +59,36 @@ async function validateOfflinePackageEntrypoint({ exportDir, issues, evidence })
   }
 }
 
+async function validateOfflinePackageReadmeTrustBoundary({ exportDir, issues, evidence }) {
+  evidence.packageReadmeTrustBoundaryPhrasesChecked = 0;
+
+  const readmePath = path.join(exportDir, "README.md");
+  let readmeText;
+  try {
+    readmeText = await fs.readFile(readmePath, "utf8");
+  } catch (error) {
+    issues.push(`Offline package README trust-boundary evidence could not be checked: ${error.message}`);
+    return;
+  }
+
+  const requiredPhrases = [
+    "local-only at runtime",
+    "bundled catalog snapshot",
+    "does not require network access",
+    "no OAuth flows",
+    "no sensitive credential collection",
+    "no purchase/payment execution",
+    "display metadata only",
+  ];
+
+  for (const phrase of requiredPhrases) {
+    evidence.packageReadmeTrustBoundaryPhrasesChecked += 1;
+    if (!readmeText.includes(phrase)) {
+      issues.push(`Offline package README must keep trust-boundary phrase: ${phrase}`);
+    }
+  }
+}
+
 async function validateOfflinePackageReadmeEntrypoint({ exportDir, issues, evidence }) {
   evidence.packageReadmeCommandsChecked = 0;
 
@@ -152,6 +182,7 @@ async function main() {
   const evidence = issues.evidence;
   await validateOfflinePackageEntrypoint({ exportDir, issues, evidence });
   await validateOfflinePackageReadmeEntrypoint({ exportDir, issues, evidence });
+  await validateOfflinePackageReadmeTrustBoundary({ exportDir, issues, evidence });
   await validatePackagedRuntimeMirror({ skillDir, exportDir, issues, evidence });
 
   if (issues.length > 0) {
@@ -164,7 +195,7 @@ async function main() {
 
   if (evidence) {
     console.log(
-      `publish-check: offline skill bundle passed; files=${evidence.filesScanned}, markdownLinks=${evidence.markdownLinksChecked}, requiredPaths=${evidence.requiredPathsChecked}, synchronizedFiles=${evidence.synchronizedFilesChecked}, catalogUrls=${evidence.catalogUrlsChecked}, catalogPathSegments=${evidence.catalogTokenLikePathSegmentsChecked ?? 0}, packageEntrypoints=${evidence.packageEntrypointsChecked ?? 0}, packageDependencies=${evidence.packageDependenciesChecked ?? 0}, packageReadmeCommands=${evidence.packageReadmeCommandsChecked ?? 0}, runtimeMirrorFiles=${evidence.runtimeMirrorFilesChecked ?? 0}, assetBytes=${evidence.assetBytes ?? "n/a"}/${evidence.maxAssetBytes ?? "n/a"}.`,
+      `publish-check: offline skill bundle passed; files=${evidence.filesScanned}, markdownLinks=${evidence.markdownLinksChecked}, requiredPaths=${evidence.requiredPathsChecked}, synchronizedFiles=${evidence.synchronizedFilesChecked}, catalogUrls=${evidence.catalogUrlsChecked}, catalogPathSegments=${evidence.catalogTokenLikePathSegmentsChecked ?? 0}, packageEntrypoints=${evidence.packageEntrypointsChecked ?? 0}, packageDependencies=${evidence.packageDependenciesChecked ?? 0}, packageReadmeCommands=${evidence.packageReadmeCommandsChecked ?? 0}, packageReadmeTrustBoundaryPhrases=${evidence.packageReadmeTrustBoundaryPhrasesChecked ?? 0}, runtimeMirrorFiles=${evidence.runtimeMirrorFilesChecked ?? 0}, assetBytes=${evidence.assetBytes ?? "n/a"}/${evidence.maxAssetBytes ?? "n/a"}.`,
     );
   } else {
     console.log("publish-check: offline skill bundle passed.");
