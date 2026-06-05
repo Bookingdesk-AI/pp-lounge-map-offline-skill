@@ -1,0 +1,5 @@
+
+> pp-lounge-map@0.0.0 validate:publish:offline
+> node scripts/validate-publish-ready-offline.mjs
+
+publish-check: offline skill bundle passed; files=11, markdownLinks=3, requiredPaths=6, synchronizedFiles=5, catalogUrls=1754, catalogPathSegments=8770, packageManifestFields=7, packageManifestRequiredFiles=21, packageEntrypoints=2, packageDependencies=2, packageReadmeCommands=2, packageReadmeTrustBoundaryPhrases=7, runtimeMirrorFiles=5, assetBytes=2021679/5242880.

@@ -13,6 +13,8 @@
     "skills/pp-lounge-map-offline/references/mcp.md",
     "skills/pp-lounge-map-offline/references/safety.md",
     "skills/pp-lounge-map-offline/references/publishing.md",
-    "skills/pp-lounge-map-offline/scripts/run-offline-mcp.mjs"
+    "skills/pp-lounge-map-offline/scripts/run-offline-mcp.mjs",
+    "skills/pp-lounge-map-offline/scripts/print-offline-mcp-config.mjs",
+    "skills/pp-lounge-map-offline/assets/catalog.json"
   ]
 }

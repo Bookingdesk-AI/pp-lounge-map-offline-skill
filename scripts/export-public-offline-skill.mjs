@@ -60,6 +60,8 @@ async function main() {
           `skills/${OFFLINE_SKILL_NAME}/references/safety.md`,
           `skills/${OFFLINE_SKILL_NAME}/references/publishing.md`,
           `skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs`,
+          `skills/${OFFLINE_SKILL_NAME}/scripts/print-offline-mcp-config.mjs`,
+          `skills/${OFFLINE_SKILL_NAME}/assets/catalog.json`,
         ],
       },
       null,
