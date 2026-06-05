@@ -1,0 +1,15 @@
+{
+  "name": "pp-lounge-map-offline",
+  "skillPath": "skills/pp-lounge-map-offline/SKILL.md",
+  "packageRootType": "wrapper",
+  "mcpCommand": "node skills/pp-lounge-map-offline/scripts/run-offline-mcp.mjs",
+  "validationCommand": "npm run validate:publish:offline",
+  "requiredFiles": [
+    "skills/pp-lounge-map-offline/SKILL.md",
+    "skills/pp-lounge-map-offline/README.md",
+    "skills/pp-lounge-map-offline/references/mcp.md",
+    "skills/pp-lounge-map-offline/references/safety.md",
+    "skills/pp-lounge-map-offline/references/publishing.md",
+    "skills/pp-lounge-map-offline/scripts/run-offline-mcp.mjs"
+  ]
+}
