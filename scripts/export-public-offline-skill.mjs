@@ -51,6 +51,9 @@ async function main() {
         mcpCommand,
         validationCommand: 'npm run validate:publish:offline',
         requiredFiles: [
+          'README.md',
+          'package.json',
+          'SKILL-PACKAGE.json',
           `skills/${OFFLINE_SKILL_NAME}/SKILL.md`,
           `skills/${OFFLINE_SKILL_NAME}/README.md`,
           `skills/${OFFLINE_SKILL_NAME}/references/mcp.md`,

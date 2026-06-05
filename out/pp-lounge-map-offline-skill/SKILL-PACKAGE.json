@@ -5,6 +5,9 @@
   "mcpCommand": "node skills/pp-lounge-map-offline/scripts/run-offline-mcp.mjs",
   "validationCommand": "npm run validate:publish:offline",
   "requiredFiles": [
+    "README.md",
+    "package.json",
+    "SKILL-PACKAGE.json",
     "skills/pp-lounge-map-offline/SKILL.md",
     "skills/pp-lounge-map-offline/README.md",
     "skills/pp-lounge-map-offline/references/mcp.md",

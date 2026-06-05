@@ -48,6 +48,23 @@ async function validateOfflinePackageManifest({ exportDir, issues, evidence }) {
     issues.push("Offline package manifest must declare requiredFiles for reviewer path integrity.");
   }
 
+  const reviewerCriticalFiles = [
+    "README.md",
+    "package.json",
+    "SKILL-PACKAGE.json",
+    `skills/${OFFLINE_SKILL_NAME}/README.md`,
+    `skills/${OFFLINE_SKILL_NAME}/references/mcp.md`,
+    `skills/${OFFLINE_SKILL_NAME}/references/safety.md`,
+    `skills/${OFFLINE_SKILL_NAME}/references/publishing.md`,
+    `skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs`,
+  ];
+  for (const relativePath of reviewerCriticalFiles) {
+    evidence.packageManifestRequiredFilesChecked += 1;
+    if (!requiredFiles.includes(relativePath)) {
+      issues.push(`Offline package manifest requiredFiles must include reviewer-critical path: ${relativePath}`);
+    }
+  }
+
   for (const relativePath of requiredFiles) {
     evidence.packageManifestRequiredFilesChecked += 1;
     const resolvedPath = path.resolve(exportDir, relativePath);
