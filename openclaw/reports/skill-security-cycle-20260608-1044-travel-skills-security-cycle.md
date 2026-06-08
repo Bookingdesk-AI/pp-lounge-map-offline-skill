@@ -23,3 +23,25 @@ git grep -nE 'AKIA[0-9A-Z]{16}|-----BEGIN (RSA|EC|OPENSSH|PGP|PRIVATE) KEY-----|
 - No committed high-confidence secret patterns were identified in skills/pp-lounge-map-offline + out/pp-lounge-map-offline-skill.
 - Existing publish validator checks frontmatter, package entrypoints, synchronized source/export docs, required files, runtime mirror drift, catalog URL display-only constraints, and offline trust-boundary phrases.
 - Candidate improvement strengthens exported package reviewer command evidence.
+
+## Phase B — FIX PLAN
+
+### Goal
+
+Ship one additive operator-evidence hardening feature: add exported package reviewer command evidence and enforce it in publish validation.
+
+### Classification
+
+- Severity: Low package-review drift risk.
+- Reason: no live secret was observed, but reviewers need quick confirmation that README, package.json, and SKILL-PACKAGE entrypoints agree before mirroring/publishing.
+- Feature ladder item: C. Operator evidence improvement.
+
+### Non-goals / do-not-touch scope
+
+- Do not change lounge catalog data, runtime MCP semantics, hosted web deployment, or package dependencies.
+- Do not delete generated package files; update only source exporter/validator and exported README evidence.
+
+### Verification
+
+- Run npm run validate:publish:offline.
+- Run git grep secret/boundary checks over skills/pp-lounge-map-offline, out/pp-lounge-map-offline-skill, and relevant scripts.
