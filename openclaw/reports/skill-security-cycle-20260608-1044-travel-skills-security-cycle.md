@@ -52,3 +52,23 @@ Ship one additive operator-evidence hardening feature: add exported package revi
 - Exporter improvement: scripts/export-public-offline-skill.mjs emits the reviewer evidence block for future package exports.
 - Validator improvement: scripts/validate-publish-ready-offline.mjs enforces the README command-evidence block against package manifest/package.json values.
 - Verification before commit: npm run validate:publish:offline passed.
+
+## Phase D — REVIEW + VERIFY
+
+### Commands run
+
+```text
+npm run validate:publish:offline
+git grep -nE '<high-confidence secret patterns>' -- skills/pp-lounge-map-offline out/pp-lounge-map-offline-skill scripts/export-public-offline-skill.mjs scripts/validate-publish-ready-offline.mjs
+sed -n '1,12p' skills/pp-lounge-map-offline/SKILL.md
+cat out/pp-lounge-map-offline-skill/SKILL-PACKAGE.json | jq '{name,skillPath,mcpCommand,validationCommand}'
+git status --short --branch
+```
+
+### Result
+
+- Publish validator passed: files=11, markdownLinks=3, requiredPaths=6, synchronizedFiles=5, catalogUrls=1754, catalogPathSegments=8770, packageManifestFields=7, packageManifestRequiredFiles=21, packageEntrypoints=2, packageDependencies=2, packageReadmeCommands=7, packageReadmeTrustBoundaryPhrases=7, runtimeMirrorFiles=5, assetBytes=2021679/5242880.
+- Frontmatter verified: name is pp-lounge-map-offline and description remains offline/air-gapped oriented.
+- Package manifest verified: name=pp-lounge-map-offline, skillPath=skills/pp-lounge-map-offline/SKILL.md, mcpCommand=node skills/pp-lounge-map-offline/scripts/run-offline-mcp.mjs, validationCommand=npm run validate:publish:offline.
+- Secret grep review: no high-confidence secret assignment/key patterns found.
+- Working tree after verification: clean on branch cron/travel-skills-security-cycle-20260606-1544 tracking origin/cron/travel-skills-security-cycle-20260606-1544.
