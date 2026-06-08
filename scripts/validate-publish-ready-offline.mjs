@@ -163,11 +163,14 @@ async function validateOfflinePackageReadmeTrustBoundary({ exportDir, issues, ev
 async function validateOfflinePackageReadmeEntrypoint({ exportDir, issues, evidence }) {
   evidence.packageReadmeCommandsChecked = 0;
 
+  const manifestPath = path.join(exportDir, "SKILL-PACKAGE.json");
   const packagePath = path.join(exportDir, "package.json");
   const readmePath = path.join(exportDir, "README.md");
+  let manifest;
   let packageJson;
   let readmeText;
   try {
+    manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
     packageJson = JSON.parse(await fs.readFile(packagePath, "utf8"));
     readmeText = await fs.readFile(readmePath, "utf8");
   } catch (error) {
@@ -192,6 +195,20 @@ async function validateOfflinePackageReadmeEntrypoint({ exportDir, issues, evide
   evidence.packageReadmeCommandsChecked += 1;
   if (!readmeText.includes(scriptRelativePath)) {
     issues.push("Offline package README must reference the packaged local MCP script path.");
+  }
+
+  const reviewerEvidencePhrases = [
+    "Reviewer command evidence",
+    "package.json `scripts.mcp`",
+    `SKILL-PACKAGE.json \`mcpCommand\`: \`${manifest?.mcpCommand}\``,
+    `SKILL-PACKAGE.json \`validationCommand\`: \`${manifest?.validationCommand}\``,
+    "Run validation from the source repo before publishing the exported bundle.",
+  ];
+  for (const phrase of reviewerEvidencePhrases) {
+    evidence.packageReadmeCommandsChecked += 1;
+    if (!readmeText.includes(phrase)) {
+      issues.push(`Offline package README must keep reviewer command evidence phrase: ${phrase}`);
+    }
   }
 }
 

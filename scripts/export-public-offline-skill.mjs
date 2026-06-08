@@ -32,15 +32,16 @@ async function main() {
   await buildOfflineSkill(projectRoot);
   const { skillDir, exportDir } = getOfflineSkillPaths(projectRoot);
 
+  const mcpCommand = `node skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs`;
+
   await fs.rm(exportDir, { recursive: true, force: true });
   await copyDir(skillDir, path.resolve(exportDir, 'skills', OFFLINE_SKILL_NAME));
   await fs.copyFile(path.resolve(projectRoot, 'LICENSE'), path.resolve(exportDir, 'LICENSE'));
   await fs.writeFile(
     path.resolve(exportDir, 'README.md'),
-    `# ${OFFLINE_SKILL_NAME}\n\nPortable offline skill bundle for Priority Pass lounge lookup.\n\n## Runtime\n\n1. Install package dependencies once.\n2. Start the local stdio MCP server with \`node skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs\`.\n3. Point your MCP client at that command.\n\n## Integrity checkpoints\n\nBefore publishing or mirroring this bundle, verify these packaged paths exist:\n\n- \`skills/${OFFLINE_SKILL_NAME}/SKILL.md\`\n- \`skills/${OFFLINE_SKILL_NAME}/references/mcp.md\`\n- \`skills/${OFFLINE_SKILL_NAME}/references/safety.md\`\n- \`skills/${OFFLINE_SKILL_NAME}/references/publishing.md\`\n- \`skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs\`\n\nRun \`npm run validate:publish:offline\` from the source repo before shipping; it checks frontmatter, markdown references, synchronized source/package docs, runtime mirror files, and package entrypoints.\n\n## Trust boundary\n\nThis artifact is local-only at runtime. It uses the bundled catalog snapshot and does not require network access to answer lounge queries.\n\nIt has no OAuth flows, no sensitive credential collection, and no purchase/payment execution. Catalog \`url\` fields are display metadata only; do not fetch them while operating the offline bundle.\n`,
+    `# ${OFFLINE_SKILL_NAME}\n\nPortable offline skill bundle for Priority Pass lounge lookup.\n\n## Runtime\n\n1. Install package dependencies once.\n2. Start the local stdio MCP server with \`node skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs\`.\n3. Point your MCP client at that command.\n\n## Integrity checkpoints\n\nBefore publishing or mirroring this bundle, verify these packaged paths exist:\n\n- \`skills/${OFFLINE_SKILL_NAME}/SKILL.md\`\n- \`skills/${OFFLINE_SKILL_NAME}/references/mcp.md\`\n- \`skills/${OFFLINE_SKILL_NAME}/references/safety.md\`\n- \`skills/${OFFLINE_SKILL_NAME}/references/publishing.md\`\n- \`skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs\`\n\nRun \`npm run validate:publish:offline\` from the source repo before shipping; it checks frontmatter, markdown references, synchronized source/package docs, runtime mirror files, and package entrypoints.\n\n## Reviewer command evidence\n\n- package.json \`scripts.mcp\`: \`${mcpCommand}\`\n- SKILL-PACKAGE.json \`mcpCommand\`: \`${mcpCommand}\`\n- SKILL-PACKAGE.json \`validationCommand\`: \`npm run validate:publish:offline\`\n- Run validation from the source repo before publishing the exported bundle.\n\n## Trust boundary\n\nThis artifact is local-only at runtime. It uses the bundled catalog snapshot and does not require network access to answer lounge queries.\n\nIt has no OAuth flows, no sensitive credential collection, and no purchase/payment execution. Catalog \`url\` fields are display metadata only; do not fetch them while operating the offline bundle.\n`,
     'utf8',
   );
-  const mcpCommand = `node skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs`;
   await fs.writeFile(
     path.resolve(exportDir, 'SKILL-PACKAGE.json'),
     `${JSON.stringify(

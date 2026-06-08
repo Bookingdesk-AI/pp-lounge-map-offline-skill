@@ -20,6 +20,13 @@ Before publishing or mirroring this bundle, verify these packaged paths exist:
 
 Run `npm run validate:publish:offline` from the source repo before shipping; it checks frontmatter, markdown references, synchronized source/package docs, runtime mirror files, and package entrypoints.
 
+## Reviewer command evidence
+
+- package.json `scripts.mcp`: `node skills/pp-lounge-map-offline/scripts/run-offline-mcp.mjs`
+- SKILL-PACKAGE.json `mcpCommand`: `node skills/pp-lounge-map-offline/scripts/run-offline-mcp.mjs`
+- SKILL-PACKAGE.json `validationCommand`: `npm run validate:publish:offline`
+- Run validation from the source repo before publishing the exported bundle.
+
 ## Trust boundary
 
 This artifact is local-only at runtime. It uses the bundled catalog snapshot and does not require network access to answer lounge queries.

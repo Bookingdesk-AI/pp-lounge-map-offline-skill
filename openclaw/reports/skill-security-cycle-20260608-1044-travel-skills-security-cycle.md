@@ -45,3 +45,10 @@ Ship one additive operator-evidence hardening feature: add exported package revi
 
 - Run npm run validate:publish:offline.
 - Run git grep secret/boundary checks over skills/pp-lounge-map-offline, out/pp-lounge-map-offline-skill, and relevant scripts.
+
+## Phase C — IMPROVE
+
+- Shipped: exported offline README now includes Reviewer command evidence for package.json scripts.mcp, SKILL-PACKAGE mcpCommand, and validationCommand.
+- Exporter improvement: scripts/export-public-offline-skill.mjs emits the reviewer evidence block for future package exports.
+- Validator improvement: scripts/validate-publish-ready-offline.mjs enforces the README command-evidence block against package manifest/package.json values.
+- Verification before commit: npm run validate:publish:offline passed.
