@@ -63,7 +63,9 @@ async function validateOfflinePackageManifest({ exportDir, issues, evidence }) {
   for (const relativePath of reviewerCriticalFiles) {
     evidence.packageManifestRequiredFilesChecked += 1;
     if (!requiredFiles.includes(relativePath)) {
-      issues.push(`Offline package manifest requiredFiles must include reviewer-critical path: ${relativePath}`);
+      issues.push(
+        `Offline package manifest requiredFiles must include reviewer-critical path: ${relativePath}. Rebuild the offline package with npm run build:offline-skill, then re-run npm run validate:publish:offline.`,
+      );
     }
   }
 
@@ -77,7 +79,9 @@ async function validateOfflinePackageManifest({ exportDir, issues, evidence }) {
     try {
       await fs.stat(resolvedPath);
     } catch {
-      issues.push(`Offline package manifest required file is missing: ${relativePath}`);
+      issues.push(
+        `Offline package manifest required file is missing: ${relativePath}. Rebuild the exported offline bundle with npm run build:offline-skill or restore the listed file before publishing.`,
+      );
     }
   }
 
@@ -230,10 +234,14 @@ async function validatePackagedRuntimeMirror({ skillDir, exportDir, issues, evid
       const source = await fs.readFile(sourcePath, "utf8");
       const mirror = await fs.readFile(mirrorPath, "utf8");
       if (source !== mirror) {
-        issues.push(`Packaged runtime mirror drift detected for ${relativePath}.`);
+        issues.push(
+          `Packaged runtime mirror drift detected for ${relativePath}. Rebuild the offline package with npm run build:offline-skill so source runtime files and out/ mirror files match.`,
+        );
       }
     } catch (error) {
-      issues.push(`Packaged runtime mirror check could not read ${relativePath}: ${error.message}`);
+      issues.push(
+        `Packaged runtime mirror check could not read ${relativePath}: ${error.message}. Restore the source and packaged runtime file, then rebuild with npm run build:offline-skill before publishing.`,
+      );
     }
   }
 }
