@@ -53,19 +53,11 @@ export interface LoungeMeta {
   }>;
 }
 
-export interface SpotGroupState {
-  key: string;
-  airportCode: string;
-  anchor: [number, number];
-  loungeIds: string[];
-  openedAt: string;
-}
-
-export type ClusterClickMode = 'zoom' | 'spot_stack';
-
 export type SheetSnap = 'peek' | 'mid' | 'full';
 
-export type MobileSheetMode = 'browse' | 'filters' | 'selected';
+export type MobileSheetMode = 'results' | 'filters' | 'details';
+
+export type SortOption = 'best_match' | 'airport_code' | 'country_city' | 'type';
 
 export type QuickFilterPreset =
   | 'none'

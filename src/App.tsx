@@ -1,17 +1,8 @@
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
-import {
-  MapContainer,
-  Marker,
-  TileLayer,
-  Tooltip,
-  useMap,
-  useMapEvents,
-} from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-cluster';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type {
-  ClusterClickMode,
   LoungeFeature,
   LoungeFeatureCollection,
   LoungeFeatureProperties,
@@ -20,24 +11,27 @@ import type {
   MobileUIState,
   QuickFilterPreset,
   SheetSnap,
-  SpotGroupState,
+  SortOption,
 } from './types';
+import {
+  LoungeClusterLayer,
+  type MapInteractionStatus,
+} from './map/cluster/LoungeClusterLayer';
+import { coordinateKey } from './map/cluster/coordinateKey';
 import './App.css';
 
-const TYPE_COLOR: Record<string, string> = {
-  LOUNGE: '#d6b574',
-  EAT: '#8dc7bf',
-  REST: '#95aee3',
-  REFRESH: '#87cfeb',
-  UNWIND: '#cc94bf',
+const SORT_LABELS: Record<SortOption, string> = {
+  best_match: 'Best',
+  airport_code: 'Airport',
+  country_city: 'Location',
+  type: 'Type',
 };
 
 const WORLD_CENTER: [number, number] = [22.5, 11.5];
 const WORLD_ZOOM = 2;
 const MOBILE_MEDIA_QUERY = '(max-width: 980px)';
 const SHEET_ORDER: SheetSnap[] = ['peek', 'mid', 'full'];
-
-const markerIconCache = new Map<string, L.DivIcon>();
+const COMPARE_LIMIT = 3;
 
 interface InitialUrlState {
   search: string;
@@ -48,18 +42,50 @@ interface InitialUrlState {
   selectedId: string | null;
   sheet: SheetSnap;
   mode: MobileSheetMode;
+  sort: SortOption;
 }
 
 interface MobileFilterDraft {
+  search: string;
   types: string[];
   country: string;
   city: string;
   facilities: string[];
+  sort: SortOption;
 }
 
-interface ClusterLayerLike {
-  getAllChildMarkers: () => L.Marker[];
-  getBounds: () => L.LatLngBounds;
+interface FilterSummaryChip {
+  key: string;
+  label: string;
+  onRemove: () => void;
+}
+
+function parseListParam(params: URLSearchParams, key: string) {
+  return (params.get(key) ?? '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function normalizeSheet(value: string | null): SheetSnap {
+  if (value === 'peek' || value === 'mid' || value === 'full') {
+    return value;
+  }
+  return 'mid';
+}
+
+function normalizeMode(value: string | null): MobileSheetMode {
+  if (value === 'results' || value === 'filters' || value === 'details') {
+    return value;
+  }
+  return 'results';
+}
+
+function normalizeSort(value: string | null): SortOption {
+  if (value === 'best_match' || value === 'airport_code' || value === 'country_city' || value === 'type') {
+    return value;
+  }
+  return 'country_city';
 }
 
 function quickPresetForType(type: string): QuickFilterPreset {
@@ -79,27 +105,6 @@ function quickPresetForType(type: string): QuickFilterPreset {
   }
 }
 
-function parseListParam(params: URLSearchParams, key: string) {
-  return (params.get(key) ?? '')
-    .split(',')
-    .map((value) => value.trim())
-    .filter(Boolean);
-}
-
-function normalizeSheet(value: string | null): SheetSnap {
-  if (value === 'peek' || value === 'mid' || value === 'full') {
-    return value;
-  }
-  return 'mid';
-}
-
-function normalizeMode(value: string | null): MobileSheetMode {
-  if (value === 'browse' || value === 'filters' || value === 'selected') {
-    return value;
-  }
-  return 'browse';
-}
-
 function readInitialUrlState(): InitialUrlState {
   const params = new URLSearchParams(window.location.search);
   const isInitialMobile = window.matchMedia(MOBILE_MEDIA_QUERY).matches;
@@ -114,35 +119,178 @@ function readInitialUrlState(): InitialUrlState {
     selectedId: params.get('selected'),
     sheet: hasSheet ? normalizeSheet(params.get('sheet')) : isInitialMobile ? 'peek' : 'mid',
     mode: normalizeMode(params.get('mode')),
+    sort: normalizeSort(params.get('sort')),
   };
 }
 
-function coordinateKey(coordinates: [number, number]) {
-  const [lon, lat] = coordinates;
-  return `${lat.toFixed(5)}:${lon.toFixed(5)}`;
+function baseSortKey(feature: LoungeFeature) {
+  const { country, city, airportCode, airportName, name } = feature.properties;
+  return `${country}|${city}|${airportCode}|${airportName}|${name}`;
 }
 
-function coordinateKeyFromLatLng(latLng: L.LatLng) {
-  return `${latLng.lat.toFixed(5)}:${latLng.lng.toFixed(5)}`;
-}
-
-function markerIcon(type: string, active: boolean): L.DivIcon {
-  const key = `${type}-${active ? 'active' : 'idle'}`;
-  const cached = markerIconCache.get(key);
-  if (cached) {
-    return cached;
+function getSearchScore(properties: LoungeFeatureProperties, rawQuery: string) {
+  const query = rawQuery.trim().toLowerCase();
+  if (!query) {
+    return 0;
   }
 
-  const color = TYPE_COLOR[type] ?? TYPE_COLOR.LOUNGE;
-  const icon = L.divIcon({
-    className: 'marker-wrap',
-    html: `<span class="marker-dot ${active ? 'is-active' : ''}" style="--dot:${color}"></span>`,
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-  });
+  const airportCode = properties.airportCode.toLowerCase();
+  const airportName = properties.airportName.toLowerCase();
+  const name = properties.name.toLowerCase();
+  const country = properties.country.toLowerCase();
+  const city = properties.city.toLowerCase();
+  const terminal = properties.terminal.toLowerCase();
+  const location = properties.location.toLowerCase();
+  const haystack = [airportCode, airportName, name, country, city, terminal, location].join(' ');
 
-  markerIconCache.set(key, icon);
-  return icon;
+  if (!haystack.includes(query)) {
+    return -1;
+  }
+
+  if (airportCode === query) {
+    return 1200;
+  }
+
+  if (name === query) {
+    return 1100;
+  }
+
+  if (airportName === query || city === query || country === query) {
+    return 1025;
+  }
+
+  if (airportCode.startsWith(query)) {
+    return 980;
+  }
+
+  if (name.startsWith(query)) {
+    return 920;
+  }
+
+  if (airportName.startsWith(query) || city.startsWith(query)) {
+    return 860;
+  }
+
+  if (name.includes(query)) {
+    return 790;
+  }
+
+  if (airportName.includes(query)) {
+    return 740;
+  }
+
+  if (city.includes(query) || country.includes(query)) {
+    return 700;
+  }
+
+  if (terminal.includes(query) || location.includes(query)) {
+    return 620;
+  }
+
+  return 500;
+}
+
+function matchesSearch(properties: LoungeFeatureProperties, query: string) {
+  return getSearchScore(properties, query) >= 0;
+}
+
+function sortFeatures(features: LoungeFeature[], sort: SortOption, query: string) {
+  return [...features].sort((first, second) => {
+    if (sort === 'best_match' && query.trim()) {
+      const scoreDelta = getSearchScore(second.properties, query) - getSearchScore(first.properties, query);
+      if (scoreDelta !== 0) {
+        return scoreDelta;
+      }
+    }
+
+    if (sort === 'airport_code') {
+      const codeOrder = first.properties.airportCode.localeCompare(second.properties.airportCode);
+      if (codeOrder !== 0) {
+        return codeOrder;
+      }
+    }
+
+    if (sort === 'type') {
+      const typeOrder = first.properties.type.localeCompare(second.properties.type);
+      if (typeOrder !== 0) {
+        return typeOrder;
+      }
+    }
+
+    return baseSortKey(first).localeCompare(baseSortKey(second));
+  });
+}
+
+function joinOrFallback(values: string[], fallback: string, limit = values.length) {
+  if (values.length === 0) {
+    return fallback;
+  }
+  return values.slice(0, limit).join(' · ');
+}
+
+function compactList(values: string[], fallback: string, limit = values.length, maxItemLength = 160) {
+  if (values.length === 0) {
+    return fallback;
+  }
+
+  return values
+    .slice(0, limit)
+    .map((value) => {
+      const compactValue = value.replace(/\s+/g, ' ').trim();
+      return compactValue.length > maxItemLength
+        ? `${compactValue.slice(0, maxItemLength).trim()}...`
+        : compactValue;
+    })
+    .join(' · ');
+}
+
+function locationLabel(feature: LoungeFeature) {
+  const cityOrCountry = feature.properties.city || feature.properties.country;
+  return feature.properties.terminal !== 'Unknown'
+    ? `${cityOrCountry} · ${feature.properties.terminal}`
+    : cityOrCountry;
+}
+
+function detailLocation(feature: LoungeFeature) {
+  return `${feature.properties.airportCode} · ${feature.properties.airportName}`;
+}
+
+function compactOpeningHours(value: string, fallback = 'Not listed', maxLines = 3, maxLength = 180) {
+  const lines = value
+    .replace(/\r/g, '\n')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const scheduleLines: string[] = [];
+  for (const line of lines) {
+    const lower = line.toLowerCase();
+    const isNote =
+      lower.startsWith('note:') ||
+      lower.startsWith('important note:') ||
+      lower.startsWith('for cardholders') ||
+      lower.includes('we advise cardholders');
+
+    if (isNote) {
+      break;
+    }
+
+    if (line.length > 180 && scheduleLines.length > 0) {
+      break;
+    }
+
+    scheduleLines.push(line);
+    if (scheduleLines.length >= maxLines) {
+      break;
+    }
+  }
+
+  const schedule = scheduleLines.join(' · ');
+  if (!schedule) {
+    return fallback;
+  }
+
+  return schedule.length > maxLength ? `${schedule.slice(0, maxLength).trim()}...` : schedule;
 }
 
 function TypePill({
@@ -161,77 +309,17 @@ function TypePill({
   );
 }
 
-function sortFeatures(features: LoungeFeature[]) {
-  return [...features].sort((a, b) => {
-    const first = `${a.properties.country}|${a.properties.city}|${a.properties.airportCode}|${a.properties.name}`;
-    const second = `${b.properties.country}|${b.properties.city}|${b.properties.airportCode}|${b.properties.name}`;
-    return first.localeCompare(second);
-  });
-}
-
-function matchesSearch(properties: LoungeFeatureProperties, query: string) {
-  if (!query) {
-    return true;
-  }
-
-  const haystack = [
-    properties.airportCode,
-    properties.airportName,
-    properties.name,
-    properties.country,
-    properties.city,
-    properties.terminal,
-  ]
-    .join(' ')
-    .toLowerCase();
-
-  return haystack.includes(query);
-}
-
-function toOffsetPosition(
-  coordinates: [number, number],
-  index: number,
-  total: number,
-  zoom: number,
-  seed: string,
-): [number, number] {
-  const [lon, lat] = coordinates;
-  if (total <= 1) {
-    return [lat, lon];
-  }
-
-  const ringSize = 8;
-  const ring = Math.floor(index / ringSize);
-  const indexInRing = index % ringSize;
-  const itemsInRing = Math.min(total - ring * ringSize, ringSize);
-
-  const seedValue = [...seed].reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const seedAngle = (seedValue % 360) * (Math.PI / 180);
-  const angle = seedAngle + (indexInRing / Math.max(itemsInRing, 1)) * Math.PI * 2;
-
-  const baseRadiusMeters = Math.max(42, (52000 / 2 ** Math.max(zoom, 2)) * (1 + ring * 0.65));
-  const metersPerDegreeLat = 111320;
-  const metersPerDegreeLon = 111320 * Math.max(Math.cos((lat * Math.PI) / 180), 0.15);
-
-  const latOffset = (Math.sin(angle) * baseRadiusMeters) / metersPerDegreeLat;
-  const lonOffset = (Math.cos(angle) * baseRadiusMeters) / metersPerDegreeLon;
-
-  return [lat + latOffset, lon + lonOffset];
-}
-
 function FitBounds({
   features,
   selectedId,
-  activeSpotGroup,
 }: {
   features: LoungeFeature[];
   selectedId: string | null;
-  activeSpotGroup: SpotGroupState | null;
 }) {
   const map = useMap();
 
   useEffect(() => {
-    if (selectedId || activeSpotGroup || features.length === 0) {
+    if (selectedId || features.length === 0) {
       return;
     }
 
@@ -252,7 +340,7 @@ function FitBounds({
       animate: true,
       duration: 0.75,
     });
-  }, [activeSpotGroup, features, map, selectedId]);
+  }, [features, map, selectedId]);
 
   return null;
 }
@@ -278,219 +366,18 @@ function FlyToSelection({
   return null;
 }
 
-function ClusteredMarkers({
-  features,
-  selectedId,
-  hoveredId,
-  activeSpotGroup,
-  onSelect,
-  onOpenSpotGroup,
-  onDismissSpotGroup,
-  onClusterMode,
-}: {
-  features: LoungeFeature[];
-  selectedId: string | null;
-  hoveredId: string | null;
-  activeSpotGroup: SpotGroupState | null;
-  onSelect: (id: string) => void;
-  onOpenSpotGroup: (next: SpotGroupState) => void;
-  onDismissSpotGroup: () => void;
-  onClusterMode: (mode: ClusterClickMode) => void;
-}) {
-  const map = useMap();
-  const [zoom, setZoom] = useState(map.getZoom());
-
-  useMapEvents({
-    zoomend: () => {
-      setZoom(map.getZoom());
-    },
-  });
-
-  const featuresById = useMemo(
-    () => new Map(features.map((feature) => [feature.properties.id, feature])),
-    [features],
-  );
-
-  const featuresBySpot = useMemo(() => {
-    const grouped = new Map<string, LoungeFeature[]>();
-    for (const feature of features) {
-      const key = coordinateKey(feature.geometry.coordinates);
-      const current = grouped.get(key) ?? [];
-      current.push(feature);
-      grouped.set(key, current);
-    }
-
-    for (const [, entries] of grouped) {
-      entries.sort((a, b) => a.properties.name.localeCompare(b.properties.name));
-    }
-
-    return grouped;
-  }, [features]);
-
-  const activeSpotIds = useMemo(() => new Set(activeSpotGroup?.loungeIds ?? []), [activeSpotGroup]);
-
-  const clusteredFeatures = useMemo(
-    () => features.filter((feature) => !activeSpotIds.has(feature.properties.id)),
-    [features, activeSpotIds],
-  );
-
-  const activeSpotFeatures = useMemo(() => {
-    if (!activeSpotGroup) {
-      return [];
-    }
-
-    return activeSpotGroup.loungeIds
-      .map((id) => featuresById.get(id))
-      .filter((feature): feature is LoungeFeature => Boolean(feature));
-  }, [activeSpotGroup, featuresById]);
-
-  const handleClusterClick = useCallback(
-    (rawEvent: unknown) => {
-      const event = rawEvent as L.LeafletEvent & { layer?: ClusterLayerLike };
-      const cluster = event.layer;
-      if (!cluster) {
-        return;
-      }
-
-      const childMarkers = cluster.getAllChildMarkers();
-      if (childMarkers.length === 0) {
-        return;
-      }
-
-      const coordinateKeys = new Set(
-        childMarkers.map((marker: L.Marker) => coordinateKeyFromLatLng(marker.getLatLng())),
-      );
-
-      if (coordinateKeys.size === 1) {
-        const onlyKey = childMarkers.length > 0 ? coordinateKeyFromLatLng(childMarkers[0].getLatLng()) : '';
-        const spotFeatures = featuresBySpot.get(onlyKey) ?? [];
-        const airportCodes = new Set(spotFeatures.map((feature) => feature.properties.airportCode));
-
-        if (spotFeatures.length > 1 && airportCodes.size === 1) {
-          const anchorLatLng = childMarkers[0].getLatLng();
-          onClusterMode('spot_stack');
-          onOpenSpotGroup({
-            key: onlyKey,
-            airportCode: spotFeatures[0].properties.airportCode,
-            anchor: [anchorLatLng.lng, anchorLatLng.lat],
-            loungeIds: spotFeatures.map((feature) => feature.properties.id),
-            openedAt: new Date().toISOString(),
-          });
-
-          map.flyTo([anchorLatLng.lat, anchorLatLng.lng], Math.max(map.getZoom(), 8), {
-            duration: 0.45,
-          });
-
-          return;
-        }
-      }
-
-      onClusterMode('zoom');
-      onDismissSpotGroup();
-      map.fitBounds(cluster.getBounds(), {
-        animate: true,
-        duration: 0.45,
-        padding: [38, 38],
-        maxZoom: Math.min(12, map.getMaxZoom()),
-      });
-    },
-    [featuresBySpot, map, onClusterMode, onDismissSpotGroup, onOpenSpotGroup],
-  );
-
-  return (
-    <>
-      <MarkerClusterGroup
-        chunkedLoading
-        showCoverageOnHover={false}
-        maxClusterRadius={50}
-        spiderfyOnMaxZoom={false}
-        zoomToBoundsOnClick={false}
-        disableClusteringAtZoom={10}
-        eventHandlers={{
-          clusterclick: handleClusterClick,
-        }}
-      >
-        {clusteredFeatures.map((feature) => {
-          const id = feature.properties.id;
-          const [lon, lat] = feature.geometry.coordinates;
-          const active = id === selectedId || id === hoveredId;
-
-          return (
-            <Marker
-              key={id}
-              position={[lat, lon]}
-              icon={markerIcon(feature.properties.type, active)}
-              eventHandlers={{
-                click: () => onSelect(id),
-              }}
-            >
-              <Tooltip direction="top" offset={[0, -8]}>
-                <div className="map-tooltip">
-                  <strong>{feature.properties.name}</strong>
-                  <span>
-                    {feature.properties.airportCode} · {feature.properties.city || feature.properties.country}
-                  </span>
-                </div>
-              </Tooltip>
-            </Marker>
-          );
-        })}
-      </MarkerClusterGroup>
-
-      {activeSpotFeatures.map((feature, index) => {
-        const id = feature.properties.id;
-        const position = toOffsetPosition(
-          feature.geometry.coordinates,
-          index,
-          activeSpotFeatures.length,
-          zoom,
-          activeSpotGroup?.key ?? '',
-        );
-        const active = id === selectedId || id === hoveredId;
-
-        return (
-          <Marker
-            key={`stack-${id}`}
-            position={position}
-            icon={markerIcon(feature.properties.type, active)}
-            zIndexOffset={1600}
-            eventHandlers={{
-              click: () => onSelect(id),
-            }}
-          >
-            <Tooltip direction="top" offset={[0, -8]}>
-              <div className="map-tooltip">
-                <strong>{feature.properties.name}</strong>
-                <span>
-                  {feature.properties.airportCode} · {feature.properties.city || feature.properties.country}
-                </span>
-              </div>
-            </Tooltip>
-          </Marker>
-        );
-      })}
-    </>
-  );
-}
-
 function MapView({
   features,
   selectedId,
   hoveredId,
-  activeSpotGroup,
   onSelect,
-  onOpenSpotGroup,
-  onDismissSpotGroup,
-  onClusterMode,
+  onInteractionStatusChange,
 }: {
   features: LoungeFeature[];
   selectedId: string | null;
   hoveredId: string | null;
-  activeSpotGroup: SpotGroupState | null;
   onSelect: (id: string) => void;
-  onOpenSpotGroup: (next: SpotGroupState) => void;
-  onDismissSpotGroup: () => void;
-  onClusterMode: (mode: ClusterClickMode) => void;
+  onInteractionStatusChange: (status: MapInteractionStatus) => void;
 }) {
   const selectedFeature = useMemo(
     () => features.find((feature) => feature.properties.id === selectedId),
@@ -507,24 +394,42 @@ function MapView({
       worldCopyJump
     >
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
       />
 
-      <ClusteredMarkers
+      <LoungeClusterLayer
         features={features}
         selectedId={selectedId}
         hoveredId={hoveredId}
-        activeSpotGroup={activeSpotGroup}
         onSelect={onSelect}
-        onOpenSpotGroup={onOpenSpotGroup}
-        onDismissSpotGroup={onDismissSpotGroup}
-        onClusterMode={onClusterMode}
+        onInteractionStatusChange={onInteractionStatusChange}
       />
 
-      <FitBounds features={features} selectedId={selectedId} activeSpotGroup={activeSpotGroup} />
+      <FitBounds features={features} selectedId={selectedId} />
       <FlyToSelection selected={selectedFeature} />
     </MapContainer>
+  );
+}
+
+function SortControl({
+  value,
+  onChange,
+}: {
+  value: SortOption;
+  onChange: (sort: SortOption) => void;
+}) {
+  return (
+    <label className="sort-control">
+      <span>Sort</span>
+      <select value={value} onChange={(event) => onChange(event.target.value as SortOption)}>
+        {Object.entries(SORT_LABELS).map(([sort, label]) => (
+          <option key={sort} value={sort}>
+            {label}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
 
@@ -623,12 +528,163 @@ function FilterControls({
   );
 }
 
+function ActiveFilterSummary({
+  chips,
+  onClearAll,
+}: {
+  chips: FilterSummaryChip[];
+  onClearAll: () => void;
+}) {
+  if (chips.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="active-filters">
+      <div className="active-filters-head">
+        <p>Active filters</p>
+        <button type="button" className="inline-link" onClick={onClearAll}>
+          Clear all
+        </button>
+      </div>
+      <div className="active-filter-list">
+        {chips.map((chip) => (
+          <button key={chip.key} type="button" className="filter-chip" onClick={chip.onRemove}>
+            {chip.label}
+            <span aria-hidden>×</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CompareTray({
+  comparedFeatures,
+  selectedId,
+  onSelect,
+  onRemove,
+  compact = false,
+}: {
+  comparedFeatures: LoungeFeature[];
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  onRemove: (id: string) => void;
+  compact?: boolean;
+}) {
+  const showExpandedMetrics = comparedFeatures.length > 1 && !compact;
+
+  return (
+    <section
+      className={`compare-tray ${compact ? 'is-compact' : ''} ${
+        comparedFeatures.length === 0 ? 'is-empty' : ''
+      }`}
+    >
+      <div className="section-title-row">
+        <div>
+          <h2>Compare</h2>
+        </div>
+        <span className="compare-count">{comparedFeatures.length} / {COMPARE_LIMIT}</span>
+      </div>
+
+      {comparedFeatures.length === 0 ? (
+        null
+      ) : (
+        <>
+          <div className="compare-card-grid">
+            {comparedFeatures.map((feature) => {
+              const active = selectedId === feature.properties.id;
+              return (
+                <article key={feature.properties.id} className={`compare-card ${active ? 'is-active' : ''}`}>
+                  <div className="compare-card-head">
+                    <span className="badge">{feature.properties.type}</span>
+                    <span className="code">{feature.properties.airportCode}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="compare-select"
+                    onClick={() => onSelect(feature.properties.id)}
+                  >
+                    <strong>{feature.properties.name}</strong>
+                    <span>{locationLabel(feature)}</span>
+                  </button>
+                  <dl className="compare-metrics">
+                    <div>
+                      <dt>Hours</dt>
+                        <dd>{compactOpeningHours(feature.properties.openingHours, 'Details', 2, 120)}</dd>
+                    </div>
+                    <div>
+                      <dt>Facilities</dt>
+                      <dd>{joinOrFallback(feature.properties.facilities, 'Not listed', showExpandedMetrics ? 4 : 2)}</dd>
+                    </div>
+                    {showExpandedMetrics ? (
+                      <div>
+                        <dt>Conditions</dt>
+                        <dd>{compactList(feature.properties.conditions, 'Not listed', 2, 110)}</dd>
+                      </div>
+                    ) : null}
+                  </dl>
+                  <button
+                    type="button"
+                    className="secondary-action"
+                    onClick={() => onRemove(feature.properties.id)}
+                  >
+                    Remove
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+
+function ResultsEmptyState({
+  search,
+  selectedFilterCount,
+  onClearSearch,
+  onClearFilters,
+}: {
+  search: string;
+  selectedFilterCount: number;
+  onClearSearch: () => void;
+  onClearFilters: () => void;
+}) {
+  return (
+    <div className="results-empty">
+      <p className="eyebrow">No matches</p>
+      <h3>0 results</h3>
+      <div className="results-empty-actions">
+        {search.trim() ? (
+          <button type="button" className="secondary-action" onClick={onClearSearch}>
+            Clear search
+          </button>
+        ) : null}
+        {selectedFilterCount > 0 ? (
+          <button type="button" className="primary-action subtle" onClick={onClearFilters}>
+            Clear filters
+          </button>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function ResultsList({
   features,
   selectedId,
   hoveredId,
+  comparedIds,
+  compareLimitReached,
   onHover,
   onSelect,
+  onToggleCompare,
+  onClearSearch,
+  onClearFilters,
+  search,
+  selectedFilterCount,
   initialBatch,
   batchSize,
   listContextKey,
@@ -636,8 +692,15 @@ function ResultsList({
   features: LoungeFeature[];
   selectedId: string | null;
   hoveredId: string | null;
+  comparedIds: Set<string>;
+  compareLimitReached: boolean;
   onHover: (id: string | null) => void;
   onSelect: (id: string) => void;
+  onToggleCompare: (id: string) => void;
+  onClearSearch: () => void;
+  onClearFilters: () => void;
+  search: string;
+  selectedFilterCount: number;
   initialBatch: number;
   batchSize: number;
   listContextKey: string;
@@ -672,8 +735,7 @@ function ResultsList({
     }
 
     const rootElement = listRef.current.closest('.mobile-sheet-body');
-    const observerRoot =
-      rootElement instanceof HTMLElement ? rootElement : listRef.current;
+    const observerRoot = rootElement instanceof HTMLElement ? rootElement : listRef.current;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -693,29 +755,64 @@ function ResultsList({
     return () => observer.disconnect();
   }, [canLoadMore, loadMore, observerSupported]);
 
+  if (features.length === 0) {
+    return (
+      <section className="results" ref={listRef} data-list-context={listContextKey}>
+        <ResultsEmptyState
+          search={search}
+          selectedFilterCount={selectedFilterCount}
+          onClearSearch={onClearSearch}
+          onClearFilters={onClearFilters}
+        />
+      </section>
+    );
+  }
+
   return (
     <section className="results" ref={listRef} data-list-context={listContextKey}>
       {visibleFeatures.map((feature) => {
         const active = selectedId === feature.properties.id;
         const hovered = hoveredId === feature.properties.id;
+        const compared = comparedIds.has(feature.properties.id);
+        const compareDisabled = compareLimitReached && !compared;
 
         return (
           <article
             key={feature.properties.id}
             className={`result-card ${active ? 'is-active' : ''} ${hovered ? 'is-hovered' : ''}`}
-            onClick={() => onSelect(feature.properties.id)}
             onMouseEnter={() => onHover(feature.properties.id)}
             onMouseLeave={() => onHover(null)}
           >
-            <header>
-              <span className="badge">{feature.properties.type}</span>
-              <span className="code">{feature.properties.airportCode}</span>
-            </header>
-            <h3>{feature.properties.name}</h3>
-            <p>
-              {feature.properties.airportName} · {feature.properties.city || feature.properties.country}
-            </p>
-            <small>{feature.properties.terminal}</small>
+            <button
+              type="button"
+              className="result-card-main"
+              onClick={() => onSelect(feature.properties.id)}
+              onFocus={() => onHover(feature.properties.id)}
+              onBlur={() => onHover(null)}
+            >
+              <header>
+                <span className="badge">{feature.properties.type}</span>
+                <span className="code">{feature.properties.airportCode}</span>
+              </header>
+              <h3>{feature.properties.name}</h3>
+              <p>{feature.properties.airportName}</p>
+              <div className="result-meta-row">
+                <span>{locationLabel(feature)}</span>
+                <span>{compactOpeningHours(feature.properties.openingHours, 'Details', 2, 110)}</span>
+              </div>
+              <small>{joinOrFallback(feature.properties.facilities, 'Not listed', 3)}</small>
+            </button>
+            <div className="result-card-actions">
+              <button
+                type="button"
+                className={`compare-toggle ${compared ? 'is-on' : ''}`}
+                onClick={() => onToggleCompare(feature.properties.id)}
+                disabled={compareDisabled}
+                aria-pressed={compared}
+              >
+                {compared ? 'In compare' : 'Compare'}
+              </button>
+            </div>
           </article>
         );
       })}
@@ -736,100 +833,163 @@ function ResultsList({
   );
 }
 
-function DetailContent({
+function SameSpotList({
   selectedFeature,
   sameSpotFeatures,
   onSelect,
-  onDismissSpotGroup,
-  activeSpotGroup,
 }: {
-  selectedFeature: LoungeFeature | undefined;
+  selectedFeature: LoungeFeature;
   sameSpotFeatures: LoungeFeature[];
   onSelect: (id: string) => void;
-  onDismissSpotGroup: () => void;
-  activeSpotGroup: SpotGroupState | null;
 }) {
-  if (!selectedFeature) {
-    return (
-      <div className="empty-detail">
-        <h3>Select a lounge</h3>
-        <p>Choose a marker or result row to see entry conditions, opening hours, and facilities.</p>
-      </div>
-    );
+  if (sameSpotFeatures.length <= 1) {
+    return null;
   }
 
   return (
-    <>
-      <div className="detail-head">
-        <p>{selectedFeature.properties.type}</p>
-        <h3>{selectedFeature.properties.name}</h3>
-        <span>
-          {selectedFeature.properties.airportCode} · {selectedFeature.properties.airportName}
-        </span>
+    <div className="spot-group">
+      <div className="spot-group-head">
+        <p className="spot-group-title">
+          {sameSpotFeatures.length} at {selectedFeature.properties.airportCode}
+        </p>
+      </div>
+      <div className="spot-group-list">
+        {sameSpotFeatures.map((spot) => (
+          <button
+            key={spot.properties.id}
+            type="button"
+            className={`spot-item ${selectedFeature.properties.id === spot.properties.id ? 'is-active' : ''}`}
+            onClick={() => onSelect(spot.properties.id)}
+          >
+            <strong>{spot.properties.name}</strong>
+            <span>
+              {spot.properties.airportCode} · {spot.properties.city || spot.properties.country}
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DetailPanel({
+  selectedFeature,
+  sameSpotFeatures,
+  comparedIds,
+  compareLimitReached,
+  onSelect,
+  onToggleCompare,
+  onClose,
+}: {
+  selectedFeature: LoungeFeature;
+  sameSpotFeatures: LoungeFeature[];
+  comparedIds: Set<string>;
+  compareLimitReached: boolean;
+  onSelect: (id: string) => void;
+  onToggleCompare: (id: string) => void;
+  onClose: () => void;
+}) {
+  const compared = comparedIds.has(selectedFeature.properties.id);
+
+  return (
+    <aside className="detail-panel detail-panel-overlay">
+      <div className="detail-panel-head">
+        <div>
+          <p>Selected</p>
+          <h3>{selectedFeature.properties.name}</h3>
+          <span>{detailLocation(selectedFeature)}</span>
+        </div>
+        <button type="button" className="ghost-action" onClick={onClose}>
+          Close
+        </button>
       </div>
 
-      <dl>
-        <div>
-          <dt>Location</dt>
-          <dd>
-            {selectedFeature.properties.city || selectedFeature.properties.country}
-            {selectedFeature.properties.terminal !== 'Unknown'
-              ? ` · ${selectedFeature.properties.terminal}`
-              : ''}
-          </dd>
+      <div className="detail-panel-body">
+        <div className="detail-meta-strip">
+          <span className="badge">{selectedFeature.properties.type}</span>
+          <span className="code">{locationLabel(selectedFeature)}</span>
         </div>
-        <div>
-          <dt>Opening Hours</dt>
-          <dd>{selectedFeature.properties.openingHours || 'See lounge page for schedule.'}</dd>
-        </div>
-        <div>
-          <dt>Conditions</dt>
-          <dd>{selectedFeature.properties.conditions.join(' · ') || 'Not listed'}</dd>
-        </div>
-        <div>
-          <dt>Facilities</dt>
-          <dd>{selectedFeature.properties.facilities.join(' · ') || 'Not listed'}</dd>
-        </div>
-      </dl>
 
-      {sameSpotFeatures.length > 1 ? (
-        <div className="spot-group">
-          <div className="spot-group-head">
-            <p className="spot-group-title">
-              {sameSpotFeatures.length} lounges at {selectedFeature.properties.airportCode}
-            </p>
-            {activeSpotGroup ? (
-              <button type="button" className="spot-dismiss" onClick={onDismissSpotGroup}>
-                Dismiss stack
-              </button>
-            ) : null}
-          </div>
-          <div className="spot-group-list">
-            {sameSpotFeatures.map((spot) => (
-              <button
-                key={spot.properties.id}
-                type="button"
-                className={`spot-item ${
-                  selectedFeature.properties.id === spot.properties.id ? 'is-active' : ''
-                }`}
-                onClick={() => onSelect(spot.properties.id)}
-              >
-                <strong>{spot.properties.name}</strong>
-                <span>
-                  {spot.properties.airportCode} · {spot.properties.city || spot.properties.country}
-                </span>
-              </button>
-            ))}
-          </div>
+        <div className="detail-actions">
+          <button
+            type="button"
+            className={`primary-action ${compared ? 'subtle' : ''}`}
+            onClick={() => onToggleCompare(selectedFeature.properties.id)}
+            disabled={compareLimitReached && !compared}
+          >
+            {compared ? 'Remove from compare' : 'Add to compare'}
+          </button>
+          {selectedFeature.properties.url ? (
+            <a className="ghost-link" href={selectedFeature.properties.url} target="_blank" rel="noreferrer">
+              Source
+            </a>
+          ) : null}
         </div>
-      ) : null}
 
-      {selectedFeature.properties.url ? (
-        <a href={selectedFeature.properties.url} target="_blank" rel="noreferrer">
-          View Priority Pass details
-        </a>
+        <dl className="detail-grid">
+          <div>
+            <dt>Location</dt>
+            <dd>{locationLabel(selectedFeature)}</dd>
+          </div>
+          <div>
+            <dt>Opening hours</dt>
+            <dd>{compactOpeningHours(selectedFeature.properties.openingHours, 'Not listed', 7, 260)}</dd>
+          </div>
+          <div>
+            <dt>Conditions</dt>
+            <dd>{compactList(selectedFeature.properties.conditions, 'Not listed', 3, 110)}</dd>
+          </div>
+          <div>
+            <dt>Facilities</dt>
+            <dd>{joinOrFallback(selectedFeature.properties.facilities, 'Not listed')}</dd>
+          </div>
+        </dl>
+
+        <SameSpotList
+          selectedFeature={selectedFeature}
+          sameSpotFeatures={sameSpotFeatures}
+          onSelect={onSelect}
+        />
+      </div>
+    </aside>
+  );
+}
+
+function MapLegend({
+  interactionStatus,
+  comparedCount,
+}: {
+  interactionStatus: MapInteractionStatus;
+  comparedCount: number;
+}) {
+  const [expanded, setExpanded] = useState(true);
+
+  return (
+    <div className={`map-legend ${expanded ? 'is-expanded' : 'is-collapsed'}`}>
+      <button
+        type="button"
+        className="map-legend-toggle"
+        onClick={() => setExpanded((current) => !current)}
+        aria-expanded={expanded}
+      >
+        <span className="eyebrow">Map</span>
+        <span>{expanded ? 'Hide' : 'Show'}</span>
+      </button>
+      {expanded ? (
+        <ul>
+          <li>
+            {interactionStatus === 'spiderfied'
+              ? 'Spiderfied'
+              : 'Clustered'}
+          </li>
+          <li>
+            {comparedCount > 0
+              ? `${comparedCount} compared`
+              : '0 compared'}
+          </li>
+        </ul>
       ) : null}
-    </>
+    </div>
   );
 }
 
@@ -856,6 +1016,13 @@ function MobileQuickFilters({
 }) {
   return (
     <div className="mobile-quick-filters">
+      <div className="mobile-results-summary">
+        <p>{visibleCount} visible</p>
+        <button type="button" className="ghost-link" onClick={onOpenFilters}>
+          {selectedFilterCount > 0 ? `${selectedFilterCount} filters` : 'Filters'}
+        </button>
+      </div>
+
       <div className="mobile-type-strip">
         {types.map((type) => {
           const preset = quickPresetForType(type);
@@ -876,44 +1043,38 @@ function MobileQuickFilters({
       </div>
 
       <div className="mobile-filter-meta">
-        <button type="button" className="meta-chip" onClick={onOpenFilters}>
-          Country: {selectedCountry === 'ALL' ? 'All' : selectedCountry}
-        </button>
-        <button type="button" className="meta-chip" onClick={onOpenFilters}>
-          City: {selectedCity === 'ALL' ? 'All' : selectedCity}
-        </button>
-        <span className="meta-count">{visibleCount} matches</span>
-        <span className="meta-count">{selectedFilterCount} filters</span>
+        <span className="meta-chip">Country: {selectedCountry === 'ALL' ? 'All' : selectedCountry}</span>
+        <span className="meta-chip">City: {selectedCity === 'ALL' ? 'All' : selectedCity}</span>
       </div>
     </div>
   );
 }
 
-function MobileSelectedView({
+function MobileDetailsView({
   selectedFeature,
   sameSpotFeatures,
+  comparedIds,
+  compareLimitReached,
   onSelect,
-  onDismissSpotGroup,
-  activeSpotGroup,
+  onToggleCompare,
 }: {
   selectedFeature: LoungeFeature | undefined;
   sameSpotFeatures: LoungeFeature[];
+  comparedIds: Set<string>;
+  compareLimitReached: boolean;
   onSelect: (id: string) => void;
-  onDismissSpotGroup: () => void;
-  activeSpotGroup: SpotGroupState | null;
+  onToggleCompare: (id: string) => void;
 }) {
   if (!selectedFeature) {
     return (
       <div className="mobile-empty-selected">
-        <h3>No lounge selected</h3>
-        <p>Tap a map marker or result card to open details.</p>
+        <p className="eyebrow">Details</p>
+        <h3>None selected</h3>
       </div>
     );
   }
 
-  const locationText = `${selectedFeature.properties.city || selectedFeature.properties.country}${
-    selectedFeature.properties.terminal !== 'Unknown' ? ` · ${selectedFeature.properties.terminal}` : ''
-  }`;
+  const compared = comparedIds.has(selectedFeature.properties.id);
 
   return (
     <div className="mobile-selected-view">
@@ -924,63 +1085,50 @@ function MobileSelectedView({
         </div>
         <h3>{selectedFeature.properties.name}</h3>
         <p>{selectedFeature.properties.airportName}</p>
-        <small>{selectedFeature.properties.openingHours || 'See lounge page for schedule.'}</small>
+        <small>{locationLabel(selectedFeature)}</small>
+      </div>
+
+      <div className="detail-actions">
+        <button
+          type="button"
+          className={`primary-action ${compared ? 'subtle' : ''}`}
+          onClick={() => onToggleCompare(selectedFeature.properties.id)}
+          disabled={compareLimitReached && !compared}
+        >
+          {compared ? 'Remove from compare' : 'Add to compare'}
+        </button>
+        {selectedFeature.properties.url ? (
+          <a className="ghost-link" href={selectedFeature.properties.url} target="_blank" rel="noreferrer">
+            Source
+          </a>
+        ) : null}
       </div>
 
       <details className="mobile-detail-accordion" open>
+        <summary>Opening hours</summary>
+        <p>{compactOpeningHours(selectedFeature.properties.openingHours, 'Not listed', 7, 260)}</p>
+      </details>
+
+      <details className="mobile-detail-accordion" open>
         <summary>Location</summary>
-        <p>{locationText || 'Not listed'}</p>
+        <p>{locationLabel(selectedFeature)}</p>
       </details>
 
       <details className="mobile-detail-accordion">
         <summary>Conditions</summary>
-        <p>{selectedFeature.properties.conditions.join(' · ') || 'Not listed'}</p>
+        <p>{compactList(selectedFeature.properties.conditions, 'Not listed', 3, 110)}</p>
       </details>
 
       <details className="mobile-detail-accordion">
         <summary>Facilities</summary>
-        <p>{selectedFeature.properties.facilities.join(' · ') || 'Not listed'}</p>
+        <p>{joinOrFallback(selectedFeature.properties.facilities, 'Not listed')}</p>
       </details>
 
-      {sameSpotFeatures.length > 1 ? (
-        <div className="spot-group mobile-spot-group">
-          <div className="spot-group-head">
-            <p className="spot-group-title">
-              {sameSpotFeatures.length} lounges at {selectedFeature.properties.airportCode}
-            </p>
-            {activeSpotGroup ? (
-              <button type="button" className="spot-dismiss" onClick={onDismissSpotGroup}>
-                Dismiss stack
-              </button>
-            ) : null}
-          </div>
-          <div className="spot-group-list">
-            {sameSpotFeatures.map((spot) => (
-              <button
-                key={spot.properties.id}
-                type="button"
-                className={`spot-item ${
-                  selectedFeature.properties.id === spot.properties.id ? 'is-active' : ''
-                }`}
-                onClick={() => onSelect(spot.properties.id)}
-              >
-                <strong>{spot.properties.name}</strong>
-                <span>
-                  {spot.properties.airportCode} · {spot.properties.city || spot.properties.country}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      {selectedFeature.properties.url ? (
-        <div className="mobile-sticky-cta">
-          <a className="detail-drawer-link" href={selectedFeature.properties.url} target="_blank" rel="noreferrer">
-            View Priority Pass details
-          </a>
-        </div>
-      ) : null}
+      <SameSpotList
+        selectedFeature={selectedFeature}
+        sameSpotFeatures={sameSpotFeatures}
+        onSelect={onSelect}
+      />
     </div>
   );
 }
@@ -998,12 +1146,14 @@ function App() {
   const [selectedCountry, setSelectedCountry] = useState(initialUrlState.selectedCountry);
   const [selectedCity, setSelectedCity] = useState(initialUrlState.selectedCity);
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>(initialUrlState.selectedFacilities);
+  const [sort, setSort] = useState<SortOption>(
+    initialUrlState.sort === 'country_city' && initialUrlState.search ? 'best_match' : initialUrlState.sort,
+  );
 
   const [selectedId, setSelectedId] = useState<string | null>(initialUrlState.selectedId);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [activeSpotGroup, setActiveSpotGroup] = useState<SpotGroupState | null>(null);
-  const [clusterClickMode, setClusterClickMode] = useState<ClusterClickMode>('zoom');
-  const [filtersCollapsed, setFiltersCollapsed] = useState(false);
+  const [mapInteractionStatus, setMapInteractionStatus] = useState<MapInteractionStatus>('clusters');
+  const [compareIds, setCompareIds] = useState<string[]>([]);
 
   const [isMobile, setIsMobile] = useState(() => window.matchMedia(MOBILE_MEDIA_QUERY).matches);
   const [mobileUI, setMobileUI] = useState<MobileUIState>({
@@ -1012,18 +1162,15 @@ function App() {
     quickFilterState: 'none',
   });
   const [mobileFilterDraft, setMobileFilterDraft] = useState<MobileFilterDraft>({
+    search: initialUrlState.search,
     types: initialUrlState.selectedTypes,
     country: initialUrlState.selectedCountry,
     city: initialUrlState.selectedCity,
     facilities: initialUrlState.selectedFacilities,
+    sort,
   });
 
   const sheetDragState = useRef<{ startY: number; currentY: number } | null>(null);
-  const filterSignatureRef = useRef('');
-
-  const transitionMobile = useCallback((patch: Partial<MobileUIState>) => {
-    setMobileUI((current) => ({ ...current, ...patch }));
-  }, []);
 
   useEffect(() => {
     const media = window.matchMedia(MOBILE_MEDIA_QUERY);
@@ -1031,7 +1178,7 @@ function App() {
     const listener = (event: MediaQueryListEvent) => {
       setIsMobile(event.matches);
       if (!event.matches) {
-        setMobileUI((current) => ({ ...current, sheetMode: 'browse' }));
+        setMobileUI((current) => ({ ...current, sheetMode: 'results' }));
       }
     };
 
@@ -1084,6 +1231,16 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    setSort((current) => {
+      if (search.trim()) {
+        return current === 'country_city' ? 'best_match' : current;
+      }
+
+      return current === 'best_match' ? 'country_city' : current;
+    });
+  }, [search]);
+
   const countries = meta?.filters.countries ?? [];
   const types = meta?.filters.types ?? [];
   const facilityOptions = meta?.filters.facilities ?? [];
@@ -1126,52 +1283,38 @@ function App() {
     return [...cities].sort((a, b) => a.localeCompare(b));
   }, [features, meta, mobileFilterDraft.country]);
 
+  const query = search.trim().toLowerCase();
+
+  const geoFilteredFeatures = useMemo(() => {
+    return features.filter((feature) => {
+      const properties = feature.properties;
+
+      if (selectedCountry !== 'ALL' && properties.country !== selectedCountry) {
+        return false;
+      }
+
+      if (selectedCity !== 'ALL' && properties.city !== selectedCity) {
+        return false;
+      }
+
+      if (
+        selectedFacilities.length > 0 &&
+        !selectedFacilities.every((facility) => properties.facilities.includes(facility))
+      ) {
+        return false;
+      }
+
+      return matchesSearch(properties, query);
+    });
+  }, [features, query, selectedCountry, selectedCity, selectedFacilities]);
+
   const filteredFeatures = useMemo(() => {
-    const query = search.trim().toLowerCase();
-
-    return sortFeatures(
-      features.filter((feature) => {
-        const properties = feature.properties;
-
-        if (selectedTypes.length > 0 && !selectedTypes.includes(properties.type)) {
-          return false;
-        }
-
-        if (selectedCountry !== 'ALL' && properties.country !== selectedCountry) {
-          return false;
-        }
-
-        if (selectedCity !== 'ALL' && properties.city !== selectedCity) {
-          return false;
-        }
-
-        if (
-          selectedFacilities.length > 0 &&
-          !selectedFacilities.every((facility) => properties.facilities.includes(facility))
-        ) {
-          return false;
-        }
-
-        return matchesSearch(properties, query);
-      }),
-    );
-  }, [features, search, selectedTypes, selectedCountry, selectedCity, selectedFacilities]);
-
-  const featuresBySpot = useMemo(() => {
-    const grouped = new Map<string, LoungeFeature[]>();
-    for (const feature of filteredFeatures) {
-      const key = coordinateKey(feature.geometry.coordinates);
-      const current = grouped.get(key) ?? [];
-      current.push(feature);
-      grouped.set(key, current);
-    }
-
-    for (const [, entries] of grouped) {
-      entries.sort((a, b) => a.properties.name.localeCompare(b.properties.name));
-    }
-
-    return grouped;
-  }, [filteredFeatures]);
+    const narrowed =
+      selectedTypes.length > 0
+        ? geoFilteredFeatures.filter((feature) => selectedTypes.includes(feature.properties.type))
+        : geoFilteredFeatures;
+    return sortFeatures(narrowed, sort, query);
+  }, [geoFilteredFeatures, query, selectedTypes, sort]);
 
   const featuresById = useMemo(
     () => new Map(features.map((feature) => [feature.properties.id, feature])),
@@ -1186,33 +1329,51 @@ function App() {
   }, [features, filteredFeatures, selectedId]);
 
   const sameSpotFeatures = useMemo(() => {
-    if (activeSpotGroup) {
-      return activeSpotGroup.loungeIds
-        .map((id) => featuresById.get(id))
-        .filter((feature): feature is LoungeFeature => Boolean(feature));
-    }
-
     if (!selectedFeature) {
       return [];
     }
 
-    return featuresBySpot.get(coordinateKey(selectedFeature.geometry.coordinates)) ?? [selectedFeature];
-  }, [activeSpotGroup, featuresById, featuresBySpot, selectedFeature]);
+    const selectedCoordinate = coordinateKey(selectedFeature.geometry.coordinates);
+    const sameCoordinate = filteredFeatures
+      .filter((feature) => coordinateKey(feature.geometry.coordinates) === selectedCoordinate)
+      .sort((first, second) => first.properties.name.localeCompare(second.properties.name));
+
+    if (sameCoordinate.length > 1) {
+      return sameCoordinate;
+    }
+
+    return filteredFeatures
+      .filter((feature) => feature.properties.airportCode === selectedFeature.properties.airportCode)
+      .sort((first, second) => first.properties.name.localeCompare(second.properties.name));
+  }, [filteredFeatures, selectedFeature]);
+
+  const comparedFeatures = useMemo(
+    () =>
+      compareIds
+        .map((id) => featuresById.get(id))
+        .filter((feature): feature is LoungeFeature => Boolean(feature)),
+    [compareIds, featuresById],
+  );
+
+  const comparedIdSet = useMemo(() => new Set(compareIds), [compareIds]);
+  const compareLimitReached = compareIds.length >= COMPARE_LIMIT;
 
   useEffect(() => {
     if (!selectedId) {
       return;
     }
 
+    if (loading) {
+      return;
+    }
+
     const stillVisible = filteredFeatures.some((feature) => feature.properties.id === selectedId);
     if (!stillVisible) {
       setSelectedId(filteredFeatures[0]?.properties.id ?? null);
-      setActiveSpotGroup(null);
     }
-  }, [filteredFeatures, selectedId]);
+  }, [filteredFeatures, loading, selectedId]);
 
   useEffect(() => {
-    const query = search.trim().toLowerCase();
     if (!query) {
       return;
     }
@@ -1224,21 +1385,7 @@ function App() {
     if (exactIata) {
       setSelectedId(exactIata.properties.id);
     }
-  }, [search, filteredFeatures]);
-
-  useEffect(() => {
-    if (!activeSpotGroup) {
-      return;
-    }
-
-    const stillVisible = activeSpotGroup.loungeIds.some((id) =>
-      filteredFeatures.some((feature) => feature.properties.id === id),
-    );
-
-    if (!stillVisible) {
-      setActiveSpotGroup(null);
-    }
-  }, [activeSpotGroup, filteredFeatures]);
+  }, [query, filteredFeatures]);
 
   const filterSignature = useMemo(
     () =>
@@ -1248,37 +1395,26 @@ function App() {
         selectedCountry,
         selectedCity,
         [...selectedFacilities].sort().join(','),
+        sort,
       ].join('|'),
-    [search, selectedTypes, selectedCountry, selectedCity, selectedFacilities],
+    [search, selectedTypes, selectedCountry, selectedCity, selectedFacilities, sort],
   );
-
-  useEffect(() => {
-    if (!filterSignatureRef.current) {
-      filterSignatureRef.current = filterSignature;
-      return;
-    }
-
-    if (filterSignatureRef.current !== filterSignature) {
-      setActiveSpotGroup(null);
-      filterSignatureRef.current = filterSignature;
-    }
-  }, [filterSignature]);
 
   const typeCounts = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const feature of filteredFeatures) {
+    for (const feature of geoFilteredFeatures) {
       const type = feature.properties.type;
       counts.set(type, (counts.get(type) || 0) + 1);
     }
     return counts;
-  }, [filteredFeatures]);
+  }, [geoFilteredFeatures]);
 
   useEffect(() => {
     const params = new URLSearchParams();
 
-    const query = search.trim();
-    if (query) {
-      params.set('q', query);
+    const trimmedSearch = search.trim();
+    if (trimmedSearch) {
+      params.set('q', trimmedSearch);
     }
 
     if (selectedTypes.length > 0) {
@@ -1301,6 +1437,10 @@ function App() {
       params.set('selected', selectedId);
     }
 
+    if (sort !== (trimmedSearch ? 'best_match' : 'country_city')) {
+      params.set('sort', sort);
+    }
+
     params.set('sheet', mobileUI.sheetSnap);
     params.set('mode', mobileUI.sheetMode);
 
@@ -1319,6 +1459,7 @@ function App() {
     selectedCity,
     selectedFacilities,
     selectedId,
+    sort,
     mobileUI.sheetSnap,
     mobileUI.sheetMode,
   ]);
@@ -1329,23 +1470,21 @@ function App() {
     );
   }, []);
 
-  const toggleQuickType = useCallback(
-    (type: string) => {
-      setSelectedTypes((current) => {
-        const currentlyActive = current.includes(type);
-        const nextTypes = currentlyActive ? current.filter((item) => item !== type) : [...current, type];
+  const toggleQuickType = useCallback((type: string) => {
+    setSelectedTypes((current) => {
+      const currentlyActive = current.includes(type);
+      const nextTypes = currentlyActive ? current.filter((item) => item !== type) : [...current, type];
 
-        transitionMobile({
-          sheetMode: 'browse',
-          sheetSnap: 'mid',
-          quickFilterState: currentlyActive ? 'none' : quickPresetForType(type),
-        });
+      setMobileUI((mobileCurrent) => ({
+        ...mobileCurrent,
+        sheetMode: 'results',
+        sheetSnap: 'mid',
+        quickFilterState: currentlyActive ? 'none' : quickPresetForType(type),
+      }));
 
-        return nextTypes;
-      });
-    },
-    [transitionMobile],
-  );
+      return nextTypes;
+    });
+  }, []);
 
   const toggleFacility = useCallback((facility: string) => {
     setSelectedFacilities((current) =>
@@ -1356,16 +1495,13 @@ function App() {
   }, []);
 
   const selectFeature = useCallback(
-    (id: string, options?: { preserveSpotGroup?: boolean }) => {
+    (id: string) => {
       setSelectedId(id);
-      if (!options?.preserveSpotGroup) {
-        setActiveSpotGroup(null);
-      }
 
       if (isMobile) {
         setMobileUI((current) => ({
           ...current,
-          sheetMode: 'selected',
+          sheetMode: 'details',
           sheetSnap: 'full',
         }));
       }
@@ -1373,24 +1509,31 @@ function App() {
     [isMobile],
   );
 
-  const openSpotGroup = useCallback(
-    (next: SpotGroupState) => {
-      setActiveSpotGroup(next);
-      setSelectedId((current) => (current && next.loungeIds.includes(current) ? current : next.loungeIds[0] ?? null));
-
-      if (isMobile) {
-        setMobileUI((current) => ({
-          ...current,
-          sheetMode: 'selected',
-          sheetSnap: 'full',
-        }));
+  const toggleCompare = useCallback((id: string) => {
+    setCompareIds((current) => {
+      if (current.includes(id)) {
+        return current.filter((item) => item !== id);
       }
-    },
-    [isMobile],
-  );
 
-  const dismissSpotGroup = useCallback(() => {
-    setActiveSpotGroup(null);
+      if (current.length >= COMPARE_LIMIT) {
+        return current;
+      }
+
+      return [...current, id];
+    });
+  }, []);
+
+  const clearSearch = useCallback(() => {
+    setSearch('');
+  }, []);
+
+  const clearAppliedFilters = useCallback(() => {
+    setSearch('');
+    setSelectedTypes([]);
+    setSelectedCountry('ALL');
+    setSelectedCity('ALL');
+    setSelectedFacilities([]);
+    setSort('country_city');
   }, []);
 
   const shiftSheetSnap = useCallback((direction: 1 | -1) => {
@@ -1403,48 +1546,41 @@ function App() {
 
   const openMobileFilters = useCallback(() => {
     setMobileFilterDraft({
+      search,
       types: [...selectedTypes],
       country: selectedCountry,
       city: selectedCity,
       facilities: [...selectedFacilities],
+      sort,
     });
-    transitionMobile({ sheetMode: 'filters', sheetSnap: 'full' });
-  }, [selectedTypes, selectedCountry, selectedCity, selectedFacilities, transitionMobile]);
+    setMobileUI((current) => ({ ...current, sheetMode: 'filters', sheetSnap: 'full' }));
+  }, [search, selectedTypes, selectedCountry, selectedCity, selectedFacilities, sort]);
 
   const applyMobileFilters = useCallback(() => {
+    setSearch(mobileFilterDraft.search);
     setSelectedTypes([...mobileFilterDraft.types]);
     setSelectedCountry(mobileFilterDraft.country);
     setSelectedCity(mobileFilterDraft.city);
     setSelectedFacilities([...mobileFilterDraft.facilities]);
-    transitionMobile({
-      sheetMode: 'browse',
+    setSort(mobileFilterDraft.sort);
+    setMobileUI((current) => ({
+      ...current,
+      sheetMode: 'results',
       sheetSnap: 'mid',
       quickFilterState: 'none',
-    });
-  }, [mobileFilterDraft, transitionMobile]);
+    }));
+  }, [mobileFilterDraft]);
 
-  const clearAllFilters = useCallback(() => {
-    const cleared: MobileFilterDraft = {
+  const resetMobileDraft = useCallback(() => {
+    setMobileFilterDraft({
+      search: '',
       types: [],
       country: 'ALL',
       city: 'ALL',
       facilities: [],
-    };
-
-    setSearch('');
-    setSelectedTypes(cleared.types);
-    setSelectedCountry(cleared.country);
-    setSelectedCity(cleared.city);
-    setSelectedFacilities(cleared.facilities);
-    setSelectedId(null);
-    setActiveSpotGroup(null);
-    setMobileFilterDraft(cleared);
-    transitionMobile({
-      sheetMode: 'browse',
-      sheetSnap: isMobile ? 'mid' : 'mid',
-      quickFilterState: 'none',
+      sort: 'country_city',
     });
-  }, [isMobile, transitionMobile]);
+  }, []);
 
   const handleSheetPointerDown = useCallback((event: ReactPointerEvent<HTMLButtonElement>) => {
     sheetDragState.current = { startY: event.clientY, currentY: event.clientY };
@@ -1458,7 +1594,7 @@ function App() {
     sheetDragState.current.currentY = event.clientY;
   }, []);
 
-  const handleSheetPointerUp = useCallback((event: ReactPointerEvent<HTMLButtonElement>) => {
+  const finishSheetDrag = useCallback((event: ReactPointerEvent<HTMLButtonElement>) => {
     const drag = sheetDragState.current;
     sheetDragState.current = null;
 
@@ -1475,7 +1611,9 @@ function App() {
       }
     }
 
-    event.currentTarget.releasePointerCapture(event.pointerId);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
   }, [shiftSheetSnap]);
 
   const toggleDraftType = useCallback((type: string) => {
@@ -1497,17 +1635,70 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!isMobile || mobileUI.sheetMode !== 'selected') {
+    if (!isMobile || mobileUI.sheetMode !== 'details') {
+      return;
+    }
+
+    if (loading) {
       return;
     }
 
     if (!selectedFeature) {
-      transitionMobile({ sheetMode: 'browse', sheetSnap: 'mid' });
+      setMobileUI((current) => ({ ...current, sheetMode: 'results', sheetSnap: 'mid' }));
     }
-  }, [isMobile, mobileUI.sheetMode, selectedFeature, transitionMobile]);
+  }, [isMobile, loading, mobileUI.sheetMode, selectedFeature]);
+
+  const activeFilterChips = useMemo(() => {
+    const chips: FilterSummaryChip[] = [];
+
+    if (search.trim()) {
+      chips.push({
+        key: 'search',
+        label: `Search: ${search.trim()}`,
+        onRemove: () => setSearch(''),
+      });
+    }
+
+    for (const type of selectedTypes) {
+      chips.push({
+        key: `type-${type}`,
+        label: type,
+        onRemove: () => toggleType(type),
+      });
+    }
+
+    if (selectedCountry !== 'ALL') {
+      chips.push({
+        key: 'country',
+        label: selectedCountry,
+        onRemove: () => {
+          setSelectedCountry('ALL');
+          setSelectedCity('ALL');
+        },
+      });
+    }
+
+    if (selectedCity !== 'ALL') {
+      chips.push({
+        key: 'city',
+        label: selectedCity,
+        onRemove: () => setSelectedCity('ALL'),
+      });
+    }
+
+    for (const facility of selectedFacilities) {
+      chips.push({
+        key: `facility-${facility}`,
+        label: facility,
+        onRemove: () => toggleFacility(facility),
+      });
+    }
+
+    return chips;
+  }, [search, selectedTypes, selectedCountry, selectedCity, selectedFacilities, toggleType, toggleFacility]);
 
   if (loading) {
-    return <div className="state-screen">Loading lounge map data...</div>;
+    return <div className="state-screen">Loading...</div>;
   }
 
   if (error) {
@@ -1518,243 +1709,279 @@ function App() {
     selectedTypes.length +
     selectedFacilities.length +
     (selectedCountry !== 'ALL' ? 1 : 0) +
-    (selectedCity !== 'ALL' ? 1 : 0);
+    (selectedCity !== 'ALL' ? 1 : 0) +
+    (search.trim() ? 1 : 0);
 
   return (
     <div className={`app-shell ${isMobile ? `is-mobile sheet-${mobileUI.sheetSnap}` : ''}`}>
-      <div className="ambient-orb orb-a" aria-hidden />
-      <div className="ambient-orb orb-b" aria-hidden />
-      <div className="ambient-orb orb-c" aria-hidden />
-
       <header className="topbar">
         <div className="brand-wrap">
-          <p className="kicker">Priority Pass</p>
-          <h1>Global Lounge Atlas</h1>
-          <p className="subtitle">
-            {meta?.stats.totalFeatures ?? 0} lounges across {meta?.stats.uniqueCountries ?? 0} countries.
-          </p>
+          <h1>Lounge Map</h1>
+          <div className="system-stats" aria-label="Catalog status">
+            <span>{meta?.stats.totalFeatures ?? 0} records</span>
+            <span>{meta?.stats.uniqueAirports ?? 0} airports</span>
+            <span>{meta?.stats.uniqueCountries ?? 0} countries</span>
+            <span>{meta ? new Date(meta.generatedAt).toISOString().slice(0, 10) : 'No date'}</span>
+          </div>
         </div>
 
         <label className="search-wrap">
-          <span>Search airport, city, or lounge</span>
+          <span>Search</span>
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Example: AUA, New York, Plaza Premium"
+            placeholder="Airport, city, lounge"
           />
         </label>
       </header>
 
-      <main className={`workspace ${filtersCollapsed ? 'filters-collapsed' : ''}`}>
-        <aside className={`filter-rail ${filtersCollapsed ? 'is-collapsed' : ''}`}>
-          {filtersCollapsed ? (
-            <div className="collapsed-rail">
-              <button type="button" className="rail-expand" onClick={() => setFiltersCollapsed(false)}>
-                Show filters
-              </button>
-              <p>{filteredFeatures.length} visible</p>
-              <p>{selectedFilterCount} active filters</p>
+      <main className="workspace">
+        <section className="results-rail">
+          <div className="panel-head">
+            <div>
+              <h2>Results</h2>
             </div>
-          ) : (
-            <>
-              <div className="panel-head">
-                <h2>Explore</h2>
-                <div className="panel-head-meta">
-                  <p>{filteredFeatures.length} visible</p>
-                  <button type="button" className="panel-fold-btn" onClick={() => setFiltersCollapsed(true)}>
-                    Collapse
-                  </button>
-                </div>
-              </div>
+            <div className="panel-head-meta">
+              <p>{filteredFeatures.length} visible</p>
+              <SortControl value={sort} onChange={setSort} />
+            </div>
+          </div>
 
-              <div className="filter-sections">
-                <FilterControls
-                  types={types}
-                  typeCounts={typeCounts}
-                  selectedTypes={selectedTypes}
-                  selectedCountry={selectedCountry}
-                  selectedCity={selectedCity}
-                  countries={countries}
-                  cityOptions={cityOptions}
-                  selectedFacilities={selectedFacilities}
-                  facilityOptions={facilityOptions}
-                  toggleType={toggleType}
-                  toggleFacility={toggleFacility}
-                  setSelectedCountry={setSelectedCountry}
-                  setSelectedCity={setSelectedCity}
-                />
-              </div>
+          <ActiveFilterSummary chips={activeFilterChips} onClearAll={clearAppliedFilters} />
 
-              <ResultsList
-                key={`results-desktop-${filterSignature}`}
-                features={filteredFeatures}
-                selectedId={selectedId}
-                hoveredId={hoveredId}
-                onHover={setHoveredId}
-                onSelect={(id) => selectFeature(id)}
-                initialBatch={60}
-                batchSize={60}
-                listContextKey={`desktop|${filterSignature}`}
-              />
-            </>
-          )}
-        </aside>
+          <CompareTray
+            comparedFeatures={comparedFeatures}
+            selectedId={selectedId}
+            onSelect={(id) => selectFeature(id)}
+            onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+          />
 
-        <section className="map-zone">
-          <MapView
+          <div className="panel-cluster">
+            <FilterControls
+              types={types}
+              typeCounts={typeCounts}
+              selectedTypes={selectedTypes}
+              selectedCountry={selectedCountry}
+              selectedCity={selectedCity}
+              countries={countries}
+              cityOptions={cityOptions}
+              selectedFacilities={selectedFacilities}
+              facilityOptions={facilityOptions}
+              toggleType={toggleType}
+              toggleFacility={toggleFacility}
+              setSelectedCountry={setSelectedCountry}
+              setSelectedCity={setSelectedCity}
+            />
+          </div>
+
+          <ResultsList
+            key={`results-desktop-${filterSignature}`}
             features={filteredFeatures}
             selectedId={selectedId}
             hoveredId={hoveredId}
-            activeSpotGroup={activeSpotGroup}
+            comparedIds={comparedIdSet}
+            compareLimitReached={compareLimitReached}
+            onHover={setHoveredId}
             onSelect={(id) => selectFeature(id)}
-            onOpenSpotGroup={openSpotGroup}
-            onDismissSpotGroup={dismissSpotGroup}
-            onClusterMode={setClusterClickMode}
+            onToggleCompare={toggleCompare}
+            onClearSearch={clearSearch}
+            onClearFilters={clearAppliedFilters}
+            search={search}
+            selectedFilterCount={selectedFilterCount}
+            initialBatch={60}
+            batchSize={60}
+            listContextKey={`desktop|${filterSignature}`}
           />
         </section>
 
-        <aside className="detail-rail">
-          <div className="detail-panel">
-            <div className="detail-panel-head">
-              <p>Details</p>
-              <span className={`cluster-mode mode-${clusterClickMode}`}>
-                {clusterClickMode === 'spot_stack' ? 'Same-airport stack active' : 'Cluster zoom mode'}
-              </span>
-            </div>
-
-            <DetailContent
-              selectedFeature={selectedFeature}
-              sameSpotFeatures={sameSpotFeatures}
+        <section className="map-stage">
+          <div className="map-zone">
+            <MapView
+              features={filteredFeatures}
+              selectedId={selectedId}
+              hoveredId={hoveredId}
               onSelect={(id) => selectFeature(id)}
-              onDismissSpotGroup={dismissSpotGroup}
-              activeSpotGroup={activeSpotGroup}
+              onInteractionStatusChange={setMapInteractionStatus}
             />
           </div>
-        </aside>
-      </main>
 
-      {isMobile ? (
-        <section className={`mobile-sheet sheet-${mobileUI.sheetSnap} mode-${mobileUI.sheetMode}`}>
-          <button
-            type="button"
-            className="sheet-grab"
-            onPointerDown={handleSheetPointerDown}
-            onPointerMove={handleSheetPointerMove}
-            onPointerUp={handleSheetPointerUp}
-            aria-label="Drag sheet"
-          >
-            <span />
-            <small>Swipe for more</small>
-          </button>
+          <MapLegend interactionStatus={mapInteractionStatus} comparedCount={comparedFeatures.length} />
 
-          <div className="mobile-sheet-head">
-            <p>{filteredFeatures.length} visible</p>
-            <p>{selectedFilterCount} active filters</p>
-          </div>
+          {selectedFeature ? (
+            <DetailPanel
+              selectedFeature={selectedFeature}
+              sameSpotFeatures={sameSpotFeatures}
+              comparedIds={comparedIdSet}
+              compareLimitReached={compareLimitReached}
+              onSelect={(id) => selectFeature(id)}
+              onToggleCompare={toggleCompare}
+              onClose={() => setSelectedId(null)}
+            />
+          ) : null}
 
-          <div className="mobile-actions" role="toolbar" aria-label="Mobile map actions">
-            <button
-              type="button"
-              className={mobileUI.sheetMode === 'browse' ? 'is-active' : ''}
-              onClick={() => transitionMobile({ sheetMode: 'browse', sheetSnap: 'mid' })}
-            >
-              Results
-            </button>
-            <button
-              type="button"
-              className={mobileUI.sheetMode === 'filters' ? 'is-active' : ''}
-              onClick={openMobileFilters}
-            >
-              Filters
-            </button>
-            <button
-              type="button"
-              className={mobileUI.sheetMode === 'selected' ? 'is-active' : ''}
-              disabled={!selectedFeature}
-              onClick={() => transitionMobile({ sheetMode: 'selected', sheetSnap: 'full' })}
-            >
-              Selected
-            </button>
-            <button type="button" onClick={clearAllFilters}>
-              Reset
-            </button>
-          </div>
+          {isMobile ? (
+            <section className={`mobile-sheet sheet-${mobileUI.sheetSnap} mode-${mobileUI.sheetMode}`}>
+              <button
+                type="button"
+                className="sheet-grab"
+                onPointerDown={handleSheetPointerDown}
+                onPointerMove={handleSheetPointerMove}
+                onPointerUp={finishSheetDrag}
+                onPointerCancel={finishSheetDrag}
+                onLostPointerCapture={finishSheetDrag}
+                aria-label="Drag sheet"
+              >
+                <span />
+              </button>
 
-          <div className="mobile-sheet-body">
-            {mobileUI.sheetMode === 'browse' ? (
-              <>
-                <MobileQuickFilters
-                  types={types}
-                  selectedTypes={selectedTypes}
-                  selectedCountry={selectedCountry}
-                  selectedCity={selectedCity}
-                  visibleCount={filteredFeatures.length}
-                  selectedFilterCount={selectedFilterCount}
-                  quickFilterState={mobileUI.quickFilterState}
-                  onQuickTypeToggle={toggleQuickType}
-                  onOpenFilters={openMobileFilters}
-                />
-                <ResultsList
-                  key={`results-mobile-${filterSignature}`}
-                  features={filteredFeatures}
-                  selectedId={selectedId}
-                  hoveredId={hoveredId}
-                  onHover={setHoveredId}
-                  onSelect={(id) => selectFeature(id)}
-                  initialBatch={24}
-                  batchSize={24}
-                  listContextKey={`mobile|${filterSignature}`}
-                />
-              </>
-            ) : null}
-
-            {mobileUI.sheetMode === 'filters' ? (
-              <div className="mobile-filter-wrap">
-                <FilterControls
-                  types={types}
-                  typeCounts={typeCounts}
-                  selectedTypes={mobileFilterDraft.types}
-                  selectedCountry={mobileFilterDraft.country}
-                  selectedCity={mobileFilterDraft.city}
-                  countries={countries}
-                  cityOptions={draftCityOptions}
-                  selectedFacilities={mobileFilterDraft.facilities}
-                  facilityOptions={facilityOptions}
-                  toggleType={toggleDraftType}
-                  toggleFacility={toggleDraftFacility}
-                  setSelectedCountry={(country) =>
-                    setMobileFilterDraft((current) => ({ ...current, country, city: 'ALL' }))
+              <div className="mobile-actions" role="toolbar" aria-label="Mobile map actions">
+                <button
+                  type="button"
+                  className={mobileUI.sheetMode === 'results' ? 'is-active' : ''}
+                  onClick={() =>
+                    setMobileUI((current) => ({ ...current, sheetMode: 'results', sheetSnap: 'mid' }))
                   }
-                  setSelectedCity={(city) =>
-                    setMobileFilterDraft((current) => ({ ...current, city }))
+                >
+                  Results
+                </button>
+                <button
+                  type="button"
+                  className={mobileUI.sheetMode === 'filters' ? 'is-active' : ''}
+                  onClick={openMobileFilters}
+                >
+                  Filters
+                </button>
+                <button
+                  type="button"
+                  className={mobileUI.sheetMode === 'details' ? 'is-active' : ''}
+                  disabled={!selectedFeature}
+                  onClick={() =>
+                    setMobileUI((current) => ({ ...current, sheetMode: 'details', sheetSnap: 'full' }))
                   }
-                />
-
-                <div className="mobile-filter-actions">
-                  <button type="button" onClick={clearAllFilters}>
-                    Clear all
-                  </button>
-                  <button type="button" className="is-primary" onClick={applyMobileFilters}>
-                    Apply
-                  </button>
-                </div>
+                >
+                  Details
+                </button>
               </div>
-            ) : null}
 
-            {mobileUI.sheetMode === 'selected' ? (
-              <div className="mobile-detail-wrap">
-                <MobileSelectedView
-                  selectedFeature={selectedFeature}
-                  sameSpotFeatures={sameSpotFeatures}
-                  onSelect={(id) => selectFeature(id)}
-                  onDismissSpotGroup={dismissSpotGroup}
-                  activeSpotGroup={activeSpotGroup}
-                />
+              <div className="mobile-sheet-body">
+                {mobileUI.sheetMode === 'results' ? (
+                  <>
+                    <MobileQuickFilters
+                      types={types}
+                      selectedTypes={selectedTypes}
+                      selectedCountry={selectedCountry}
+                      selectedCity={selectedCity}
+                      visibleCount={filteredFeatures.length}
+                      selectedFilterCount={selectedFilterCount}
+                      quickFilterState={mobileUI.quickFilterState}
+                      onQuickTypeToggle={toggleQuickType}
+                      onOpenFilters={openMobileFilters}
+                    />
+                    <CompareTray
+                      compact
+                      comparedFeatures={comparedFeatures}
+                      selectedId={selectedId}
+                      onSelect={(id) => selectFeature(id)}
+                      onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+                    />
+                    <ResultsList
+                      key={`results-mobile-${filterSignature}`}
+                      features={filteredFeatures}
+                      selectedId={selectedId}
+                      hoveredId={hoveredId}
+                      comparedIds={comparedIdSet}
+                      compareLimitReached={compareLimitReached}
+                      onHover={setHoveredId}
+                      onSelect={(id) => selectFeature(id)}
+                      onToggleCompare={toggleCompare}
+                      onClearSearch={clearSearch}
+                      onClearFilters={clearAppliedFilters}
+                      search={search}
+                      selectedFilterCount={selectedFilterCount}
+                      initialBatch={24}
+                      batchSize={24}
+                      listContextKey={`mobile|${filterSignature}`}
+                    />
+                  </>
+                ) : null}
+
+                {mobileUI.sheetMode === 'filters' ? (
+                  <div className="mobile-filter-wrap">
+                    <label className="sort-control mobile-search-control">
+                      <span>Search</span>
+                      <input
+                        value={mobileFilterDraft.search}
+                        onChange={(event) =>
+                          setMobileFilterDraft((current) => ({ ...current, search: event.target.value }))
+                        }
+                        placeholder="Airport, city, lounge"
+                      />
+                    </label>
+
+                    <div className="control-group">
+                      <SortControl
+                        value={mobileFilterDraft.sort}
+                        onChange={(nextSort) =>
+                          setMobileFilterDraft((current) => ({ ...current, sort: nextSort }))
+                        }
+                      />
+                    </div>
+
+                    <FilterControls
+                      types={types}
+                      typeCounts={typeCounts}
+                      selectedTypes={mobileFilterDraft.types}
+                      selectedCountry={mobileFilterDraft.country}
+                      selectedCity={mobileFilterDraft.city}
+                      countries={countries}
+                      cityOptions={draftCityOptions}
+                      selectedFacilities={mobileFilterDraft.facilities}
+                      facilityOptions={facilityOptions}
+                      toggleType={toggleDraftType}
+                      toggleFacility={toggleDraftFacility}
+                      setSelectedCountry={(country) =>
+                        setMobileFilterDraft((current) => ({ ...current, country, city: 'ALL' }))
+                      }
+                      setSelectedCity={(city) =>
+                        setMobileFilterDraft((current) => ({ ...current, city }))
+                      }
+                    />
+
+                    <div className="mobile-filter-actions">
+                      <button type="button" className="secondary-action" onClick={resetMobileDraft}>
+                        Clear all
+                      </button>
+                      <button type="button" className="primary-action" onClick={applyMobileFilters}>
+                        Apply filters
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+
+                {mobileUI.sheetMode === 'details' ? (
+                  <div className="mobile-detail-wrap">
+                    <CompareTray
+                      compact
+                      comparedFeatures={comparedFeatures}
+                      selectedId={selectedId}
+                      onSelect={(id) => selectFeature(id)}
+                      onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+                    />
+                    <MobileDetailsView
+                      selectedFeature={selectedFeature}
+                      sameSpotFeatures={sameSpotFeatures}
+                      comparedIds={comparedIdSet}
+                      compareLimitReached={compareLimitReached}
+                      onSelect={(id) => selectFeature(id)}
+                      onToggleCompare={toggleCompare}
+                    />
+                  </div>
+                ) : null}
               </div>
-            ) : null}
-          </div>
+            </section>
+          ) : null}
         </section>
-      ) : null}
+      </main>
     </div>
   );
 }
