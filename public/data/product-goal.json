@@ -1,0 +1,147 @@
+{
+  "id": "lounge-guru-product-goal",
+  "version": "2026-06-14",
+  "product": "Lounge Guru",
+  "positioning": "ExpertFlyer-grade airport lounge intelligence console for desk.travel.",
+  "policy": {
+    "sourceMode": "official_public_first",
+    "rawScraping": "disallowed",
+    "manualOverrides": "owner_reason_date_required",
+    "copy": "concise_task_text_only"
+  },
+  "benchmarks": [
+    {
+      "name": "ExpertFlyer",
+      "lesson": "Deep inventory, seat maps, alerts, and availability monitoring set the operational utility bar.",
+      "url": "https://www.expertflyer.com/"
+    },
+    {
+      "name": "point.me",
+      "lesson": "Search results should support loyalty-program decisions and fast action.",
+      "url": "https://www.point.me/"
+    },
+    {
+      "name": "AwardFares",
+      "lesson": "Availability tools need alerts, timelines, and quick comparison.",
+      "url": "https://awardfares.com/"
+    },
+    {
+      "name": "LoungeBuddy",
+      "lesson": "Lounge discovery needs location, access, amenities, and airport context.",
+      "url": "https://www.loungebuddy.com/"
+    }
+  ],
+  "users": [
+    "travel_operations",
+    "data_stewards",
+    "internal_product_users"
+  ],
+  "coreQuestions": [
+    "which_lounges_can_this_traveler_access",
+    "where_is_the_lounge",
+    "is_it_open_for_this_itinerary",
+    "which_program_or_brand_grants_access",
+    "which_restrictions_apply",
+    "what_changed_since_last_verification",
+    "which_source_should_we_trust",
+    "which_records_need_review"
+  ],
+  "sourcePriorities": [
+    "priority-pass",
+    "amex-global-lounge-collection",
+    "chase-sapphire",
+    "capital-one",
+    "united",
+    "delta",
+    "american",
+    "air-canada",
+    "plaza-premium",
+    "escape-lounges",
+    "airport-dimensions",
+    "ourairports"
+  ],
+  "views": {
+    "map": [
+      "search",
+      "filters",
+      "compare",
+      "detail",
+      "source_badges",
+      "quality_badges"
+    ],
+    "intake": [
+      "source_runs",
+      "parse_errors",
+      "changed_fields",
+      "conflicts",
+      "stale_records",
+      "approval_actions"
+    ],
+    "schema": [
+      "canonical_fields",
+      "coverage",
+      "provider_confidence",
+      "required_failures"
+    ],
+    "sources": [
+      "registry",
+      "freshness_targets",
+      "fetch_mode",
+      "last_run",
+      "rights_notes",
+      "brand_coverage"
+    ]
+  },
+  "workflows": {
+    "desktop": [
+      "left_rail_results_filters_compare",
+      "center_map_table_hybrid",
+      "right_detail_panel",
+      "dense_intake_tables"
+    ],
+    "mobile": [
+      "results_sheet",
+      "filters_sheet",
+      "details_sheet",
+      "compare_sheet",
+      "review_sheet"
+    ]
+  },
+  "monitoring": [
+    "hours_changed",
+    "lounge_opened_or_closed",
+    "access_policy_changed",
+    "terminal_or_security_side_changed",
+    "source_stale",
+    "conflict_introduced"
+  ],
+  "aesthetic": {
+    "tone": "restrained_precise_operational",
+    "use": [
+      "light_neutral_surfaces",
+      "compact_typography",
+      "source_badges",
+      "quality_badges",
+      "brand_logos",
+      "visible_focus_states"
+    ],
+    "avoid": [
+      "hero_sections",
+      "marketing_copy",
+      "intro_paragraphs",
+      "redundant_helper_text",
+      "decorative_cards",
+      "nested_cards",
+      "gradient_travel_styling",
+      "hidden_mobile_functionality"
+    ]
+  },
+  "milestones": [
+    "publish_goal_contract",
+    "show_source_health",
+    "expose_intake_diff_rows",
+    "add_access_filters",
+    "add_mobile_compare_and_review",
+    "emit_source_change_alerts"
+  ]
+}

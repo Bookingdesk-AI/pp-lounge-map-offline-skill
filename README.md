@@ -2,6 +2,10 @@
 
 Multi-source lounge data console with a public, read-only MCP server and publishable skill bundles.
 
+## Product goal
+
+See `docs/lounge-guru-product-goal.md` for the Lounge Guru north star, quality bar, workflow standard, and first milestones.
+
 ## Commands
 
 - `npm run build:mcp-data` regenerates the compact MCP catalog from the public GeoJSON and metadata.
