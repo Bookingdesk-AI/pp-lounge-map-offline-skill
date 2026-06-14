@@ -1,5 +1,5 @@
 import type { RefObject } from 'react';
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import L from 'leaflet';
 import { Marker, Tooltip, useMap, useMapEvents } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
@@ -22,7 +22,7 @@ function ClusterInteractionController({
   const map = useMap();
   const freezeModeRef = useRef<'frozen' | 'live'>('live');
 
-  const syncFreezeState = () => {
+  const syncFreezeState = useCallback(() => {
     const group = asFreezableGroup(clusterRef.current);
     if (!group) {
       return;
@@ -39,7 +39,7 @@ function ClusterInteractionController({
     }
 
     onInteractionStatusChange('clusters');
-  };
+  }, [clusterRef, map, onInteractionStatusChange]);
 
   useMapEvents({
     zoomstart: () => {
@@ -50,7 +50,7 @@ function ClusterInteractionController({
 
   useEffect(() => {
     syncFreezeState();
-  }, [map, onInteractionStatusChange]);
+  }, [syncFreezeState]);
 
   return null;
 }
@@ -105,7 +105,7 @@ export const LoungeClusterLayer = memo(function LoungeClusterLayer({
         iconCreateFunction={iconCreateFunction}
         spiderLegPolylineOptions={{
           weight: 2,
-          color: 'rgba(201, 164, 93, 0.78)',
+          color: 'rgba(36, 86, 166, 0.72)',
           opacity: 0.72,
         }}
       >

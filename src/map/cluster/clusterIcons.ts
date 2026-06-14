@@ -1,11 +1,11 @@
 import L from 'leaflet';
 
 const TYPE_COLOR: Record<string, string> = {
-  LOUNGE: '#c9a45d',
-  EAT: '#87b7aa',
-  REST: '#8fa4cb',
-  REFRESH: '#85adc9',
-  UNWIND: '#b993af',
+  LOUNGE: '#2456a6',
+  EAT: '#27755f',
+  REST: '#6f5aa8',
+  REFRESH: '#1f7c91',
+  UNWIND: '#b85c18',
 };
 
 const markerIconCache = new Map<string, L.DivIcon>();

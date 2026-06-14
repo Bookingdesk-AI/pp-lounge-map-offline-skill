@@ -1,34 +1,52 @@
 # Frontend UI Refresh
 
-This branch refreshes the lounge map frontend around a traveler-first comparison workflow while keeping the existing data model and Leaflet map.
+This update turns the lounge map into a compact internal operations console for finding, filtering, inspecting, and comparing lounge records across the global catalog.
 
 ## What Changed
 
-- Reworked desktop from a persistent three-column layout into a comparison-focused left rail plus map stage.
-- Simplified mobile into `Results`, `Filters`, and `Details`.
-- Stabilized the mobile map stage so the map no longer overflows the viewport and full-sheet panels stay below the header/search area.
-- Fixed mobile deep links so `selected`, `sheet`, and `mode` URL params hydrate into the intended lounge/details view.
-- Hardened the mobile sheet grab handle for touch drag gestures and restored desktop filter-label contrast.
-- Added result sorting with `Best match`, `Airport code`, `Country / city`, and `Type`.
-- Added a compare queue capped at 3 lounges.
-- Added explicit no-results recovery actions.
-- Replaced clickable result containers with semantic buttons for better keyboard access.
-- Reduced decorative chrome so the result list gets more usable vertical space.
+- Replaced the traveler-facing visual tone with a light, data-dense enterprise interface.
+- Removed hero, subtitle, intro, marketing, and helper copy from the app surface.
+- Kept the first screen as the working app: search, filters, results, compare, map, and details.
+- Added concise catalog status in the header: records, airports, countries, and data date.
+- Bounded schedule and condition text so source workbook notes do not dominate result or detail views.
+- Kept the source link available for full external record review.
+- Preserved desktop workflow: left rail for results, filters, compare; map and detail overlay on the right.
+- Preserved mobile workflow: bottom sheet with `Results`, `Filters`, and `Details`.
+- Updated map tiles, markers, clusters, and focus states to match the enterprise console palette.
+- Added persistent design context in `.impeccable.md`.
 
-## Map Interaction Updates
+## Copy Audit
 
-- Replaced the custom same-spot burst/offset-marker path with a modular cluster subsystem under `src/map/cluster/`.
-- Restored native `Leaflet.markercluster` zoom and spiderfy behavior inside the map pane, then layered in `Leaflet.MarkerCluster.Freezable` so tightly packed lounges stay explorable at close zoom without sudden disappear/reflow.
-- Kept same-airport comparison in the side panel by deriving related lounges from the selected feature instead of temporary map-expansion state.
-- Added custom dark-theme cluster badges and tightened the small-badge typography so count labels render cleanly at production sizes.
-- Added a collapsible map guide panel.
+Kept copy is limited to functional text:
+
+- App title and catalog status.
+- Control labels and filter values.
+- Sort options.
+- Buttons and links.
+- Empty, loading, and error states.
+- Map status.
+- Data values from the lounge catalog.
+
+Removed or suppressed copy:
+
+- Landing-page language.
+- Explanatory helper text.
+- Traveler-facing comparison copy.
+- Source workbook notes in schedule previews.
+- Long legal/source condition text in compact views.
 
 ## Verification
 
-- `npm test`
+- `npm run lint`
 - `npx tsc -b`
 - `npx vite build`
+- `npm run test`
+- Browser verification at desktop width.
+- Browser verification at mobile width.
+- Runtime copy scan for landing/helper copy.
 
-## Known Caveat
+## Deploy Note
 
-The repo-wide `npm run build` command still depends on the workbook/data pipeline and currently fails before the frontend build when sheet `pp_lounges-2` is unavailable. The web app itself builds successfully with `npx vite build`.
+This UI-only deploy can use the current checked-in public data and run `npm run deploy:web` after `npx vite build`.
+
+The full `npm run deploy` path still starts with `npm run release:prepare`, which downloads and rebuilds the source workbook pipeline. The currently cached workbook only exposes `Sheet1`, while `scripts/build-lounge-data.mjs` expects `pp_lounges-2` and `airports (1)`. Do not use the full release-prep deploy path until the source workbook schema or data builder fallback is reconciled.

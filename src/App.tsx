@@ -21,9 +21,9 @@ import { coordinateKey } from './map/cluster/coordinateKey';
 import './App.css';
 
 const SORT_LABELS: Record<SortOption, string> = {
-  best_match: 'Best match',
-  airport_code: 'Airport code',
-  country_city: 'Country / city',
+  best_match: 'Best',
+  airport_code: 'Airport',
+  country_city: 'Location',
   type: 'Type',
 };
 
@@ -228,6 +228,22 @@ function joinOrFallback(values: string[], fallback: string, limit = values.lengt
   return values.slice(0, limit).join(' · ');
 }
 
+function compactList(values: string[], fallback: string, limit = values.length, maxItemLength = 160) {
+  if (values.length === 0) {
+    return fallback;
+  }
+
+  return values
+    .slice(0, limit)
+    .map((value) => {
+      const compactValue = value.replace(/\s+/g, ' ').trim();
+      return compactValue.length > maxItemLength
+        ? `${compactValue.slice(0, maxItemLength).trim()}...`
+        : compactValue;
+    })
+    .join(' · ');
+}
+
 function locationLabel(feature: LoungeFeature) {
   const cityOrCountry = feature.properties.city || feature.properties.country;
   return feature.properties.terminal !== 'Unknown'
@@ -237,6 +253,44 @@ function locationLabel(feature: LoungeFeature) {
 
 function detailLocation(feature: LoungeFeature) {
   return `${feature.properties.airportCode} · ${feature.properties.airportName}`;
+}
+
+function compactOpeningHours(value: string, fallback = 'Not listed', maxLines = 3, maxLength = 180) {
+  const lines = value
+    .replace(/\r/g, '\n')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const scheduleLines: string[] = [];
+  for (const line of lines) {
+    const lower = line.toLowerCase();
+    const isNote =
+      lower.startsWith('note:') ||
+      lower.startsWith('important note:') ||
+      lower.startsWith('for cardholders') ||
+      lower.includes('we advise cardholders');
+
+    if (isNote) {
+      break;
+    }
+
+    if (line.length > 180 && scheduleLines.length > 0) {
+      break;
+    }
+
+    scheduleLines.push(line);
+    if (scheduleLines.length >= maxLines) {
+      break;
+    }
+  }
+
+  const schedule = scheduleLines.join(' · ');
+  if (!schedule) {
+    return fallback;
+  }
+
+  return schedule.length > maxLength ? `${schedule.slice(0, maxLength).trim()}...` : schedule;
 }
 
 function TypePill({
@@ -340,7 +394,7 @@ function MapView({
       worldCopyJump
     >
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
       />
 
@@ -482,11 +536,7 @@ function ActiveFilterSummary({
   onClearAll: () => void;
 }) {
   if (chips.length === 0) {
-    return (
-      <div className="active-filters is-empty">
-        <p>No active filters</p>
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -532,14 +582,13 @@ function CompareTray({
     >
       <div className="section-title-row">
         <div>
-          <p className="eyebrow">Compare</p>
-          <h2>Shortlist up to {COMPARE_LIMIT} lounges</h2>
+          <h2>Compare</h2>
         </div>
         <span className="compare-count">{comparedFeatures.length} / {COMPARE_LIMIT}</span>
       </div>
 
       {comparedFeatures.length === 0 ? (
-        <p className="support-copy">Save lounges to compare hours, facilities, and access.</p>
+        null
       ) : (
         <>
           <div className="compare-card-grid">
@@ -562,7 +611,7 @@ function CompareTray({
                   <dl className="compare-metrics">
                     <div>
                       <dt>Hours</dt>
-                      <dd>{feature.properties.openingHours || 'See details'}</dd>
+                        <dd>{compactOpeningHours(feature.properties.openingHours, 'Details', 2, 120)}</dd>
                     </div>
                     <div>
                       <dt>Facilities</dt>
@@ -571,7 +620,7 @@ function CompareTray({
                     {showExpandedMetrics ? (
                       <div>
                         <dt>Conditions</dt>
-                        <dd>{joinOrFallback(feature.properties.conditions, 'Not listed', 3)}</dd>
+                        <dd>{compactList(feature.properties.conditions, 'Not listed', 2, 110)}</dd>
                       </div>
                     ) : null}
                   </dl>
@@ -606,12 +655,7 @@ function ResultsEmptyState({
   return (
     <div className="results-empty">
       <p className="eyebrow">No matches</p>
-      <h3>Nothing matches the current criteria.</h3>
-      <p>
-        {search.trim()
-          ? `Try broadening "${search.trim()}" or remove a few filters to see nearby lounge options.`
-          : 'Try removing a few filters to reopen the broader lounge catalog.'}
-      </p>
+      <h3>0 results</h3>
       <div className="results-empty-actions">
         {search.trim() ? (
           <button type="button" className="secondary-action" onClick={onClearSearch}>
@@ -669,10 +713,6 @@ function ResultsList({
   const [visibleCount, setVisibleCount] = useState(() =>
     Math.min(Math.max(initialBatch, 1), features.length),
   );
-
-  useEffect(() => {
-    setVisibleCount(Math.min(Math.max(initialBatch, 1), features.length));
-  }, [features.length, initialBatch, listContextKey]);
 
   const selectedIndex = selectedId
     ? features.findIndex((feature) => feature.properties.id === selectedId)
@@ -758,9 +798,9 @@ function ResultsList({
               <p>{feature.properties.airportName}</p>
               <div className="result-meta-row">
                 <span>{locationLabel(feature)}</span>
-                <span>{feature.properties.openingHours || 'See details'}</span>
+                <span>{compactOpeningHours(feature.properties.openingHours, 'Details', 2, 110)}</span>
               </div>
-              <small>{joinOrFallback(feature.properties.facilities, 'Facilities not listed', 3)}</small>
+              <small>{joinOrFallback(feature.properties.facilities, 'Not listed', 3)}</small>
             </button>
             <div className="result-card-actions">
               <button
@@ -810,12 +850,9 @@ function SameSpotList({
     <div className="spot-group">
       <div className="spot-group-head">
         <p className="spot-group-title">
-          {sameSpotFeatures.length} lounges at {selectedFeature.properties.airportCode}
+          {sameSpotFeatures.length} at {selectedFeature.properties.airportCode}
         </p>
       </div>
-      <p className="support-copy">
-        Close clusters spiderfy on the map, and this list keeps the same-airport options handy for comparison.
-      </p>
       <div className="spot-group-list">
         {sameSpotFeatures.map((spot) => (
           <button
@@ -858,7 +895,7 @@ function DetailPanel({
     <aside className="detail-panel detail-panel-overlay">
       <div className="detail-panel-head">
         <div>
-          <p>Selected lounge</p>
+          <p>Selected</p>
           <h3>{selectedFeature.properties.name}</h3>
           <span>{detailLocation(selectedFeature)}</span>
         </div>
@@ -884,7 +921,7 @@ function DetailPanel({
           </button>
           {selectedFeature.properties.url ? (
             <a className="ghost-link" href={selectedFeature.properties.url} target="_blank" rel="noreferrer">
-              View Priority Pass details
+              Source
             </a>
           ) : null}
         </div>
@@ -896,11 +933,11 @@ function DetailPanel({
           </div>
           <div>
             <dt>Opening hours</dt>
-            <dd>{selectedFeature.properties.openingHours || 'See Priority Pass details for schedule.'}</dd>
+            <dd>{compactOpeningHours(selectedFeature.properties.openingHours, 'Not listed', 7, 260)}</dd>
           </div>
           <div>
             <dt>Conditions</dt>
-            <dd>{joinOrFallback(selectedFeature.properties.conditions, 'Not listed')}</dd>
+            <dd>{compactList(selectedFeature.properties.conditions, 'Not listed', 3, 110)}</dd>
           </div>
           <div>
             <dt>Facilities</dt>
@@ -935,21 +972,20 @@ function MapLegend({
         onClick={() => setExpanded((current) => !current)}
         aria-expanded={expanded}
       >
-        <span className="eyebrow">Map guide</span>
+        <span className="eyebrow">Map</span>
         <span>{expanded ? 'Hide' : 'Show'}</span>
       </button>
       {expanded ? (
         <ul>
-          <li>Click a cluster to zoom in, then spiderfy nearby lounges without leaving the map pane.</li>
           <li>
             {interactionStatus === 'spiderfied'
-              ? 'Spiderfy view is active for the current cluster.'
-              : 'Cluster zoom mode is active.'}
+              ? 'Spiderfied'
+              : 'Clustered'}
           </li>
           <li>
             {comparedCount > 0
-              ? `${comparedCount} lounge${comparedCount === 1 ? '' : 's'} saved for compare.`
-              : 'Use Compare to shortlist up to three lounges.'}
+              ? `${comparedCount} compared`
+              : '0 compared'}
           </li>
         </ul>
       ) : null}
@@ -981,9 +1017,9 @@ function MobileQuickFilters({
   return (
     <div className="mobile-quick-filters">
       <div className="mobile-results-summary">
-        <p>{visibleCount} lounges visible</p>
+        <p>{visibleCount} visible</p>
         <button type="button" className="ghost-link" onClick={onOpenFilters}>
-          {selectedFilterCount > 0 ? `${selectedFilterCount} filters active` : 'Open filters'}
+          {selectedFilterCount > 0 ? `${selectedFilterCount} filters` : 'Filters'}
         </button>
       </div>
 
@@ -1033,8 +1069,7 @@ function MobileDetailsView({
     return (
       <div className="mobile-empty-selected">
         <p className="eyebrow">Details</p>
-        <h3>No lounge selected</h3>
-        <p>Pick a result or map marker to open lounge details and compare options.</p>
+        <h3>None selected</h3>
       </div>
     );
   }
@@ -1064,14 +1099,14 @@ function MobileDetailsView({
         </button>
         {selectedFeature.properties.url ? (
           <a className="ghost-link" href={selectedFeature.properties.url} target="_blank" rel="noreferrer">
-            View Priority Pass details
+            Source
           </a>
         ) : null}
       </div>
 
       <details className="mobile-detail-accordion" open>
         <summary>Opening hours</summary>
-        <p>{selectedFeature.properties.openingHours || 'See lounge page for schedule.'}</p>
+        <p>{compactOpeningHours(selectedFeature.properties.openingHours, 'Not listed', 7, 260)}</p>
       </details>
 
       <details className="mobile-detail-accordion" open>
@@ -1081,7 +1116,7 @@ function MobileDetailsView({
 
       <details className="mobile-detail-accordion">
         <summary>Conditions</summary>
-        <p>{joinOrFallback(selectedFeature.properties.conditions, 'Not listed')}</p>
+        <p>{compactList(selectedFeature.properties.conditions, 'Not listed', 3, 110)}</p>
       </details>
 
       <details className="mobile-detail-accordion">
@@ -1663,7 +1698,7 @@ function App() {
   }, [search, selectedTypes, selectedCountry, selectedCity, selectedFacilities, toggleType, toggleFacility]);
 
   if (loading) {
-    return <div className="state-screen">Loading lounge map data...</div>;
+    return <div className="state-screen">Loading...</div>;
   }
 
   if (error) {
@@ -1681,19 +1716,21 @@ function App() {
     <div className={`app-shell ${isMobile ? `is-mobile sheet-${mobileUI.sheetSnap}` : ''}`}>
       <header className="topbar">
         <div className="brand-wrap">
-          <p className="kicker">Priority Pass</p>
-          <h1>Global Lounge Atlas</h1>
-          <p className="subtitle">
-            Compare {meta?.stats.totalFeatures ?? 0} lounges across {meta?.stats.uniqueCountries ?? 0} countries.
-          </p>
+          <h1>Lounge Map</h1>
+          <div className="system-stats" aria-label="Catalog status">
+            <span>{meta?.stats.totalFeatures ?? 0} records</span>
+            <span>{meta?.stats.uniqueAirports ?? 0} airports</span>
+            <span>{meta?.stats.uniqueCountries ?? 0} countries</span>
+            <span>{meta ? new Date(meta.generatedAt).toISOString().slice(0, 10) : 'No date'}</span>
+          </div>
         </div>
 
         <label className="search-wrap">
-          <span>Search airport, city, or lounge</span>
+          <span>Search</span>
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Example: AUA, New York, Plaza Premium"
+            placeholder="Airport, city, lounge"
           />
         </label>
       </header>
@@ -1702,8 +1739,7 @@ function App() {
         <section className="results-rail">
           <div className="panel-head">
             <div>
-              <p className="eyebrow">Explore</p>
-              <h2>Traveler comparison</h2>
+              <h2>Results</h2>
             </div>
             <div className="panel-head-meta">
               <p>{filteredFeatures.length} visible</p>
@@ -1796,7 +1832,6 @@ function App() {
                 aria-label="Drag sheet"
               >
                 <span />
-                <small>Swipe for more</small>
               </button>
 
               <div className="mobile-actions" role="toolbar" aria-label="Mobile map actions">

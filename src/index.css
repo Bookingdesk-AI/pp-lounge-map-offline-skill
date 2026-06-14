@@ -1,27 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg-base-1: #081522;
-  --bg-base-2: #0d2032;
-  --bg-base-3: #142b40;
-  --surface-1: rgba(10, 23, 38, 0.96);
-  --surface-2: rgba(12, 28, 45, 0.94);
-  --line-soft: rgba(223, 233, 242, 0.12);
-  --line-strong: rgba(223, 233, 242, 0.2);
-  --text-main: #f5f1e7;
-  --text-soft: #d7e0ea;
-  --text-muted: #9aa8b7;
-  --brand-gold: #c9a45d;
-  --panel-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
+  --bg-base-1: #eef2f6;
+  --bg-base-2: #dfe6ee;
+  --surface-1: #f8fafc;
+  --surface-2: #eef3f8;
+  --surface-3: #e5ebf2;
+  --line-soft: #d5dde7;
+  --line-strong: #aebacc;
+  --text-main: #17202c;
+  --text-soft: #405064;
+  --text-muted: #65758a;
+  --brand-blue: #2456a6;
+  --brand-blue-strong: #163f82;
+  --brand-amber: #b85c18;
+  --status-green: #27755f;
+  --panel-shadow: 0 18px 40px rgba(22, 34, 52, 0.14);
 
-  --duration-fast: 180ms;
-  --duration-medium: 260ms;
-  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-emphasis: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 160ms;
+  --duration-medium: 240ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --font-display: 'Cormorant Garamond', serif;
-  --font-sans: 'Manrope', 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'IBM Plex Sans', sans-serif;
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
 
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
@@ -48,9 +51,10 @@ body {
   color: var(--text-main);
   overflow: hidden;
   background:
-    radial-gradient(1200px 540px at 12% -5%, rgba(201, 164, 93, 0.12), transparent 62%),
-    radial-gradient(860px 520px at 88% 10%, rgba(67, 92, 122, 0.16), transparent 68%),
-    linear-gradient(180deg, var(--bg-base-1) 0%, var(--bg-base-2) 52%, var(--bg-base-3) 100%);
+    linear-gradient(rgba(23, 32, 44, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 32, 44, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, var(--bg-base-1) 0%, var(--bg-base-2) 100%);
+  background-size: 32px 32px, 32px 32px, auto;
 }
 
 button,
