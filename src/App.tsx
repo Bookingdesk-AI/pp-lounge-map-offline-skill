@@ -2056,25 +2056,18 @@ function App() {
       <main className="workspace">
         <section className="results-rail">
           <div className="panel-head">
-            <div>
+            <div className="panel-title-stack">
               <h2>Results</h2>
-            </div>
-            <div className="panel-head-meta">
               <p>{filteredFeatures.length} visible</p>
+            </div>
+            <div className="rail-toolbar">
+              <span className="compare-count">{comparedFeatures.length} / {COMPARE_LIMIT}</span>
               <SortControl value={sort} onChange={setSort} />
             </div>
           </div>
 
-          <ActiveFilterSummary chips={activeFilterChips} onClearAll={clearAppliedFilters} />
-
-          <CompareTray
-            comparedFeatures={comparedFeatures}
-            selectedId={selectedId}
-            onSelect={(id) => selectFeature(id)}
-            onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
-          />
-
-          <div className="panel-cluster">
+          <div className="rail-controls">
+            <ActiveFilterSummary chips={activeFilterChips} onClearAll={clearAppliedFilters} />
             <FilterControls
               types={types}
               typeCounts={typeCounts}
@@ -2091,6 +2084,15 @@ function App() {
               setSelectedCity={setSelectedCity}
             />
           </div>
+
+          {comparedFeatures.length > 0 ? (
+            <CompareTray
+              comparedFeatures={comparedFeatures}
+              selectedId={selectedId}
+              onSelect={(id) => selectFeature(id)}
+              onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+            />
+          ) : null}
 
           <ResultsList
             key={`results-desktop-${filterSignature}`}
