@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-14T19:41:10.683Z",
-  "runId": "2026-06-14T19-39-58-249Z",
+  "generatedAt": "2026-06-14T19:44:14.802Z",
+  "runId": "2026-06-14T19-42-59-083Z",
   "policy": {
     "fetchMode": "single_public_source_url_per_registry_entry",
     "rawSnapshots": ".cache/source-snapshots",
@@ -15,7 +15,7 @@
     "skipped": 3,
     "httpErrors": 1,
     "fetchErrors": 2,
-    "discoveredAirportCodes": 71,
+    "discoveredAirportCodes": 63,
     "discoveredLoungeLinks": 227,
     "knownAirportCodes": 9056
   },
@@ -41,16 +41,13 @@
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
       "bytes": 389173,
-      "sha256": "a0bd87ef636ab42facd63ca914ddcaa726fda701e7bd4106cb7545768335552b",
+      "sha256": "2388a0da9deadf4a04d01bd7f48e365ef1ced1de9798cb8c3f513d6984b4beb5",
       "title": "Airport Lounge Access 1,800+ Lounges and Experiences Worldwide | Priority Pass",
       "jsonLdBlocks": 0,
       "records": 20,
       "airportCodes": [
-        "GOL",
         "JFK",
-        "SAN",
-        "SFO",
-        "USA"
+        "SFO"
       ],
       "loungeLinks": [
         "https://www.prioritypass.com/en-GB/airport-lounges",
@@ -74,7 +71,7 @@
         "https://www.prioritypass.com/lounges/hong-kong-sar/hong-kong-chek-lap-kok-intl",
         "https://www.prioritypass.com/lounges/australia/sydney-kingsford-smith"
       ],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/priority-pass.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/priority-pass.html",
       "robots": {
         "checked": true,
         "url": "https://www.prioritypass.com/robots.txt",
@@ -92,16 +89,13 @@
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
       "bytes": 387825,
-      "sha256": "b9c3380341a7313fa932a91214a11049c17216f572d0fa5d9dbcbe72128be466",
+      "sha256": "01c7ae4b2b69ea9ac3093492d20fb5197ae3dfae6918ecc689814287444ef15b",
       "title": "Chase Sapphire Airport Lounge Network",
       "jsonLdBlocks": 0,
-      "records": 23,
+      "records": 20,
       "airportCodes": [
-        "AND",
-        "CAD",
         "DFW",
         "FRA",
-        "GBP",
         "IAD",
         "JFK",
         "LAS",
@@ -143,7 +137,7 @@
         "https://www.airportdimensions.com/sapphire-lounge-terms-of-use",
         "https://creditcards.chase.com/a1/26Q2/sapphire/goreserve?CELL=68JY"
       ],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/chase-sapphire.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/chase-sapphire.html",
       "robots": {
         "checked": true,
         "url": "https://account.chase.com/robots.txt",
@@ -161,7 +155,7 @@
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
       "bytes": 1040049,
-      "sha256": "b7daae593cdd1ccc3b551a5d828c86c0ffd082693e49d5f74e00d455b641358b",
+      "sha256": "051f9ea27a8dae56388878dfc1539915cc65fbb52353491e180854c253086a2a",
       "title": "Explore Amex Global Lounge Collection® | Amex US",
       "jsonLdBlocks": 0,
       "records": 54,
@@ -226,7 +220,7 @@
         "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/YYZ/",
         "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/IAD/"
       ],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/amex-global-lounge-collection.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/amex-global-lounge-collection.html",
       "robots": {
         "checked": true,
         "url": "https://global.americanexpress.com/robots.txt",
@@ -275,7 +269,7 @@
         "https://capitalonetravel.com/airport-lounges/lounge/?airportId=DCA&amp;loungeId=LND:12BC1CDE-1C2A-4905-898C-128DE43CD057",
         "https://capitalonetravel.com/airport-lounges/lounge/?airportId=LGA&amp;loungeId=LND:BEA8FABE-542E-4D94-A1FC-364BD4AD4DDD"
       ],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/capital-one.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/capital-one.html",
       "robots": {
         "checked": true,
         "url": "https://www.capitalone.com/robots.txt",
@@ -316,7 +310,7 @@
       "records": 0,
       "airportCodes": [],
       "loungeLinks": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/mastercard-travel-pass.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/mastercard-travel-pass.html",
       "robots": {
         "checked": true,
         "url": "https://mastercardtravelpass.dragonpass.com/robots.txt",
@@ -340,7 +334,7 @@
       "records": 0,
       "airportCodes": [],
       "loungeLinks": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/citi-travel.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/citi-travel.html",
       "robots": {
         "checked": true,
         "url": "https://www.cititravel.com/robots.txt",
@@ -364,7 +358,7 @@
       "records": 0,
       "airportCodes": [],
       "loungeLinks": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/dragonpass.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/dragonpass.html",
       "robots": {
         "checked": true,
         "url": "https://en.dragonpass.com.cn/robots.txt",
@@ -399,7 +393,7 @@
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 62533,
-      "sha256": "dcd1ff02c953639c4b79ac4e0f58634ff995c8c341d514c67049eacd038a3d24",
+      "sha256": "0db9b0b04ab220c5346ffa417a69cd8258dc506222a4c02dd9811a4674ca70b6",
       "title": "Delta Sky Club Locations | Delta Air Lines",
       "jsonLdBlocks": 1,
       "records": 23,
@@ -429,7 +423,7 @@
         "https://www.delta.com/us/en/delta-sky-club/delta-one-lounge",
         "https://global.americanexpress.com/lounge-access/the-platinum-card"
       ],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/delta.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/delta.html",
       "robots": {
         "checked": true,
         "url": "https://www.delta.com/robots.txt",
@@ -447,13 +441,13 @@
       "httpStatus": 403,
       "contentType": "text/html",
       "bytes": 442,
-      "sha256": "6451d975610cdb987f1bdb680f23202869e042fda68106546777fd0c3c52a85e",
+      "sha256": "02560fcfb702554a2af43e774cccda6481c1b6620ada9b36b83c9126c5724eaa",
       "title": "Access Denied",
       "jsonLdBlocks": 0,
       "records": 0,
       "airportCodes": [],
       "loungeLinks": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/american.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/american.html",
       "robots": {
         "checked": true,
         "url": "https://www.aa.com/robots.txt",
@@ -471,20 +465,17 @@
       "httpStatus": 200,
       "contentType": "text/html; charset=UTF-8",
       "bytes": 518961,
-      "sha256": "2242142432f3cc567f6b46ad98880986dc03abcf5d70b42082d6b4927fd39df9",
+      "sha256": "e2d10fda4a77c797312ed0061762368ba38b4a4e053ebc550dcc33baba354221",
       "title": "Air Canada Maple Leaf Lounges",
       "jsonLdBlocks": 0,
       "records": 53,
       "airportCodes": [
-        "CAD",
         "DXB",
         "FRA",
-        "GBP",
         "LAX",
         "LGA",
         "LHR",
         "SFO",
-        "VIP",
         "YEG",
         "YHZ",
         "YOW",
@@ -552,7 +543,7 @@
         "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html#",
         "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html#/"
       ],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/air-canada.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/air-canada.html",
       "robots": {
         "checked": true,
         "url": "https://www.aircanada.com/robots.txt",
@@ -587,7 +578,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "bytes": 1239475,
-      "sha256": "d988115339f6284c3bad8a432c87a9ab8c2f9fa955c7c051f36aeeb86ab7e26d",
+      "sha256": "ccc40d898325f2ff55b2bb848137a00dcd660fef13d448b0e1f5bdf61eebe213",
       "title": "Airport Lounges in the UK, US & Australia | Escape Lounges",
       "jsonLdBlocks": 1,
       "records": 42,
@@ -636,7 +627,7 @@
         "https://www.instagram.com/escape_lounges/",
         "https://twitter.com/Escape_Lounges"
       ],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/escape-lounges.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/escape-lounges.html",
       "robots": {
         "checked": true,
         "url": "https://escapelounges.com/robots.txt",
@@ -654,10 +645,10 @@
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
       "bytes": 264609,
-      "sha256": "b74e6c45d46f7b3ff8959f05282733ca6342a760456dface9b1493f9b58c37da",
+      "sha256": "e4a5a37837799647520de7e924a0261946e2c71621665b2b56d2c5abb6261f68",
       "title": "Your Global Partner in Airport Experiences | Airport Dimensions",
       "jsonLdBlocks": 0,
-      "records": 51,
+      "records": 48,
       "airportCodes": [
         "AAP",
         "ATL",
@@ -677,7 +668,6 @@
         "DOH",
         "DPS",
         "DXB",
-        "FOR",
         "GRR",
         "HKG",
         "IAD",
@@ -700,7 +690,6 @@
         "PLM",
         "PNK",
         "POA",
-        "SAN",
         "SEA",
         "SFO",
         "SGN",
@@ -708,11 +697,10 @@
         "SSA",
         "SUB",
         "UPG",
-        "VCP",
-        "VIP"
+        "VCP"
       ],
       "loungeLinks": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/airport-dimensions.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/airport-dimensions.html",
       "robots": {
         "checked": true,
         "url": "https://www.airportdimensions.com/robots.txt",
@@ -736,7 +724,7 @@
       "records": 0,
       "airportCodes": [],
       "loungeLinks": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-39-58-249Z/ourairports.html",
+      "snapshotFile": ".cache/source-snapshots/2026-06-14T19-42-59-083Z/ourairports.html",
       "robots": {
         "checked": true,
         "url": "https://ourairports.com/robots.txt",

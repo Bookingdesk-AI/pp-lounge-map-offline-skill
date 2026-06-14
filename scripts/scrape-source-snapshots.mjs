@@ -34,6 +34,72 @@ const LOUNGE_TERMS = [
   'travel pass',
 ];
 
+const AMBIGUOUS_AIRPORT_CODES = new Set([
+  'ACE',
+  'ADD',
+  'AGE',
+  'AIR',
+  'AND',
+  'ANY',
+  'APP',
+  'ARE',
+  'ASK',
+  'BAR',
+  'BUT',
+  'CAD',
+  'CAF',
+  'CAN',
+  'CAR',
+  'CAT',
+  'COM',
+  'DAY',
+  'DOG',
+  'DON',
+  'EYE',
+  'FLY',
+  'FOR',
+  'GBP',
+  'GET',
+  'GOL',
+  'HOT',
+  'HOW',
+  'HUB',
+  'INS',
+  'INT',
+  'JOS',
+  'KEY',
+  'MAP',
+  'MAR',
+  'MAY',
+  'MIN',
+  'NET',
+  'NEW',
+  'NOT',
+  'NOW',
+  'OFF',
+  'OLD',
+  'ONE',
+  'OPT',
+  'OUR',
+  'OUT',
+  'PET',
+  'PRE',
+  'REG',
+  'SAN',
+  'SEE',
+  'SIT',
+  'SKY',
+  'SPA',
+  'THE',
+  'TRY',
+  'USA',
+  'USE',
+  'VIP',
+  'WEB',
+  'WWW',
+  'YOU',
+]);
+
 function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
@@ -110,7 +176,7 @@ function extractAirportCodes(text, knownAirportCodes) {
 
   while ((match = codeRegex.exec(text)) !== null) {
     const code = match[0];
-    if (!knownAirportCodes.has(code)) {
+    if (!knownAirportCodes.has(code) || AMBIGUOUS_AIRPORT_CODES.has(code)) {
       continue;
     }
     const start = Math.max(0, match.index - 180);
