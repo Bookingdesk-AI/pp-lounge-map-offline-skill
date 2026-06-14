@@ -1,10 +1,11 @@
-import type { PointerEvent as ReactPointerEvent } from 'react';
+import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type {
   AppView,
   CanonicalLoungeRecord,
+  LoungeBrandAsset,
   LoungeFeature,
   LoungeFeatureCollection,
   LoungeFeatureProperties,
@@ -265,6 +266,39 @@ function locationLabel(feature: LoungeFeature) {
 
 function detailLocation(feature: LoungeFeature) {
   return `${feature.properties.airportCode} · ${feature.properties.airportName}`;
+}
+
+function getFeatureBrandAsset(feature: LoungeFeature) {
+  return feature.properties.canonical?.lounge.brandAsset;
+}
+
+function BrandMark({
+  asset,
+  label,
+  compact = false,
+}: {
+  asset?: LoungeBrandAsset;
+  label: string;
+  compact?: boolean;
+}) {
+  const markStyle = {
+    '--brand-mark-bg': asset?.background ?? '#eef3f8',
+    '--brand-mark-fg': asset?.foreground ?? '#405064',
+    '--brand-mark-line': asset?.color ?? '#aebacc',
+  } as CSSProperties;
+
+  return (
+      <span className={`brand-mark ${compact ? 'is-compact' : ''}`} style={markStyle}>
+        <span className="brand-mark-tile" aria-hidden>
+        {asset?.logoUrl ? (
+          <img className="brand-mark-img" src={asset.logoUrl} alt="" loading="lazy" />
+        ) : (
+          (asset?.logoText ?? label.slice(0, 2).toUpperCase())
+        )}
+      </span>
+      <span className="brand-mark-name">{label}</span>
+    </span>
+  );
 }
 
 function compactOpeningHours(value: string, fallback = 'Not listed', maxLines = 3, maxLength = 180) {
@@ -787,6 +821,8 @@ function ResultsList({
         const hovered = hoveredId === feature.properties.id;
         const compared = comparedIds.has(feature.properties.id);
         const compareDisabled = compareLimitReached && !compared;
+        const brandAsset = getFeatureBrandAsset(feature);
+        const brandName = brandAsset?.name ?? feature.properties.canonical?.lounge.brand ?? feature.properties.provider ?? 'Priority Pass';
 
         return (
           <article
@@ -802,14 +838,17 @@ function ResultsList({
               onFocus={() => onHover(feature.properties.id)}
               onBlur={() => onHover(null)}
             >
-              <header>
-                <span className="badge">{feature.properties.type}</span>
-                <span className="code">{feature.properties.airportCode}</span>
+              <header className="result-card-head">
+                <BrandMark asset={brandAsset} label={brandName} compact />
+                <span className="result-code-group">
+                  <span className="badge">{feature.properties.type}</span>
+                  <span className="code">{feature.properties.airportCode}</span>
+                </span>
               </header>
               <h3>{feature.properties.name}</h3>
               <p>{feature.properties.airportName}</p>
               <div className="quality-row">
-                <span>{feature.properties.canonical?.lounge.brand ?? feature.properties.provider ?? 'Priority Pass'}</span>
+                <span>{feature.properties.canonical?.sources[0]?.publisher ?? 'Priority Pass'}</span>
                 <span>{feature.properties.quality?.reviewStatus ?? feature.properties.canonical?.quality.reviewStatus ?? 'approved'}</span>
               </div>
               <div className="result-meta-row">
@@ -906,6 +945,9 @@ function DetailPanel({
   onClose: () => void;
 }) {
   const compared = comparedIds.has(selectedFeature.properties.id);
+  const brandAsset = getFeatureBrandAsset(selectedFeature);
+  const brandName =
+    brandAsset?.name ?? selectedFeature.properties.canonical?.lounge.brand ?? selectedFeature.properties.provider ?? 'Priority Pass';
 
   return (
     <aside className="detail-panel detail-panel-overlay">
@@ -922,6 +964,7 @@ function DetailPanel({
 
       <div className="detail-panel-body">
         <div className="detail-meta-strip">
+          <BrandMark asset={brandAsset} label={brandName} />
           <span className="badge">{selectedFeature.properties.type}</span>
           <span className="code">{locationLabel(selectedFeature)}</span>
           <QualityBadge
@@ -1103,11 +1146,15 @@ function MobileDetailsView({
   }
 
   const compared = comparedIds.has(selectedFeature.properties.id);
+  const brandAsset = getFeatureBrandAsset(selectedFeature);
+  const brandName =
+    brandAsset?.name ?? selectedFeature.properties.canonical?.lounge.brand ?? selectedFeature.properties.provider ?? 'Priority Pass';
 
   return (
     <div className="mobile-selected-view">
       <div className="mobile-selected-summary">
         <div className="mobile-selected-meta">
+        <BrandMark asset={brandAsset} label={brandName} compact />
         <span className="badge">{selectedFeature.properties.type}</span>
         <span className="code">{selectedFeature.properties.airportCode}</span>
       </div>
@@ -1115,7 +1162,7 @@ function MobileDetailsView({
       <p>{selectedFeature.properties.airportName}</p>
       <small>{locationLabel(selectedFeature)}</small>
       <div className="quality-row">
-        <span>{selectedFeature.properties.canonical?.lounge.brand ?? selectedFeature.properties.provider ?? 'Priority Pass'}</span>
+        <span>{selectedFeature.properties.canonical?.sources[0]?.publisher ?? 'Priority Pass'}</span>
         <span>{selectedFeature.properties.canonical?.quality.reviewStatus ?? 'approved'}</span>
       </div>
     </div>
@@ -1348,7 +1395,24 @@ function SchemaView({ meta, records }: { meta: LoungeMeta | null; records: Canon
   );
 }
 
-function SourcesView({ sources }: { sources: LoungeSourceRegistryEntry[] }) {
+function SourcesView({
+  sources,
+  brands,
+}: {
+  sources: LoungeSourceRegistryEntry[];
+  brands: LoungeBrandAsset[];
+}) {
+  const brandsById = useMemo(() => new Map(brands.map((brand) => [brand.id, brand])), [brands]);
+  const sourceBrandAsset = useCallback(
+    (source: LoungeSourceRegistryEntry) => {
+      if (source.id === 'desk-travel-brand-database') {
+        return brandsById.get('desk-travel');
+      }
+      return source.brandIds?.map((brandId) => brandsById.get(brandId)).find(Boolean);
+    },
+    [brandsById],
+  );
+
   return (
     <main className="console-view">
       <section className="console-panel">
@@ -1361,6 +1425,7 @@ function SourcesView({ sources }: { sources: LoungeSourceRegistryEntry[] }) {
             <thead>
               <tr>
                 <th>Publisher</th>
+                <th>Brands</th>
                 <th>Adapter</th>
                 <th>Status</th>
                 <th>Freshness</th>
@@ -1372,10 +1437,17 @@ function SourcesView({ sources }: { sources: LoungeSourceRegistryEntry[] }) {
               {sources.map((source) => (
                 <tr key={source.id}>
                   <td>
-                    <a href={source.url} target="_blank" rel="noreferrer">
-                      {source.publisher}
-                    </a>
+                    <div className="source-publisher-cell">
+                      <a className="source-brand-link" href={source.url} target="_blank" rel="noreferrer">
+                        <BrandMark
+                          asset={sourceBrandAsset(source)}
+                          label={source.publisher}
+                          compact
+                        />
+                      </a>
+                    </div>
                   </td>
+                  <td>{source.brandIds?.length ?? 0}</td>
                   <td>{source.adapter}</td>
                   <td>{source.status}</td>
                   <td>{source.freshnessDays}d</td>
@@ -1398,6 +1470,7 @@ function App() {
   const [meta, setMeta] = useState<LoungeMeta | null>(null);
   const [canonicalRecords, setCanonicalRecords] = useState<CanonicalLoungeRecord[]>([]);
   const [sources, setSources] = useState<LoungeSourceRegistryEntry[]>([]);
+  const [brands, setBrands] = useState<LoungeBrandAsset[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<AppView>(initialUrlState.view);
@@ -1456,11 +1529,12 @@ function App() {
 
     async function loadData() {
       try {
-        const [geoJsonResponse, metaResponse, canonicalResponse, sourceResponse] = await Promise.all([
+        const [geoJsonResponse, metaResponse, canonicalResponse, sourceResponse, brandResponse] = await Promise.all([
           fetch('/data/lounges.geojson'),
           fetch('/data/meta.json'),
           fetch('/data/lounge-guru-catalog.json'),
           fetch('/data/source-registry.json'),
+          fetch('/data/brand-registry.json'),
         ]);
 
         if (!geoJsonResponse.ok || !metaResponse.ok) {
@@ -1477,11 +1551,32 @@ function App() {
               quality?: LoungeMeta['quality'];
               stats?: Partial<LoungeMeta['stats']>;
               filters?: Partial<LoungeMeta['filters']>;
+              brands?: LoungeBrandAsset[];
             })
           : null;
         const sourceRegistry = sourceResponse.ok
           ? ((await sourceResponse.json()) as LoungeSourceRegistryEntry[])
           : canonical?.sources ?? nextMeta.sources ?? [];
+        const brandRegistry = brandResponse.ok
+          ? ((await brandResponse.json()) as LoungeBrandAsset[])
+          : canonical?.brands ?? nextMeta.brands ?? [];
+        const canonicalRecords = canonical?.records ?? [];
+        const canonicalById = new Map(canonicalRecords.map((record) => [record.lounge.id, record]));
+        const nextFeatures = (geoJson.features ?? []).map((feature) => {
+          const canonicalRecord = canonicalById.get(feature.properties.id) ?? feature.properties.canonical;
+          return {
+            ...feature,
+            properties: {
+              ...feature.properties,
+              canonical: canonicalRecord,
+              provider: feature.properties.provider ?? canonicalRecord?.lounge.brand,
+              programs: feature.properties.programs ?? canonicalRecord?.lounge.programs,
+              accessMethods: feature.properties.accessMethods ?? canonicalRecord?.lounge.accessMethods,
+              sources: feature.properties.sources ?? canonicalRecord?.sources,
+              quality: feature.properties.quality ?? canonicalRecord?.quality,
+            },
+          };
+        });
 
         const mergedMeta: LoungeMeta = canonical
           ? {
@@ -1507,10 +1602,11 @@ function App() {
           return;
         }
 
-        setFeatures(geoJson.features ?? []);
+        setFeatures(nextFeatures);
         setMeta(mergedMeta);
-        setCanonicalRecords(canonical?.records ?? []);
+        setCanonicalRecords(canonicalRecords);
         setSources(sourceRegistry);
+        setBrands(brandRegistry);
         setLoading(false);
       } catch (loadError) {
         if (!alive) {
@@ -2049,7 +2145,7 @@ function App() {
       ) : null}
 
       {activeView === 'sources' ? (
-        <SourcesView sources={sources} />
+        <SourcesView sources={sources} brands={brands} />
       ) : null}
 
       {activeView === 'map' ? (

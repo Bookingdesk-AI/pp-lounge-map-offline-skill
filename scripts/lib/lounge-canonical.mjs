@@ -1,3 +1,8 @@
+import {
+  createDeskTravelBrandImport,
+  getBrandRegistry,
+  resolveBrandAsset,
+} from './brand-registry.mjs';
 import { CANONICAL_SCHEMA_FIELDS, LOUNGE_GURU_SCHEMA_VERSION, cloneSourceRegistry } from './source-registry.mjs';
 
 const COMPLETE_FIELD_WEIGHTS = [
@@ -166,6 +171,8 @@ export function createCanonicalRecord(feature, options = {}) {
   const sourceId = options.sourceId ?? properties.sourceId ?? 'priority-pass';
   const generatedAt = options.generatedAt ?? new Date().toISOString();
   const coordinates = getCoordinates(feature);
+  const inferredBrand = clean(properties.provider) || inferBrand(properties.name);
+  const brandAsset = resolveBrandAsset(inferredBrand, properties.name, sourceId);
   const source = {
     sourceId,
     publisher: options.publisher ?? 'Priority Pass',
@@ -196,7 +203,8 @@ export function createCanonicalRecord(feature, options = {}) {
     lounge: {
       id: clean(properties.id),
       name: clean(properties.name),
-      brand: clean(properties.provider) || inferBrand(properties.name),
+      brand: inferredBrand,
+      brandAsset,
       operator: inferOperator(properties.name, sourceId),
       category: inferCategory(properties.type),
       status: 'active',
@@ -244,6 +252,12 @@ export function createCanonicalRecord(feature, options = {}) {
 
 export function createSourceRegistryForCatalog(features, generatedAt) {
   const registry = cloneSourceRegistry();
+  const deskTravelBrandDb = registry.find((source) => source.id === 'desk-travel-brand-database');
+  if (deskTravelBrandDb) {
+    deskTravelBrandDb.records = getBrandRegistry().length;
+    deskTravelBrandDb.lastRunAt = generatedAt;
+  }
+
   const priorityPass = registry.find((source) => source.id === 'priority-pass');
   if (priorityPass) {
     priorityPass.records = features.length;
@@ -286,6 +300,8 @@ export function createCanonicalCatalog({ features, meta }) {
   const generatedAt = meta.generatedAt ?? new Date().toISOString();
   const records = features.map((feature) => createCanonicalRecord(feature, { generatedAt }));
   const sources = createSourceRegistryForCatalog(features, generatedAt);
+  const brands = getBrandRegistry();
+  const deskTravelBrandImport = createDeskTravelBrandImport({ generatedAt });
   const quality = summarizeQuality(records);
 
   return {
@@ -306,6 +322,8 @@ export function createCanonicalCatalog({ features, meta }) {
     },
     quality,
     sources,
+    brands,
+    deskTravelBrandImport,
     records,
   };
 }

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-labelledby="title">
+  <title id="title">Priority Pass</title>
+  <rect width="96" height="96" rx="18" fill="#eaf1fb"/>
+  <rect x="13" y="13" width="70" height="70" rx="13" fill="#ffffff" stroke="#214f9f" stroke-opacity="0.28" stroke-width="2"/>
+  <text x="48" y="55" fill="#163f82" font-family="IBM Plex Sans, Arial, sans-serif" font-size="25" font-weight="700" text-anchor="middle" letter-spacing="0">PP</text>
+</svg>

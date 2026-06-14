@@ -335,6 +335,7 @@
 .meta-chip,
 .quick-type-chip,
 .badge,
+.brand-mark-tile,
 .quality-badge,
 .compare-toggle,
 .inline-link,
@@ -356,6 +357,66 @@
   padding: 0.28rem 0.48rem;
   font-size: 0.68rem;
   cursor: pointer;
+}
+
+.brand-mark {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+.brand-mark.is-compact {
+  gap: 0.3rem;
+}
+
+.brand-mark-tile {
+  width: 34px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-color: color-mix(in srgb, var(--brand-mark-line) 42%, var(--line-soft));
+  background: var(--brand-mark-bg);
+  color: var(--brand-mark-fg);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.brand-mark.is-compact .brand-mark-tile {
+  width: 30px;
+  height: 24px;
+  font-size: 0.62rem;
+}
+
+.brand-mark-img {
+  width: 24px;
+  height: 24px;
+  display: block;
+  border-radius: inherit;
+  object-fit: contain;
+}
+
+.brand-mark.is-compact .brand-mark-img {
+  width: 20px;
+  height: 20px;
+}
+
+.brand-mark-name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-soft);
+  font-size: 0.74rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brand-mark.is-compact .brand-mark-name {
+  max-width: 132px;
+  font-size: 0.7rem;
 }
 
 .rail-controls .type-pill,
@@ -529,13 +590,24 @@
 }
 
 .compare-card-head,
-.result-card header,
+.result-card-head,
 .mobile-selected-meta,
 .detail-meta-strip {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 0.6rem;
+}
+
+.result-card-head {
+  min-width: 0;
+}
+
+.result-code-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: 0 0 auto;
 }
 
 .badge {
@@ -1031,6 +1103,10 @@
   align-items: center;
 }
 
+.detail-meta-strip {
+  flex-wrap: wrap;
+}
+
 .detail-grid dd {
   font-size: 0.82rem;
   line-height: 1.5;
@@ -1189,6 +1265,16 @@
 .data-table a {
   color: var(--brand-blue-strong);
   text-decoration: none;
+}
+
+.source-publisher-cell {
+  display: grid;
+  gap: 0.34rem;
+  align-items: start;
+}
+
+.source-brand-link {
+  width: fit-content;
 }
 
 .schema-grid {

@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { createBrandLogoSvg } from './lib/brand-registry.mjs';
 import { createCanonicalCatalog } from './lib/lounge-canonical.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,7 +12,10 @@ const geoJsonPath = path.resolve(projectRoot, 'public', 'data', 'lounges.geojson
 const metaPath = path.resolve(projectRoot, 'public', 'data', 'meta.json');
 const outputCatalogPath = path.resolve(projectRoot, 'public', 'data', 'lounge-guru-catalog.json');
 const outputSourcesPath = path.resolve(projectRoot, 'public', 'data', 'source-registry.json');
+const outputBrandsPath = path.resolve(projectRoot, 'public', 'data', 'brand-registry.json');
+const outputBrandImportPath = path.resolve(projectRoot, 'public', 'data', 'desk-travel-brand-import.json');
 const outputQualityPath = path.resolve(projectRoot, 'public', 'data', 'quality-report.json');
+const outputBrandLogoDir = path.resolve(projectRoot, 'public', 'data', 'brand-logos');
 
 async function main() {
   const geoJson = JSON.parse(await fs.readFile(geoJsonPath, 'utf8'));
@@ -27,8 +31,16 @@ async function main() {
   }
 
   await fs.mkdir(path.dirname(outputCatalogPath), { recursive: true });
+  await fs.mkdir(outputBrandLogoDir, { recursive: true });
   await fs.writeFile(outputCatalogPath, `${JSON.stringify(catalog, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputSourcesPath, `${JSON.stringify(catalog.sources, null, 2)}\n`, 'utf8');
+  await fs.writeFile(outputBrandsPath, `${JSON.stringify(catalog.brands, null, 2)}\n`, 'utf8');
+  await fs.writeFile(outputBrandImportPath, `${JSON.stringify(catalog.deskTravelBrandImport, null, 2)}\n`, 'utf8');
+  await Promise.all(
+    catalog.brands.map((brand) =>
+      fs.writeFile(path.join(outputBrandLogoDir, `${brand.id}.svg`), createBrandLogoSvg(brand), 'utf8'),
+    ),
+  );
   await fs.writeFile(
     outputQualityPath,
     `${JSON.stringify(
@@ -38,6 +50,7 @@ async function main() {
         stats: catalog.stats,
         quality: catalog.quality,
         sources: catalog.sources,
+        brands: catalog.brands,
       },
       null,
       2,

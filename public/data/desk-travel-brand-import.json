@@ -1,0 +1,368 @@
+{
+  "generatedAt": "2026-03-11T13:05:33.139Z",
+  "target": "desk.travel.brand_assets",
+  "mode": "upsert",
+  "version": "2026-06-14",
+  "records": [
+    {
+      "id": "desk-travel",
+      "name": "Desk.Travel",
+      "category": "aggregator",
+      "sourceIds": [
+        "desk-travel-brand-database"
+      ],
+      "sourceUrl": "https://desk.travel/",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/desk-travel",
+      "logoUrl": "/data/brand-logos/desk-travel.svg",
+      "logoText": "DT",
+      "color": "#2456a6",
+      "background": "#eaf1fb",
+      "foreground": "#163f82",
+      "status": "approved",
+      "rightsNote": "Internal Desk.Travel brand asset registry owner mark."
+    },
+    {
+      "id": "priority-pass",
+      "name": "Priority Pass",
+      "category": "program",
+      "sourceIds": [
+        "priority-pass"
+      ],
+      "sourceUrl": "https://www.prioritypass.com/en-GB/airport-lounges",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/priority-pass",
+      "logoUrl": "/data/brand-logos/priority-pass.svg",
+      "logoText": "PP",
+      "color": "#214f9f",
+      "background": "#eaf1fb",
+      "foreground": "#163f82",
+      "status": "approved",
+      "rightsNote": "Desk.Travel managed brand asset; source mapping uses official public program page."
+    },
+    {
+      "id": "chase-sapphire",
+      "name": "Chase Sapphire",
+      "category": "issuer",
+      "sourceIds": [
+        "chase-sapphire"
+      ],
+      "sourceUrl": "https://account.chase.com/sapphire-airport-lounge",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/chase-sapphire",
+      "logoUrl": "/data/brand-logos/chase-sapphire.svg",
+      "logoText": "CS",
+      "color": "#0c3f78",
+      "background": "#e8f0fb",
+      "foreground": "#0c3f78",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed brand asset; official public Chase page supplies source context."
+    },
+    {
+      "id": "american-express",
+      "name": "American Express",
+      "category": "issuer",
+      "sourceIds": [
+        "amex-global-lounge-collection"
+      ],
+      "sourceUrl": "https://global.americanexpress.com/lounge-access/the-platinum-card",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/american-express",
+      "logoUrl": "/data/brand-logos/american-express.svg",
+      "logoText": "AX",
+      "color": "#1f5f9f",
+      "background": "#e8f3fb",
+      "foreground": "#164b7a",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed brand asset; official public Amex page supplies source context."
+    },
+    {
+      "id": "capital-one",
+      "name": "Capital One",
+      "category": "issuer",
+      "sourceIds": [
+        "capital-one"
+      ],
+      "sourceUrl": "https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/capital-one",
+      "logoUrl": "/data/brand-logos/capital-one.svg",
+      "logoText": "CO",
+      "color": "#244f7a",
+      "background": "#eaf2f8",
+      "foreground": "#1f405f",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed brand asset; official public Capital One page supplies source context."
+    },
+    {
+      "id": "visa-airport-companion",
+      "name": "Visa Airport Companion",
+      "category": "card_network",
+      "sourceIds": [
+        "visa-airport-companion"
+      ],
+      "sourceUrl": "https://www.visaairportcompanion.com/",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/visa-airport-companion",
+      "logoUrl": "/data/brand-logos/visa-airport-companion.svg",
+      "logoText": "VI",
+      "color": "#1f4a8a",
+      "background": "#edf3fb",
+      "foreground": "#173b70",
+      "status": "candidate",
+      "rightsNote": "Desk.Travel managed brand asset; official public Visa program page supplies source context."
+    },
+    {
+      "id": "mastercard-travel-pass",
+      "name": "Mastercard Travel Pass",
+      "category": "card_network",
+      "sourceIds": [
+        "mastercard-travel-pass"
+      ],
+      "sourceUrl": "https://mastercardtravelpass.dragonpass.com/",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/mastercard-travel-pass",
+      "logoUrl": "/data/brand-logos/mastercard-travel-pass.svg",
+      "logoText": "MC",
+      "color": "#9b3f1d",
+      "background": "#fff0e7",
+      "foreground": "#7b3217",
+      "status": "candidate",
+      "rightsNote": "Desk.Travel managed brand asset; official public Mastercard/DragonPass page supplies source context."
+    },
+    {
+      "id": "citi",
+      "name": "Citi",
+      "category": "issuer",
+      "sourceIds": [
+        "citi-travel"
+      ],
+      "sourceUrl": "https://www.cititravel.com/",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/citi",
+      "logoUrl": "/data/brand-logos/citi.svg",
+      "logoText": "CT",
+      "color": "#1d5790",
+      "background": "#eaf2fb",
+      "foreground": "#174774",
+      "status": "candidate",
+      "rightsNote": "Desk.Travel managed brand asset; official public Citi travel page supplies source context."
+    },
+    {
+      "id": "dragonpass",
+      "name": "DragonPass",
+      "category": "aggregator",
+      "sourceIds": [
+        "dragonpass"
+      ],
+      "sourceUrl": "https://en.dragonpass.com.cn/",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/dragonpass",
+      "logoUrl": "/data/brand-logos/dragonpass.svg",
+      "logoText": "DP",
+      "color": "#9d2f2f",
+      "background": "#fff0f0",
+      "foreground": "#822626",
+      "status": "candidate",
+      "rightsNote": "Desk.Travel managed brand asset; official public DragonPass page supplies source context."
+    },
+    {
+      "id": "united",
+      "name": "United",
+      "category": "airline",
+      "sourceIds": [
+        "united"
+      ],
+      "sourceUrl": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/united",
+      "logoUrl": "/data/brand-logos/united.svg",
+      "logoText": "UA",
+      "color": "#214f9f",
+      "background": "#eaf1fb",
+      "foreground": "#163f82",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed brand asset; official public United page supplies source context."
+    },
+    {
+      "id": "delta",
+      "name": "Delta",
+      "category": "airline",
+      "sourceIds": [
+        "delta"
+      ],
+      "sourceUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/delta",
+      "logoUrl": "/data/brand-logos/delta.svg",
+      "logoText": "DL",
+      "color": "#8c2633",
+      "background": "#fff0f2",
+      "foreground": "#75202b",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed brand asset; official public Delta page supplies source context."
+    },
+    {
+      "id": "american-airlines",
+      "name": "American Airlines",
+      "category": "airline",
+      "sourceIds": [
+        "american"
+      ],
+      "sourceUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/american-airlines",
+      "logoUrl": "/data/brand-logos/american-airlines.svg",
+      "logoText": "AA",
+      "color": "#2d5c87",
+      "background": "#eaf2f8",
+      "foreground": "#214967",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed brand asset; official public American Airlines page supplies source context."
+    },
+    {
+      "id": "air-canada",
+      "name": "Air Canada",
+      "category": "airline",
+      "sourceIds": [
+        "air-canada"
+      ],
+      "sourceUrl": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/air-canada",
+      "logoUrl": "/data/brand-logos/air-canada.svg",
+      "logoText": "AC",
+      "color": "#3f4650",
+      "background": "#eef1f4",
+      "foreground": "#303741",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed brand asset; official public Air Canada page supplies source context."
+    },
+    {
+      "id": "plaza-premium",
+      "name": "Plaza Premium",
+      "category": "operator",
+      "sourceIds": [
+        "plaza-premium"
+      ],
+      "sourceUrl": "https://www.plazapremiumlounge.com/en-uk",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/plaza-premium",
+      "logoUrl": "/data/brand-logos/plaza-premium.svg",
+      "logoText": "PL",
+      "color": "#846229",
+      "background": "#f8f1e4",
+      "foreground": "#694d1f",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed brand asset; official public Plaza Premium page supplies source context."
+    },
+    {
+      "id": "escape-lounges",
+      "name": "Escape Lounges",
+      "category": "operator",
+      "sourceIds": [
+        "escape-lounges"
+      ],
+      "sourceUrl": "https://escapelounges.com/",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/escape-lounges",
+      "logoUrl": "/data/brand-logos/escape-lounges.svg",
+      "logoText": "ES",
+      "color": "#487267",
+      "background": "#eaf4f1",
+      "foreground": "#365a51",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed brand asset; official public Escape page supplies source context."
+    },
+    {
+      "id": "airport-dimensions",
+      "name": "Airport Dimensions",
+      "category": "operator",
+      "sourceIds": [
+        "airport-dimensions"
+      ],
+      "sourceUrl": "https://www.airportdimensions.com/locations",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/airport-dimensions",
+      "logoUrl": "/data/brand-logos/airport-dimensions.svg",
+      "logoText": "AD",
+      "color": "#5b6372",
+      "background": "#eef1f6",
+      "foreground": "#424a58",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed brand asset; official public Airport Dimensions page supplies source context."
+    },
+    {
+      "id": "aspire",
+      "name": "Aspire",
+      "category": "operator",
+      "sourceIds": [
+        "priority-pass"
+      ],
+      "sourceUrl": "https://www.prioritypass.com/en-GB/airport-lounges",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/aspire",
+      "logoUrl": "/data/brand-logos/aspire.svg",
+      "logoText": "AS",
+      "color": "#4f6f8a",
+      "background": "#edf3f7",
+      "foreground": "#3e5870",
+      "status": "approved",
+      "rightsNote": "Desk.Travel managed brand asset; Priority Pass record supplies source context."
+    },
+    {
+      "id": "marhaba",
+      "name": "Marhaba",
+      "category": "operator",
+      "sourceIds": [
+        "priority-pass"
+      ],
+      "sourceUrl": "https://www.prioritypass.com/en-GB/airport-lounges",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/marhaba",
+      "logoUrl": "/data/brand-logos/marhaba.svg",
+      "logoText": "MH",
+      "color": "#7d6542",
+      "background": "#f7f1e8",
+      "foreground": "#604d33",
+      "status": "approved",
+      "rightsNote": "Desk.Travel managed brand asset; Priority Pass record supplies source context."
+    },
+    {
+      "id": "primeclass",
+      "name": "Primeclass",
+      "category": "operator",
+      "sourceIds": [
+        "priority-pass"
+      ],
+      "sourceUrl": "https://www.prioritypass.com/en-GB/airport-lounges",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/primeclass",
+      "logoUrl": "/data/brand-logos/primeclass.svg",
+      "logoText": "PC",
+      "color": "#6b5f7d",
+      "background": "#f0edf6",
+      "foreground": "#514760",
+      "status": "approved",
+      "rightsNote": "Desk.Travel managed brand asset; Priority Pass record supplies source context."
+    },
+    {
+      "id": "be-relax",
+      "name": "Be Relax",
+      "category": "operator",
+      "sourceIds": [
+        "priority-pass"
+      ],
+      "sourceUrl": "https://www.prioritypass.com/en-GB/airport-lounges",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/be-relax",
+      "logoUrl": "/data/brand-logos/be-relax.svg",
+      "logoText": "BR",
+      "color": "#4c746e",
+      "background": "#eaf4f2",
+      "foreground": "#365952",
+      "status": "approved",
+      "rightsNote": "Desk.Travel managed brand asset; Priority Pass record supplies source context."
+    }
+  ]
+}

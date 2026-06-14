@@ -451,6 +451,7 @@ async function main() {
     },
     schema: canonicalCatalog.schema,
     sources: canonicalCatalog.sources,
+    brands: canonicalCatalog.brands,
     quality: canonicalCatalog.quality,
     issues,
   };

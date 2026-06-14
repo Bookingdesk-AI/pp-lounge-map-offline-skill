@@ -1,5 +1,40 @@
 [
   {
+    "id": "desk-travel-brand-database",
+    "publisher": "Desk.Travel Brand Database",
+    "coverage": "Approved logo assets, brand categories, and source-to-brand mappings",
+    "adapter": "licensed_api",
+    "status": "active",
+    "freshnessDays": 7,
+    "url": "https://desk.travel/",
+    "rightsNote": "Internal Desk.Travel brand asset registry; use only approved logo assets and source mappings.",
+    "lastRunAt": "2026-03-11T13:05:33.139Z",
+    "records": 20,
+    "issues": 0,
+    "brandIds": [
+      "desk-travel",
+      "priority-pass",
+      "chase-sapphire",
+      "american-express",
+      "capital-one",
+      "visa-airport-companion",
+      "mastercard-travel-pass",
+      "citi",
+      "dragonpass",
+      "united",
+      "delta",
+      "american-airlines",
+      "air-canada",
+      "plaza-premium",
+      "escape-lounges",
+      "airport-dimensions",
+      "aspire",
+      "marhaba",
+      "primeclass",
+      "be-relax"
+    ]
+  },
+  {
     "id": "priority-pass",
     "publisher": "Priority Pass",
     "coverage": "Network lounge, dining, rest, refresh, and unwind records",
@@ -10,7 +45,14 @@
     "rightsNote": "Use only the approved source workbook or public official pages; do not bypass account controls.",
     "lastRunAt": "2026-03-11T13:05:33.139Z",
     "records": 1754,
-    "issues": 657
+    "issues": 657,
+    "brandIds": [
+      "priority-pass",
+      "aspire",
+      "marhaba",
+      "primeclass",
+      "be-relax"
+    ]
   },
   {
     "id": "chase-sapphire",
@@ -23,7 +65,10 @@
     "rightsNote": "Official public Chase page; parse only public location and policy text.",
     "lastRunAt": null,
     "records": 0,
-    "issues": 0
+    "issues": 0,
+    "brandIds": [
+      "chase-sapphire"
+    ]
   },
   {
     "id": "amex-global-lounge-collection",
@@ -36,7 +81,10 @@
     "rightsNote": "Official public Amex page; treat partner eligibility as source evidence, not canonical operator data.",
     "lastRunAt": null,
     "records": 0,
-    "issues": 0
+    "issues": 0,
+    "brandIds": [
+      "american-express"
+    ]
   },
   {
     "id": "capital-one",
@@ -49,7 +97,74 @@
     "rightsNote": "Official public Capital One page; retain URL provenance for every imported location.",
     "lastRunAt": null,
     "records": 0,
-    "issues": 0
+    "issues": 0,
+    "brandIds": [
+      "capital-one"
+    ]
+  },
+  {
+    "id": "visa-airport-companion",
+    "publisher": "Visa Airport Companion",
+    "coverage": "Visa cardholder airport lounge access program evidence",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 30,
+    "url": "https://www.visaairportcompanion.com/",
+    "rightsNote": "Official public Visa program page; import only public program and eligibility evidence.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": [
+      "visa-airport-companion"
+    ]
+  },
+  {
+    "id": "mastercard-travel-pass",
+    "publisher": "Mastercard Travel Pass",
+    "coverage": "Mastercard cardholder airport lounge access program evidence",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 30,
+    "url": "https://mastercardtravelpass.dragonpass.com/",
+    "rightsNote": "Official public Mastercard Travel Pass page; retain URL provenance for every imported field.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": [
+      "mastercard-travel-pass"
+    ]
+  },
+  {
+    "id": "citi-travel",
+    "publisher": "Citi Travel",
+    "coverage": "Citi travel card program and issuer evidence",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 30,
+    "url": "https://www.cititravel.com/",
+    "rightsNote": "Official public Citi travel page; issuer-program mapping requires manual review before publishing records.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": [
+      "citi"
+    ]
+  },
+  {
+    "id": "dragonpass",
+    "publisher": "DragonPass",
+    "coverage": "DragonPass lounge network and partner access evidence",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 30,
+    "url": "https://en.dragonpass.com.cn/",
+    "rightsNote": "Official public DragonPass page; import only public program and location evidence.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": [
+      "dragonpass"
+    ]
   },
   {
     "id": "united",
@@ -62,7 +177,10 @@
     "rightsNote": "Official public airline location page.",
     "lastRunAt": null,
     "records": 0,
-    "issues": 0
+    "issues": 0,
+    "brandIds": [
+      "united"
+    ]
   },
   {
     "id": "delta",
@@ -75,7 +193,10 @@
     "rightsNote": "Official public airline location page.",
     "lastRunAt": null,
     "records": 0,
-    "issues": 0
+    "issues": 0,
+    "brandIds": [
+      "delta"
+    ]
   },
   {
     "id": "american",
@@ -88,7 +209,10 @@
     "rightsNote": "Official public airline location page.",
     "lastRunAt": null,
     "records": 0,
-    "issues": 0
+    "issues": 0,
+    "brandIds": [
+      "american-airlines"
+    ]
   },
   {
     "id": "air-canada",
@@ -101,7 +225,10 @@
     "rightsNote": "Official public airline location page.",
     "lastRunAt": null,
     "records": 0,
-    "issues": 0
+    "issues": 0,
+    "brandIds": [
+      "air-canada"
+    ]
   },
   {
     "id": "plaza-premium",
@@ -114,7 +241,10 @@
     "rightsNote": "Official public operator page.",
     "lastRunAt": null,
     "records": 0,
-    "issues": 0
+    "issues": 0,
+    "brandIds": [
+      "plaza-premium"
+    ]
   },
   {
     "id": "escape-lounges",
@@ -127,7 +257,10 @@
     "rightsNote": "Official public operator page.",
     "lastRunAt": null,
     "records": 0,
-    "issues": 0
+    "issues": 0,
+    "brandIds": [
+      "escape-lounges"
+    ]
   },
   {
     "id": "airport-dimensions",
@@ -140,7 +273,10 @@
     "rightsNote": "Official public operator page.",
     "lastRunAt": null,
     "records": 0,
-    "issues": 0
+    "issues": 0,
+    "brandIds": [
+      "airport-dimensions"
+    ]
   },
   {
     "id": "ourairports",
@@ -153,7 +289,8 @@
     "rightsNote": "Open airport reference data; use for normalization only.",
     "lastRunAt": "2026-03-11T13:05:33.139Z",
     "records": 752,
-    "issues": 0
+    "issues": 0,
+    "brandIds": []
   },
   {
     "id": "nominatim",
@@ -166,6 +303,7 @@
     "rightsNote": "Fallback only; honor rate limits and cache results.",
     "lastRunAt": null,
     "records": 0,
-    "issues": 0
+    "issues": 0,
+    "brandIds": []
   }
 ]

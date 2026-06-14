@@ -1,6 +1,21 @@
+import { getBrandIdsForSource, getBrandRegistry } from './brand-registry.mjs';
+
 export const LOUNGE_GURU_SCHEMA_VERSION = '2026-06-14';
 
 export const SOURCE_REGISTRY = [
+  {
+    id: 'desk-travel-brand-database',
+    publisher: 'Desk.Travel Brand Database',
+    coverage: 'Approved logo assets, brand categories, and source-to-brand mappings',
+    adapter: 'licensed_api',
+    status: 'active',
+    freshnessDays: 7,
+    url: 'https://desk.travel/',
+    rightsNote: 'Internal Desk.Travel brand asset registry; use only approved logo assets and source mappings.',
+    lastRunAt: null,
+    records: 0,
+    issues: 0,
+  },
   {
     id: 'priority-pass',
     publisher: 'Priority Pass',
@@ -49,6 +64,58 @@ export const SOURCE_REGISTRY = [
     freshnessDays: 14,
     url: 'https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/',
     rightsNote: 'Official public Capital One page; retain URL provenance for every imported location.',
+    lastRunAt: null,
+    records: 0,
+    issues: 0,
+  },
+  {
+    id: 'visa-airport-companion',
+    publisher: 'Visa Airport Companion',
+    coverage: 'Visa cardholder airport lounge access program evidence',
+    adapter: 'official_page',
+    status: 'candidate',
+    freshnessDays: 30,
+    url: 'https://www.visaairportcompanion.com/',
+    rightsNote: 'Official public Visa program page; import only public program and eligibility evidence.',
+    lastRunAt: null,
+    records: 0,
+    issues: 0,
+  },
+  {
+    id: 'mastercard-travel-pass',
+    publisher: 'Mastercard Travel Pass',
+    coverage: 'Mastercard cardholder airport lounge access program evidence',
+    adapter: 'official_page',
+    status: 'candidate',
+    freshnessDays: 30,
+    url: 'https://mastercardtravelpass.dragonpass.com/',
+    rightsNote: 'Official public Mastercard Travel Pass page; retain URL provenance for every imported field.',
+    lastRunAt: null,
+    records: 0,
+    issues: 0,
+  },
+  {
+    id: 'citi-travel',
+    publisher: 'Citi Travel',
+    coverage: 'Citi travel card program and issuer evidence',
+    adapter: 'official_page',
+    status: 'candidate',
+    freshnessDays: 30,
+    url: 'https://www.cititravel.com/',
+    rightsNote: 'Official public Citi travel page; issuer-program mapping requires manual review before publishing records.',
+    lastRunAt: null,
+    records: 0,
+    issues: 0,
+  },
+  {
+    id: 'dragonpass',
+    publisher: 'DragonPass',
+    coverage: 'DragonPass lounge network and partner access evidence',
+    adapter: 'official_page',
+    status: 'candidate',
+    freshnessDays: 30,
+    url: 'https://en.dragonpass.com.cn/',
+    rightsNote: 'Official public DragonPass page; import only public program and location evidence.',
     lastRunAt: null,
     records: 0,
     issues: 0,
@@ -181,6 +248,7 @@ export const CANONICAL_SCHEMA_FIELDS = [
   ['lounge', 'status', true],
   ['lounge', 'programs', true],
   ['lounge', 'accessMethods', true],
+  ['lounge', 'brandAsset', true],
   ['airport', 'iata', true],
   ['airport', 'icao', false],
   ['airport', 'name', true],
@@ -206,5 +274,10 @@ export const CANONICAL_SCHEMA_FIELDS = [
 ].map(([group, name, required]) => ({ group, name, required }));
 
 export function cloneSourceRegistry() {
-  return SOURCE_REGISTRY.map((source) => ({ ...source }));
+  return SOURCE_REGISTRY.map((source) => ({
+    ...source,
+    brandIds: source.id === 'desk-travel-brand-database'
+      ? getBrandRegistry().map((brand) => brand.id)
+      : getBrandIdsForSource(source.id),
+  }));
 }

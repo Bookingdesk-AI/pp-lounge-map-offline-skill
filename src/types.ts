@@ -14,6 +14,25 @@ export interface LoungeSourceRegistryEntry {
   lastRunAt: string | null;
   records: number;
   issues: number;
+  brandIds?: string[];
+}
+
+export interface LoungeBrandAsset {
+  id: string;
+  name: string;
+  category: 'program' | 'issuer' | 'airline' | 'operator' | 'card_network' | 'aggregator';
+  aliases?: string[];
+  sourceIds: string[];
+  sourceUrl: string;
+  assetSource: 'desk_travel_database' | 'official_public_source' | 'generated_fallback';
+  deskTravelAssetKey: string;
+  logoUrl: string;
+  logoText: string;
+  color: string;
+  background: string;
+  foreground: string;
+  status: 'approved' | 'review' | 'candidate';
+  rightsNote: string;
 }
 
 export interface LoungeSourceEvidence {
@@ -37,6 +56,7 @@ export interface CanonicalLounge {
   id: string;
   name: string;
   brand: string;
+  brandAsset?: LoungeBrandAsset;
   operator: string;
   category: string;
   status: string;
@@ -154,6 +174,7 @@ export interface LoungeMeta {
     }>;
   };
   sources?: LoungeSourceRegistryEntry[];
+  brands?: LoungeBrandAsset[];
   quality?: {
     averageCompleteness: number;
     averageFreshness: number;
