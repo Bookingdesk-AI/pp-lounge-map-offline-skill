@@ -8,6 +8,9 @@ test('catalog metadata is present and sanitized', () => {
   assert.ok(meta.generatedAt);
   assert.ok(meta.sourceFile.endsWith('.xlsx'));
   assert.ok(meta.stats.totalFeatures > 0);
+  assert.ok(meta.schema.version);
+  assert.ok(meta.stats.totalSources > 0);
+  assert.ok(meta.quality.averageCompleteness > 0);
   assert.doesNotMatch(JSON.stringify(meta), /\/Users\//u);
 });
 
@@ -31,6 +34,27 @@ test('search_lounges rejects unsupported filters', () => {
   );
 });
 
+test('search_lounges supports provider, program, and review-status filters', () => {
+  const meta = getCatalogMeta();
+  const provider = meta.filters.providers[0];
+  const program = meta.filters.programs[0];
+  const status = meta.filters.reviewStatuses[0];
+
+  const result = searchLounges({
+    providers: [provider],
+    programs: [program],
+    reviewStatus: status,
+    limit: 5,
+  });
+
+  assert.ok(result.results.length > 0);
+  for (const lounge of result.results) {
+    assert.equal(lounge.provider, provider);
+    assert.ok(lounge.programs.includes(program));
+    assert.equal(lounge.quality.reviewStatus, status);
+  }
+});
+
 test('get_lounge returns a known lounge by stable id', () => {
   const known = getAllLounges()[0];
   const lounge = getLoungeById(known.id);
@@ -38,4 +62,6 @@ test('get_lounge returns a known lounge by stable id', () => {
   assert.equal(lounge.id, known.id);
   assert.equal(typeof lounge.lat, 'number');
   assert.equal(typeof lounge.lon, 'number');
+  assert.ok(lounge.sources.length > 0);
+  assert.ok(lounge.canonical);
 });

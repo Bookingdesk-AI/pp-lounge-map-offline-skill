@@ -1,3 +1,90 @@
+export type SourceAdapterKind = 'official_html' | 'official_page' | 'csv_file' | 'manual_review' | 'licensed_api';
+
+export type SourceRunStatus = 'active' | 'manual_review' | 'candidate' | 'blocked';
+
+export interface LoungeSourceRegistryEntry {
+  id: string;
+  publisher: string;
+  coverage: string;
+  adapter: SourceAdapterKind;
+  status: SourceRunStatus;
+  freshnessDays: number;
+  url: string;
+  rightsNote: string;
+  lastRunAt: string | null;
+  records: number;
+  issues: number;
+}
+
+export interface LoungeSourceEvidence {
+  sourceId: string;
+  publisher: string;
+  url: string;
+  retrievedAt: string;
+  fieldCoverage: string[];
+  confidence: number;
+  rightsNote: string;
+}
+
+export interface LoungeQuality {
+  completeness: number;
+  freshness: number;
+  conflicts: string[];
+  reviewStatus: 'approved' | 'review' | 'blocked';
+}
+
+export interface CanonicalLounge {
+  id: string;
+  name: string;
+  brand: string;
+  operator: string;
+  category: string;
+  status: string;
+  programs: string[];
+  accessMethods: string[];
+}
+
+export interface CanonicalAirport {
+  iata: string;
+  icao: string;
+  name: string;
+  city: string;
+  country: string;
+  timezone: string;
+  coordinates: {
+    lat: number;
+    lon: number;
+  };
+}
+
+export interface CanonicalLocation {
+  terminal: string;
+  concourse: string;
+  gate: string;
+  securitySide: string;
+  directions: string;
+}
+
+export interface CanonicalOperations {
+  hours: string;
+  exceptions: string[];
+  plannedOpening: string;
+  lastVerifiedAt: string;
+}
+
+export interface CanonicalLoungeRecord {
+  lounge: CanonicalLounge;
+  airport: CanonicalAirport;
+  location: CanonicalLocation;
+  operations: CanonicalOperations;
+  amenities: string[];
+  restrictions: string[];
+  guestPolicy: string;
+  notes: string[];
+  sources: LoungeSourceEvidence[];
+  quality: LoungeQuality;
+}
+
 export interface LoungeFeatureProperties {
   id: string;
   airportCode: string;
@@ -13,6 +100,12 @@ export interface LoungeFeatureProperties {
   url: string;
   location: string;
   slug: string;
+  provider?: string;
+  programs?: string[];
+  accessMethods?: string[];
+  sources?: LoungeSourceEvidence[];
+  quality?: LoungeQuality;
+  canonical?: CanonicalLoungeRecord;
 }
 
 export interface LoungeFeature {
@@ -39,12 +132,33 @@ export interface LoungeMeta {
     uniqueAirports: number;
     uniqueCountries: number;
     uniqueCities: number;
+    totalSources?: number;
+    reviewQueue?: number;
+    approvedRecords?: number;
   };
   filters: {
     types: string[];
     countries: string[];
     cities: string[];
     facilities: string[];
+    providers?: string[];
+    programs?: string[];
+    reviewStatuses?: string[];
+  };
+  schema?: {
+    version: string;
+    fields: Array<{
+      group: string;
+      name: string;
+      required: boolean;
+    }>;
+  };
+  sources?: LoungeSourceRegistryEntry[];
+  quality?: {
+    averageCompleteness: number;
+    averageFreshness: number;
+    conflictCount: number;
+    reviewQueue: number;
   };
   issues: Array<{
     row: number;
@@ -55,7 +169,9 @@ export interface LoungeMeta {
 
 export type SheetSnap = 'peek' | 'mid' | 'full';
 
-export type MobileSheetMode = 'results' | 'filters' | 'details';
+export type MobileSheetMode = 'results' | 'filters' | 'details' | 'intake';
+
+export type AppView = 'map' | 'intake' | 'schema' | 'sources';
 
 export type SortOption = 'best_match' | 'airport_code' | 'country_city' | 'type';
 

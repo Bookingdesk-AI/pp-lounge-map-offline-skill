@@ -4,8 +4,9 @@
 
 1. Ensure Cloudflare auth is available to `wrangler`.
 2. Confirm the source workbook exists in the private R2 bucket and object configured by:
-   - `PP_LOUNGE_MAP_SOURCE_BUCKET`
-   - `PP_LOUNGE_MAP_SOURCE_OBJECT`
+   - `LOUNGE_GURU_SOURCE_BUCKET`
+   - `LOUNGE_GURU_SOURCE_OBJECT`
+   - Legacy fallbacks: `PP_LOUNGE_MAP_SOURCE_BUCKET`, `PP_LOUNGE_MAP_SOURCE_OBJECT`
 3. Run `npm run release:prepare`.
 
 This step downloads the workbook into the repo-local `.cache/` directory, rebuilds the public data artifacts, runs tests and publish validation, and builds `dist/`.
@@ -22,13 +23,13 @@ If you want one command, run `npm run deploy`.
 Verify the site shell still works:
 
 ```bash
-curl -I https://prioritypassmap.desk.travel/
+curl -I https://loungeguru.desk.travel/
 ```
 
 Verify health:
 
 ```bash
-curl -i https://prioritypassmap.desk.travel/healthz
+curl -i https://loungeguru.desk.travel/healthz
 ```
 
 Verify the canonical MCP route is no longer serving HTML:
@@ -37,13 +38,13 @@ Verify the canonical MCP route is no longer serving HTML:
 curl -i \
   -H 'accept: application/json, text/event-stream' \
   -H 'content-type: application/json' \
-  https://prioritypassmap.desk.travel/mcp
+  https://loungeguru.desk.travel/mcp
 ```
 
 Verify legacy SSE transport:
 
 ```bash
-curl -i -H 'accept: text/event-stream' https://prioritypassmap.desk.travel/sse
+curl -i -H 'accept: text/event-stream' https://loungeguru.desk.travel/sse
 ```
 
 The response should advertise an `event: endpoint` pointing at `/messages?sessionId=...`.

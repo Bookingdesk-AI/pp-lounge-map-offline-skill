@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-export const OFFLINE_SKILL_NAME = 'pp-lounge-map-offline';
+export const OFFLINE_SKILL_NAME = 'lounge-guru-offline';
 export const OFFLINE_ASSET_MAX_BYTES = 5 * 1024 * 1024;
 
 const RUNTIME_SOURCES = [
@@ -21,7 +21,7 @@ export function getOfflineSkillPaths(projectRoot) {
     runtimeDir: path.resolve(skillDir, 'scripts', 'runtime'),
     assetPath: path.resolve(skillDir, 'assets', 'catalog.json'),
     sourceCatalogPath: path.resolve(projectRoot, 'mcp', 'data', 'catalog.json'),
-    exportDir: path.resolve(projectRoot, 'out', 'pp-lounge-map-offline-skill'),
+    exportDir: path.resolve(projectRoot, 'out', 'lounge-guru-offline-skill'),
   };
 }
 
@@ -41,9 +41,15 @@ export async function buildOfflineSkill(projectRoot) {
   const slimCatalog = {
     generatedAt: catalog.generatedAt,
     sourceFile: 'offline-snapshot',
+    schema: catalog.schema,
     stats: catalog.stats,
     filters: catalog.filters,
-    lounges: catalog.lounges.map(({ searchText, ...lounge }) => lounge),
+    quality: catalog.quality,
+    sources: catalog.sources,
+    lounges: catalog.lounges.map(({ searchText, canonical, ...lounge }) => {
+      void canonical;
+      return lounge;
+    }),
   };
   const serialized = JSON.stringify(slimCatalog);
   const assetBytes = Buffer.byteLength(serialized);

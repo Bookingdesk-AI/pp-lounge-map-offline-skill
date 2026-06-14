@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import Papa from 'papaparse';
 import XLSX from 'xlsx';
 
+import { createCanonicalCatalog, createCanonicalRecord } from './lib/lounge-canonical.mjs';
 import { resolveSourceWorkbookConfig } from './lib/source-workbook.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -241,7 +242,7 @@ async function geocodeFallback(record, cache) {
 
   const response = await fetch(endpoint, {
     headers: {
-      'User-Agent': 'pp-lounge-map-data-builder/1.0',
+      'User-Agent': 'lounge-guru-data-builder/1.0',
     },
   });
 
@@ -392,29 +393,71 @@ async function main() {
     throw new Error('Unsafe source filename detected while building metadata.');
   }
 
+  const generatedAt = new Date().toISOString();
+  const enrichedFeatures = features.map((feature) => ({
+    ...feature,
+    properties: {
+      ...feature.properties,
+      provider: 'Priority Pass',
+      programs: ['Priority Pass'],
+      accessMethods: ['membership'],
+      canonical: createCanonicalRecord(feature, { generatedAt }),
+    },
+  }));
+  const canonicalCatalog = createCanonicalCatalog({
+    features: enrichedFeatures,
+    meta: {
+      generatedAt,
+      sourceFile: safeSourceFile,
+      stats: {
+        totalInputRows: loungeRows.length,
+        totalFeatures: enrichedFeatures.length,
+        droppedRows: issues.length,
+        uniqueAirports: new Set(enrichedFeatures.map((feature) => feature.properties.airportCode)).size,
+        uniqueCountries: countries.length,
+        uniqueCities: cities.length,
+      },
+      filters: {
+        types,
+        countries,
+        cities,
+        facilities: topFacilities,
+      },
+    },
+  });
+
   const meta = {
-    generatedAt: new Date().toISOString(),
+    generatedAt,
     sourceFile: safeSourceFile,
     stats: {
       totalInputRows: loungeRows.length,
-      totalFeatures: features.length,
+      totalFeatures: enrichedFeatures.length,
       droppedRows: issues.length,
-      uniqueAirports: new Set(features.map((feature) => feature.properties.airportCode)).size,
+      uniqueAirports: new Set(enrichedFeatures.map((feature) => feature.properties.airportCode)).size,
       uniqueCountries: countries.length,
       uniqueCities: cities.length,
+      totalSources: canonicalCatalog.stats.totalSources,
+      reviewQueue: canonicalCatalog.stats.reviewQueue,
+      approvedRecords: canonicalCatalog.stats.approvedRecords,
     },
     filters: {
       types,
       countries,
       cities,
       facilities: topFacilities,
+      providers: canonicalCatalog.filters.providers,
+      programs: canonicalCatalog.filters.programs,
+      reviewStatuses: canonicalCatalog.filters.reviewStatuses,
     },
+    schema: canonicalCatalog.schema,
+    sources: canonicalCatalog.sources,
+    quality: canonicalCatalog.quality,
     issues,
   };
 
   const geoJson = {
     type: 'FeatureCollection',
-    features,
+    features: enrichedFeatures,
   };
 
   const geoJsonSerialized = JSON.stringify(geoJson);

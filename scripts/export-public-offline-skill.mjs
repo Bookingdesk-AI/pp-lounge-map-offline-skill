@@ -37,14 +37,14 @@ async function main() {
   await fs.copyFile(path.resolve(projectRoot, 'LICENSE'), path.resolve(exportDir, 'LICENSE'));
   await fs.writeFile(
     path.resolve(exportDir, 'README.md'),
-    `# ${OFFLINE_SKILL_NAME}\n\nPortable offline skill bundle for Priority Pass lounge lookup.\n\n## Runtime\n\n1. Install package dependencies once.\n2. Start the local stdio MCP server with \`node skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs\`.\n3. Point your MCP client at that command.\n\n## Trust boundary\n\nThis artifact is local-only at runtime. It uses the bundled catalog snapshot and does not require network access to answer lounge queries.\n`,
+    `# ${OFFLINE_SKILL_NAME}\n\nPortable offline skill bundle for Lounge Guru airport lounge lookup.\n\n## Runtime\n\n1. Install package dependencies once.\n2. Start the local stdio MCP server with \`node skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs\`.\n3. Point your MCP client at that command.\n\n## Trust boundary\n\nThis artifact is local-only at runtime. It uses the bundled catalog snapshot and does not require network access to answer lounge queries.\n`,
     'utf8',
   );
   await fs.writeFile(
     path.resolve(exportDir, 'package.json'),
     `${JSON.stringify(
       {
-        name: 'pp-lounge-map-offline-skill',
+        name: 'lounge-guru-offline-skill',
         private: true,
         type: 'module',
         version: '1.0.0',

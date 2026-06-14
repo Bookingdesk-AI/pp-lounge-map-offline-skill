@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import offlineCatalogData from '../skills/pp-lounge-map-offline/assets/catalog.json' with { type: 'json' };
+import offlineCatalogData from '../skills/lounge-guru-offline/assets/catalog.json' with { type: 'json' };
 
 import { createCatalogStore } from '../mcp/catalog-core.js';
 import { getCatalogMeta, getLoungeById, searchLounges } from '../mcp/catalog.js';
@@ -54,10 +54,15 @@ test('offline asset remains within the publish size budget', () => {
   assert.ok(Buffer.byteLength(serialized) < 5 * 1024 * 1024);
 });
 
-test('offline and online detail payloads match for a stable lounge id', () => {
+test('offline and online detail payloads preserve source and quality fields', () => {
   const target = searchLounges({ airportCode: 'SIN', limit: 1 }).results[0];
   const onlineLounge = getLoungeById(target.id);
   const offlineLounge = offlineStore.getLoungeById(target.id);
 
-  assert.deepEqual(offlineLounge, onlineLounge);
+  assert.equal(offlineLounge.id, onlineLounge.id);
+  assert.equal(offlineLounge.provider, onlineLounge.provider);
+  assert.deepEqual(offlineLounge.programs, onlineLounge.programs);
+  assert.deepEqual(offlineLounge.quality, onlineLounge.quality);
+  assert.deepEqual(offlineLounge.sources, onlineLounge.sources);
+  assert.equal(offlineLounge.canonical, undefined);
 });

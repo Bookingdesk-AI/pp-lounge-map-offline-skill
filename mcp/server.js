@@ -6,7 +6,7 @@ import * as store from './catalog.js';
 import { enforceRateLimit } from './rate-limit.js';
 import { createCatalogMcpServer, ONLINE_SERVER_INFO } from './server-core.js';
 
-const MCP_OBJECT_BINDING = 'PP_LOUNGE_MCP';
+const MCP_OBJECT_BINDING = 'LOUNGE_GURU_MCP';
 const STREAMABLE_MCP_PATH = '/mcp';
 const LEGACY_SSE_PATH = '/sse';
 const LEGACY_MESSAGES_PATH = '/messages';
@@ -46,7 +46,7 @@ async function logEvent(request, event, details = {}) {
 
   console.log(
     JSON.stringify({
-      service: 'pp-lounge-map-mcp',
+      service: 'lounge-guru-mcp',
       event,
       timestamp: new Date().toISOString(),
       method: request?.method ?? 'unknown',

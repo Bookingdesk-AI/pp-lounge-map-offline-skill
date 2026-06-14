@@ -88,7 +88,7 @@ export async function enforceRateLimit(env, request, options = {}) {
   }
 
   const key = await rateLimitKey(request);
-  const id = env.MCP_RATE_LIMITER.idFromName('pp-lounge-map-anon');
+  const id = env.MCP_RATE_LIMITER.idFromName('lounge-guru-anon');
   const stub = env.MCP_RATE_LIMITER.get(id);
   const limit = options.limit ?? DEFAULT_LIMIT;
   const windowMs = options.windowMs ?? DEFAULT_WINDOW_MS;

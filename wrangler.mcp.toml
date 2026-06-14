@@ -1,13 +1,13 @@
-name = "pp-lounge-map-mcp"
+name = "lounge-guru-mcp"
 main = "mcp/worker.js"
 compatibility_date = "2026-03-16"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 routes = [
-  "prioritypassmap.desk.travel/mcp*",
-  "prioritypassmap.desk.travel/sse*",
-  "prioritypassmap.desk.travel/messages*",
-  "prioritypassmap.desk.travel/healthz",
+  "loungeguru.desk.travel/mcp*",
+  "loungeguru.desk.travel/sse*",
+  "loungeguru.desk.travel/messages*",
+  "loungeguru.desk.travel/healthz",
 ]
 
 [[durable_objects.bindings]]
@@ -15,7 +15,7 @@ name = "MCP_RATE_LIMITER"
 class_name = "McpRateLimiter"
 
 [[durable_objects.bindings]]
-name = "PP_LOUNGE_MCP"
+name = "LOUNGE_GURU_MCP"
 class_name = "CatalogMcpAgent"
 
 [[migrations]]

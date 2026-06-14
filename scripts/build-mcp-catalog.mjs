@@ -2,11 +2,14 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { createCanonicalCatalog } from './lib/lounge-canonical.mjs';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
 const geoJsonPath = path.resolve(projectRoot, 'public', 'data', 'lounges.geojson');
 const metaPath = path.resolve(projectRoot, 'public', 'data', 'meta.json');
+const canonicalPath = path.resolve(projectRoot, 'public', 'data', 'lounge-guru-catalog.json');
 const outputPath = path.resolve(projectRoot, 'mcp', 'data', 'catalog.json');
 
 function clean(value) {
@@ -33,6 +36,15 @@ function normalizeSearchText(record) {
 async function main() {
   const geoJson = JSON.parse(await fs.readFile(geoJsonPath, 'utf8'));
   const meta = JSON.parse(await fs.readFile(metaPath, 'utf8'));
+  let canonicalCatalog = null;
+
+  try {
+    canonicalCatalog = JSON.parse(await fs.readFile(canonicalPath, 'utf8'));
+  } catch {
+    canonicalCatalog = createCanonicalCatalog({ features: geoJson.features ?? [], meta });
+  }
+
+  const canonicalById = new Map((canonicalCatalog.records ?? []).map((record) => [record.lounge.id, record]));
 
   const lounges = geoJson.features
     .map((feature) => {
@@ -56,6 +68,17 @@ async function main() {
         slug: clean(properties.slug),
         lat: Number(lat),
         lon: Number(lon),
+        provider: clean(properties.provider) || clean(canonicalById.get(clean(properties.id))?.lounge.brand),
+        programs: canonicalById.get(clean(properties.id))?.lounge.programs ?? ['Priority Pass'],
+        accessMethods: canonicalById.get(clean(properties.id))?.lounge.accessMethods ?? ['membership'],
+        sources: canonicalById.get(clean(properties.id))?.sources ?? [],
+        quality: canonicalById.get(clean(properties.id))?.quality ?? {
+          completeness: 0,
+          freshness: 0,
+          conflicts: ['missing_canonical_record'],
+          reviewStatus: 'review',
+        },
+        canonical: canonicalById.get(clean(properties.id)) ?? null,
       };
     })
     .map((lounge) => ({
@@ -68,8 +91,11 @@ async function main() {
   const catalog = {
     generatedAt: clean(meta.generatedAt),
     sourceFile,
-    stats: meta.stats,
-    filters: meta.filters,
+    schema: canonicalCatalog.schema,
+    stats: canonicalCatalog.stats ?? meta.stats,
+    filters: canonicalCatalog.filters ?? meta.filters,
+    quality: canonicalCatalog.quality,
+    sources: canonicalCatalog.sources,
     lounges,
   };
 

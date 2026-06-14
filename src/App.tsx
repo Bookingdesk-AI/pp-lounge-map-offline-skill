@@ -3,10 +3,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type {
+  AppView,
+  CanonicalLoungeRecord,
   LoungeFeature,
   LoungeFeatureCollection,
   LoungeFeatureProperties,
   LoungeMeta,
+  LoungeSourceRegistryEntry,
   MobileSheetMode,
   MobileUIState,
   QuickFilterPreset,
@@ -43,6 +46,7 @@ interface InitialUrlState {
   sheet: SheetSnap;
   mode: MobileSheetMode;
   sort: SortOption;
+  view: AppView;
 }
 
 interface MobileFilterDraft {
@@ -88,6 +92,13 @@ function normalizeSort(value: string | null): SortOption {
   return 'country_city';
 }
 
+function normalizeView(value: string | null): AppView {
+  if (value === 'map' || value === 'intake' || value === 'schema' || value === 'sources') {
+    return value;
+  }
+  return 'map';
+}
+
 function quickPresetForType(type: string): QuickFilterPreset {
   switch (type) {
     case 'LOUNGE':
@@ -120,6 +131,7 @@ function readInitialUrlState(): InitialUrlState {
     sheet: hasSheet ? normalizeSheet(params.get('sheet')) : isInitialMobile ? 'peek' : 'mid',
     mode: normalizeMode(params.get('mode')),
     sort: normalizeSort(params.get('sort')),
+    view: normalizeView(params.get('view')),
   };
 }
 
@@ -796,6 +808,10 @@ function ResultsList({
               </header>
               <h3>{feature.properties.name}</h3>
               <p>{feature.properties.airportName}</p>
+              <div className="quality-row">
+                <span>{feature.properties.canonical?.lounge.brand ?? feature.properties.provider ?? 'Priority Pass'}</span>
+                <span>{feature.properties.quality?.reviewStatus ?? feature.properties.canonical?.quality.reviewStatus ?? 'approved'}</span>
+              </div>
               <div className="result-meta-row">
                 <span>{locationLabel(feature)}</span>
                 <span>{compactOpeningHours(feature.properties.openingHours, 'Details', 2, 110)}</span>
@@ -908,6 +924,10 @@ function DetailPanel({
         <div className="detail-meta-strip">
           <span className="badge">{selectedFeature.properties.type}</span>
           <span className="code">{locationLabel(selectedFeature)}</span>
+          <QualityBadge
+            label="Quality"
+            score={selectedFeature.properties.quality?.completeness ?? selectedFeature.properties.canonical?.quality.completeness ?? 0}
+          />
         </div>
 
         <div className="detail-actions">
@@ -942,6 +962,14 @@ function DetailPanel({
           <div>
             <dt>Facilities</dt>
             <dd>{joinOrFallback(selectedFeature.properties.facilities, 'Not listed')}</dd>
+          </div>
+          <div>
+            <dt>Programs</dt>
+            <dd>{joinOrFallback(selectedFeature.properties.canonical?.lounge.programs ?? selectedFeature.properties.programs ?? [], 'Not listed')}</dd>
+          </div>
+          <div>
+            <dt>Source</dt>
+            <dd>{selectedFeature.properties.canonical?.sources[0]?.publisher ?? 'Priority Pass'}</dd>
           </div>
         </dl>
 
@@ -1080,13 +1108,17 @@ function MobileDetailsView({
     <div className="mobile-selected-view">
       <div className="mobile-selected-summary">
         <div className="mobile-selected-meta">
-          <span className="badge">{selectedFeature.properties.type}</span>
-          <span className="code">{selectedFeature.properties.airportCode}</span>
-        </div>
-        <h3>{selectedFeature.properties.name}</h3>
-        <p>{selectedFeature.properties.airportName}</p>
-        <small>{locationLabel(selectedFeature)}</small>
+        <span className="badge">{selectedFeature.properties.type}</span>
+        <span className="code">{selectedFeature.properties.airportCode}</span>
       </div>
+      <h3>{selectedFeature.properties.name}</h3>
+      <p>{selectedFeature.properties.airportName}</p>
+      <small>{locationLabel(selectedFeature)}</small>
+      <div className="quality-row">
+        <span>{selectedFeature.properties.canonical?.lounge.brand ?? selectedFeature.properties.provider ?? 'Priority Pass'}</span>
+        <span>{selectedFeature.properties.canonical?.quality.reviewStatus ?? 'approved'}</span>
+      </div>
+    </div>
 
       <div className="detail-actions">
         <button
@@ -1133,13 +1165,242 @@ function MobileDetailsView({
   );
 }
 
+function qualityClass(score: number) {
+  if (score >= 85) {
+    return 'good';
+  }
+  if (score >= 65) {
+    return 'warn';
+  }
+  return 'bad';
+}
+
+function QualityBadge({ label, score }: { label: string; score: number }) {
+  return (
+    <span className={`quality-badge is-${qualityClass(score)}`}>
+      {label}: {score}
+    </span>
+  );
+}
+
+function ViewTabs({
+  activeView,
+  onChange,
+}: {
+  activeView: AppView;
+  onChange: (view: AppView) => void;
+}) {
+  const views: Array<{ id: AppView; label: string }> = [
+    { id: 'map', label: 'Map' },
+    { id: 'intake', label: 'Intake' },
+    { id: 'schema', label: 'Schema' },
+    { id: 'sources', label: 'Sources' },
+  ];
+
+  return (
+    <nav className="view-tabs" aria-label="Views">
+      {views.map((view) => (
+        <button
+          key={view.id}
+          type="button"
+          className={activeView === view.id ? 'is-active' : ''}
+          onClick={() => onChange(view.id)}
+        >
+          {view.label}
+        </button>
+      ))}
+    </nav>
+  );
+}
+
+function IntakeView({
+  records,
+  sources,
+  meta,
+}: {
+  records: CanonicalLoungeRecord[];
+  sources: LoungeSourceRegistryEntry[];
+  meta: LoungeMeta | null;
+}) {
+  const reviewRecords = records
+    .filter((record) => record.quality.reviewStatus !== 'approved' || record.quality.conflicts.length > 0)
+    .slice(0, 24);
+  const activeSources = sources.filter((source) => source.status === 'active').length;
+  const manualSources = sources.filter((source) => source.status === 'manual_review').length;
+
+  return (
+    <main className="console-view">
+      <section className="ops-strip" aria-label="Intake status">
+        <div>
+          <span>Runs</span>
+          <strong>{activeSources}</strong>
+        </div>
+        <div>
+          <span>Review</span>
+          <strong>{meta?.quality?.reviewQueue ?? reviewRecords.length}</strong>
+        </div>
+        <div>
+          <span>Conflicts</span>
+          <strong>{meta?.quality?.conflictCount ?? 0}</strong>
+        </div>
+        <div>
+          <span>Manual</span>
+          <strong>{manualSources}</strong>
+        </div>
+      </section>
+
+      <section className="console-panel">
+        <div className="panel-head">
+          <h2>Review queue</h2>
+          <span className="compare-count">{reviewRecords.length}</span>
+        </div>
+        <div className="data-table-wrap">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Lounge</th>
+                <th>Airport</th>
+                <th>Source</th>
+                <th>Quality</th>
+                <th>Issues</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reviewRecords.length === 0 ? (
+                <tr>
+                  <td colSpan={5}>No issues</td>
+                </tr>
+              ) : (
+                reviewRecords.map((record) => (
+                  <tr key={record.lounge.id}>
+                    <td>{record.lounge.name}</td>
+                    <td>{record.airport.iata}</td>
+                    <td>{record.sources[0]?.publisher ?? 'Unknown'}</td>
+                    <td>
+                      <QualityBadge label="C" score={record.quality.completeness} />
+                    </td>
+                    <td>{record.quality.conflicts.join(', ') || record.quality.reviewStatus}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function SchemaView({ meta, records }: { meta: LoungeMeta | null; records: CanonicalLoungeRecord[] }) {
+  const fields = meta?.schema?.fields ?? [];
+  const coverage = fields.map((field) => {
+    const covered = records.filter((record) => {
+      const group = field.group === 'record' ? record : record[field.group as keyof CanonicalLoungeRecord];
+      if (!group || typeof group !== 'object') {
+        return false;
+      }
+      const value = (group as unknown as Record<string, unknown>)[field.name];
+      return Array.isArray(value) ? value.length > 0 : Boolean(value);
+    }).length;
+    return {
+      ...field,
+      coverage: records.length > 0 ? Math.round((covered / records.length) * 100) : 0,
+    };
+  });
+
+  return (
+    <main className="console-view">
+      <section className="ops-strip" aria-label="Schema status">
+        <div>
+          <span>Version</span>
+          <strong>{meta?.schema?.version ?? 'n/a'}</strong>
+        </div>
+        <div>
+          <span>Fields</span>
+          <strong>{fields.length}</strong>
+        </div>
+        <div>
+          <span>Sources</span>
+          <strong>{meta?.stats.totalSources ?? 0}</strong>
+        </div>
+        <div>
+          <span>Records</span>
+          <strong>{records.length}</strong>
+        </div>
+      </section>
+
+      <section className="console-panel">
+        <div className="panel-head">
+          <h2>Field coverage</h2>
+        </div>
+        <div className="schema-grid">
+          {coverage.map((field) => (
+            <div key={`${field.group}.${field.name}`} className="schema-row">
+              <span>{field.group}</span>
+              <strong>{field.name}</strong>
+              <small>{field.required ? 'Required' : 'Optional'}</small>
+              <QualityBadge label="Coverage" score={field.coverage} />
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function SourcesView({ sources }: { sources: LoungeSourceRegistryEntry[] }) {
+  return (
+    <main className="console-view">
+      <section className="console-panel">
+        <div className="panel-head">
+          <h2>Source registry</h2>
+          <span className="compare-count">{sources.length}</span>
+        </div>
+        <div className="data-table-wrap">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Publisher</th>
+                <th>Adapter</th>
+                <th>Status</th>
+                <th>Freshness</th>
+                <th>Records</th>
+                <th>Rights</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sources.map((source) => (
+                <tr key={source.id}>
+                  <td>
+                    <a href={source.url} target="_blank" rel="noreferrer">
+                      {source.publisher}
+                    </a>
+                  </td>
+                  <td>{source.adapter}</td>
+                  <td>{source.status}</td>
+                  <td>{source.freshnessDays}d</td>
+                  <td>{source.records}</td>
+                  <td>{source.rightsNote}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function App() {
   const initialUrlState = useMemo(() => readInitialUrlState(), []);
 
   const [features, setFeatures] = useState<LoungeFeature[]>([]);
   const [meta, setMeta] = useState<LoungeMeta | null>(null);
+  const [canonicalRecords, setCanonicalRecords] = useState<CanonicalLoungeRecord[]>([]);
+  const [sources, setSources] = useState<LoungeSourceRegistryEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeView, setActiveView] = useState<AppView>(initialUrlState.view);
 
   const [search, setSearch] = useState(initialUrlState.search);
   const [selectedTypes, setSelectedTypes] = useState<string[]>(initialUrlState.selectedTypes);
@@ -1195,9 +1456,11 @@ function App() {
 
     async function loadData() {
       try {
-        const [geoJsonResponse, metaResponse] = await Promise.all([
+        const [geoJsonResponse, metaResponse, canonicalResponse, sourceResponse] = await Promise.all([
           fetch('/data/lounges.geojson'),
           fetch('/data/meta.json'),
+          fetch('/data/lounge-guru-catalog.json'),
+          fetch('/data/source-registry.json'),
         ]);
 
         if (!geoJsonResponse.ok || !metaResponse.ok) {
@@ -1206,13 +1469,48 @@ function App() {
 
         const geoJson = (await geoJsonResponse.json()) as LoungeFeatureCollection;
         const nextMeta = (await metaResponse.json()) as LoungeMeta;
+        const canonical = canonicalResponse.ok
+          ? ((await canonicalResponse.json()) as {
+              records?: CanonicalLoungeRecord[];
+              sources?: LoungeSourceRegistryEntry[];
+              schema?: LoungeMeta['schema'];
+              quality?: LoungeMeta['quality'];
+              stats?: Partial<LoungeMeta['stats']>;
+              filters?: Partial<LoungeMeta['filters']>;
+            })
+          : null;
+        const sourceRegistry = sourceResponse.ok
+          ? ((await sourceResponse.json()) as LoungeSourceRegistryEntry[])
+          : canonical?.sources ?? nextMeta.sources ?? [];
+
+        const mergedMeta: LoungeMeta = canonical
+          ? {
+              ...nextMeta,
+              schema: canonical.schema ?? nextMeta.schema,
+              quality: canonical.quality ?? nextMeta.quality,
+              sources: sourceRegistry,
+              stats: {
+                ...nextMeta.stats,
+                ...canonical.stats,
+              },
+              filters: {
+                ...nextMeta.filters,
+                ...canonical.filters,
+              },
+            }
+          : {
+              ...nextMeta,
+              sources: sourceRegistry,
+            };
 
         if (!alive) {
           return;
         }
 
         setFeatures(geoJson.features ?? []);
-        setMeta(nextMeta);
+        setMeta(mergedMeta);
+        setCanonicalRecords(canonical?.records ?? []);
+        setSources(sourceRegistry);
         setLoading(false);
       } catch (loadError) {
         if (!alive) {
@@ -1441,6 +1739,10 @@ function App() {
       params.set('sort', sort);
     }
 
+    if (activeView !== 'map') {
+      params.set('view', activeView);
+    }
+
     params.set('sheet', mobileUI.sheetSnap);
     params.set('mode', mobileUI.sheetMode);
 
@@ -1460,6 +1762,7 @@ function App() {
     selectedFacilities,
     selectedId,
     sort,
+    activeView,
     mobileUI.sheetSnap,
     mobileUI.sheetMode,
   ]);
@@ -1716,11 +2019,13 @@ function App() {
     <div className={`app-shell ${isMobile ? `is-mobile sheet-${mobileUI.sheetSnap}` : ''}`}>
       <header className="topbar">
         <div className="brand-wrap">
-          <h1>Lounge Map</h1>
+          <h1>Lounge Guru</h1>
+          <ViewTabs activeView={activeView} onChange={setActiveView} />
           <div className="system-stats" aria-label="Catalog status">
             <span>{meta?.stats.totalFeatures ?? 0} records</span>
             <span>{meta?.stats.uniqueAirports ?? 0} airports</span>
             <span>{meta?.stats.uniqueCountries ?? 0} countries</span>
+            <span>{meta?.quality?.reviewQueue ?? 0} review</span>
             <span>{meta ? new Date(meta.generatedAt).toISOString().slice(0, 10) : 'No date'}</span>
           </div>
         </div>
@@ -1735,6 +2040,19 @@ function App() {
         </label>
       </header>
 
+      {activeView === 'intake' ? (
+        <IntakeView records={canonicalRecords} sources={sources} meta={meta} />
+      ) : null}
+
+      {activeView === 'schema' ? (
+        <SchemaView meta={meta} records={canonicalRecords} />
+      ) : null}
+
+      {activeView === 'sources' ? (
+        <SourcesView sources={sources} />
+      ) : null}
+
+      {activeView === 'map' ? (
       <main className="workspace">
         <section className="results-rail">
           <div className="panel-head">
@@ -1861,6 +2179,15 @@ function App() {
                 >
                   Details
                 </button>
+                <button
+                  type="button"
+                  className={mobileUI.sheetMode === 'intake' ? 'is-active' : ''}
+                  onClick={() =>
+                    setMobileUI((current) => ({ ...current, sheetMode: 'intake', sheetSnap: 'full' }))
+                  }
+                >
+                  Intake
+                </button>
               </div>
 
               <div className="mobile-sheet-body">
@@ -1977,11 +2304,18 @@ function App() {
                     />
                   </div>
                 ) : null}
+
+                {mobileUI.sheetMode === 'intake' ? (
+                  <div className="mobile-intake-wrap">
+                    <IntakeView records={canonicalRecords} sources={sources} meta={meta} />
+                  </div>
+                ) : null}
               </div>
             </section>
           ) : null}
         </section>
       </main>
+      ) : null}
     </div>
   );
 }

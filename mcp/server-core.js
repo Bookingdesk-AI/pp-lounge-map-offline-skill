@@ -11,7 +11,7 @@ import {
 } from './contract.js';
 
 export const ONLINE_SERVER_INFO = {
-  name: 'pp-lounge-map',
+  name: 'lounge-guru',
   version: '1.0.0',
 };
 
@@ -53,7 +53,7 @@ export function createCatalogMcpServer({
     {
       title: 'Search lounges',
       description:
-        'Search the public pp-lounge-map catalog using bounded plain-text filters and pagination.',
+        'Search the public Lounge Guru catalog using bounded plain-text filters and pagination.',
       inputSchema: SearchLoungesInputSchema,
       outputSchema: SearchLoungesOutputSchema,
     },
@@ -141,34 +141,79 @@ export function createCatalogMcpServer({
     },
   );
 
-  server.registerResource(
+  const registerJsonResource = (name, uri, title, description, getPayload) => {
+    server.registerResource(
+      name,
+      uri,
+      {
+        title,
+        description,
+      },
+      async () => jsonResource(uri, getPayload()),
+    );
+  };
+
+  registerJsonResource(
     'catalog-meta',
-    'pp-lounge://meta',
-    {
-      title: 'Catalog metadata',
-      description: 'Public metadata and facet counts for the pp-lounge-map catalog.',
-    },
-    async () => jsonResource('pp-lounge://meta', store.getCatalogMeta()),
+    'lounge-guru://meta',
+    'Catalog metadata',
+    'Public metadata and facet counts for the Lounge Guru catalog.',
+    () => store.getCatalogMeta(),
   );
 
-  server.registerResource(
+  registerJsonResource(
     'catalog-filters',
+    'lounge-guru://filters',
+    'Catalog filters',
+    'Public facet lists, schema, sources, and stats used by the Lounge Guru catalog.',
+    () => store.getFiltersResource(),
+  );
+
+  registerJsonResource(
+    'catalog-meta-compat',
+    'pp-lounge://meta',
+    'Catalog metadata',
+    'Compatibility metadata alias for existing pp-lounge-map clients.',
+    () => store.getCatalogMeta(),
+  );
+
+  registerJsonResource(
+    'catalog-filters-compat',
     'pp-lounge://filters',
-    {
-      title: 'Catalog filters',
-      description: 'Public facet lists and stats used by the pp-lounge-map catalog.',
-    },
-    async () => jsonResource('pp-lounge://filters', store.getFiltersResource()),
+    'Catalog filters',
+    'Compatibility filter alias for existing pp-lounge-map clients.',
+    () => store.getFiltersResource(),
   );
 
   server.registerResource(
     'lounge-detail',
+    new ResourceTemplate('lounge-guru://lounge/{id}', {
+      list: undefined,
+    }),
+    {
+      title: 'Lounge detail',
+      description: 'Public detail for a single lounge in the Lounge Guru catalog.',
+    },
+    async (uri, variables) => {
+      const lounge = store.getLoungeById(String(variables.id ?? ''));
+      if (!lounge) {
+        return jsonResource(uri.toString(), {
+          error: 'not_found',
+        });
+      }
+
+      return jsonResource(uri.toString(), lounge);
+    },
+  );
+
+  server.registerResource(
+    'lounge-detail-compat',
     new ResourceTemplate('pp-lounge://lounge/{id}', {
       list: undefined,
     }),
     {
       title: 'Lounge detail',
-      description: 'Public detail for a single lounge in the pp-lounge-map catalog.',
+      description: 'Compatibility detail alias for existing pp-lounge-map clients.',
     },
     async (uri, variables) => {
       const lounge = store.getLoungeById(String(variables.id ?? ''));
@@ -209,7 +254,7 @@ export function createCatalogMcpServer({
         description: `Public lounge brief for ${airportCode}`,
         messages: [
           createPromptMessage(
-            `Summarize the public Priority Pass lounge options at ${airportCode}. Use only the following catalog facts:\n${bulletList}`,
+            `Summarize the public Lounge Guru options at ${airportCode}. Use only the following catalog facts:\n${bulletList}`,
           ),
         ],
       };
@@ -220,7 +265,7 @@ export function createCatalogMcpServer({
     'compare-airport-lounges',
     {
       title: 'Compare airport lounges',
-      description: 'Compare lounges at a single airport using the public catalog data.',
+      description: 'Compare lounges at a single airport using the public Lounge Guru catalog data.',
       argsSchema: ComparePromptArgsSchema,
     },
     async ({ airportCode, type }) => {
@@ -244,7 +289,7 @@ export function createCatalogMcpServer({
         description: `Compare public lounge options at ${airportCode}`,
         messages: [
           createPromptMessage(
-            `Compare the public lounge options at ${airportCode}. Highlight tradeoffs in lounge type, terminal, and facilities. Use only these catalog facts:\n${bulletList}`,
+            `Compare the public Lounge Guru options at ${airportCode}. Highlight tradeoffs in lounge type, terminal, and facilities. Use only these catalog facts:\n${bulletList}`,
           ),
         ],
       };

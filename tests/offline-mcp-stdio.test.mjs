@@ -12,7 +12,7 @@ const projectRoot = path.resolve(__dirname, '..');
 const serverScript = path.resolve(
   projectRoot,
   'skills',
-  'pp-lounge-map-offline',
+  'lounge-guru-offline',
   'scripts',
   'run-offline-mcp.mjs',
 );
@@ -30,7 +30,7 @@ test('offline stdio MCP server exposes the expected tools, resources, and prompt
   });
 
   const client = new Client({
-    name: 'pp-lounge-map-offline-test',
+    name: 'lounge-guru-offline-test',
     version: '1.0.0',
   });
 
@@ -46,7 +46,7 @@ test('offline stdio MCP server exposes the expected tools, resources, and prompt
     const resources = await client.listResources();
     assert.deepEqual(
       resources.resources.map((resource) => resource.uri).sort(),
-      ['pp-lounge://filters', 'pp-lounge://meta'],
+      ['lounge-guru://filters', 'lounge-guru://meta', 'pp-lounge://filters', 'pp-lounge://meta'],
     );
 
     const prompts = await client.listPrompts();
@@ -76,9 +76,9 @@ test('offline stdio MCP server exposes the expected tools, resources, and prompt
     assert.equal(lounge.structuredContent.lounge.id, loungeId);
 
     const meta = await client.readResource({
-      uri: 'pp-lounge://meta',
+      uri: 'lounge-guru://meta',
     });
-    assert.equal(meta.contents[0].uri, 'pp-lounge://meta');
+    assert.equal(meta.contents[0].uri, 'lounge-guru://meta');
 
     const prompt = await client.getPrompt({
       name: 'airport-lounge-brief',

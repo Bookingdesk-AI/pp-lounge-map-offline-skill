@@ -1,0 +1,346 @@
+{
+  "generatedAt": "2026-03-11T13:05:33.139Z",
+  "schema": {
+    "version": "2026-06-14",
+    "fields": [
+      {
+        "group": "lounge",
+        "name": "id",
+        "required": true
+      },
+      {
+        "group": "lounge",
+        "name": "name",
+        "required": true
+      },
+      {
+        "group": "lounge",
+        "name": "brand",
+        "required": true
+      },
+      {
+        "group": "lounge",
+        "name": "operator",
+        "required": false
+      },
+      {
+        "group": "lounge",
+        "name": "category",
+        "required": true
+      },
+      {
+        "group": "lounge",
+        "name": "status",
+        "required": true
+      },
+      {
+        "group": "lounge",
+        "name": "programs",
+        "required": true
+      },
+      {
+        "group": "lounge",
+        "name": "accessMethods",
+        "required": true
+      },
+      {
+        "group": "airport",
+        "name": "iata",
+        "required": true
+      },
+      {
+        "group": "airport",
+        "name": "icao",
+        "required": false
+      },
+      {
+        "group": "airport",
+        "name": "name",
+        "required": true
+      },
+      {
+        "group": "airport",
+        "name": "city",
+        "required": true
+      },
+      {
+        "group": "airport",
+        "name": "country",
+        "required": true
+      },
+      {
+        "group": "airport",
+        "name": "timezone",
+        "required": false
+      },
+      {
+        "group": "airport",
+        "name": "coordinates",
+        "required": true
+      },
+      {
+        "group": "location",
+        "name": "terminal",
+        "required": true
+      },
+      {
+        "group": "location",
+        "name": "concourse",
+        "required": false
+      },
+      {
+        "group": "location",
+        "name": "gate",
+        "required": false
+      },
+      {
+        "group": "location",
+        "name": "securitySide",
+        "required": false
+      },
+      {
+        "group": "location",
+        "name": "directions",
+        "required": false
+      },
+      {
+        "group": "operations",
+        "name": "hours",
+        "required": false
+      },
+      {
+        "group": "operations",
+        "name": "exceptions",
+        "required": false
+      },
+      {
+        "group": "operations",
+        "name": "plannedOpening",
+        "required": false
+      },
+      {
+        "group": "operations",
+        "name": "lastVerifiedAt",
+        "required": true
+      },
+      {
+        "group": "record",
+        "name": "amenities",
+        "required": false
+      },
+      {
+        "group": "record",
+        "name": "restrictions",
+        "required": false
+      },
+      {
+        "group": "record",
+        "name": "guestPolicy",
+        "required": false
+      },
+      {
+        "group": "record",
+        "name": "notes",
+        "required": false
+      },
+      {
+        "group": "record",
+        "name": "sources",
+        "required": true
+      },
+      {
+        "group": "record",
+        "name": "quality",
+        "required": true
+      }
+    ]
+  },
+  "stats": {
+    "totalInputRows": 1754,
+    "totalFeatures": 1754,
+    "droppedRows": 0,
+    "uniqueAirports": 752,
+    "uniqueCountries": 140,
+    "uniqueCities": 732,
+    "totalSources": 13,
+    "reviewQueue": 657,
+    "approvedRecords": 1097
+  },
+  "quality": {
+    "averageCompleteness": 97,
+    "averageFreshness": 0,
+    "conflictCount": 666,
+    "reviewQueue": 657
+  },
+  "sources": [
+    {
+      "id": "priority-pass",
+      "publisher": "Priority Pass",
+      "coverage": "Network lounge, dining, rest, refresh, and unwind records",
+      "adapter": "csv_file",
+      "status": "active",
+      "freshnessDays": 30,
+      "url": "https://www.prioritypass.com/en-GB/airport-lounges",
+      "rightsNote": "Use only the approved source workbook or public official pages; do not bypass account controls.",
+      "lastRunAt": "2026-03-11T13:05:33.139Z",
+      "records": 1754,
+      "issues": 657
+    },
+    {
+      "id": "chase-sapphire",
+      "publisher": "Chase Sapphire Lounge by The Club",
+      "coverage": "Issuer-operated Sapphire Lounge locations and access policy",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "freshnessDays": 14,
+      "url": "https://account.chase.com/sapphire-airport-lounge",
+      "rightsNote": "Official public Chase page; parse only public location and policy text.",
+      "lastRunAt": null,
+      "records": 0,
+      "issues": 0
+    },
+    {
+      "id": "amex-global-lounge-collection",
+      "publisher": "American Express Global Lounge Collection",
+      "coverage": "Centurion and partner access program evidence",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "freshnessDays": 14,
+      "url": "https://global.americanexpress.com/lounge-access/the-platinum-card",
+      "rightsNote": "Official public Amex page; treat partner eligibility as source evidence, not canonical operator data.",
+      "lastRunAt": null,
+      "records": 0,
+      "issues": 0
+    },
+    {
+      "id": "capital-one",
+      "publisher": "Capital One Lounges",
+      "coverage": "Capital One Lounge and Landing locations",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "freshnessDays": 14,
+      "url": "https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/",
+      "rightsNote": "Official public Capital One page; retain URL provenance for every imported location.",
+      "lastRunAt": null,
+      "records": 0,
+      "issues": 0
+    },
+    {
+      "id": "united",
+      "publisher": "United Club and Polaris Lounges",
+      "coverage": "United-operated lounge locations",
+      "adapter": "official_html",
+      "status": "manual_review",
+      "freshnessDays": 14,
+      "url": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+      "rightsNote": "Official public airline location page.",
+      "lastRunAt": null,
+      "records": 0,
+      "issues": 0
+    },
+    {
+      "id": "delta",
+      "publisher": "Delta Sky Club",
+      "coverage": "Delta-operated Sky Club locations",
+      "adapter": "official_html",
+      "status": "manual_review",
+      "freshnessDays": 14,
+      "url": "https://www.delta.com/us/en/delta-sky-club/locations",
+      "rightsNote": "Official public airline location page.",
+      "lastRunAt": null,
+      "records": 0,
+      "issues": 0
+    },
+    {
+      "id": "american",
+      "publisher": "American Airlines Admirals Club",
+      "coverage": "American-operated Admirals Club locations",
+      "adapter": "official_html",
+      "status": "manual_review",
+      "freshnessDays": 14,
+      "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+      "rightsNote": "Official public airline location page.",
+      "lastRunAt": null,
+      "records": 0,
+      "issues": 0
+    },
+    {
+      "id": "air-canada",
+      "publisher": "Air Canada Maple Leaf Lounges",
+      "coverage": "Air Canada-operated lounge locations",
+      "adapter": "official_html",
+      "status": "manual_review",
+      "freshnessDays": 14,
+      "url": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
+      "rightsNote": "Official public airline location page.",
+      "lastRunAt": null,
+      "records": 0,
+      "issues": 0
+    },
+    {
+      "id": "plaza-premium",
+      "publisher": "Plaza Premium Lounge",
+      "coverage": "Plaza Premium operated lounges",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "freshnessDays": 14,
+      "url": "https://www.plazapremiumlounge.com/en-uk",
+      "rightsNote": "Official public operator page.",
+      "lastRunAt": null,
+      "records": 0,
+      "issues": 0
+    },
+    {
+      "id": "escape-lounges",
+      "publisher": "Escape Lounges",
+      "coverage": "Escape Lounges operator locations",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "freshnessDays": 14,
+      "url": "https://escapelounges.com/",
+      "rightsNote": "Official public operator page.",
+      "lastRunAt": null,
+      "records": 0,
+      "issues": 0
+    },
+    {
+      "id": "airport-dimensions",
+      "publisher": "Airport Dimensions / The Club",
+      "coverage": "The Club and partner lounge operator locations",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "freshnessDays": 14,
+      "url": "https://www.airportdimensions.com/locations",
+      "rightsNote": "Official public operator page.",
+      "lastRunAt": null,
+      "records": 0,
+      "issues": 0
+    },
+    {
+      "id": "ourairports",
+      "publisher": "OurAirports",
+      "coverage": "Airport identity, city, country, and coordinates",
+      "adapter": "csv_file",
+      "status": "active",
+      "freshnessDays": 30,
+      "url": "https://ourairports.com/data/",
+      "rightsNote": "Open airport reference data; use for normalization only.",
+      "lastRunAt": "2026-03-11T13:05:33.139Z",
+      "records": 752,
+      "issues": 0
+    },
+    {
+      "id": "nominatim",
+      "publisher": "OpenStreetMap Nominatim",
+      "coverage": "Fallback airport geocoding",
+      "adapter": "official_page",
+      "status": "blocked",
+      "freshnessDays": 90,
+      "url": "https://operations.osmfoundation.org/policies/nominatim/",
+      "rightsNote": "Fallback only; honor rate limits and cache results.",
+      "lastRunAt": null,
+      "records": 0,
+      "issues": 0
+    }
+  ]
+}

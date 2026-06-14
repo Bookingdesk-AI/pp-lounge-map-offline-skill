@@ -68,6 +68,7 @@ async function main() {
 
   const steps = [
     ['npm', ['run', 'build:data']],
+    ['npm', ['run', 'build:canonical-data']],
     ['npm', ['run', 'build:mcp-data']],
     ['npm', ['run', 'build:offline-skill']],
     ['npm', ['test']],

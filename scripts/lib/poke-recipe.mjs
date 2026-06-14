@@ -2,9 +2,9 @@ import path from 'node:path';
 import { z } from 'zod';
 
 export const POKE_KITCHEN_URL = 'https://poke.com/kitchen';
-export const POKE_MCP_ENDPOINT = 'https://prioritypassmap.desk.travel/mcp';
-export const POKE_INTEGRATION_NAME = 'PP Lounge Map';
-export const POKE_RECIPE_PATH = ['recipes', 'poke', 'pp-lounge-map.hosted.recipe.json'];
+export const POKE_MCP_ENDPOINT = 'https://loungeguru.desk.travel/mcp';
+export const POKE_INTEGRATION_NAME = 'Lounge Guru';
+export const POKE_RECIPE_PATH = ['recipes', 'poke', 'lounge-guru.hosted.recipe.json'];
 
 export function getPokeRecipePath(projectRoot) {
   return path.resolve(projectRoot, ...POKE_RECIPE_PATH);

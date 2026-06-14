@@ -49,6 +49,9 @@ function getSearchText(lounge) {
     lounge.terminal,
     lounge.name,
     lounge.location,
+    lounge.provider,
+    ...(Array.isArray(lounge.programs) ? lounge.programs : []),
+    ...(Array.isArray(lounge.accessMethods) ? lounge.accessMethods : []),
     ...(Array.isArray(lounge.facilities) ? lounge.facilities : []),
     ...(Array.isArray(lounge.conditions) ? lounge.conditions : []),
   ]
@@ -70,6 +73,10 @@ function toSummary(lounge) {
     location: lounge.location,
     lat: lounge.lat,
     lon: lounge.lon,
+    provider: lounge.provider,
+    programs: lounge.programs,
+    accessMethods: lounge.accessMethods,
+    quality: lounge.quality,
   };
 }
 
@@ -131,6 +138,9 @@ export function createCatalogStore(catalogData) {
     sourceFile: catalogData.sourceFile,
     stats: catalogData.stats,
     filters: catalogData.filters,
+    schema: catalogData.schema,
+    quality: catalogData.quality,
+    sources: catalogData.sources,
     lounges: catalogData.lounges.map((lounge) => ({
       ...lounge,
       searchText: lounge.searchText ?? getSearchText(lounge),
@@ -142,6 +152,9 @@ export function createCatalogStore(catalogData) {
   const allowedCountries = new Set(catalog.filters.countries);
   const allowedCities = new Set(catalog.filters.cities);
   const allowedFacilities = new Set(catalog.filters.facilities);
+  const allowedProviders = new Set(catalog.filters.providers ?? []);
+  const allowedPrograms = new Set(catalog.filters.programs ?? []);
+  const allowedReviewStatuses = new Set(catalog.filters.reviewStatuses ?? []);
   const searchCache = new Map();
 
   function getCachedSearch(key) {
@@ -172,6 +185,8 @@ export function createCatalogStore(catalogData) {
         sourceFile: catalog.sourceFile,
         stats: catalog.stats,
         filters: catalog.filters,
+        schema: catalog.schema,
+        quality: catalog.quality,
       };
     },
 
@@ -179,6 +194,9 @@ export function createCatalogStore(catalogData) {
       return {
         stats: catalog.stats,
         filters: catalog.filters,
+        schema: catalog.schema,
+        quality: catalog.quality,
+        sources: catalog.sources,
       };
     },
 
@@ -198,6 +216,9 @@ export function createCatalogStore(catalogData) {
       const city = input.city?.trim() ?? null;
       const types = normalizeList(input.types, normalizeType);
       const facilities = normalizeList(input.facilities, (value) => value.trim());
+      const providers = normalizeList(input.providers, (value) => value.trim());
+      const programs = normalizeList(input.programs, (value) => value.trim());
+      const reviewStatus = input.reviewStatus?.trim() ?? null;
       const limit = input.limit ?? 10;
       const offset = decodeCursor(input.cursor);
 
@@ -215,6 +236,12 @@ export function createCatalogStore(catalogData) {
 
       requireAllowed(types, allowedTypes, 'type');
       requireAllowed(facilities, allowedFacilities, 'facility');
+      requireAllowed(providers, allowedProviders, 'provider');
+      requireAllowed(programs, allowedPrograms, 'program');
+
+      if (reviewStatus && !allowedReviewStatuses.has(reviewStatus)) {
+        throw new Error(`Unsupported review status filter: ${reviewStatus}.`);
+      }
 
       const cacheKey = buildCacheKey({
         query,
@@ -223,6 +250,9 @@ export function createCatalogStore(catalogData) {
         city,
         types,
         facilities,
+        providers,
+        programs,
+        reviewStatus,
         limit,
         offset,
       });
@@ -250,6 +280,18 @@ export function createCatalogStore(catalogData) {
           }
 
           if (facilities.length > 0 && !facilities.every((facility) => lounge.facilities.includes(facility))) {
+            return false;
+          }
+
+          if (providers.length > 0 && !providers.includes(lounge.provider)) {
+            return false;
+          }
+
+          if (programs.length > 0 && !programs.every((program) => (lounge.programs ?? []).includes(program))) {
+            return false;
+          }
+
+          if (reviewStatus && lounge.quality?.reviewStatus !== reviewStatus) {
             return false;
           }
 

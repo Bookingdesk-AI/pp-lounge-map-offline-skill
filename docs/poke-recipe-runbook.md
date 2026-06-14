@@ -2,12 +2,12 @@
 
 ## Goal
 
-Create and publish the hosted Poke recipe for `pp-lounge-map` using the checked-in draft spec and the live MCP integration.
+Create and publish the hosted Poke recipe for `lounge-guru` using the checked-in draft spec and the live MCP integration.
 
 ## Source of truth
 
-- Recipe draft: `recipes/poke/pp-lounge-map.hosted.recipe.json`
-- MCP endpoint: `https://prioritypassmap.desk.travel/mcp`
+- Recipe draft: `recipes/poke/lounge-guru.hosted.recipe.json`
+- MCP endpoint: `https://loungeguru.desk.travel/mcp`
 - Transport: `streamable-http`
 
 Validate the draft before editing Kitchen:
@@ -33,12 +33,12 @@ npx poke@latest login
 2. Add the hosted MCP integration to your Poke account:
 
 ```bash
-npx poke@latest mcp add https://prioritypassmap.desk.travel/mcp -n "PP Lounge Map"
+npx poke@latest mcp add https://loungeguru.desk.travel/mcp -n "Lounge Guru"
 ```
 
 3. Open Kitchen at [poke.com/kitchen](https://poke.com/kitchen).
 4. Create a new recipe draft.
-5. Copy values from `recipes/poke/pp-lounge-map.hosted.recipe.json` into the draft:
+5. Copy values from `recipes/poke/lounge-guru.hosted.recipe.json` into the draft:
    - name
    - description
    - onboarding input context
