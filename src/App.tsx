@@ -36,6 +36,7 @@ const WORLD_ZOOM = 2;
 const MOBILE_MEDIA_QUERY = '(max-width: 980px)';
 const SHEET_ORDER: SheetSnap[] = ['peek', 'mid', 'full'];
 const COMPARE_LIMIT = 3;
+const INTERNAL_VIEWS_ENABLED = import.meta.env.DEV;
 
 interface InitialUrlState {
   search: string;
@@ -94,6 +95,10 @@ function normalizeSort(value: string | null): SortOption {
 }
 
 function normalizeView(value: string | null): AppView {
+  if (!INTERNAL_VIEWS_ENABLED) {
+    return 'map';
+  }
+
   if (value === 'map' || value === 'intake' || value === 'schema' || value === 'sources') {
     return value;
   }
@@ -1237,6 +1242,10 @@ function ViewTabs({
   activeView: AppView;
   onChange: (view: AppView) => void;
 }) {
+  if (!INTERNAL_VIEWS_ENABLED) {
+    return null;
+  }
+
   const views: Array<{ id: AppView; label: string }> = [
     { id: 'map', label: 'Map' },
     { id: 'intake', label: 'Intake' },
@@ -2277,15 +2286,17 @@ function App() {
                 >
                   Details
                 </button>
-                <button
-                  type="button"
-                  className={mobileUI.sheetMode === 'intake' ? 'is-active' : ''}
-                  onClick={() =>
-                    setMobileUI((current) => ({ ...current, sheetMode: 'intake', sheetSnap: 'full' }))
-                  }
-                >
-                  Intake
-                </button>
+                {INTERNAL_VIEWS_ENABLED ? (
+                  <button
+                    type="button"
+                    className={mobileUI.sheetMode === 'intake' ? 'is-active' : ''}
+                    onClick={() =>
+                      setMobileUI((current) => ({ ...current, sheetMode: 'intake', sheetSnap: 'full' }))
+                    }
+                  >
+                    Intake
+                  </button>
+                ) : null}
               </div>
 
               <div className="mobile-sheet-body">
@@ -2403,7 +2414,7 @@ function App() {
                   </div>
                 ) : null}
 
-                {mobileUI.sheetMode === 'intake' ? (
+                {INTERNAL_VIEWS_ENABLED && mobileUI.sheetMode === 'intake' ? (
                   <div className="mobile-intake-wrap">
                     <IntakeView records={canonicalRecords} sources={sources} meta={meta} />
                   </div>
