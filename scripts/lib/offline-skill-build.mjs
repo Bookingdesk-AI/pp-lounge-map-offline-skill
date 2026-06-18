@@ -21,7 +21,7 @@ export function getOfflineSkillPaths(projectRoot) {
     runtimeDir: path.resolve(skillDir, 'scripts', 'runtime'),
     assetPath: path.resolve(skillDir, 'assets', 'catalog.json'),
     sourceCatalogPath: path.resolve(projectRoot, 'mcp', 'data', 'catalog.json'),
-    exportDir: path.resolve(projectRoot, 'out', 'lounge-guru-offline-skill'),
+    exportDir: path.resolve(projectRoot, 'out', 'pp-lounge-map-offline-skill'),
   };
 }
 

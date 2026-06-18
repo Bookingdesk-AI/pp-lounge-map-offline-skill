@@ -33,23 +33,37 @@ async function main() {
   const { skillDir, exportDir } = getOfflineSkillPaths(projectRoot);
 
   await fs.rm(exportDir, { recursive: true, force: true });
-  await copyDir(skillDir, path.resolve(exportDir, 'skills', OFFLINE_SKILL_NAME));
+
+  const exportedSkillName = 'pp-lounge-map-offline';
+  const exportedSkillDir = path.resolve(exportDir, 'skills', exportedSkillName);
+  await copyDir(skillDir, exportedSkillDir);
+  const exportedSkillPath = path.resolve(exportedSkillDir, 'SKILL.md');
+  const exportedSkillText = await fs.readFile(exportedSkillPath, 'utf8');
+  await fs.writeFile(
+    exportedSkillPath,
+    exportedSkillText
+      .replace('name: lounge-guru-offline', `name: ${exportedSkillName}`)
+      .replaceAll(OFFLINE_SKILL_NAME, exportedSkillName)
+      .replaceAll('Lounge Guru', 'PP Lounge Map'),
+    'utf8',
+  );
+
   await fs.copyFile(path.resolve(projectRoot, 'LICENSE'), path.resolve(exportDir, 'LICENSE'));
   await fs.writeFile(
     path.resolve(exportDir, 'README.md'),
-    `# ${OFFLINE_SKILL_NAME}\n\nPortable offline skill bundle for Lounge Guru airport lounge lookup.\n\n## Runtime\n\n1. Install package dependencies once.\n2. Start the local stdio MCP server with \`node skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs\`.\n3. Point your MCP client at that command.\n\n## Trust boundary\n\nThis artifact is local-only at runtime. It uses the bundled catalog snapshot and does not require network access to answer lounge queries.\n`,
+    `# pp-lounge-map-offline-skill\n\nPortable offline skill bundle for PP Lounge Map airport lounge lookup.\n\n## Runtime\n\n1. Install package dependencies once.\n2. Start the local stdio MCP server with \`node skills/pp-lounge-map-offline/scripts/run-offline-mcp.mjs\`.\n3. Point your MCP client at that command.\n\n## Trust boundary\n\nThis artifact is local-only at runtime. It uses the bundled catalog snapshot and does not require network access to answer lounge queries.\n`,
     'utf8',
   );
   await fs.writeFile(
     path.resolve(exportDir, 'package.json'),
     `${JSON.stringify(
       {
-        name: 'lounge-guru-offline-skill',
+        name: 'pp-lounge-map-offline-skill',
         private: true,
         type: 'module',
         version: '1.0.0',
         scripts: {
-          mcp: `node skills/${OFFLINE_SKILL_NAME}/scripts/run-offline-mcp.mjs`,
+          mcp: `node skills/pp-lounge-map-offline/scripts/run-offline-mcp.mjs`,
         },
         dependencies: {
           '@modelcontextprotocol/sdk': '^1.27.1',
