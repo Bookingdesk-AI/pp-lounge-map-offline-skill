@@ -20,6 +20,11 @@ async function main() {
     expectedName: OFFLINE_SKILL_NAME,
     maxAssetBytes: OFFLINE_ASSET_MAX_BYTES,
     assetRelativePath: path.join('assets', 'catalog.json'),
+    requiredReferences: [
+      path.join('references', 'mcp.md'),
+      path.join('references', 'safety.md'),
+      path.join('references', 'publishing.md'),
+    ],
     forbidHttpUrlsInMarkdown: true,
   });
 

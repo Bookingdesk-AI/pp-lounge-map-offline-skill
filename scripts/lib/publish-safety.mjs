@@ -51,6 +51,7 @@ export async function validateSkillBundleWithOptions({
   expectedName,
   maxAssetBytes,
   assetRelativePath,
+  requiredReferences = [],
   forbidHttpUrlsInMarkdown = false,
 }) {
   const issues = [];
@@ -101,6 +102,18 @@ export async function validateSkillBundleWithOptions({
     }
     if (!/description:/u.test(skillText)) {
       issues.push('SKILL.md must declare a description.');
+    }
+
+    for (const reference of requiredReferences) {
+      const referencePath = path.join(skillDir, reference);
+      if (!skillText.includes(reference)) {
+        issues.push(`SKILL.md must reference ${reference}.`);
+      }
+      try {
+        await fs.stat(referencePath);
+      } catch {
+        issues.push(`Missing required reference: ${reference}`);
+      }
     }
   } catch {
     issues.push('SKILL.md could not be read.');
