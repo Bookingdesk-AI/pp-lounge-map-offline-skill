@@ -36,3 +36,12 @@ Post-change verification:
 Changed files:
 - `scripts/lib/publish-safety.mjs`
 - `scripts/validate-publish-ready-offline.mjs`
+
+## Phase E — Issue Cycle
+
+Persistent blocker status:
+- No blocker repeated >=3 runs during this cycle.
+- No `PERSISTENT_BLOCKER` entry was added to `openclaw/reports/skill-security-issues.md`.
+
+Next hardening candidate:
+- Add a release test that mutates one required offline reference and confirms publish validation fails closed.
