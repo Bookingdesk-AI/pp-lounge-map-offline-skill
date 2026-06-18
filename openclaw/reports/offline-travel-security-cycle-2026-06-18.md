@@ -25,3 +25,14 @@ Selected bounded improvement:
 
 Reasoning:
 - The offline skill already includes these references, but making them a release gate improves referenced-file integrity and reviewer trust in exported packages.
+
+## Phase D — Review + Verify
+
+Post-change verification:
+- `npm run validate:publish:offline` passed with `publish-check: offline skill bundle passed.`
+- Post-change scan found no credential-like values in the offline skill or modified validation files.
+- The publish validation gate now requires `SKILL.md` to reference local MCP setup, safety boundary, and publishing guidance, and verifies each referenced file exists.
+
+Changed files:
+- `scripts/lib/publish-safety.mjs`
+- `scripts/validate-publish-ready-offline.mjs`
