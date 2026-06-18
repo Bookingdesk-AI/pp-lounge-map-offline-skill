@@ -15,3 +15,13 @@ Findings:
 - Local/read-only/no-network boundary is documented in `SKILL.md`, README, and safety reference.
 - The requested source path `skills/pp-lounge-map-offline` is not present in this repo; current source skill is `skills/lounge-guru-offline`, and export naming is controlled by build/export scripts.
 - Existing publish validation checks frontmatter, local-path/private-source leaks, forbidden shell/API-key patterns, remote URLs in offline markdown, and asset size.
+
+## Phase B — Fix Plan
+
+Severity: low / defense-in-depth.
+
+Selected bounded improvement:
+- Extend offline publish validation to require that `SKILL.md` references the local MCP setup, safety boundary, and publishing guidance files, and that those files exist.
+
+Reasoning:
+- The offline skill already includes these references, but making them a release gate improves referenced-file integrity and reviewer trust in exported packages.
