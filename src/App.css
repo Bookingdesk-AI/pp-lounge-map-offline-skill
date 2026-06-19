@@ -1452,7 +1452,7 @@
 
   .mobile-sheet {
     display: grid;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto auto auto 1fr;
     position: absolute;
     left: var(--sheet-side-gap);
     right: var(--sheet-side-gap-right);
@@ -1504,19 +1504,77 @@
 
   .mobile-actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
-    gap: 0.36rem;
-    padding: 0.5rem 0.62rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.32rem;
+    padding: 0.46rem 0.56rem;
     border-top: 1px solid var(--line-soft);
     border-bottom: 1px solid var(--line-soft);
     background: #ffffff;
   }
 
   .mobile-actions button {
-    min-height: 44px;
+    min-width: 0;
+    min-height: 48px;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 0.1rem;
     border-radius: 6px;
-    font-size: 0.76rem;
-    padding-inline: 0.35rem;
+    padding: 0.28rem 0.2rem;
+    font-size: 0.68rem;
+    line-height: 1.05;
+  }
+
+  .mobile-actions button span,
+  .mobile-actions button strong {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-actions button strong {
+    color: var(--text-soft);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+  }
+
+  .mobile-actions button.is-active strong {
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .mobile-actions button:nth-child(6) {
+    grid-column: 1 / -1;
+    min-height: 40px;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .mobile-sheet-status {
+    display: flex;
+    min-width: 0;
+    gap: 0.32rem;
+    overflow-x: auto;
+    padding: 0.4rem 0.56rem;
+    border-bottom: 1px solid var(--line-soft);
+    background: var(--surface-1);
+  }
+
+  .mobile-sheet-status span {
+    flex: 0 0 auto;
+    min-height: 28px;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    background: #ffffff;
+    color: var(--text-soft);
+    padding: 0.18rem 0.42rem;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
   }
 
   .mobile-sheet .ghost-link,
@@ -1837,7 +1895,7 @@
   }
 
   .mobile-actions button {
-    font-size: 0.72rem;
+    font-size: 0.66rem;
   }
 
   .compare-card-grid {

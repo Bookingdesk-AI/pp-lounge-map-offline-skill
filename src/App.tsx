@@ -40,6 +40,14 @@ const MOBILE_MEDIA_QUERY = '(max-width: 980px)';
 const SHEET_ORDER: SheetSnap[] = ['peek', 'mid', 'full'];
 const COMPARE_LIMIT = 3;
 const INTERNAL_VIEWS_ENABLED = import.meta.env.DEV;
+const MOBILE_MODE_LABELS: Record<MobileSheetMode, string> = {
+  results: 'Results',
+  filters: 'Filters',
+  details: 'Details',
+  compare: 'Compare',
+  review: 'Review',
+  intake: 'Intake',
+};
 
 interface InitialUrlState {
   search: string;
@@ -1269,6 +1277,35 @@ function MobileQuickFilters({
   );
 }
 
+function MobileModeButton({
+  mode,
+  activeMode,
+  count,
+  disabled = false,
+  onClick,
+}: {
+  mode: MobileSheetMode;
+  activeMode: MobileSheetMode;
+  count: string | number;
+  disabled?: boolean;
+  onClick: () => void;
+}) {
+  const label = MOBILE_MODE_LABELS[mode];
+
+  return (
+    <button
+      type="button"
+      className={activeMode === mode ? 'is-active' : ''}
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={`${label} ${count}`}
+    >
+      <span>{label}</span>
+      <strong>{count}</strong>
+    </button>
+  );
+}
+
 function MobileDetailsView({
   selectedFeature,
   sameSpotFeatures,
@@ -1945,6 +1982,7 @@ function App() {
   });
 
   const sheetDragState = useRef<{ startY: number; currentY: number } | null>(null);
+  const mobileSheetBodyRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const media = window.matchMedia(MOBILE_MEDIA_QUERY);
@@ -2579,6 +2617,15 @@ function App() {
     }
   }, [isMobile, loading, mobileUI.sheetMode, selectedFeature]);
 
+  useEffect(() => {
+    if (!isMobile || !mobileSheetBodyRef.current) {
+      return;
+    }
+
+    mobileSheetBodyRef.current.scrollTop = 0;
+    mobileSheetBodyRef.current.scrollLeft = 0;
+  }, [filterSignature, isMobile, mobileUI.sheetMode, selectedId]);
+
   const activeFilterChips = useMemo(() => {
     const chips: FilterSummaryChip[] = [];
 
@@ -2654,6 +2701,13 @@ function App() {
   const cloudflareReadyStatus = cloudflareEvidence
     ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks} CF`
     : null;
+  const mobileReviewCount = coverageGap?.current.reviewRecords ?? meta?.quality?.reviewQueue ?? 0;
+  const mobileSheetStatus = [
+    MOBILE_MODE_LABELS[mobileUI.sheetMode],
+    `${filteredFeatures.length} visible`,
+    selectedFilterCount > 0 ? `${selectedFilterCount} filters` : null,
+    `${comparedFeatures.length}/${COMPARE_LIMIT} compare`,
+  ].filter((item): item is string => Boolean(item));
 
   return (
     <div className={`app-shell ${isMobile ? `is-mobile sheet-${mobileUI.sheetSnap}` : ''}`}>
@@ -2807,64 +2861,64 @@ function App() {
               </button>
 
               <div className="mobile-actions" role="toolbar" aria-label="Mobile map actions">
-                <button
-                  type="button"
-                  className={mobileUI.sheetMode === 'results' ? 'is-active' : ''}
+                <MobileModeButton
+                  mode="results"
+                  activeMode={mobileUI.sheetMode}
+                  count={filteredFeatures.length}
                   onClick={() =>
                     setMobileUI((current) => ({ ...current, sheetMode: 'results', sheetSnap: 'mid' }))
                   }
-                >
-                  Results
-                </button>
-                <button
-                  type="button"
-                  className={mobileUI.sheetMode === 'filters' ? 'is-active' : ''}
+                />
+                <MobileModeButton
+                  mode="filters"
+                  activeMode={mobileUI.sheetMode}
+                  count={selectedFilterCount}
                   onClick={openMobileFilters}
-                >
-                  Filters
-                </button>
-                <button
-                  type="button"
-                  className={mobileUI.sheetMode === 'details' ? 'is-active' : ''}
+                />
+                <MobileModeButton
+                  mode="details"
+                  activeMode={mobileUI.sheetMode}
+                  count={selectedFeature?.properties.airportCode ?? '-'}
                   disabled={!selectedFeature}
                   onClick={() =>
                     setMobileUI((current) => ({ ...current, sheetMode: 'details', sheetSnap: 'full' }))
                   }
-                >
-                  Details
-                </button>
-                <button
-                  type="button"
-                  className={mobileUI.sheetMode === 'compare' ? 'is-active' : ''}
+                />
+                <MobileModeButton
+                  mode="compare"
+                  activeMode={mobileUI.sheetMode}
+                  count={`${comparedFeatures.length}/${COMPARE_LIMIT}`}
                   onClick={() =>
                     setMobileUI((current) => ({ ...current, sheetMode: 'compare', sheetSnap: 'full' }))
                   }
-                >
-                  Compare
-                </button>
-                <button
-                  type="button"
-                  className={mobileUI.sheetMode === 'review' ? 'is-active' : ''}
+                />
+                <MobileModeButton
+                  mode="review"
+                  activeMode={mobileUI.sheetMode}
+                  count={mobileReviewCount}
                   onClick={() =>
                     setMobileUI((current) => ({ ...current, sheetMode: 'review', sheetSnap: 'full' }))
                   }
-                >
-                  Review
-                </button>
+                />
                 {INTERNAL_VIEWS_ENABLED ? (
-                  <button
-                    type="button"
-                    className={mobileUI.sheetMode === 'intake' ? 'is-active' : ''}
+                  <MobileModeButton
+                    mode="intake"
+                    activeMode={mobileUI.sheetMode}
+                    count="DEV"
                     onClick={() =>
                       setMobileUI((current) => ({ ...current, sheetMode: 'intake', sheetSnap: 'full' }))
                     }
-                  >
-                    Intake
-                  </button>
+                  />
                 ) : null}
               </div>
 
-              <div className="mobile-sheet-body">
+              <div className="mobile-sheet-status" aria-label="Sheet status">
+                {mobileSheetStatus.map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
+              </div>
+
+              <div className="mobile-sheet-body" ref={mobileSheetBodyRef}>
                 {mobileUI.sheetMode === 'results' ? (
                   <>
                     <MobileQuickFilters
