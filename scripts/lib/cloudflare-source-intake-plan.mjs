@@ -77,6 +77,7 @@ export function createCloudflareSourceIntakePlan({ coverageGap, sourceRegistry, 
         status: action.status,
         next: action.next,
         url: registrySource?.url ?? runSource?.url ?? '',
+        fetchUrls: [...new Set([registrySource?.url, ...(registrySource?.fetchUrls ?? [])].filter(Boolean))],
         rightsNote: registrySource?.rightsNote ?? '',
       };
     }),

@@ -10,6 +10,7 @@ const candidates = JSON.parse(
 const validationReport = JSON.parse(
   fs.readFileSync(new URL('../public/data/non-priority-validation-report.json', import.meta.url), 'utf8'),
 );
+const sourceRegistry = JSON.parse(fs.readFileSync(new URL('../public/data/source-registry.json', import.meta.url), 'utf8'));
 const projectRoot = new URL('..', import.meta.url);
 
 test('source intake report records guarded public-source fetch policy', () => {
@@ -38,6 +39,26 @@ test('source snapshot script blocks local scrawl by default', () => {
 
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /local scrawl is blocked/);
+});
+
+test('Visa source intake has Cloudflare fetch repair candidates', () => {
+  const visa = sourceRegistry.find((source) => source.id === 'visa-airport-companion');
+
+  assert.equal(visa.url, 'https://www.visaairportcompanion.com/');
+  assert.ok(visa.fetchUrls.includes('https://www.visaairportcompanion.com/'));
+  assert.ok(visa.fetchUrls.includes('https://visaairportcompanion.ca/'));
+  assert.ok(visa.fetchUrls.includes('https://www.visa.gp/pay-with-visa/find-a-card/benefits/visa-airport-companion.html'));
+  assert.ok(visa.fetchUrls.every((url) => url.startsWith('https://')));
+});
+
+test('latest Visa intake failure remains Cloudflare-only evidence', () => {
+  const visa = report.sources.find((source) => source.sourceId === 'visa-airport-companion');
+
+  assert.equal(report.policy.execution.requiredRuntime, 'cloudflare');
+  assert.equal(visa.status, 'fetch_error');
+  assert.equal(visa.reason, 'fetch failed');
+  assert.ok(!Object.hasOwn(visa, 'text'));
+  assert.ok(!Object.hasOwn(visa, 'html'));
 });
 
 test('source intake report keeps provenance without committing raw page content', () => {

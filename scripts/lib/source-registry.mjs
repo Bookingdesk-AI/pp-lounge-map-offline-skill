@@ -76,6 +76,11 @@ export const SOURCE_REGISTRY = [
     status: 'candidate',
     freshnessDays: 30,
     url: 'https://www.visaairportcompanion.com/',
+    fetchUrls: [
+      'https://www.visaairportcompanion.com/',
+      'https://visaairportcompanion.ca/',
+      'https://www.visa.gp/pay-with-visa/find-a-card/benefits/visa-airport-companion.html',
+    ],
     rightsNote: 'Official public Visa program page; import only public program and eligibility evidence.',
     lastRunAt: null,
     records: 0,

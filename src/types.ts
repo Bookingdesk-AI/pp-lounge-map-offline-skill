@@ -10,6 +10,7 @@ export interface LoungeSourceRegistryEntry {
   status: SourceRunStatus;
   freshnessDays: number;
   url: string;
+  fetchUrls?: string[];
   rightsNote: string;
   lastRunAt: string | null;
   records: number;
@@ -251,6 +252,7 @@ export interface CloudflareSourceIntakePlan {
     status: 'ready' | 'blocked';
     next: string;
     url: string;
+    fetchUrls?: string[];
     rightsNote: string;
   }>;
 }

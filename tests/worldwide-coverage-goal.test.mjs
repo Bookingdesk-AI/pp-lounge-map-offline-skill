@@ -118,4 +118,9 @@ test('Cloudflare source intake plan tracks missing source lanes', () => {
   assert.ok(intakePlan.tasks.some((task) => task.action === 'credential_review' && task.status === 'blocked'));
   assert.ok(intakePlan.tasks.some((task) => task.action === 'structured_adapter' && task.status === 'ready'));
   assert.ok(intakePlan.tasks.some((task) => task.action === 'fetch_repair' && task.status === 'ready'));
+  assert.ok(
+    intakePlan.tasks
+      .find((task) => task.sourceId === 'visa-airport-companion')
+      ?.fetchUrls.includes('https://visaairportcompanion.ca/'),
+  );
 });

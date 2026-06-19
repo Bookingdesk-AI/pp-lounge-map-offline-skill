@@ -139,6 +139,12 @@ function validateIntakePlan(plan, gap) {
     issue(Boolean(task.action), `${prefix}: action missing`);
     issue(Boolean(task.next), `${prefix}: next missing`);
     issue(/^https:\/\//.test(task.url ?? ''), `${prefix}: url must be https`);
+    if (task.fetchUrls) {
+      issue(Array.isArray(task.fetchUrls), `${prefix}: fetchUrls must be an array`);
+      for (const [urlIndex, url] of task.fetchUrls.entries()) {
+        issue(/^https:\/\//.test(url), `${prefix}.fetchUrls[${urlIndex}]: url must be https`);
+      }
+    }
     issue(Boolean(task.rightsNote), `${prefix}: rightsNote missing`);
   }
 }
@@ -168,6 +174,14 @@ function validateArrays() {
   const candidates = readJson('public/data/non-priority-lounge-candidates.json');
   issue(Array.isArray(brandRegistry) && brandRegistry.length > 0, 'brand-registry.json: expected non-empty array');
   issue(Array.isArray(sourceRegistry) && sourceRegistry.length >= 30, 'source-registry.json: expected registered source list');
+  for (const [index, source] of (sourceRegistry ?? []).entries()) {
+    if (source.fetchUrls) {
+      issue(Array.isArray(source.fetchUrls), `source-registry.json[${index}].fetchUrls: expected array`);
+      for (const [urlIndex, url] of source.fetchUrls.entries()) {
+        issue(/^https:\/\//.test(url), `source-registry.json[${index}].fetchUrls[${urlIndex}]: url must be https`);
+      }
+    }
+  }
   issue(Array.isArray(candidates) && candidates.length > 0, 'non-priority-lounge-candidates.json: expected candidates');
 }
 

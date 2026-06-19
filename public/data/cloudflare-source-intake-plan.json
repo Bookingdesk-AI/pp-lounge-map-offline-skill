@@ -30,6 +30,9 @@
       "status": "blocked",
       "next": "Credentials",
       "url": "https://loungereview.com/api/",
+      "fetchUrls": [
+        "https://loungereview.com/api/"
+      ],
       "rightsNote": "Licensed API provider; no intake without approved commercial terms and key management."
     },
     {
@@ -46,6 +49,9 @@
       "status": "blocked",
       "next": "Credentials",
       "url": "https://docs.holidayextras.co.uk/",
+      "fetchUrls": [
+        "https://docs.holidayextras.co.uk/"
+      ],
       "rightsNote": "Official API documentation; use only under approved commercial/API terms."
     },
     {
@@ -62,6 +68,11 @@
       "status": "ready",
       "next": "Fetch",
       "url": "https://www.visaairportcompanion.com/",
+      "fetchUrls": [
+        "https://www.visaairportcompanion.com/",
+        "https://visaairportcompanion.ca/",
+        "https://www.visa.gp/pay-with-visa/find-a-card/benefits/visa-airport-companion.html"
+      ],
       "rightsNote": "Official public Visa program page; import only public program and eligibility evidence."
     },
     {
@@ -78,6 +89,9 @@
       "status": "blocked",
       "next": "Credentials",
       "url": "https://developer.mastercard.com/product/mastercard-airport-lounge-programs",
+      "fetchUrls": [
+        "https://developer.mastercard.com/product/mastercard-airport-lounge-programs"
+      ],
       "rightsNote": "Official Mastercard developer product; use only with approved API credentials and contract terms."
     },
     {
@@ -94,6 +108,9 @@
       "status": "ready",
       "next": "Adapter",
       "url": "https://mastercardtravelpass.dragonpass.com/",
+      "fetchUrls": [
+        "https://mastercardtravelpass.dragonpass.com/"
+      ],
       "rightsNote": "Official public Mastercard Travel Pass page; retain URL provenance for every imported field."
     },
     {
@@ -110,6 +127,9 @@
       "status": "ready",
       "next": "Adapter",
       "url": "https://en.dragonpass.com.cn/",
+      "fetchUrls": [
+        "https://en.dragonpass.com.cn/"
+      ],
       "rightsNote": "Official public DragonPass page; import only public program and location evidence."
     }
   ]

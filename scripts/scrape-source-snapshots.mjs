@@ -320,6 +320,10 @@ function summarizeRobots(robots) {
   };
 }
 
+function sourceFetchUrls(source) {
+  return [...new Set([source.url, ...(source.fetchUrls ?? [])].filter(Boolean))];
+}
+
 async function fetchText(url) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -345,6 +349,62 @@ async function fetchText(url) {
   } finally {
     clearTimeout(timeout);
   }
+}
+
+async function fetchSourceSeed(source) {
+  const attempts = [];
+  let fallback = null;
+
+  for (const url of sourceFetchUrls(source)) {
+    const robots = await fetchRobots(url);
+    const attempt = {
+      url,
+      robots: summarizeRobots(robots),
+    };
+
+    if (robots.checked && isDisallowedByRobots(url, robots.disallowRules)) {
+      attempts.push({
+        ...attempt,
+        status: 'skipped',
+        reason: 'robots_disallow',
+      });
+      continue;
+    }
+
+    try {
+      const fetched = await fetchText(url);
+      const completed = {
+        ...attempt,
+        status: fetched.ok ? 'fetched' : 'http_error',
+        httpStatus: fetched.status,
+        finalUrl: fetched.finalUrl,
+        contentType: fetched.contentType,
+        bytes: Buffer.byteLength(fetched.text),
+      };
+      attempts.push(completed);
+
+      if (fetched.ok) {
+        return { fetched, robots, sourceUrl: url, fetchAttempts: attempts };
+      }
+
+      fallback ??= { fetched, robots, sourceUrl: url };
+    } catch (error) {
+      attempts.push({
+        ...attempt,
+        status: 'fetch_error',
+        reason: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  if (fallback) {
+    return { ...fallback, fetchAttempts: attempts };
+  }
+
+  return {
+    error: attempts.findLast((attempt) => attempt.reason)?.reason ?? 'fetch failed',
+    fetchAttempts: attempts,
+  };
 }
 
 async function fetchJson(url) {
@@ -509,16 +569,16 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
     };
   }
 
-  const robots = await fetchRobots(source.url);
-  if (robots.checked && isDisallowedByRobots(source.url, robots.disallowRules)) {
+  const seed = await fetchSourceSeed(source);
+  if (!seed.fetched) {
     return {
       sourceId: source.id,
       publisher: source.publisher,
       url: source.url,
       adapter: source.adapter,
-      status: 'skipped',
-      reason: 'robots_disallow',
-      robots: summarizeRobots(robots),
+      status: 'fetch_error',
+      reason: seed.error,
+      fetchAttempts: seed.fetchAttempts,
       records: 0,
       airportCodes: [],
       loungeLinks: [],
@@ -526,7 +586,7 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
   }
 
   try {
-    const fetched = await fetchText(source.url);
+    const { fetched, robots, sourceUrl, fetchAttempts } = seed;
     const extension = fetched.contentType.includes('json') ? 'json' : 'html';
     const snapshotPath = path.join(runDir, `${safeName(source.id)}.${extension}`);
     await fs.writeFile(snapshotPath, fetched.text, 'utf8');
@@ -612,6 +672,7 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
       sourceId: source.id,
       publisher: source.publisher,
       url: source.url,
+      sourceUrl,
       finalUrl: fetched.finalUrl,
       adapter: source.adapter,
       status: fetched.ok ? 'fetched' : 'http_error',
@@ -627,6 +688,7 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
       structuredApi: structuredApi?.api,
       structuredRecords,
       childPages,
+      fetchAttempts,
       snapshotFile: path.relative(projectRoot, snapshotPath),
       robots: summarizeRobots(robots),
     };
@@ -638,6 +700,7 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
       adapter: source.adapter,
       status: 'fetch_error',
       reason: error instanceof Error ? error.message : String(error),
+      fetchAttempts: seed.fetchAttempts,
       records: 0,
       airportCodes: [],
       loungeLinks: [],
