@@ -1524,6 +1524,34 @@ function MobileReviewView({
   );
 }
 
+function SourceEvidenceStrip({ evidence }: { evidence: CloudflareSourceRunEvidence | null }) {
+  const sources = evidence?.sources ?? [];
+
+  if (sources.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="source-evidence-strip" aria-label="Cloudflare source evidence">
+      <div className="section-title-row">
+        <h2>CF sources</h2>
+        <span className="compare-count">
+          {evidence?.stats.readyTasksWithCloudflareEvidence ?? 0} / {evidence?.stats.readyTasks ?? 0}
+        </span>
+      </div>
+      <div className="source-evidence-list">
+        {sources.map((source) => (
+          <span key={source.sourceId} className="source-evidence-chip">
+            <strong>{source.publisher}</strong>
+            <span>{source.httpStatus ?? 'n/a'}</span>
+            <span>{source.cloudflareSnapshot ? source.status : 'missing'}</span>
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function qualityClass(score: number) {
   if (score >= 85) {
     return 'good';
@@ -2706,6 +2734,8 @@ function App() {
               setSelectedBrand={setSelectedBrand}
             />
           </div>
+
+          <SourceEvidenceStrip evidence={cloudflareEvidence} />
 
           {comparedFeatures.length > 0 ? (
             <CompareTray

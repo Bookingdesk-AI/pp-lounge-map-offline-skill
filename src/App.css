@@ -284,7 +284,8 @@
 .active-filters,
 .compare-tray,
 .panel-cluster,
-.rail-controls {
+.rail-controls,
+.source-evidence-strip {
   padding: 0.52rem 0.7rem;
   border-bottom: 1px solid var(--line-soft);
 }
@@ -309,6 +310,49 @@
 
 .rail-controls .control-group + .control-group {
   padding-top: 0.52rem;
+}
+
+.source-evidence-strip {
+  display: grid;
+  gap: 0.44rem;
+  background: #ffffff;
+}
+
+.source-evidence-strip .section-title-row h2 {
+  font-size: 0.76rem;
+}
+
+.source-evidence-list {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.source-evidence-chip {
+  min-width: 0;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  background: var(--surface-1);
+  color: var(--text-soft);
+  padding: 0.28rem 0.42rem;
+  font-size: 0.68rem;
+}
+
+.source-evidence-chip strong {
+  max-width: 9rem;
+  overflow: hidden;
+  color: var(--text-main);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.source-evidence-chip span {
+  flex: 0 0 auto;
 }
 
 .active-filters-head {
