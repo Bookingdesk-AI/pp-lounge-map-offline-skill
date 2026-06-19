@@ -3,6 +3,7 @@ import intakePlan from '../public/data/cloudflare-source-intake-plan.json' with 
 const USER_AGENT = 'lounge-guru-source-intake/1.0 (+https://loungeguru.desk.travel)';
 const DEFAULT_TIMEOUT_MS = 12000;
 const MAX_FETCH_URLS = 3;
+const MAX_BATCH_TASKS = 10;
 
 function jsonResponse(body, init = {}) {
   return new Response(JSON.stringify(body, null, 2), {
@@ -147,34 +148,16 @@ function selectTask(sourceId) {
   return readyTasks[0] ?? null;
 }
 
+function readyOfficialPageTasks() {
+  return intakePlan.tasks.filter((task) => task.status === 'ready' && task.adapter === 'official_page');
+}
+
 function sourceFetchUrls(task) {
   return [...new Set([...(task.fetchUrls ?? []), task.url].filter(Boolean))].slice(0, MAX_FETCH_URLS);
 }
 
-async function runProbe({ request, env, fetchImpl = fetch }) {
-  if (request.method !== 'POST') {
-    return jsonResponse({ error: 'method_not_allowed' }, { status: 405, headers: { allow: 'POST' } });
-  }
-
-  const authResponse = requireAuthorized(request, env);
-  if (authResponse) {
-    return authResponse;
-  }
-
-  if (!env.LOUNGE_GURU_DB) {
-    return jsonResponse({ error: 'd1_not_configured' }, { status: 503 });
-  }
-
-  const url = new URL(request.url);
-  const sourceId = url.searchParams.get('sourceId');
-  const task = selectTask(sourceId);
-  if (!task) {
-    return jsonResponse({ error: 'source_not_ready', sourceId }, { status: 404 });
-  }
-
-  const generatedAt = new Date().toISOString();
+async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new Date().toISOString() }) {
   const runId = `cloudflare-probe-${generatedAt.replace(/[:.]/g, '-')}-${task.sourceId}`;
-  const timeoutMs = Number(env.SOURCE_FETCH_TIMEOUT_MS || DEFAULT_TIMEOUT_MS);
   const attempts = [];
   let fetched = null;
 
@@ -267,8 +250,7 @@ async function runProbe({ request, env, fetchImpl = fetch }) {
     .bind(runId, generatedAt, JSON.stringify(policy), JSON.stringify(stats), JSON.stringify([sourceResult]))
     .run();
 
-  return jsonResponse({
-    ok: true,
+  return {
     runId,
     generatedAt,
     sourceId: task.sourceId,
@@ -276,9 +258,183 @@ async function runProbe({ request, env, fetchImpl = fetch }) {
     cloudflareRuntime: true,
     cloudflareSnapshot: sourceResult.cloudflareSnapshot,
     stats,
+  };
+}
+
+function parseJsonField(value, fallback) {
+  if (!value) {
+    return fallback;
+  }
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
+function compactStatusSource(source, row) {
+  return {
+    sourceId: source.sourceId,
+    publisher: source.publisher,
+    status: source.status,
+    runId: row.id,
+    generatedAt: row.generated_at,
+    cloudflareSnapshot: Boolean(source.cloudflareSnapshot),
+    httpStatus: source.httpStatus ?? null,
+    bytes: Number(source.bytes ?? 0),
+    sha256: source.sha256 ?? null,
+  };
+}
+
+async function requireReadyRequest({ request, env, method }) {
+  if (request.method !== method) {
+    return jsonResponse({ error: 'method_not_allowed' }, { status: 405, headers: { allow: method } });
+  }
+
+  const authResponse = requireAuthorized(request, env);
+  if (authResponse) {
+    return authResponse;
+  }
+
+  if (!env.LOUNGE_GURU_DB) {
+    return jsonResponse({ error: 'd1_not_configured' }, { status: 503 });
+  }
+
+  return null;
+}
+
+async function runProbe({ request, env, fetchImpl = fetch }) {
+  const readyResponse = await requireReadyRequest({ request, env, method: 'POST' });
+  if (readyResponse) {
+    return readyResponse;
+  }
+
+  const url = new URL(request.url);
+  const sourceId = url.searchParams.get('sourceId');
+  const task = selectTask(sourceId);
+  if (!task) {
+    return jsonResponse({ error: 'source_not_ready', sourceId }, { status: 404 });
+  }
+
+  const result = await runTaskProbe({
+    task,
+    env,
+    fetchImpl,
+    timeoutMs: Number(env.SOURCE_FETCH_TIMEOUT_MS || DEFAULT_TIMEOUT_MS),
+  });
+
+  return jsonResponse({
+    ok: true,
+    ...result,
+  });
+}
+
+async function runBatch({ request, env, fetchImpl = fetch }) {
+  const readyResponse = await requireReadyRequest({ request, env, method: 'POST' });
+  if (readyResponse) {
+    return readyResponse;
+  }
+
+  const url = new URL(request.url);
+  const requestedSourceIds = new Set(
+    (url.searchParams.get('sourceIds') ?? '')
+      .split(',')
+      .map((sourceId) => sourceId.trim())
+      .filter(Boolean),
+  );
+  const tasks = readyOfficialPageTasks()
+    .filter((task) => requestedSourceIds.size === 0 || requestedSourceIds.has(task.sourceId))
+    .slice(0, MAX_BATCH_TASKS);
+
+  if (tasks.length === 0) {
+    return jsonResponse({ error: 'no_ready_sources' }, { status: 404 });
+  }
+
+  const timeoutMs = Number(env.SOURCE_FETCH_TIMEOUT_MS || DEFAULT_TIMEOUT_MS);
+  const results = [];
+  for (const task of tasks) {
+    results.push(await runTaskProbe({ task, env, fetchImpl, timeoutMs }));
+  }
+
+  return jsonResponse({
+    ok: true,
+    mode: 'batch',
+    totalTasks: tasks.length,
+    fetched: results.filter((result) => result.stats.fetched === 1).length,
+    results,
+  });
+}
+
+async function sourceStatus({ request, env }) {
+  const readyResponse = await requireReadyRequest({ request, env, method: 'GET' });
+  if (readyResponse) {
+    return readyResponse;
+  }
+
+  const rowsResult = await env.LOUNGE_GURU_DB.prepare(
+    [
+      'SELECT id, generated_at, policy_json, stats_json, sources_json',
+      'FROM source_runs',
+      "WHERE id LIKE 'cloudflare-probe-%'",
+      'ORDER BY generated_at DESC',
+      'LIMIT 50',
+    ].join(' '),
+  ).all();
+  const rows = rowsResult.results ?? [];
+  const latestBySource = new Map();
+
+  for (const row of rows) {
+    const policy = parseJsonField(row.policy_json, {});
+    if (policy?.execution?.runtime !== 'cloudflare') {
+      continue;
+    }
+    const sources = parseJsonField(row.sources_json, []);
+    for (const source of sources) {
+      if (!latestBySource.has(source.sourceId)) {
+        latestBySource.set(source.sourceId, compactStatusSource(source, row));
+      }
+    }
+  }
+
+  const readyTasks = readyOfficialPageTasks();
+  const readyTaskEvidence = readyTasks.map((task) => {
+    const source = latestBySource.get(task.sourceId);
+    return {
+      sourceId: task.sourceId,
+      present: Boolean(source),
+      status: source?.status ?? 'missing',
+      cloudflareSnapshot: Boolean(source?.cloudflareSnapshot),
+    };
+  });
+  const sources = [...latestBySource.values()].sort((left, right) => left.sourceId.localeCompare(right.sourceId));
+
+  return jsonResponse({
+    ok: true,
+    generatedAt: new Date().toISOString(),
+    policy: {
+      source: 'cloudflare-d1-source_runs',
+      localScrawl: 'blocked',
+      rawPageContentCommitted: false,
+    },
+    stats: {
+      sourceRunsRead: rows.length,
+      uniqueSources: sources.length,
+      readyTasks: readyTasks.length,
+      readyTasksWithCloudflareEvidence: readyTaskEvidence.filter((task) => task.cloudflareSnapshot).length,
+    },
+    readyTaskEvidence,
+    sources,
   });
 }
 
 export async function createSourceIntakeProbeResponse(request, env, options = {}) {
   return runProbe({ request, env, fetchImpl: options.fetchImpl ?? fetch });
+}
+
+export async function createSourceIntakeBatchResponse(request, env, options = {}) {
+  return runBatch({ request, env, fetchImpl: options.fetchImpl ?? fetch });
+}
+
+export async function createSourceIntakeStatusResponse(request, env) {
+  return sourceStatus({ request, env });
 }

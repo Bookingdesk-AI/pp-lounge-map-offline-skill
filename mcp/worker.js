@@ -8,7 +8,11 @@ import {
   isStreamableMcpRequest,
 } from './server.js';
 import { McpRateLimiter } from './rate-limit.js';
-import { createSourceIntakeProbeResponse } from './source-intake.js';
+import {
+  createSourceIntakeBatchResponse,
+  createSourceIntakeProbeResponse,
+  createSourceIntakeStatusResponse,
+} from './source-intake.js';
 
 export { CatalogMcpAgent, McpRateLimiter };
 
@@ -22,6 +26,14 @@ export default {
 
     if (url.pathname === '/admin/source-intake/probe') {
       return createSourceIntakeProbeResponse(request, env);
+    }
+
+    if (url.pathname === '/admin/source-intake/probe-batch') {
+      return createSourceIntakeBatchResponse(request, env);
+    }
+
+    if (url.pathname === '/admin/source-intake/status') {
+      return createSourceIntakeStatusResponse(request, env);
     }
 
     if (isStreamableMcpRequest(request)) {

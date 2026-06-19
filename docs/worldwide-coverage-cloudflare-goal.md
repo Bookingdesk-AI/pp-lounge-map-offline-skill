@@ -97,6 +97,20 @@ curl -X POST 'https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=
 
 The probe writes a bounded `source_runs` row from the Worker runtime. It stores status, hashes, headers, and provenance only; raw page bodies stay out of D1 and git.
 
+Run all ready official-page tasks from Cloudflare:
+
+```bash
+curl -X POST 'https://loungeguru.desk.travel/admin/source-intake/probe-batch' \
+  -H 'x-lounge-guru-intake-token: <secret>'
+```
+
+Review compact D1 source-run status:
+
+```bash
+curl 'https://loungeguru.desk.travel/admin/source-intake/status' \
+  -H 'x-lounge-guru-intake-token: <secret>'
+```
+
 Export public evidence from remote D1 without fetching source pages locally:
 
 ```bash
