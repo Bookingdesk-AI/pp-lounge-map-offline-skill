@@ -15,9 +15,21 @@ const publicReportPath = path.resolve(projectRoot, 'public', 'data', 'source-int
 const latestReportPath = path.resolve(cacheRoot, 'latest-report.json');
 const timeoutMs = Number(process.env.SOURCE_FETCH_TIMEOUT_MS || 20000);
 const delayMs = Number(process.env.SOURCE_FETCH_DELAY_MS || 1200);
+const childPageLimit = Number(process.env.SOURCE_CHILD_PAGE_LIMIT || 25);
+const childCrawlSourceIds = new Set(
+  String(process.env.SOURCE_CHILD_CRAWL_SOURCES || 'escape-lounges')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean),
+);
 const ourAirportsCsvUrl =
   process.env.OUR_AIRPORTS_CSV_URL ||
   'https://raw.githubusercontent.com/davidmegginson/ourairports-data/main/airports.csv';
+const oneworldAirportsUrl =
+  'https://api.oneworld.com/wayfinding/v1/Airports?app_id=1&app_key=A3676D53BD00428BA198937061A835EE';
+const oneworldLoungeUrl =
+  'https://api.oneworld.com/lounge/v1/lounges/airport';
+const oneworldLoungeQuery = 'app_id=2&app_key=A3676D53BD00428BA198937061A835DD';
 
 const LOUNGE_TERMS = [
   'lounge',
@@ -162,11 +174,38 @@ function extractLinks(html, baseUrl) {
 
 function isLikelyLoungeLink(url) {
   const parsed = new URL(url);
+  if (['twitter.com', 'www.linkedin.com', 'www.facebook.com'].includes(parsed.hostname)) {
+    return false;
+  }
   const lower = `${parsed.pathname}${parsed.search}`.toLowerCase();
   if (/\.(css|js|mjs|png|jpe?g|gif|svg|webp|avif|ico|woff2?|ttf|eot)(\?|$)/i.test(lower)) {
     return false;
   }
   return LOUNGE_TERMS.some((term) => lower.includes(term.replace(/\s+/g, '-')) || lower.includes(term));
+}
+
+function shouldCrawlChildLink(source, url) {
+  if (childPageLimit <= 0) {
+    return false;
+  }
+  if (!childCrawlSourceIds.has(source.id)) {
+    return false;
+  }
+
+  const parsed = new URL(url);
+  const seed = new URL(source.url);
+  const host = parsed.hostname.replace(/^www\./, '');
+  const seedHost = seed.hostname.replace(/^www\./, '');
+
+  if (host === seedHost || host.endsWith(`.${seedHost}`)) {
+    return true;
+  }
+
+  if (source.id === 'capital-one' && host === 'capitalonetravel.com') {
+    return true;
+  }
+
+  return false;
 }
 
 function extractAirportCodes(text, knownAirportCodes) {
@@ -295,6 +334,130 @@ async function fetchText(url) {
   }
 }
 
+async function fetchJson(url) {
+  const response = await fetchText(url);
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status} ${response.statusText}`);
+  }
+  return {
+    finalUrl: response.finalUrl,
+    json: JSON.parse(response.text),
+    text: response.text,
+  };
+}
+
+function compactOneworldLounge(lounge, airport) {
+  return {
+    sourceRecordId: String(lounge.Id ?? lounge.ExternalId ?? `${lounge.AirportCode}-${lounge.Name}-${lounge.Terminal}`),
+    name: lounge.Name,
+    airportCode: lounge.AirportCode,
+    airportName: lounge.AirportName,
+    airportCity: airport?.City ?? '',
+    airportRegion: airport?.Region ?? '',
+    airportCoordinates: {
+      lat: Number(airport?.Latitude),
+      lon: Number(airport?.Longitude),
+    },
+    terminal: lounge.Terminal,
+    concourse: lounge.Concourse,
+    near: lounge.Near,
+    securitySide: lounge.LocationSecurity,
+    operator: lounge.OwnedBy,
+    accessClass: lounge.AccessClass,
+    accessTier: lounge.AccessTier,
+    accessConditions: lounge.AccessConditions,
+    accessNotes: lounge.AccessNotes,
+    openHours: lounge.OpenHours,
+    airlines: (lounge.Airlines ?? []).map((airline) => ({
+      code: airline.Code,
+      name: airline.Name,
+    })),
+    amenities: Object.fromEntries(
+      [
+        'BusinessCenter',
+        'TV',
+        'FoodBeverageSnackBuffet',
+        'Phone',
+        'PreFlightDinner',
+        'RelaxationRoom',
+        'Shower',
+        'SPA',
+        'WheelchairAccess',
+        'WiFi',
+        'FoodBeverageHotBuffet',
+        'AirConditioning',
+        'Restroom',
+        'RunwayViews',
+        'FlighInformationScreen',
+      ]
+        .filter((key) => Object.hasOwn(lounge, key))
+        .map((key) => [key, Boolean(lounge[key])]),
+    ),
+  };
+}
+
+async function fetchOneworldStructuredRecords(runDir) {
+  const airportsResponse = await fetchJson(oneworldAirportsUrl);
+  const airports = Array.isArray(airportsResponse.json) ? airportsResponse.json : [];
+  const airportByCode = new Map(airports.map((airport) => [airport.Code, airport]));
+  const records = [];
+  const errors = [];
+  let index = 0;
+
+  async function worker() {
+    for (;;) {
+      const current = index;
+      index += 1;
+      if (current >= airports.length) {
+        return;
+      }
+      const airport = airports[current];
+      const code = airport.Code;
+      try {
+        const loungeResponse = await fetchJson(`${oneworldLoungeUrl}/${encodeURIComponent(code)}?${oneworldLoungeQuery}`);
+        const lounges = Array.isArray(loungeResponse.json) ? loungeResponse.json : [];
+        for (const lounge of lounges) {
+          records.push(compactOneworldLounge(lounge, airportByCode.get(lounge.AirportCode) ?? airport));
+        }
+      } catch (error) {
+        errors.push({
+          airportCode: code,
+          reason: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+  }
+
+  await Promise.all(Array.from({ length: 6 }, worker));
+
+  const deduped = new Map();
+  for (const record of records) {
+    deduped.set(record.sourceRecordId, record);
+  }
+
+  const snapshot = {
+    generatedAt: new Date().toISOString(),
+    airports: airports.length,
+    errors,
+    records: [...deduped.values()].sort((first, second) =>
+      `${first.airportCode}-${first.name}`.localeCompare(`${second.airportCode}-${second.name}`),
+    ),
+  };
+  const snapshotPath = path.join(runDir, 'oneworld-structured-records.json');
+  await fs.writeFile(snapshotPath, `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8');
+
+  return {
+    api: {
+      airportsUrl: oneworldAirportsUrl,
+      loungeUrlTemplate: `${oneworldLoungeUrl}/{airportCode}`,
+      airportCount: airports.length,
+      errorCount: errors.length,
+      snapshotFile: path.relative(projectRoot, snapshotPath),
+    },
+    records: snapshot.records,
+  };
+}
+
 async function fetchRobots(url) {
   try {
     const origin = new URL(url).origin;
@@ -358,8 +521,79 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
     const text = cleanText(fetched.text);
     const links = extractLinks(fetched.text, fetched.finalUrl);
     const loungeLinks = links.filter(isLikelyLoungeLink).slice(0, 100);
-    const airportCodes = extractAirportCodes(text, knownAirportCodes);
-    const recordEstimate = Math.max(airportCodes.length, loungeLinks.length);
+    const childPages = [];
+    const airportCodes = new Set(extractAirportCodes(text, knownAirportCodes));
+    const childLinks = loungeLinks.filter((link) => shouldCrawlChildLink(source, link)).slice(0, childPageLimit);
+
+    for (const [index, childLink] of childLinks.entries()) {
+      const childRobots = await fetchRobots(childLink);
+      if (childRobots.checked && isDisallowedByRobots(childLink, childRobots.disallowRules)) {
+        childPages.push({
+          url: childLink,
+          status: 'skipped',
+          reason: 'robots_disallow',
+          airportCodes: [],
+          loungeLinks: [],
+          robots: summarizeRobots(childRobots),
+        });
+        await sleep(delayMs);
+        continue;
+      }
+
+      try {
+        const childFetched = await fetchText(childLink);
+        const childExtension = childFetched.contentType.includes('json') ? 'json' : 'html';
+        const childSnapshotPath = path.join(runDir, `${safeName(source.id)}-${String(index + 1).padStart(2, '0')}.${childExtension}`);
+        await fs.writeFile(childSnapshotPath, childFetched.text, 'utf8');
+        const childText = cleanText(childFetched.text);
+        const childAirportCodes = extractAirportCodes(childText, knownAirportCodes);
+        for (const code of childAirportCodes) {
+          airportCodes.add(code);
+        }
+        childPages.push({
+          url: childLink,
+          finalUrl: childFetched.finalUrl,
+          status: childFetched.ok ? 'fetched' : 'http_error',
+          httpStatus: childFetched.status,
+          contentType: childFetched.contentType,
+          bytes: Buffer.byteLength(childFetched.text),
+          sha256: sha256(childFetched.text),
+          title: pageTitle(childFetched.text),
+          airportCodes: childAirportCodes,
+          loungeLinks: extractLinks(childFetched.text, childFetched.finalUrl).filter(isLikelyLoungeLink).slice(0, 25),
+          snapshotFile: path.relative(projectRoot, childSnapshotPath),
+          robots: summarizeRobots(childRobots),
+        });
+      } catch (error) {
+        childPages.push({
+          url: childLink,
+          status: 'fetch_error',
+          reason: error instanceof Error ? error.message : String(error),
+          airportCodes: [],
+          loungeLinks: [],
+          robots: summarizeRobots(childRobots),
+        });
+      }
+
+      await sleep(delayMs);
+    }
+
+    const childLoungeLinks = childPages.flatMap((page) => page.loungeLinks ?? []);
+    const allLoungeLinks = [...new Set([...loungeLinks, ...childLoungeLinks])].slice(0, 200);
+    let structuredApi = null;
+    let structuredRecords = [];
+
+    if (source.id === 'oneworld') {
+      structuredApi = await fetchOneworldStructuredRecords(runDir);
+      structuredRecords = structuredApi.records;
+      for (const record of structuredRecords) {
+        if (/^[A-Z0-9]{3}$/.test(record.airportCode)) {
+          airportCodes.add(record.airportCode);
+        }
+      }
+    }
+
+    const recordEstimate = Math.max(airportCodes.size, allLoungeLinks.length, structuredRecords.length);
 
     return {
       sourceId: source.id,
@@ -375,8 +609,11 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
       title: pageTitle(fetched.text),
       jsonLdBlocks: extractJsonLdCount(fetched.text),
       records: recordEstimate,
-      airportCodes,
-      loungeLinks,
+      airportCodes: [...airportCodes].sort(),
+      loungeLinks: allLoungeLinks,
+      structuredApi: structuredApi?.api,
+      structuredRecords,
+      childPages,
       snapshotFile: path.relative(projectRoot, snapshotPath),
       robots: summarizeRobots(robots),
     };
@@ -417,6 +654,9 @@ async function main() {
     runId,
     policy: {
       fetchMode: 'single_public_source_url_per_registry_entry',
+      childFetchMode: 'bounded_lounge_link_crawl',
+      childPageLimit,
+      childCrawlSources: [...childCrawlSourceIds].sort(),
       rawSnapshots: '.cache/source-snapshots',
       rawSnapshotsCommitted: false,
       guardrail: 'official/public sources only; no login, private API, captcha, or broad crawling',
@@ -429,6 +669,10 @@ async function main() {
       skipped: results.filter((result) => result.status === 'skipped').length,
       httpErrors: results.filter((result) => result.status === 'http_error').length,
       fetchErrors: results.filter((result) => result.status === 'fetch_error').length,
+      childPagesFetched: results.reduce(
+        (total, result) => total + (result.childPages ?? []).filter((page) => page.status === 'fetched').length,
+        0,
+      ),
       discoveredAirportCodes: new Set(results.flatMap((result) => result.airportCodes)).size,
       discoveredLoungeLinks: results.reduce((total, result) => total + result.loungeLinks.length, 0),
       knownAirportCodes: knownAirportCodes.size,

@@ -250,7 +250,7 @@ export function createCanonicalRecord(feature, options = {}) {
   };
 }
 
-export function createSourceRegistryForCatalog(features, generatedAt) {
+export function createSourceRegistryForCatalog(features, generatedAt, records = []) {
   const registry = cloneSourceRegistry();
   const deskTravelBrandDb = registry.find((source) => source.id === 'desk-travel-brand-database');
   if (deskTravelBrandDb) {
@@ -260,9 +260,23 @@ export function createSourceRegistryForCatalog(features, generatedAt) {
 
   const priorityPass = registry.find((source) => source.id === 'priority-pass');
   if (priorityPass) {
-    priorityPass.records = features.length;
+    priorityPass.records = records.filter((record) =>
+      record.sources.some((source) => source.sourceId === 'priority-pass'),
+    ).length;
     priorityPass.lastRunAt = generatedAt;
     priorityPass.issues = features.filter((feature) => findQualityConflicts(feature.properties ?? feature).length > 0).length;
+  }
+
+  for (const source of registry) {
+    if (['desk-travel-brand-database', 'priority-pass', 'ourairports'].includes(source.id)) {
+      continue;
+    }
+    const sourceRecords = records.filter((record) => record.sources.some((item) => item.sourceId === source.id));
+    if (sourceRecords.length > 0) {
+      source.records = sourceRecords.length;
+      source.lastRunAt = generatedAt;
+      source.issues = sourceRecords.filter((record) => record.quality.reviewStatus !== 'approved').length;
+    }
   }
 
   const ourAirports = registry.find((source) => source.id === 'ourairports');
@@ -296,10 +310,10 @@ export function createSchemaMetadata() {
   };
 }
 
-export function createCanonicalCatalog({ features, meta }) {
+export function createCanonicalCatalog({ features, meta, additionalRecords = [] }) {
   const generatedAt = meta.generatedAt ?? new Date().toISOString();
-  const records = features.map((feature) => createCanonicalRecord(feature, { generatedAt }));
-  const sources = createSourceRegistryForCatalog(features, generatedAt);
+  const records = [...features.map((feature) => createCanonicalRecord(feature, { generatedAt })), ...additionalRecords];
+  const sources = createSourceRegistryForCatalog(features, generatedAt, records);
   const brands = getBrandRegistry();
   const deskTravelBrandImport = createDeskTravelBrandImport({ generatedAt });
   const quality = summarizeQuality(records);
@@ -310,6 +324,11 @@ export function createCanonicalCatalog({ features, meta }) {
     schema: createSchemaMetadata(),
     stats: {
       ...meta.stats,
+      totalCatalogRecords: records.length,
+      candidateRecords: additionalRecords.length,
+      nonPriorityRecords: additionalRecords.filter((record) =>
+        record.sources.some((source) => source.sourceId !== 'priority-pass'),
+      ).length,
       totalSources: sources.length,
       reviewQueue: quality.reviewQueue,
       approvedRecords: records.length - quality.reviewQueue,

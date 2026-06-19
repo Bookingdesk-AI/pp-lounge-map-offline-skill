@@ -1571,7 +1571,7 @@ function App() {
           : canonical?.brands ?? nextMeta.brands ?? [];
         const canonicalRecords = canonical?.records ?? [];
         const canonicalById = new Map(canonicalRecords.map((record) => [record.lounge.id, record]));
-        const nextFeatures = (geoJson.features ?? []).map((feature) => {
+        const nextFeatures: LoungeFeature[] = (geoJson.features ?? []).map((feature) => {
           const canonicalRecord = canonicalById.get(feature.properties.id) ?? feature.properties.canonical;
           return {
             ...feature,
@@ -1586,6 +1586,43 @@ function App() {
             },
           };
         });
+        const featureIds = new Set(nextFeatures.map((feature) => feature.properties.id));
+        const candidateFeatures: LoungeFeature[] = canonicalRecords
+          .filter((record) => !featureIds.has(record.lounge.id))
+          .filter(
+            (record) =>
+              Number.isFinite(record.airport.coordinates.lat) && Number.isFinite(record.airport.coordinates.lon),
+          )
+          .map((record) => ({
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [record.airport.coordinates.lon, record.airport.coordinates.lat],
+            },
+            properties: {
+              id: record.lounge.id,
+              airportCode: record.airport.iata,
+              airportName: record.airport.name,
+              country: record.airport.country,
+              city: record.airport.city,
+              type: record.lounge.category.toUpperCase(),
+              terminal: record.location.terminal || 'Unknown',
+              name: record.lounge.name,
+              openingHours: record.operations.hours,
+              conditions: record.restrictions,
+              facilities: record.amenities,
+              url: record.sources[0]?.url ?? '',
+              location: record.location.directions,
+              slug: record.lounge.id,
+              provider: record.lounge.brand,
+              programs: record.lounge.programs,
+              accessMethods: record.lounge.accessMethods,
+              sources: record.sources,
+              quality: record.quality,
+              canonical: record,
+            },
+          }));
+        nextFeatures.push(...candidateFeatures);
 
         const mergedMeta: LoungeMeta = canonical
           ? {

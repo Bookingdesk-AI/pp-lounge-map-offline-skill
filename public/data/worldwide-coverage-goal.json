@@ -1,0 +1,123 @@
+{
+  "id": "lounge-guru-worldwide-coverage",
+  "version": "2026-06-18",
+  "title": "Worldwide lounge coverage in Cloudflare D1",
+  "status": "active",
+  "targetScope": "all_known_public_and_licensed_airport_lounges_worldwide",
+  "cloudflareDatabase": {
+    "product": "d1",
+    "databaseName": "lounge-guru-catalog",
+    "databaseId": "7ce3bfa1-3a17-4554-a526-c3703ca3b902",
+    "binding": "LOUNGE_GURU_DB",
+    "migrationsDir": "migrations",
+    "requiredTables": [
+      "coverage_goals",
+      "catalog_runs",
+      "lounge_records",
+      "lounge_sources",
+      "source_runs",
+      "coverage_validation_runs"
+    ]
+  },
+  "terminalGoal": {
+    "minApprovedRecords": 3800,
+    "minApprovedRatio": 0.98,
+    "minSourceFamilyCoverageRatio": 1,
+    "maxUnknownAirportRecords": 0,
+    "maxRecordsWithoutSources": 0,
+    "maxRecordsWithoutQuality": 0,
+    "maxReviewRecords": 0,
+    "requiresCloudflareSchema": true
+  },
+  "sourceFamilies": [
+    {
+      "id": "licensed-global-baseline",
+      "label": "Licensed global inventory baseline",
+      "mode": "licensed_api_or_commercial_data",
+      "requiredForTerminal": true,
+      "members": ["loungereview-api", "holiday-extras-api"],
+      "benchmark": "LoungeReview publicly positions its API around 3,800+ lounge records; use this lane to establish the global universe before dedupe.",
+      "acquisition": "Commercial approval, API contract, normalized snapshot, then field-level provenance."
+    },
+    {
+      "id": "collinson-networks",
+      "label": "Collinson access networks",
+      "mode": "licensed_or_approved_source_workbook",
+      "requiredForTerminal": true,
+      "members": ["priority-pass", "loungekey", "collinson-international"],
+      "benchmark": "Priority Pass and LoungeKey are overlapping Collinson networks and must be deduped rather than counted independently.",
+      "acquisition": "Approved workbook, licensed feed, or bounded official public pages only."
+    },
+    {
+      "id": "bank-issuer-programs",
+      "label": "Bank issuer lounge programs",
+      "mode": "official_public_or_partner_api",
+      "requiredForTerminal": true,
+      "members": ["amex-global-lounge-collection", "chase-sapphire", "capital-one", "citi-travel"],
+      "benchmark": "Issuer programs are access-policy evidence and sometimes operator evidence; never treat them as the only canonical location source.",
+      "acquisition": "Official pages first; partner APIs or manual review for eligibility and guest policy."
+    },
+    {
+      "id": "card-network-programs",
+      "label": "Card network and benefit-platform programs",
+      "mode": "partner_api_or_manual_review",
+      "requiredForTerminal": true,
+      "members": ["visa-airport-companion", "mastercard-airport-lounge-programs", "mastercard-travel-pass", "dragonpass"],
+      "benchmark": "Mastercard, Visa, and DragonPass surfaces overlap with Collinson and operator networks but add eligibility and regional coverage.",
+      "acquisition": "Official developer/program pages, partner contract, or manual review."
+    },
+    {
+      "id": "airline-alliance-lounges",
+      "label": "Airline alliance lounge finders",
+      "mode": "partner_api_or_manual_review",
+      "requiredForTerminal": true,
+      "members": ["star-alliance", "oneworld", "skyteam"],
+      "benchmark": "Alliance finders provide broad airline-operated and contract lounge coverage across Star Alliance, oneworld, and SkyTeam.",
+      "acquisition": "Official finder pages or approved partner path; use as cross-check evidence for access, not automatic approval."
+    },
+    {
+      "id": "airline-operated-lounges",
+      "label": "Airline-operated lounges",
+      "mode": "official_public_or_partner_api",
+      "requiredForTerminal": true,
+      "members": ["united", "delta", "american", "air-canada"],
+      "benchmark": "Airline pages are the preferred source for operator-owned clubs, hours, restrictions, and temporary closures.",
+      "acquisition": "Bounded official HTML/page intake plus manual review for conflict resolution."
+    },
+    {
+      "id": "operator-operated-lounges",
+      "label": "Independent and contract lounge operators",
+      "mode": "official_public_or_partner_api",
+      "requiredForTerminal": true,
+      "members": ["plaza-premium", "escape-lounges", "airport-dimensions", "aspire-lounges", "marhaba", "primeclass", "no1-lounges", "be-relax"],
+      "benchmark": "Operator networks cover lounges missed by card/bank pages and must include Plaza Premium, Aspire, The Club, Escape, Marhaba, Primeclass, No1, and Be Relax.",
+      "acquisition": "Official operator pages first; licensed operator feeds where public pages block automated intake."
+    },
+    {
+      "id": "open-enrichment",
+      "label": "Open normalization and enrichment",
+      "mode": "open_data_enrichment",
+      "requiredForTerminal": true,
+      "members": ["ourairports", "openstreetmap", "nominatim"],
+      "benchmark": "Open data normalizes airports and enriches coordinates; it is not authoritative for lounge existence.",
+      "acquisition": "OurAirports CSV, OSM/Taginfo monitoring, and Nominatim only as cached, rate-limited fallback."
+    }
+  ],
+  "validation": {
+    "progressCommand": "npm run validate:coverage",
+    "terminalCommand": "npm run goal:coverage",
+    "strictExitCode": "non_zero_until_terminal_goal_passes",
+    "remoteSmokeCommand": "npx wrangler d1 execute lounge-guru-catalog --remote --command=\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\""
+  },
+  "guardrails": [
+    "Every lounge record must carry source provenance.",
+    "Licensed/private providers require an approved commercial or partner path.",
+    "Official public crawling must remain bounded, robots-aware, and snapshot-based.",
+    "Candidate records stay review-only until source conflicts, airport identity, hours, access policy, and location fields are resolved.",
+    "Cloudflare D1 is the canonical publish target for approved worldwide coverage."
+  ],
+  "benchmark": {
+    "reason": "Use a 3,800-record approved minimum as the first terminal threshold because public API/vendor research identified a comparable global lounge inventory above that scale. Terminal success also requires the major overlapping networks so the catalog can dedupe Priority Pass, LoungeKey, issuer/card programs, alliances, airlines, and operator-owned lounges.",
+    "reviewedAt": "2026-06-18"
+  }
+}

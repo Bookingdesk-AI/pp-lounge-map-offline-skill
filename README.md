@@ -5,6 +5,7 @@ Multi-source lounge data console with a public, read-only MCP server and publish
 ## Product goal
 
 See `docs/lounge-guru-product-goal.md` for the Lounge Guru north star, quality bar, workflow standard, and first milestones.
+See `docs/worldwide-coverage-cloudflare-goal.md` for the Cloudflare D1 worldwide coverage goal and terminal validation gate.
 
 ## Commands
 

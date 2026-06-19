@@ -26,11 +26,41 @@ function normalizeSearchText(record) {
     record.terminal,
     record.name,
     record.location,
+    record.provider,
+    ...record.programs,
+    ...record.accessMethods,
     ...record.facilities,
     ...record.conditions,
   ]
     .join(' ')
     .toLowerCase();
+}
+
+function loungeFromCanonicalRecord(record) {
+  return {
+    id: clean(record.lounge.id),
+    airportCode: clean(record.airport.iata).toUpperCase(),
+    airportName: clean(record.airport.name),
+    country: clean(record.airport.country),
+    city: clean(record.airport.city),
+    type: clean(record.lounge.category).toUpperCase() || 'LOUNGE',
+    terminal: clean(record.location.terminal) || 'Unknown',
+    name: clean(record.lounge.name),
+    openingHours: clean(record.operations.hours),
+    conditions: Array.isArray(record.restrictions) ? record.restrictions.map(clean).filter(Boolean) : [],
+    facilities: Array.isArray(record.amenities) ? record.amenities.map(clean).filter(Boolean) : [],
+    url: clean(record.sources[0]?.url),
+    location: clean(record.location.directions),
+    slug: clean(record.lounge.id),
+    lat: Number(record.airport.coordinates.lat),
+    lon: Number(record.airport.coordinates.lon),
+    provider: clean(record.lounge.brand),
+    programs: record.lounge.programs ?? [],
+    accessMethods: record.lounge.accessMethods ?? [],
+    sources: record.sources ?? [],
+    quality: record.quality,
+    canonical: record,
+  };
 }
 
 async function main() {
@@ -46,7 +76,7 @@ async function main() {
 
   const canonicalById = new Map((canonicalCatalog.records ?? []).map((record) => [record.lounge.id, record]));
 
-  const lounges = geoJson.features
+  const featureLounges = geoJson.features
     .map((feature) => {
       const [lon, lat] = feature.geometry.coordinates;
       const properties = feature.properties;
@@ -84,8 +114,17 @@ async function main() {
     .map((lounge) => ({
       ...lounge,
       searchText: normalizeSearchText(lounge),
-    }))
-    .sort((first, second) => first.id.localeCompare(second.id));
+    }));
+  const existingIds = new Set(featureLounges.map((lounge) => lounge.id));
+  const candidateLounges = (canonicalCatalog.records ?? [])
+    .filter((record) => !existingIds.has(record.lounge.id))
+    .map(loungeFromCanonicalRecord)
+    .filter((lounge) => Number.isFinite(lounge.lat) && Number.isFinite(lounge.lon))
+    .map((lounge) => ({
+      ...lounge,
+      searchText: normalizeSearchText(lounge),
+    }));
+  const lounges = [...featureLounges, ...candidateLounges].sort((first, second) => first.id.localeCompare(second.id));
 
   const sourceFile = path.basename(clean(meta.sourceFile));
   const catalog = {

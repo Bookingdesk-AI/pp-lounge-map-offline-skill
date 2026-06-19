@@ -153,6 +153,9 @@ export interface LoungeMeta {
     uniqueCountries: number;
     uniqueCities: number;
     totalSources?: number;
+    totalCatalogRecords?: number;
+    candidateRecords?: number;
+    nonPriorityRecords?: number;
     reviewQueue?: number;
     approvedRecords?: number;
   };

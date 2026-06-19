@@ -4,6 +4,10 @@ import { fileURLToPath } from 'node:url';
 
 import { createBrandLogoSvg } from './lib/brand-registry.mjs';
 import { createCanonicalCatalog } from './lib/lounge-canonical.mjs';
+import {
+  createNonPriorityCandidateRecords,
+  createNonPriorityValidationReport,
+} from './lib/source-candidates.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,12 +19,38 @@ const outputSourcesPath = path.resolve(projectRoot, 'public', 'data', 'source-re
 const outputBrandsPath = path.resolve(projectRoot, 'public', 'data', 'brand-registry.json');
 const outputBrandImportPath = path.resolve(projectRoot, 'public', 'data', 'desk-travel-brand-import.json');
 const outputQualityPath = path.resolve(projectRoot, 'public', 'data', 'quality-report.json');
+const sourceIntakeReportPath = path.resolve(projectRoot, 'public', 'data', 'source-intake-report.json');
+const outputCandidatePath = path.resolve(projectRoot, 'public', 'data', 'non-priority-lounge-candidates.json');
+const outputValidationPath = path.resolve(projectRoot, 'public', 'data', 'non-priority-validation-report.json');
 const outputBrandLogoDir = path.resolve(projectRoot, 'public', 'data', 'brand-logos');
+
+async function readSourceIntakeReport() {
+  try {
+    return JSON.parse(await fs.readFile(sourceIntakeReportPath, 'utf8'));
+  } catch {
+    return null;
+  }
+}
 
 async function main() {
   const geoJson = JSON.parse(await fs.readFile(geoJsonPath, 'utf8'));
   const meta = JSON.parse(await fs.readFile(metaPath, 'utf8'));
-  const catalog = createCanonicalCatalog({ features: geoJson.features ?? [], meta });
+  const intakeReport = await readSourceIntakeReport();
+  const candidateRecords = createNonPriorityCandidateRecords({
+    report: intakeReport,
+    features: geoJson.features ?? [],
+    generatedAt: meta.generatedAt,
+  });
+  const catalog = createCanonicalCatalog({
+    features: geoJson.features ?? [],
+    meta,
+    additionalRecords: candidateRecords,
+  });
+  const validationReport = createNonPriorityValidationReport({
+    records: catalog.records,
+    report: intakeReport,
+    generatedAt: catalog.generatedAt,
+  });
 
   const serialized = JSON.stringify(catalog);
   const forbiddenFragments = [projectRoot, path.resolve(projectRoot, '..'), process.env.HOME || ''].filter(Boolean);
@@ -33,6 +63,8 @@ async function main() {
   await fs.mkdir(path.dirname(outputCatalogPath), { recursive: true });
   await fs.mkdir(outputBrandLogoDir, { recursive: true });
   await fs.writeFile(outputCatalogPath, `${JSON.stringify(catalog, null, 2)}\n`, 'utf8');
+  await fs.writeFile(outputCandidatePath, `${JSON.stringify(candidateRecords, null, 2)}\n`, 'utf8');
+  await fs.writeFile(outputValidationPath, `${JSON.stringify(validationReport, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputSourcesPath, `${JSON.stringify(catalog.sources, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputBrandsPath, `${JSON.stringify(catalog.brands, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputBrandImportPath, `${JSON.stringify(catalog.deskTravelBrandImport, null, 2)}\n`, 'utf8');
@@ -58,7 +90,10 @@ async function main() {
     'utf8',
   );
 
-  console.log(`Wrote ${catalog.records.length} canonical Lounge Guru records.`);
+  console.log(
+    `Wrote ${catalog.records.length} canonical Lounge Guru records ` +
+      `(${candidateRecords.length} non-Priority Pass candidates).`,
+  );
 }
 
 main().catch((error) => {

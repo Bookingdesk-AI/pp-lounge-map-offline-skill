@@ -18,6 +18,12 @@ class_name = "McpRateLimiter"
 name = "LOUNGE_GURU_MCP"
 class_name = "CatalogMcpAgent"
 
+[[d1_databases]]
+binding = "LOUNGE_GURU_DB"
+database_name = "lounge-guru-catalog"
+database_id = "7ce3bfa1-3a17-4554-a526-c3703ca3b902"
+migrations_dir = "migrations"
+
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["McpRateLimiter"]

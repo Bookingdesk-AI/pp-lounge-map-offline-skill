@@ -63,9 +63,9 @@
     "freshnessDays": 14,
     "url": "https://account.chase.com/sapphire-airport-lounge",
     "rightsNote": "Official public Chase page; parse only public location and policy text.",
-    "lastRunAt": null,
-    "records": 0,
-    "issues": 0,
+    "lastRunAt": "2026-03-11T13:05:33.139Z",
+    "records": 8,
+    "issues": 8,
     "brandIds": [
       "chase-sapphire"
     ]
@@ -79,9 +79,9 @@
     "freshnessDays": 14,
     "url": "https://global.americanexpress.com/lounge-access/the-platinum-card",
     "rightsNote": "Official public Amex page; treat partner eligibility as source evidence, not canonical operator data.",
-    "lastRunAt": null,
-    "records": 0,
-    "issues": 0,
+    "lastRunAt": "2026-03-11T13:05:33.139Z",
+    "records": 24,
+    "issues": 24,
     "brandIds": [
       "american-express"
     ]
@@ -95,9 +95,9 @@
     "freshnessDays": 14,
     "url": "https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/",
     "rightsNote": "Official public Capital One page; retain URL provenance for every imported location.",
-    "lastRunAt": null,
-    "records": 0,
-    "issues": 0,
+    "lastRunAt": "2026-03-11T13:05:33.139Z",
+    "records": 6,
+    "issues": 6,
     "brandIds": [
       "capital-one"
     ]
@@ -167,6 +167,76 @@
     ]
   },
   {
+    "id": "mastercard-airport-lounge-programs",
+    "publisher": "Mastercard Airport Lounge Programs",
+    "coverage": "Mastercard developer airport lounge program inventory and access evidence",
+    "adapter": "licensed_api",
+    "status": "candidate",
+    "freshnessDays": 30,
+    "url": "https://developer.mastercard.com/product/mastercard-airport-lounge-programs",
+    "rightsNote": "Official Mastercard developer product; use only with approved API credentials and contract terms.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "loungekey",
+    "publisher": "LoungeKey",
+    "coverage": "LoungeKey airport lounge access network evidence",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 30,
+    "url": "https://www.loungekey.com/",
+    "rightsNote": "Official public LoungeKey surface; licensed or partner access is required for complete record intake.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "collinson-international",
+    "publisher": "Collinson International",
+    "coverage": "Collinson lounge network and product portfolio evidence",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 30,
+    "url": "https://www.collinsongroup.com/",
+    "rightsNote": "Official Collinson corporate surface; use as network evidence and licensing path, not a raw scrape target.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "loungereview-api",
+    "publisher": "LoungeReview API",
+    "coverage": "Global airport lounge inventory, access rules, amenities, hours, coordinates, and provider metadata",
+    "adapter": "licensed_api",
+    "status": "candidate",
+    "freshnessDays": 7,
+    "url": "https://loungereview.com/api/",
+    "rightsNote": "Licensed API provider; no intake without approved commercial terms and key management.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "holiday-extras-api",
+    "publisher": "Holiday Extras API",
+    "coverage": "Airport lounge booking and product inventory evidence",
+    "adapter": "licensed_api",
+    "status": "candidate",
+    "freshnessDays": 7,
+    "url": "https://docs.holidayextras.co.uk/",
+    "rightsNote": "Official API documentation; use only under approved commercial/API terms.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
     "id": "united",
     "publisher": "United Club and Polaris Lounges",
     "coverage": "United-operated lounge locations",
@@ -223,12 +293,54 @@
     "freshnessDays": 14,
     "url": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
     "rightsNote": "Official public airline location page.",
-    "lastRunAt": null,
-    "records": 0,
-    "issues": 0,
+    "lastRunAt": "2026-03-11T13:05:33.139Z",
+    "records": 14,
+    "issues": 14,
     "brandIds": [
       "air-canada"
     ]
+  },
+  {
+    "id": "star-alliance",
+    "publisher": "Star Alliance Lounge Finder",
+    "coverage": "Star Alliance member and contract lounge finder evidence",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 14,
+    "url": "https://www.staralliance.com/en/lounge-finder",
+    "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "oneworld",
+    "publisher": "oneworld Airport Lounges",
+    "coverage": "oneworld member and contract lounge finder evidence",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 14,
+    "url": "https://www.oneworld.com/airport-lounges",
+    "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review.",
+    "lastRunAt": "2026-03-11T13:05:33.139Z",
+    "records": 778,
+    "issues": 80,
+    "brandIds": []
+  },
+  {
+    "id": "skyteam",
+    "publisher": "SkyTeam Lounges",
+    "coverage": "SkyTeam member and contract lounge finder evidence",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 14,
+    "url": "https://www.skyteam.com/en/about/lounges/",
+    "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
   },
   {
     "id": "plaza-premium",
@@ -255,9 +367,9 @@
     "freshnessDays": 14,
     "url": "https://escapelounges.com/",
     "rightsNote": "Official public operator page.",
-    "lastRunAt": null,
-    "records": 0,
-    "issues": 0,
+    "lastRunAt": "2026-03-11T13:05:33.139Z",
+    "records": 13,
+    "issues": 13,
     "brandIds": [
       "escape-lounges"
     ]
@@ -271,12 +383,82 @@
     "freshnessDays": 14,
     "url": "https://www.airportdimensions.com/locations",
     "rightsNote": "Official public operator page.",
-    "lastRunAt": null,
-    "records": 0,
-    "issues": 0,
+    "lastRunAt": "2026-03-11T13:05:33.139Z",
+    "records": 47,
+    "issues": 47,
     "brandIds": [
       "airport-dimensions"
     ]
+  },
+  {
+    "id": "aspire-lounges",
+    "publisher": "Aspire Lounges",
+    "coverage": "Aspire airport lounge operator locations",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 14,
+    "url": "https://www.executivelounges.com/airport-lounges",
+    "rightsNote": "Official Aspire location surface; retain URL provenance for every imported field.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "marhaba",
+    "publisher": "Marhaba Airport Lounges",
+    "coverage": "Marhaba airport lounge operator locations",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 14,
+    "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
+    "rightsNote": "Official Marhaba location surface; retain URL provenance for every imported field.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "primeclass",
+    "publisher": "Primeclass Lounge",
+    "coverage": "Primeclass airport lounge operator locations",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 14,
+    "url": "https://www.primeclass.com.tr/en/lounge",
+    "rightsNote": "Official Primeclass location surface; retain URL provenance for every imported field.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "no1-lounges",
+    "publisher": "No1 Lounges",
+    "coverage": "No1 Lounges operated airport lounge locations",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 14,
+    "url": "https://no1lounges.com/airport-lounges/",
+    "rightsNote": "Official No1 Lounges location surface; retain URL provenance for every imported field.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "be-relax",
+    "publisher": "Be Relax",
+    "coverage": "Be Relax airport spa and lounge locations",
+    "adapter": "official_page",
+    "status": "candidate",
+    "freshnessDays": 14,
+    "url": "https://www.berelax.com/locations/",
+    "rightsNote": "Official Be Relax location surface; classify spa-only records separately from lounge access.",
+    "lastRunAt": null,
+    "records": 0,
+    "issues": 0,
+    "brandIds": []
   },
   {
     "id": "ourairports",
@@ -289,6 +471,20 @@
     "rightsNote": "Open airport reference data; use for normalization only.",
     "lastRunAt": "2026-03-11T13:05:33.139Z",
     "records": 752,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "openstreetmap",
+    "publisher": "OpenStreetMap",
+    "coverage": "Open venue and amenity enrichment for airport lounge candidate discovery",
+    "adapter": "open_data",
+    "status": "candidate",
+    "freshnessDays": 30,
+    "url": "https://www.openstreetmap.org/",
+    "rightsNote": "Open data enrichment only; comply with ODbL attribution and do not treat as canonical lounge inventory.",
+    "lastRunAt": null,
+    "records": 0,
     "issues": 0,
     "brandIds": []
   },

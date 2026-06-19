@@ -35,10 +35,9 @@ test('search_lounges rejects unsupported filters', () => {
 });
 
 test('search_lounges supports provider, program, and review-status filters', () => {
-  const meta = getCatalogMeta();
-  const provider = meta.filters.providers[0];
-  const program = meta.filters.programs[0];
-  const status = meta.filters.reviewStatuses[0];
+  const provider = 'Chase Sapphire Lounge by The Club';
+  const program = 'Chase Sapphire Reserve';
+  const status = 'review';
 
   const result = searchLounges({
     providers: [provider],
@@ -53,6 +52,29 @@ test('search_lounges supports provider, program, and review-status filters', () 
     assert.ok(lounge.programs.includes(program));
     assert.equal(lounge.quality.reviewStatus, status);
   }
+});
+
+test('search_lounges exposes non-Priority Pass intake candidates for review', () => {
+  const result = searchLounges({
+    programs: ['Chase Sapphire Reserve'],
+    reviewStatus: 'review',
+    limit: 10,
+  });
+
+  assert.ok(result.results.length > 0);
+  for (const lounge of result.results) {
+    assert.ok(lounge.id.startsWith('candidate-chase-sapphire-'));
+    assert.ok(lounge.programs.includes('Chase Sapphire Reserve'));
+    assert.equal(lounge.quality.reviewStatus, 'review');
+  }
+});
+
+test('catalog metadata counts non-Priority Pass candidate intake', () => {
+  const meta = getCatalogMeta();
+  assert.ok(meta.stats.totalCatalogRecords > meta.stats.totalFeatures);
+  assert.ok(meta.stats.nonPriorityRecords > 0);
+  assert.ok(meta.filters.programs.includes('American Express Platinum'));
+  assert.ok(meta.filters.programs.includes('Capital One Venture X'));
 });
 
 test('get_lounge returns a known lounge by stable id', () => {

@@ -47,10 +47,21 @@
     "which_records_need_review"
   ],
   "sourcePriorities": [
+    "loungereview-api",
     "priority-pass",
+    "loungekey",
+    "collinson-international",
     "amex-global-lounge-collection",
     "chase-sapphire",
     "capital-one",
+    "citi-travel",
+    "visa-airport-companion",
+    "mastercard-airport-lounge-programs",
+    "mastercard-travel-pass",
+    "dragonpass",
+    "star-alliance",
+    "oneworld",
+    "skyteam",
     "united",
     "delta",
     "american",
@@ -58,7 +69,15 @@
     "plaza-premium",
     "escape-lounges",
     "airport-dimensions",
-    "ourairports"
+    "aspire-lounges",
+    "marhaba",
+    "primeclass",
+    "no1-lounges",
+    "be-relax",
+    "holiday-extras-api",
+    "ourairports",
+    "openstreetmap",
+    "nominatim"
   ],
   "views": {
     "map": [
