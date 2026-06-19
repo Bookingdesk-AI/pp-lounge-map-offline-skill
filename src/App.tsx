@@ -1402,6 +1402,7 @@ function MobileReviewView({
   const readyEvidence = cloudflareEvidence
     ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks}`
     : 'n/a';
+  const cloudflareSources = cloudflareEvidence?.sources ?? [];
 
   return (
     <div className="mobile-review-view">
@@ -1445,6 +1446,29 @@ function MobileReviewView({
               <span key={label} className="filter-chip">
                 {label}
               </span>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="mobile-review-panel">
+        <div className="section-title-row">
+          <h2>CF sources</h2>
+          <span className="compare-count">{cloudflareSources.length}</span>
+        </div>
+        {cloudflareSources.length === 0 ? (
+          <div className="compare-empty">No CF sources</div>
+        ) : (
+          <div className="review-list">
+            {cloudflareSources.map((source) => (
+              <div key={source.sourceId} className="review-row">
+                <span className="review-row-head">
+                  <strong>{source.publisher}</strong>
+                  <span className="code">{source.httpStatus ?? 'n/a'}</span>
+                </span>
+                <span>{source.sourceId}</span>
+                <span>{source.cloudflareSnapshot ? source.status : 'missing'}</span>
+              </div>
             ))}
           </div>
         )}
