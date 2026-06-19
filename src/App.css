@@ -1475,6 +1475,20 @@
     padding-inline: 0.35rem;
   }
 
+  .mobile-sheet .ghost-link,
+  .mobile-sheet .compare-toggle {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding-block: 0.42rem;
+  }
+
+  .mobile-sheet .result-card-actions .compare-toggle {
+    min-height: 44px;
+    padding-inline: 0.58rem;
+  }
+
   .mobile-sheet-body {
     min-height: 0;
     overflow: auto;
