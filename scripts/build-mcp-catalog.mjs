@@ -128,7 +128,7 @@ async function main() {
 
   const sourceFile = path.basename(clean(meta.sourceFile));
   const catalog = {
-    generatedAt: clean(meta.generatedAt),
+    generatedAt: clean(canonicalCatalog.generatedAt) || clean(meta.generatedAt),
     sourceFile,
     schema: canonicalCatalog.schema,
     stats: canonicalCatalog.stats ?? meta.stats,

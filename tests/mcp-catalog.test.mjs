@@ -1,13 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 
 import { getAllLounges, getCatalogMeta, getLoungeById, searchLounges } from '../mcp/catalog.js';
 
+const publicCatalog = JSON.parse(
+  fs.readFileSync(new URL('../public/data/lounge-guru-catalog.json', import.meta.url), 'utf8'),
+);
+
 test('catalog metadata is present and sanitized', () => {
   const meta = getCatalogMeta();
-  assert.ok(meta.generatedAt);
+  assert.equal(meta.generatedAt, publicCatalog.generatedAt);
   assert.ok(meta.sourceFile.endsWith('.xlsx'));
   assert.ok(meta.stats.totalFeatures > 0);
+  assert.equal(meta.stats.totalCatalogRecords, getAllLounges().length);
   assert.ok(meta.schema.version);
   assert.ok(meta.stats.totalSources > 0);
   assert.ok(meta.quality.averageCompleteness > 0);

@@ -136,7 +136,11 @@ export function createCatalogMcpServer({
 
       return {
         structuredContent: meta,
-        content: textContent(`Catalog generated at ${meta.generatedAt} with ${meta.stats.totalFeatures} public records.`),
+        content: textContent(
+          `Catalog generated at ${meta.generatedAt} with ${
+            meta.stats.totalCatalogRecords ?? meta.stats.totalFeatures
+          } public records.`,
+        ),
       };
     },
   );

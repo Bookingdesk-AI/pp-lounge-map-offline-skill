@@ -307,7 +307,7 @@ export function createHealthResponse() {
       service: ONLINE_SERVER_INFO.name,
       version: ONLINE_SERVER_INFO.version,
       generatedAt: meta.generatedAt,
-      totalFeatures: meta.stats.totalFeatures,
+      totalFeatures: meta.stats.totalCatalogRecords ?? meta.stats.totalFeatures,
     }),
     {
       headers: {
