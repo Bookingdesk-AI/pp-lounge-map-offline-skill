@@ -28,7 +28,7 @@
       "cloudflareSnapshot": false,
       "action": "credential_review",
       "status": "blocked",
-      "next": "Approve terms, credentials, and key storage before intake.",
+      "next": "Credentials",
       "url": "https://loungereview.com/api/",
       "rightsNote": "Licensed API provider; no intake without approved commercial terms and key management."
     },
@@ -44,7 +44,7 @@
       "cloudflareSnapshot": false,
       "action": "credential_review",
       "status": "blocked",
-      "next": "Approve terms, credentials, and key storage before intake.",
+      "next": "Credentials",
       "url": "https://docs.holidayextras.co.uk/",
       "rightsNote": "Official API documentation; use only under approved commercial/API terms."
     },
@@ -60,7 +60,7 @@
       "cloudflareSnapshot": false,
       "action": "fetch_repair",
       "status": "ready",
-      "next": "Repair the Cloudflare fetch path and rerun the snapshot.",
+      "next": "Fetch",
       "url": "https://www.visaairportcompanion.com/",
       "rightsNote": "Official public Visa program page; import only public program and eligibility evidence."
     },
@@ -76,7 +76,7 @@
       "cloudflareSnapshot": false,
       "action": "credential_review",
       "status": "blocked",
-      "next": "Approve terms, credentials, and key storage before intake.",
+      "next": "Credentials",
       "url": "https://developer.mastercard.com/product/mastercard-airport-lounge-programs",
       "rightsNote": "Official Mastercard developer product; use only with approved API credentials and contract terms."
     },
@@ -92,7 +92,7 @@
       "cloudflareSnapshot": true,
       "action": "structured_adapter",
       "status": "ready",
-      "next": "Build a source-specific parser from the Cloudflare snapshot.",
+      "next": "Adapter",
       "url": "https://mastercardtravelpass.dragonpass.com/",
       "rightsNote": "Official public Mastercard Travel Pass page; retain URL provenance for every imported field."
     },
@@ -108,7 +108,7 @@
       "cloudflareSnapshot": true,
       "action": "structured_adapter",
       "status": "ready",
-      "next": "Build a source-specific parser from the Cloudflare snapshot.",
+      "next": "Adapter",
       "url": "https://en.dragonpass.com.cn/",
       "rightsNote": "Official public DragonPass page; import only public program and location evidence."
     }

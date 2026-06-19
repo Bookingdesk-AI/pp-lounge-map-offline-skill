@@ -11,7 +11,7 @@ function actionForSource({ registrySource, runSource }) {
     return {
       action: 'credential_review',
       status: 'blocked',
-      next: 'Approve terms, credentials, and key storage before intake.',
+      next: 'Credentials',
     };
   }
 
@@ -19,7 +19,7 @@ function actionForSource({ registrySource, runSource }) {
     return {
       action: 'cloudflare_snapshot',
       status: 'ready',
-      next: 'Run source snapshot from the Cloudflare-approved runner.',
+      next: 'Snapshot',
     };
   }
 
@@ -27,7 +27,7 @@ function actionForSource({ registrySource, runSource }) {
     return {
       action: 'review_import',
       status: 'ready',
-      next: 'Normalize candidates, dedupe, then review for approval.',
+      next: 'Review',
     };
   }
 
@@ -35,7 +35,7 @@ function actionForSource({ registrySource, runSource }) {
     return {
       action: 'structured_adapter',
       status: 'ready',
-      next: 'Build a source-specific parser from the Cloudflare snapshot.',
+      next: 'Adapter',
     };
   }
 
@@ -43,14 +43,14 @@ function actionForSource({ registrySource, runSource }) {
     return {
       action: 'rights_review',
       status: 'blocked',
-      next: 'Resolve robots, rights, or API terms before intake.',
+      next: 'Rights',
     };
   }
 
   return {
     action: 'fetch_repair',
     status: 'ready',
-    next: 'Repair the Cloudflare fetch path and rerun the snapshot.',
+    next: 'Fetch',
   };
 }
 
