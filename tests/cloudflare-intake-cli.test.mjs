@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import fsp from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 
 import {
   buildProbeBatchUrl,
@@ -19,6 +22,8 @@ test('Cloudflare intake CLI parses bounded source IDs', () => {
   ]);
   assert.deepEqual(parseArgs(['--dry-run', '--source-ids=dragonpass']).sourceIds, ['dragonpass']);
   assert.equal(parseArgs(['--report']).mode, 'report');
+  assert.equal(parseArgs(['--report', '--output=.cache/report.json']).output, '.cache/report.json');
+  assert.throws(() => parseArgs(['--output=.cache/report.json']), /only supported with --report/);
 });
 
 test('Cloudflare intake CLI rejects non-HTTPS endpoints', () => {
@@ -103,29 +108,35 @@ test('Cloudflare intake CLI posts only to the Worker batch endpoint', async () =
 test('Cloudflare intake CLI can request D1-derived report endpoint', async () => {
   const calls = [];
   const lines = [];
+  const tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'lounge-guru-report-'));
+  const outputPath = path.join(tempDir, 'cloudflare-source-intake-report.json');
+  const reportBody = {
+    ok: true,
+    stats: {
+      totalSources: 3,
+      fetched: 3,
+      cloudflareSourceRuns: 4,
+    },
+    terminalImpact: {
+      fullCatalogIntakeReport: false,
+      coverageGateStillRequiresFullCloudflareReport: true,
+    },
+    sources: [
+      {
+        sourceId: 'dragonpass',
+        url: 'https://www.dragonpass.com/',
+        fetchAttempts: [],
+      },
+    ],
+  };
   const summary = await runCloudflareSourceIntake({
-    args: ['--report'],
+    args: ['--report', `--output=${outputPath}`],
     env: {
       LOUNGE_GURU_INTAKE_TOKEN: 'secret-token',
     },
     fetchImpl: async (url, init) => {
       calls.push({ url: String(url), init });
-      return new Response(
-        JSON.stringify({
-          ok: true,
-          stats: {
-            totalSources: 3,
-            fetched: 3,
-            cloudflareSourceRuns: 4,
-          },
-          terminalImpact: {
-            fullCatalogIntakeReport: false,
-            coverageGateStillRequiresFullCloudflareReport: true,
-          },
-          sources: [],
-        }),
-        { status: 200, headers: { 'content-type': 'application/json' } },
-      );
+      return new Response(JSON.stringify(reportBody), { status: 200, headers: { 'content-type': 'application/json' } });
     },
     log: (line) => lines.push(line),
   });
@@ -138,7 +149,24 @@ test('Cloudflare intake CLI can request D1-derived report endpoint', async () =>
   assert.equal(summary.cloudflareSourceRuns, 4);
   assert.equal(summary.fullCatalogIntakeReport, false);
   assert.equal(summary.coverageGateStillRequiresFullCloudflareReport, true);
+  assert.equal(summary.outputPath, outputPath);
+  assert.deepEqual(JSON.parse(await fsp.readFile(outputPath, 'utf8')), reportBody);
   assert.doesNotMatch(lines.join('\n'), /secret-token/);
+  await fsp.rm(tempDir, { recursive: true, force: true });
+});
+
+test('Cloudflare intake CLI dry-run report does not write output', async () => {
+  const tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'lounge-guru-report-'));
+  const outputPath = path.join(tempDir, 'dry-run.json');
+
+  await runCloudflareSourceIntake({
+    args: ['--dry-run', '--report', `--output=${outputPath}`],
+    env: {},
+    log: () => {},
+  });
+
+  await assert.rejects(fsp.access(outputPath), /ENOENT/);
+  await fsp.rm(tempDir, { recursive: true, force: true });
 });
 
 test('Cloudflare intake CLI requires token for real runs without leaking token', async () => {
@@ -180,6 +208,10 @@ test('package exposes Cloudflare-only intake command before evidence export', ()
   assert.equal(
     packageJson.scripts['intake:cloudflare:report'],
     'node scripts/run-cloudflare-source-intake.mjs --report',
+  );
+  assert.equal(
+    packageJson.scripts['intake:cloudflare:report:export'],
+    'node scripts/run-cloudflare-source-intake.mjs --report --output=public/data/cloudflare-source-intake-report.json',
   );
   assert.equal(packageJson.scripts['scrape:sources'], 'node scripts/scrape-source-snapshots.mjs');
 });

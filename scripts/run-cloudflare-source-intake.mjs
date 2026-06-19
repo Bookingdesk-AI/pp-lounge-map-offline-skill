@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const DEFAULT_BASE_URL = 'https://loungeguru.desk.travel';
@@ -14,6 +16,7 @@ export function parseArgs(args, env = process.env) {
   const options = {
     baseUrl: env.LOUNGE_GURU_INTAKE_BASE_URL || DEFAULT_BASE_URL,
     mode: env.LOUNGE_GURU_INTAKE_MODE || 'batch',
+    output: env.LOUNGE_GURU_INTAKE_OUTPUT || '',
     sourceIds: parseSourceIds(env.LOUNGE_GURU_INTAKE_SOURCE_IDS),
     dryRun: env.LOUNGE_GURU_INTAKE_DRY_RUN === '1',
     timeoutMs: Number(env.LOUNGE_GURU_INTAKE_TIMEOUT_MS || DEFAULT_TIMEOUT_MS),
@@ -26,6 +29,10 @@ export function parseArgs(args, env = process.env) {
     }
     if (arg === '--report') {
       options.mode = 'report';
+      continue;
+    }
+    if (arg.startsWith('--output=')) {
+      options.output = arg.slice('--output='.length);
       continue;
     }
     if (arg.startsWith('--base-url=')) {
@@ -48,6 +55,9 @@ export function parseArgs(args, env = process.env) {
   }
   if (!['batch', 'report'].includes(options.mode)) {
     throw new Error('LOUNGE_GURU_INTAKE_MODE must be batch or report');
+  }
+  if (options.output && options.mode !== 'report') {
+    throw new Error('--output is only supported with --report');
   }
 
   return options;
@@ -103,6 +113,13 @@ function parseJson(text) {
   }
 }
 
+async function writeJsonOutput(outputPath, body) {
+  const resolvedPath = path.resolve(outputPath);
+  await fs.mkdir(path.dirname(resolvedPath), { recursive: true });
+  await fs.writeFile(resolvedPath, `${JSON.stringify(body, null, 2)}\n`, 'utf8');
+  return resolvedPath;
+}
+
 export async function runCloudflareSourceIntake({
   args = process.argv.slice(2),
   env = process.env,
@@ -152,9 +169,11 @@ export async function runCloudflareSourceIntake({
     }
 
     if (options.mode === 'report') {
+      const outputPath = options.output ? await writeJsonOutput(options.output, body) : '';
       const summary = {
         endpoint,
         ...compactReport(body),
+        ...(outputPath ? { outputPath } : {}),
       };
       log(JSON.stringify(summary, null, 2));
       return summary;

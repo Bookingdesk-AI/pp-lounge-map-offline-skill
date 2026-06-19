@@ -111,6 +111,18 @@ curl 'https://loungeguru.desk.travel/admin/source-intake/status' \
   -H 'x-lounge-guru-intake-token: <secret>'
 ```
 
+Review the D1-derived source report:
+
+```bash
+npm run intake:cloudflare:report
+```
+
+Export the report for review after an authorized Worker run:
+
+```bash
+npm run intake:cloudflare:report:export
+```
+
 Export public evidence from remote D1 without fetching source pages locally:
 
 ```bash
