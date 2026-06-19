@@ -8,7 +8,8 @@
     "approved_records_below_target",
     "approved_ratio_below_target",
     "source_family_gaps_present",
-    "review_records_present"
+    "review_records_present",
+    "source_intake_runtime_not_cloudflare"
   ],
   "targets": {
     "minApprovedRecords": 3800,
@@ -25,7 +26,9 @@
     "sourceFamilyCoverageRatio": 0.75,
     "unknownAirportRecords": 0,
     "recordsWithoutSources": 0,
-    "recordsWithoutQuality": 0
+    "recordsWithoutQuality": 0,
+    "sourceIntakeRuntime": "legacy-local-before-cloudflare-guardrail",
+    "cloudflareSourceRuntimePassed": false
   },
   "deltas": {
     "approvedRecordsRemaining": 2005,
@@ -34,7 +37,8 @@
     "missingSourceFamilies": [
       "licensed-global-baseline",
       "card-network-programs"
-    ]
+    ],
+    "sourceIntakeRuntimeRequired": "cloudflare"
   },
   "sourceFamilies": [
     {

@@ -36,7 +36,19 @@ function validateRequiredTables(goal, migrationSql) {
   }));
 }
 
-export function createCoverageGapReport({ goal, catalog, sourceRegistry, migrationSql }) {
+function sourceIntakeRuntime(sourceIntakeReport) {
+  return sourceIntakeReport?.policy?.execution?.runtime ?? 'missing';
+}
+
+function hasRequiredCloudflareSourceRuntime(goal, sourceIntakeReport) {
+  if (!goal.terminalGoal.requiresCloudflareSourceRuntime) {
+    return true;
+  }
+
+  return sourceIntakeRuntime(sourceIntakeReport) === 'cloudflare';
+}
+
+export function createCoverageGapReport({ goal, catalog, sourceRegistry, migrationSql, sourceIntakeReport = null }) {
   const records = catalog.records ?? [];
   const counts = sourceRecordCounts(catalog);
   const sourceStatus = sourceStatuses(sourceRegistry, counts);
@@ -50,6 +62,8 @@ export function createCoverageGapReport({ goal, catalog, sourceRegistry, migrati
     return !airport.iata || !airport.name || !Number.isFinite(Number(airport.coordinates?.lat)) || !Number.isFinite(Number(airport.coordinates?.lon));
   }).length;
   const tableStatuses = validateRequiredTables(goal, migrationSql);
+  const sourceRuntime = sourceIntakeRuntime(sourceIntakeReport);
+  const cloudflareSourceRuntimePassed = hasRequiredCloudflareSourceRuntime(goal, sourceIntakeReport);
   const requiredFamilies = goal.sourceFamilies.filter((family) => family.requiredForTerminal);
   const sourceFamilies = requiredFamilies.map((family) => {
     const members = family.members ?? [family.id];
@@ -95,6 +109,9 @@ export function createCoverageGapReport({ goal, catalog, sourceRegistry, migrati
   if (tableStatuses.some((table) => !table.present)) {
     blockers.push('cloudflare_d1_schema_missing_tables');
   }
+  if (!cloudflareSourceRuntimePassed) {
+    blockers.push('source_intake_runtime_not_cloudflare');
+  }
 
   return {
     generatedAt: catalog.generatedAt,
@@ -121,12 +138,15 @@ export function createCoverageGapReport({ goal, catalog, sourceRegistry, migrati
       unknownAirportRecords,
       recordsWithoutSources,
       recordsWithoutQuality,
+      sourceIntakeRuntime: sourceRuntime,
+      cloudflareSourceRuntimePassed,
     },
     deltas: {
       approvedRecordsRemaining: approvedRecordRemaining,
       approvalsNeededForCurrentCatalogRatio: approvalRatioRemaining,
       reviewRecordsToResolve: Math.max(0, reviewRecords - goal.terminalGoal.maxReviewRecords),
       missingSourceFamilies: sourceFamilies.filter((family) => !family.present).map((family) => family.id),
+      sourceIntakeRuntimeRequired: goal.terminalGoal.requiresCloudflareSourceRuntime ? 'cloudflare' : null,
     },
     sourceFamilies,
     tableStatuses,

@@ -66,6 +66,7 @@ async function main() {
     catalog,
     sourceRegistry: catalog.sources,
     migrationSql,
+    sourceIntakeReport: intakeReport,
   });
   const intakePlan = createCloudflareSourceIntakePlan({
     coverageGap: coverageGapReport,

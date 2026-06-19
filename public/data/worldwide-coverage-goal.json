@@ -27,7 +27,8 @@
     "maxRecordsWithoutSources": 0,
     "maxRecordsWithoutQuality": 0,
     "maxReviewRecords": 0,
-    "requiresCloudflareSchema": true
+    "requiresCloudflareSchema": true,
+    "requiresCloudflareSourceRuntime": true
   },
   "sourceFamilies": [
     {

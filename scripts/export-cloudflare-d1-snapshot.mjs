@@ -38,8 +38,14 @@ async function readJson(filePath) {
   return JSON.parse(await fs.readFile(filePath, 'utf8'));
 }
 
-function summarize(catalog, goal, migrationSql) {
-  const gapReport = createCoverageGapReport({ goal, catalog, sourceRegistry: catalog.sources ?? [], migrationSql });
+function summarize(catalog, goal, migrationSql, sourceReport) {
+  const gapReport = createCoverageGapReport({
+    goal,
+    catalog,
+    sourceRegistry: catalog.sources ?? [],
+    migrationSql,
+    sourceIntakeReport: sourceReport,
+  });
   const records = catalog.records ?? [];
   const approvedRecords = records.filter((record) => record.quality?.reviewStatus === 'approved').length;
   const reviewRecords = records.length - approvedRecords;
@@ -83,6 +89,9 @@ function summarize(catalog, goal, migrationSql) {
   if (recordsWithoutQuality > goal.terminalGoal.maxRecordsWithoutQuality) {
     blockers.push('records_without_quality_present');
   }
+  if (goal.terminalGoal.requiresCloudflareSourceRuntime && gapReport.current.sourceIntakeRuntime !== 'cloudflare') {
+    blockers.push('source_intake_runtime_not_cloudflare');
+  }
 
   return {
     totalRecords: records.length,
@@ -95,6 +104,8 @@ function summarize(catalog, goal, migrationSql) {
     unknownAirportRecords,
     recordsWithoutSources,
     recordsWithoutQuality,
+    sourceIntakeRuntime: gapReport.current.sourceIntakeRuntime,
+    cloudflareSourceRuntimePassed: gapReport.current.cloudflareSourceRuntimePassed,
     sourceFamilies,
     missingSourceFamilies: gapReport.deltas.missingSourceFamilies,
     gapReport,
@@ -213,7 +224,7 @@ async function main() {
   ]);
   const catalogHash = sha256(JSON.stringify(catalog));
   const runId = `catalog-${catalogHash.slice(0, 16)}`;
-  const summary = summarize(catalog, goal, migrationSql);
+  const summary = summarize(catalog, goal, migrationSql, sourceReport);
   const statements = [
     upsertCoverageGoal(goal),
     'DELETE FROM coverage_validation_runs;',

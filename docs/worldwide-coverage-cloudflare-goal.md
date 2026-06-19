@@ -39,6 +39,7 @@ Cloudflare intake plan: `public/data/cloudflare-source-intake-plan.json`.
 - Records without source provenance: `0`
 - Records without quality state: `0`
 - D1 schema tables present
+- Source intake runtime: `cloudflare`
 
 ## Required Source Families
 
@@ -82,6 +83,8 @@ npx wrangler d1 execute lounge-guru-catalog --remote --command="SELECT name FROM
 ```bash
 LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare npm run scrape:sources
 ```
+
+Terminal coverage remains blocked while `public/data/source-intake-report.json` reports a legacy local runtime.
 
 After intake, publish only through the Cloudflare D1 snapshot path:
 

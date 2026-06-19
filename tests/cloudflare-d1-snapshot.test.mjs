@@ -18,8 +18,11 @@ test('D1 snapshot exporter writes a catalog import SQL file', () => {
   assert.equal(summary.totalRecords, catalog.records.length);
   assert.equal(summary.terminalPassed, false);
   assert.ok(summary.blockers.includes('approved_records_below_3800'));
+  assert.ok(summary.blockers.includes('source_intake_runtime_not_cloudflare'));
   assert.match(sql, /INSERT OR REPLACE INTO coverage_goals/);
   assert.match(sql, /licensed-global-baseline/);
+  assert.match(sql, /legacy-local-before-cloudflare-guardrail/);
+  assert.match(sql, /source_intake_runtime_not_cloudflare/);
   assert.match(sql, /INSERT INTO catalog_runs/);
   assert.match(sql, /INSERT INTO lounge_records/);
   assert.match(sql, /INSERT INTO lounge_sources/);

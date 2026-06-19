@@ -103,8 +103,22 @@ function validateCoverage(goal, gap) {
   issue(goal?.id === 'lounge-guru-worldwide-coverage', 'worldwide-coverage-goal.json: goal id mismatch');
   issue(goal?.cloudflareDatabase?.product === 'd1', 'worldwide-coverage-goal.json: database product mismatch');
   issue(goal?.cloudflareDatabase?.databaseName === 'lounge-guru-catalog', 'worldwide-coverage-goal.json: D1 name mismatch');
+  issue(goal?.terminalGoal?.requiresCloudflareSourceRuntime === true, 'worldwide-coverage-goal.json: Cloudflare source runtime not required');
   issue(gap?.goalId === goal?.id, 'coverage-gap-report.json: goal id mismatch');
   issue(gap?.terminalPassed === false, 'coverage-gap-report.json: terminalPassed should remain false until proven complete');
+  issue(
+    Boolean(gap?.current?.sourceIntakeRuntime),
+    'coverage-gap-report.json: source intake runtime missing',
+  );
+  issue(
+    gap?.current?.cloudflareSourceRuntimePassed === (gap?.current?.sourceIntakeRuntime === 'cloudflare'),
+    'coverage-gap-report.json: Cloudflare source runtime status mismatch',
+  );
+  issue(
+    gap?.current?.sourceIntakeRuntime === 'cloudflare' ||
+      gap?.blockers?.includes('source_intake_runtime_not_cloudflare'),
+    'coverage-gap-report.json: non-Cloudflare source runtime not blocked',
+  );
   issue(
     Array.isArray(gap?.deltas?.missingSourceFamilies) && gap.deltas.missingSourceFamilies.length > 0,
     'coverage-gap-report.json: missing source families not reported',

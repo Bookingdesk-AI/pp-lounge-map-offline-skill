@@ -18,6 +18,7 @@ test('worldwide coverage goal defines the Cloudflare D1 target', () => {
   assert.equal(goal.cloudflareDatabase.databaseId, '7ce3bfa1-3a17-4554-a526-c3703ca3b902');
   assert.equal(goal.cloudflareDatabase.binding, 'LOUNGE_GURU_DB');
   assert.equal(goal.terminalGoal.requiresCloudflareSchema, true);
+  assert.equal(goal.terminalGoal.requiresCloudflareSourceRuntime, true);
 });
 
 test('worldwide coverage goal requires real global source lanes', () => {
@@ -77,6 +78,9 @@ test('coverage validator reports current progress without pretending terminal co
   assert.equal(summary.terminalPassed, false);
   assert.ok(summary.blockers.includes('approved_records_below_3800'));
   assert.ok(summary.blockers.includes('review_records_present'));
+  assert.equal(summary.sourceIntakeRuntime, coverageGap.current.sourceIntakeRuntime);
+  assert.equal(summary.cloudflareSourceRuntimePassed, false);
+  assert.ok(summary.blockers.includes('source_intake_runtime_not_cloudflare'));
   assert.deepEqual(summary.missingSourceFamilies, coverageGap.deltas.missingSourceFamilies);
   assert.equal(summary.gapReport.catalogHash, coverageGap.catalogHash);
 });
@@ -85,6 +89,10 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
   assert.equal(coverageGap.goalId, goal.id);
   assert.equal(coverageGap.terminalPassed, false);
   assert.ok(coverageGap.blockers.includes('source_family_gaps_present'));
+  assert.ok(coverageGap.blockers.includes('source_intake_runtime_not_cloudflare'));
+  assert.equal(coverageGap.current.sourceIntakeRuntime, 'legacy-local-before-cloudflare-guardrail');
+  assert.equal(coverageGap.current.cloudflareSourceRuntimePassed, false);
+  assert.equal(coverageGap.deltas.sourceIntakeRuntimeRequired, 'cloudflare');
   assert.ok(coverageGap.deltas.approvedRecordsRemaining > 0);
   assert.ok(coverageGap.deltas.reviewRecordsToResolve > 0);
   assert.deepEqual([...coverageGap.deltas.missingSourceFamilies].sort(), [
