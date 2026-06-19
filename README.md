@@ -19,6 +19,7 @@ See `docs/worldwide-coverage-cloudflare-goal.md` for the Cloudflare D1 worldwide
 - `npm run deploy` runs release prep, then deploys the Worker and the site.
 - `npm run validate:publish` runs the public bundle safety audit.
 - `npm run validate:publish:offline` runs the offline bundle safety audit.
+- `npm run validate:json` validates public data JSON and GeoJSON contracts.
 - `npm run poke:validate` validates the hosted Poke recipe draft.
 - `npm run poke:bootstrap` prints the exact Poke MCP bootstrap command and canonical endpoint.
 - `npm run skill:validate` validates the skill bundle structure.

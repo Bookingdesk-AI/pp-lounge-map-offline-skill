@@ -8,6 +8,7 @@
    - `LOUNGE_GURU_SOURCE_OBJECT`
    - Legacy fallbacks: `PP_LOUNGE_MAP_SOURCE_BUCKET`, `PP_LOUNGE_MAP_SOURCE_OBJECT`
 3. Run `npm run release:prepare`.
+4. Run `npm run validate:json`.
 
 This step downloads the workbook into the repo-local `.cache/` directory, rebuilds the public data artifacts, runs tests and publish validation, and builds `dist/`.
 

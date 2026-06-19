@@ -23,6 +23,7 @@ Progress check:
 
 ```bash
 npm run validate:coverage
+npm run validate:json
 ```
 
 Gap report: `public/data/coverage-gap-report.json`.

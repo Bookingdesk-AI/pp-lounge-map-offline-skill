@@ -20,6 +20,7 @@
     "validate:publish": "node scripts/validate-publish-ready.mjs",
     "validate:publish:offline": "node scripts/validate-publish-ready-offline.mjs",
     "validate:coverage": "node scripts/validate-worldwide-coverage-goal.mjs",
+    "validate:json": "node scripts/validate-public-json.mjs",
     "goal:coverage": "node scripts/validate-worldwide-coverage-goal.mjs --strict",
     "db:catalog:sql": "node scripts/export-cloudflare-d1-snapshot.mjs",
     "db:catalog:push": "npm run db:catalog:sql && wrangler d1 execute lounge-guru-catalog --remote --config wrangler.mcp.toml --file .cache/d1/lounge-guru-current-snapshot.sql",
