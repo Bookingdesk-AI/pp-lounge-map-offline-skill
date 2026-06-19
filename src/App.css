@@ -1476,7 +1476,8 @@
   }
 
   .mobile-sheet .ghost-link,
-  .mobile-sheet .compare-toggle {
+  .mobile-sheet .compare-toggle,
+  .mobile-sheet .results-load-more {
     display: inline-flex;
     min-height: 44px;
     align-items: center;
