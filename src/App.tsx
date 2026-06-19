@@ -180,6 +180,9 @@ function normalizeMode(value: string | null): MobileSheetMode {
   if (value === 'results' || value === 'filters' || value === 'details') {
     return value;
   }
+  if (INTERNAL_VIEWS_ENABLED && value === 'intake') {
+    return value;
+  }
   return 'results';
 }
 

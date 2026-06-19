@@ -25,6 +25,8 @@ Progress check:
 npm run validate:coverage
 ```
 
+Gap report: `public/data/coverage-gap-report.json`.
+
 ## Terminal Criteria
 
 - Approved records: `>= 3,800`
