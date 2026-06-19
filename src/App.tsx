@@ -6,6 +6,7 @@ import type {
   AppView,
   CanonicalLoungeRecord,
   CloudflareSourceIntakePlan,
+  CloudflareSourceRunEvidence,
   CoverageGapReport,
   LoungeBrandAsset,
   LoungeFeature,
@@ -1382,11 +1383,13 @@ function MobileReviewView({
   records,
   meta,
   coverageGap,
+  cloudflareEvidence,
   onSelect,
 }: {
   records: CanonicalLoungeRecord[];
   meta: LoungeMeta | null;
   coverageGap: CoverageGapReport | null;
+  cloudflareEvidence: CloudflareSourceRunEvidence | null;
   onSelect: (id: string) => void;
 }) {
   const reviewRecords = records
@@ -1396,6 +1399,9 @@ function MobileReviewView({
   const blockerLabels = coverageGap?.blockers.map(formatBlockerLabel) ?? [];
   const sourceRuntime = coverageGap?.current.sourceIntakeRuntime ?? 'unknown';
   const runtimePassed = coverageGap?.current.cloudflareSourceRuntimePassed === true;
+  const readyEvidence = cloudflareEvidence
+    ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks}`
+    : 'n/a';
 
   return (
     <div className="mobile-review-view">
@@ -1419,6 +1425,10 @@ function MobileReviewView({
         <div>
           <span>Runtime</span>
           <strong>{runtimePassed ? 'Cloudflare' : sourceRuntime}</strong>
+        </div>
+        <div>
+          <span>CF ready</span>
+          <strong>{readyEvidence}</strong>
         </div>
       </section>
 
@@ -1846,6 +1856,7 @@ function App() {
   const [brands, setBrands] = useState<LoungeBrandAsset[]>([]);
   const [coverageGap, setCoverageGap] = useState<CoverageGapReport | null>(null);
   const [intakePlan, setIntakePlan] = useState<CloudflareSourceIntakePlan | null>(null);
+  const [cloudflareEvidence, setCloudflareEvidence] = useState<CloudflareSourceRunEvidence | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<AppView>(initialUrlState.view);
@@ -1914,6 +1925,7 @@ function App() {
           brandResponse,
           coverageGapResponse,
           intakePlanResponse,
+          cloudflareEvidenceResponse,
         ] = await Promise.all([
           fetch('/data/lounges.geojson'),
           fetch('/data/meta.json'),
@@ -1922,6 +1934,7 @@ function App() {
           fetch('/data/brand-registry.json'),
           fetch('/data/coverage-gap-report.json'),
           fetch('/data/cloudflare-source-intake-plan.json'),
+          fetch('/data/cloudflare-source-run-evidence.json'),
         ]);
 
         if (!geoJsonResponse.ok || !metaResponse.ok) {
@@ -1953,6 +1966,9 @@ function App() {
           : null;
         const nextIntakePlan = intakePlanResponse.ok
           ? ((await intakePlanResponse.json()) as CloudflareSourceIntakePlan)
+          : null;
+        const nextCloudflareEvidence = cloudflareEvidenceResponse.ok
+          ? ((await cloudflareEvidenceResponse.json()) as CloudflareSourceRunEvidence)
           : null;
         const canonicalRecords = canonical?.records ?? [];
         const canonicalById = new Map(canonicalRecords.map((record) => [record.lounge.id, record]));
@@ -2041,6 +2057,7 @@ function App() {
         setBrands(brandRegistry);
         setCoverageGap(nextCoverageGap);
         setIntakePlan(nextIntakePlan);
+        setCloudflareEvidence(nextCloudflareEvidence);
         setLoading(false);
       } catch (loadError) {
         if (!alive) {
@@ -2582,6 +2599,9 @@ function App() {
     (selectedCity !== 'ALL' ? 1 : 0) +
     (selectedBrand !== 'ALL' ? 1 : 0) +
     (search.trim() ? 1 : 0);
+  const cloudflareReadyStatus = cloudflareEvidence
+    ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks} CF`
+    : null;
 
   return (
     <div className={`app-shell ${isMobile ? `is-mobile sheet-${mobileUI.sheetSnap}` : ''}`}>
@@ -2594,6 +2614,7 @@ function App() {
             <span>{meta?.stats.uniqueAirports ?? 0} airports</span>
             <span>{meta?.stats.uniqueCountries ?? 0} countries</span>
             <span>{meta?.quality?.reviewQueue ?? 0} review</span>
+            {cloudflareReadyStatus ? <span>{cloudflareReadyStatus}</span> : null}
             <span>{meta ? new Date(meta.generatedAt).toISOString().slice(0, 10) : 'No date'}</span>
           </div>
         </div>
@@ -2933,6 +2954,7 @@ function App() {
                       records={canonicalRecords}
                       meta={meta}
                       coverageGap={coverageGap}
+                      cloudflareEvidence={cloudflareEvidence}
                       onSelect={(id) => selectFeature(id)}
                     />
                   </div>

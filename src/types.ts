@@ -263,6 +263,46 @@ export interface CloudflareSourceIntakePlan {
   }>;
 }
 
+export interface CloudflareSourceRunEvidence {
+  generatedAt: string;
+  policy: {
+    source: string;
+    database: string;
+    binding: string;
+    localScrawl: 'blocked';
+    rawSnapshotsCommitted: false;
+    rawPageContentCommitted: false;
+  };
+  stats: {
+    sourceRunsRead: number;
+    cloudflareSourceRuns: number;
+    uniqueSources: number;
+    fetched: number;
+    cloudflareSnapshots: number;
+    readyTasks: number;
+    readyTasksWithCloudflareEvidence: number;
+  };
+  readyTaskEvidence: Array<{
+    sourceId: string;
+    present: boolean;
+    status: string;
+    cloudflareSnapshot: boolean;
+  }>;
+  sources: Array<{
+    sourceId: string;
+    publisher: string;
+    url: string;
+    adapter: string;
+    status: string;
+    runId: string;
+    generatedAt: string;
+    cloudflareSnapshot: boolean;
+    httpStatus: number | null;
+    bytes: number;
+    sha256: string | null;
+  }>;
+}
+
 export type SheetSnap = 'peek' | 'mid' | 'full';
 
 export type MobileSheetMode = 'results' | 'filters' | 'details' | 'compare' | 'review' | 'intake';
