@@ -11,6 +11,7 @@ import { McpRateLimiter } from './rate-limit.js';
 import {
   createSourceIntakeBatchResponse,
   createSourceIntakeProbeResponse,
+  createSourceIntakeReportResponse,
   createSourceIntakeStatusResponse,
 } from './source-intake.js';
 
@@ -34,6 +35,10 @@ export default {
 
     if (url.pathname === '/admin/source-intake/status') {
       return createSourceIntakeStatusResponse(request, env);
+    }
+
+    if (url.pathname === '/admin/source-intake/report') {
+      return createSourceIntakeReportResponse(request, env);
     }
 
     if (isStreamableMcpRequest(request)) {

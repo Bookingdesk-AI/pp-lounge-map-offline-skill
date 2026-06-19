@@ -13,6 +13,7 @@ export function parseSourceIds(value) {
 export function parseArgs(args, env = process.env) {
   const options = {
     baseUrl: env.LOUNGE_GURU_INTAKE_BASE_URL || DEFAULT_BASE_URL,
+    mode: env.LOUNGE_GURU_INTAKE_MODE || 'batch',
     sourceIds: parseSourceIds(env.LOUNGE_GURU_INTAKE_SOURCE_IDS),
     dryRun: env.LOUNGE_GURU_INTAKE_DRY_RUN === '1',
     timeoutMs: Number(env.LOUNGE_GURU_INTAKE_TIMEOUT_MS || DEFAULT_TIMEOUT_MS),
@@ -21,6 +22,10 @@ export function parseArgs(args, env = process.env) {
   for (const arg of args) {
     if (arg === '--dry-run') {
       options.dryRun = true;
+      continue;
+    }
+    if (arg === '--report') {
+      options.mode = 'report';
       continue;
     }
     if (arg.startsWith('--base-url=')) {
@@ -41,6 +46,9 @@ export function parseArgs(args, env = process.env) {
   if (!Number.isFinite(options.timeoutMs) || options.timeoutMs <= 0) {
     throw new Error('LOUNGE_GURU_INTAKE_TIMEOUT_MS must be a positive number');
   }
+  if (!['batch', 'report'].includes(options.mode)) {
+    throw new Error('LOUNGE_GURU_INTAKE_MODE must be batch or report');
+  }
 
   return options;
 }
@@ -56,6 +64,14 @@ export function buildProbeBatchUrl({ baseUrl, sourceIds = [] }) {
   return url;
 }
 
+export function buildReportUrl({ baseUrl }) {
+  const url = new URL('/admin/source-intake/report', baseUrl);
+  if (url.protocol !== 'https:') {
+    throw new Error('Cloudflare intake base URL must use HTTPS');
+  }
+  return url;
+}
+
 function compactResult(result) {
   return {
     sourceId: result.sourceId,
@@ -63,6 +79,19 @@ function compactResult(result) {
     cloudflareRuntime: Boolean(result.cloudflareRuntime),
     cloudflareSnapshot: Boolean(result.cloudflareSnapshot),
     fetched: Number(result.stats?.fetched ?? 0),
+  };
+}
+
+function compactReport(body) {
+  return {
+    ok: Boolean(body.ok),
+    totalSources: Number(body.stats?.totalSources ?? 0),
+    fetched: Number(body.stats?.fetched ?? 0),
+    cloudflareSourceRuns: Number(body.stats?.cloudflareSourceRuns ?? 0),
+    fullCatalogIntakeReport: Boolean(body.terminalImpact?.fullCatalogIntakeReport),
+    coverageGateStillRequiresFullCloudflareReport: Boolean(
+      body.terminalImpact?.coverageGateStillRequiresFullCloudflareReport,
+    ),
   };
 }
 
@@ -81,13 +110,14 @@ export async function runCloudflareSourceIntake({
   log = console.log,
 } = {}) {
   const options = parseArgs(args, env);
-  const url = buildProbeBatchUrl(options);
+  const url = options.mode === 'report' ? buildReportUrl(options) : buildProbeBatchUrl(options);
   const sourceIds = options.sourceIds;
   const endpoint = `${url.origin}${url.pathname}`;
 
   if (options.dryRun) {
     const summary = {
       dryRun: true,
+      mode: options.mode,
       endpoint,
       sourceIds,
       localScrawl: 'blocked',
@@ -106,7 +136,7 @@ export async function runCloudflareSourceIntake({
 
   try {
     const response = await fetchImpl(url, {
-      method: 'POST',
+      method: options.mode === 'report' ? 'GET' : 'POST',
       signal: controller.signal,
       headers: {
         accept: 'application/json',
@@ -119,6 +149,15 @@ export async function runCloudflareSourceIntake({
     if (!response.ok) {
       const reason = body.error || response.statusText || 'request_failed';
       throw new Error(`Cloudflare intake failed: ${response.status} ${reason}`);
+    }
+
+    if (options.mode === 'report') {
+      const summary = {
+        endpoint,
+        ...compactReport(body),
+      };
+      log(JSON.stringify(summary, null, 2));
+      return summary;
     }
 
     const summary = {

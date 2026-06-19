@@ -286,6 +286,49 @@ function compactStatusSource(source, row) {
   };
 }
 
+function compactReportAttempt(attempt) {
+  return {
+    url: attempt.url,
+    status: attempt.status,
+    reason: attempt.reason ?? null,
+    httpStatus: attempt.httpStatus ?? null,
+    finalUrl: attempt.finalUrl ?? null,
+    contentType: attempt.contentType ?? '',
+    bytes: Number(attempt.bytes ?? 0),
+    sha256: attempt.sha256 ?? null,
+    robots: attempt.robots
+      ? {
+          checked: Boolean(attempt.robots.checked),
+          url: attempt.robots.url,
+          status: attempt.robots.status ?? null,
+          disallowed: Boolean(attempt.robots.disallowed),
+          disallowRuleCount: Number(attempt.robots.disallowRuleCount ?? 0),
+        }
+      : null,
+  };
+}
+
+function compactReportSource(source) {
+  return {
+    sourceId: source.sourceId,
+    publisher: source.publisher,
+    url: source.url,
+    adapter: source.adapter,
+    status: source.status,
+    reason: source.reason ?? null,
+    records: Number(source.records ?? 0),
+    airportCodes: Array.isArray(source.airportCodes) ? source.airportCodes : [],
+    loungeLinks: Array.isArray(source.loungeLinks) ? source.loungeLinks : [],
+    cloudflareSnapshot: Boolean(source.cloudflareSnapshot),
+    finalUrl: source.finalUrl ?? null,
+    httpStatus: source.httpStatus ?? null,
+    contentType: source.contentType ?? '',
+    bytes: Number(source.bytes ?? 0),
+    sha256: source.sha256 ?? null,
+    fetchAttempts: (source.fetchAttempts ?? []).map(compactReportAttempt),
+  };
+}
+
 async function requireReadyRequest({ request, env, method }) {
   if (request.method !== method) {
     return jsonResponse({ error: 'method_not_allowed' }, { status: 405, headers: { allow: method } });
@@ -301,6 +344,39 @@ async function requireReadyRequest({ request, env, method }) {
   }
 
   return null;
+}
+
+async function readCloudflareProbeRows(env, limit = 100) {
+  const rowsResult = await env.LOUNGE_GURU_DB.prepare(
+    [
+      'SELECT id, generated_at, policy_json, stats_json, sources_json',
+      'FROM source_runs',
+      "WHERE id LIKE 'cloudflare-probe-%'",
+      'ORDER BY generated_at DESC',
+      `LIMIT ${limit}`,
+    ].join(' '),
+  ).all();
+
+  return rowsResult.results ?? [];
+}
+
+function latestCloudflareSourceRows(rows, compactSource) {
+  const latestBySource = new Map();
+
+  for (const row of rows) {
+    const policy = parseJsonField(row.policy_json, {});
+    if (policy?.execution?.runtime !== 'cloudflare') {
+      continue;
+    }
+    const sources = parseJsonField(row.sources_json, []);
+    for (const source of sources) {
+      if (!latestBySource.has(source.sourceId)) {
+        latestBySource.set(source.sourceId, compactSource(source, row));
+      }
+    }
+  }
+
+  return latestBySource;
 }
 
 async function runProbe({ request, env, fetchImpl = fetch }) {
@@ -371,30 +447,8 @@ async function sourceStatus({ request, env }) {
     return readyResponse;
   }
 
-  const rowsResult = await env.LOUNGE_GURU_DB.prepare(
-    [
-      'SELECT id, generated_at, policy_json, stats_json, sources_json',
-      'FROM source_runs',
-      "WHERE id LIKE 'cloudflare-probe-%'",
-      'ORDER BY generated_at DESC',
-      'LIMIT 50',
-    ].join(' '),
-  ).all();
-  const rows = rowsResult.results ?? [];
-  const latestBySource = new Map();
-
-  for (const row of rows) {
-    const policy = parseJsonField(row.policy_json, {});
-    if (policy?.execution?.runtime !== 'cloudflare') {
-      continue;
-    }
-    const sources = parseJsonField(row.sources_json, []);
-    for (const source of sources) {
-      if (!latestBySource.has(source.sourceId)) {
-        latestBySource.set(source.sourceId, compactStatusSource(source, row));
-      }
-    }
-  }
+  const rows = await readCloudflareProbeRows(env, 50);
+  const latestBySource = latestCloudflareSourceRows(rows, compactStatusSource);
 
   const readyTasks = readyOfficialPageTasks();
   const readyTaskEvidence = readyTasks.map((task) => {
@@ -427,6 +481,59 @@ async function sourceStatus({ request, env }) {
   });
 }
 
+async function sourceReport({ request, env }) {
+  const readyResponse = await requireReadyRequest({ request, env, method: 'GET' });
+  if (readyResponse) {
+    return readyResponse;
+  }
+
+  const generatedAt = new Date().toISOString();
+  const rows = await readCloudflareProbeRows(env, 100);
+  const latestBySource = latestCloudflareSourceRows(rows, (source, row) => ({
+    ...compactReportSource(source),
+    runId: row.id,
+    retrievedAt: row.generated_at,
+  }));
+  const sources = [...latestBySource.values()].sort((left, right) => left.sourceId.localeCompare(right.sourceId));
+  const readyTasks = readyOfficialPageTasks();
+
+  return jsonResponse({
+    ok: true,
+    generatedAt,
+    runId: `cloudflare-report-${generatedAt.replace(/[:.]/g, '-')}`,
+    policy: {
+      fetchMode: 'cloudflare_d1_source_runs_report',
+      rawSnapshotsCommitted: false,
+      rawPageContentCommitted: false,
+      guardrail: 'official/public source-run evidence only; no local page fetch',
+      execution: {
+        requiredRuntime: 'cloudflare',
+        runtime: 'cloudflare',
+        localScrawl: 'blocked',
+        proofEnv: 'LOUNGE_GURU_INTAKE_TOKEN',
+      },
+    },
+    stats: {
+      totalSources: sources.length,
+      fetched: sources.filter((source) => source.status === 'fetched').length,
+      skipped: sources.filter((source) => source.status === 'skipped').length,
+      httpErrors: sources.filter((source) => source.status === 'http_error').length,
+      fetchErrors: sources.filter((source) => source.status === 'fetch_error').length,
+      childPagesFetched: 0,
+      discoveredAirportCodes: sources.reduce((total, source) => total + source.airportCodes.length, 0),
+      discoveredLoungeLinks: sources.reduce((total, source) => total + source.loungeLinks.length, 0),
+      cloudflareSourceRuns: rows.length,
+      readyTasks: readyTasks.length,
+      readyTasksWithCloudflareEvidence: sources.filter((source) => source.cloudflareSnapshot).length,
+    },
+    terminalImpact: {
+      fullCatalogIntakeReport: false,
+      coverageGateStillRequiresFullCloudflareReport: true,
+    },
+    sources,
+  });
+}
+
 export async function createSourceIntakeProbeResponse(request, env, options = {}) {
   return runProbe({ request, env, fetchImpl: options.fetchImpl ?? fetch });
 }
@@ -437,4 +544,8 @@ export async function createSourceIntakeBatchResponse(request, env, options = {}
 
 export async function createSourceIntakeStatusResponse(request, env) {
   return sourceStatus({ request, env });
+}
+
+export async function createSourceIntakeReportResponse(request, env) {
+  return sourceReport({ request, env });
 }
