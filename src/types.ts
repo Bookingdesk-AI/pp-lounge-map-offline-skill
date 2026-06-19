@@ -203,12 +203,18 @@ export interface CoverageGapReport {
     reviewRecords: number;
     approvedRatio: number;
     sourceFamilyCoverageRatio: number;
+    unknownAirportRecords?: number;
+    recordsWithoutSources?: number;
+    recordsWithoutQuality?: number;
+    sourceIntakeRuntime?: string;
+    cloudflareSourceRuntimePassed?: boolean;
   };
   deltas: {
     approvedRecordsRemaining: number;
     approvalsNeededForCurrentCatalogRatio: number;
     reviewRecordsToResolve: number;
     missingSourceFamilies: string[];
+    sourceIntakeRuntimeRequired?: string | null;
   };
   sourceFamilies: Array<{
     id: string;
@@ -259,7 +265,7 @@ export interface CloudflareSourceIntakePlan {
 
 export type SheetSnap = 'peek' | 'mid' | 'full';
 
-export type MobileSheetMode = 'results' | 'filters' | 'details' | 'compare' | 'intake';
+export type MobileSheetMode = 'results' | 'filters' | 'details' | 'compare' | 'review' | 'intake';
 
 export type AppView = 'map' | 'intake' | 'schema' | 'sources';
 

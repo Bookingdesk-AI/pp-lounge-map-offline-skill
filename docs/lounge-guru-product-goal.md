@@ -172,5 +172,5 @@ Avoid:
 2. Source health: show stale/manual/blocked source counts in `Sources`.
 3. Intake diff: expose field-level conflict rows.
 4. Access filters: add bank/card/airline/program filters.
-5. Mobile parity: add Compare and Review sheet modes.
+5. Mobile parity: shipped Compare and Review sheet modes.
 6. Monitoring: emit source-change alerts from intake snapshots.

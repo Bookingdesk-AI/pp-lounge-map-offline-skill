@@ -178,7 +178,7 @@ function normalizeSheet(value: string | null): SheetSnap {
 }
 
 function normalizeMode(value: string | null): MobileSheetMode {
-  if (value === 'results' || value === 'filters' || value === 'details' || value === 'compare') {
+  if (value === 'results' || value === 'filters' || value === 'details' || value === 'compare' || value === 'review') {
     return value;
   }
   if (INTERNAL_VIEWS_ENABLED && value === 'intake') {
@@ -1354,6 +1354,138 @@ function MobileDetailsView({
         sameSpotFeatures={sameSpotFeatures}
         onSelect={onSelect}
       />
+    </div>
+  );
+}
+
+function formatBlockerLabel(blocker: string) {
+  switch (blocker) {
+    case 'approved_records_below_target':
+    case 'approved_records_below_3800':
+      return 'Approved count';
+    case 'approved_ratio_below_target':
+    case 'approved_ratio_below_0.98':
+      return 'Approved ratio';
+    case 'source_family_gaps_present':
+    case 'source_family_coverage_incomplete':
+      return 'Source families';
+    case 'review_records_present':
+      return 'Review records';
+    case 'source_intake_runtime_not_cloudflare':
+      return 'Cloudflare runtime';
+    default:
+      return blocker.replaceAll('_', ' ');
+  }
+}
+
+function MobileReviewView({
+  records,
+  meta,
+  coverageGap,
+  onSelect,
+}: {
+  records: CanonicalLoungeRecord[];
+  meta: LoungeMeta | null;
+  coverageGap: CoverageGapReport | null;
+  onSelect: (id: string) => void;
+}) {
+  const reviewRecords = records
+    .filter((record) => record.quality.reviewStatus !== 'approved' || record.quality.conflicts.length > 0)
+    .slice(0, 12);
+  const missingFamilies = coverageGap?.sourceFamilies.filter((family) => !family.present) ?? [];
+  const blockerLabels = coverageGap?.blockers.map(formatBlockerLabel) ?? [];
+  const sourceRuntime = coverageGap?.current.sourceIntakeRuntime ?? 'unknown';
+  const runtimePassed = coverageGap?.current.cloudflareSourceRuntimePassed === true;
+
+  return (
+    <div className="mobile-review-view">
+      <section className="mobile-review-metrics" aria-label="Review status">
+        <div>
+          <span>Review</span>
+          <strong>{coverageGap?.current.reviewRecords ?? meta?.quality?.reviewQueue ?? reviewRecords.length}</strong>
+        </div>
+        <div>
+          <span>Approved</span>
+          <strong>{coverageGap ? `${Math.round(coverageGap.current.approvedRatio * 100)}%` : 'n/a'}</strong>
+        </div>
+        <div>
+          <span>Families</span>
+          <strong>
+            {coverageGap
+              ? `${coverageGap.sourceFamilies.length - missingFamilies.length}/${coverageGap.sourceFamilies.length}`
+              : 'n/a'}
+          </strong>
+        </div>
+        <div>
+          <span>Runtime</span>
+          <strong>{runtimePassed ? 'Cloudflare' : sourceRuntime}</strong>
+        </div>
+      </section>
+
+      <section className="mobile-review-panel">
+        <div className="section-title-row">
+          <h2>Blockers</h2>
+          <span className="compare-count">{blockerLabels.length}</span>
+        </div>
+        {blockerLabels.length === 0 ? (
+          <div className="compare-empty">No blockers</div>
+        ) : (
+          <div className="review-chip-list">
+            {blockerLabels.map((label) => (
+              <span key={label} className="filter-chip">
+                {label}
+              </span>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="mobile-review-panel">
+        <div className="section-title-row">
+          <h2>Families</h2>
+          <span className="compare-count">{missingFamilies.length}</span>
+        </div>
+        {missingFamilies.length === 0 ? (
+          <div className="compare-empty">No gaps</div>
+        ) : (
+          <div className="review-list">
+            {missingFamilies.map((family) => (
+              <div key={family.id} className="review-row">
+                <strong>{family.label}</strong>
+                <span>{family.missingMembers.join(', ')}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="mobile-review-panel">
+        <div className="section-title-row">
+          <h2>Queue</h2>
+          <span className="compare-count">{reviewRecords.length}</span>
+        </div>
+        {reviewRecords.length === 0 ? (
+          <div className="compare-empty">No review records</div>
+        ) : (
+          <div className="review-list">
+            {reviewRecords.map((record) => (
+              <button
+                key={record.lounge.id}
+                type="button"
+                className="review-row is-action"
+                onClick={() => onSelect(record.lounge.id)}
+              >
+                <span className="review-row-head">
+                  <strong>{record.lounge.name}</strong>
+                  <span className="code">{record.airport.iata}</span>
+                </span>
+                <span>{record.sources[0]?.publisher ?? 'Unknown'}</span>
+                <span>{record.quality.conflicts.join(', ') || record.quality.reviewStatus}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
@@ -2635,6 +2767,15 @@ function App() {
                 >
                   Compare
                 </button>
+                <button
+                  type="button"
+                  className={mobileUI.sheetMode === 'review' ? 'is-active' : ''}
+                  onClick={() =>
+                    setMobileUI((current) => ({ ...current, sheetMode: 'review', sheetSnap: 'full' }))
+                  }
+                >
+                  Review
+                </button>
                 {INTERNAL_VIEWS_ENABLED ? (
                   <button
                     type="button"
@@ -2782,6 +2923,17 @@ function App() {
                       selectedId={selectedId}
                       onSelect={(id) => selectFeature(id)}
                       onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+                    />
+                  </div>
+                ) : null}
+
+                {mobileUI.sheetMode === 'review' ? (
+                  <div className="mobile-review-wrap">
+                    <MobileReviewView
+                      records={canonicalRecords}
+                      meta={meta}
+                      coverageGap={coverageGap}
+                      onSelect={(id) => selectFeature(id)}
                     />
                   </div>
                 ) : null}

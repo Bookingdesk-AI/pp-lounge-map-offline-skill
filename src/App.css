@@ -1460,7 +1460,7 @@
 
   .mobile-actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
     gap: 0.36rem;
     padding: 0.5rem 0.62rem;
     border-top: 1px solid var(--line-soft);
@@ -1501,6 +1501,7 @@
   .mobile-quick-filters,
   .mobile-detail-wrap,
   .mobile-compare-wrap,
+  .mobile-review-wrap,
   .mobile-filter-wrap {
     padding: 0.62rem;
   }
@@ -1589,6 +1590,117 @@
 
   .compare-tray.is-compact .section-title-row h2 {
     font-size: 0.96rem;
+  }
+
+  .mobile-review-view {
+    display: grid;
+    gap: 0.62rem;
+  }
+
+  .mobile-review-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.44rem;
+  }
+
+  .mobile-review-metrics div,
+  .mobile-review-panel {
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    background: #ffffff;
+  }
+
+  .mobile-review-metrics div {
+    min-width: 0;
+    display: grid;
+    gap: 0.18rem;
+    padding: 0.58rem;
+  }
+
+  .mobile-review-metrics span,
+  .review-row > span,
+  .review-row-head {
+    min-width: 0;
+  }
+
+  .mobile-review-metrics span {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--text-soft);
+    text-transform: uppercase;
+  }
+
+  .mobile-review-metrics strong {
+    overflow: hidden;
+    color: var(--text-main);
+    font-size: 0.92rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-review-panel {
+    padding: 0.62rem;
+  }
+
+  .mobile-review-panel .section-title-row h2 {
+    font-size: 0.96rem;
+  }
+
+  .review-chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.36rem;
+    margin-top: 0.5rem;
+  }
+
+  .review-chip-list .filter-chip {
+    min-height: 34px;
+  }
+
+  .review-list {
+    display: grid;
+    gap: 0.44rem;
+    margin-top: 0.5rem;
+  }
+
+  .review-row {
+    width: 100%;
+    min-width: 0;
+    display: grid;
+    gap: 0.22rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    background: var(--surface-1);
+    color: var(--text-soft);
+    padding: 0.52rem;
+    text-align: left;
+    font: inherit;
+  }
+
+  .review-row.is-action {
+    cursor: pointer;
+  }
+
+  .review-row.is-action:focus-visible {
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 0 3px rgba(36, 86, 166, 0.18);
+    outline: 0;
+  }
+
+  .review-row strong,
+  .review-row span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .review-row strong {
+    color: var(--text-main);
+  }
+
+  .review-row-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
 
   .mobile-sheet .results {
