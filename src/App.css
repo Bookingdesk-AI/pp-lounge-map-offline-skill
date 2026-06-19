@@ -129,6 +129,7 @@
 
 .search-wrap input,
 .sort-control select,
+.mobile-results-search input,
 .mobile-search-control input,
 .control-group select {
   width: 100%;
@@ -146,6 +147,7 @@
 }
 
 .search-wrap input::placeholder,
+.mobile-results-search input::placeholder,
 .mobile-search-control input::placeholder {
   color: var(--text-muted);
 }
@@ -153,6 +155,7 @@
 .search-wrap input:focus-visible,
 .view-tabs button:focus-visible,
 .sort-control select:focus-visible,
+.mobile-results-search input:focus-visible,
 .mobile-search-control input:focus-visible,
 .control-group select:focus-visible,
 .type-pill:focus-visible,
@@ -1434,8 +1437,10 @@
     border: 0;
     background: transparent;
     padding: 0.35rem 0.5rem 0.18rem;
+    min-height: 44px;
     display: grid;
     justify-items: center;
+    align-items: center;
     gap: 0.18rem;
     cursor: grab;
     color: var(--text-soft);
@@ -1455,7 +1460,7 @@
 
   .mobile-actions {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
     gap: 0.36rem;
     padding: 0.5rem 0.62rem;
     border-top: 1px solid var(--line-soft);
@@ -1464,7 +1469,7 @@
   }
 
   .mobile-actions button {
-    min-height: 42px;
+    min-height: 44px;
     border-radius: 6px;
     font-size: 0.76rem;
     padding-inline: 0.35rem;
@@ -1489,7 +1494,25 @@
     justify-content: space-between;
     gap: 0.8rem;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.46rem;
+  }
+
+  .mobile-results-search {
+    display: grid;
+    gap: 0.22rem;
+    margin-bottom: 0.52rem;
+  }
+
+  .mobile-results-search span {
+    font-size: 0.62rem;
+    color: var(--text-soft);
+    font-weight: 600;
+  }
+
+  .mobile-results-search input,
+  .mobile-search-control input,
+  .mobile-filter-wrap select {
+    min-height: 44px;
   }
 
   .mobile-type-strip {
@@ -1508,8 +1531,14 @@
 
   .meta-chip {
     cursor: default;
-    min-height: 32px;
+    min-height: 34px;
     font-size: 0.64rem;
+  }
+
+  .mobile-type-strip .quick-type-chip,
+  .mobile-filter-wrap .type-pill,
+  .mobile-filter-wrap .filter-chip {
+    min-height: 44px;
   }
 
   .compare-tray.is-compact,
@@ -1536,6 +1565,8 @@
   .mobile-filter-actions {
     position: sticky;
     bottom: 0;
+    display: flex;
+    gap: 0.5rem;
     padding-top: 0.72rem;
     background: linear-gradient(180deg, rgba(248, 250, 252, 0), rgba(248, 250, 252, 0.98) 40%);
   }
@@ -1544,6 +1575,7 @@
   .mobile-filter-actions .primary-action {
     flex: 1 1 0;
     justify-content: center;
+    min-height: 44px;
   }
 
   .mobile-selected-view {
@@ -1571,7 +1603,7 @@
   }
 
   .mobile-detail-accordion summary {
-    min-height: 42px;
+    min-height: 44px;
     display: flex;
     align-items: center;
     cursor: pointer;

@@ -1196,6 +1196,7 @@ function MapLegend({
 }
 
 function MobileQuickFilters({
+  search,
   types,
   selectedTypes,
   selectedCountry,
@@ -1204,9 +1205,11 @@ function MobileQuickFilters({
   visibleCount,
   selectedFilterCount,
   quickFilterState,
+  onSearchChange,
   onQuickTypeToggle,
   onOpenFilters,
 }: {
+  search: string;
   types: string[];
   selectedTypes: string[];
   selectedCountry: string;
@@ -1215,6 +1218,7 @@ function MobileQuickFilters({
   visibleCount: number;
   selectedFilterCount: number;
   quickFilterState: QuickFilterPreset;
+  onSearchChange: (search: string) => void;
   onQuickTypeToggle: (type: string) => void;
   onOpenFilters: () => void;
 }) {
@@ -1226,6 +1230,16 @@ function MobileQuickFilters({
           {selectedFilterCount > 0 ? `${selectedFilterCount} filters` : 'Filters'}
         </button>
       </div>
+
+      <label className="mobile-results-search">
+        <span>Search</span>
+        <input
+          type="search"
+          value={search}
+          onChange={(event) => onSearchChange(event.target.value)}
+          placeholder="Airport, city, lounge"
+        />
+      </label>
 
       <div className="mobile-type-strip">
         {types.map((type) => {
@@ -2511,6 +2525,7 @@ function App() {
                 {mobileUI.sheetMode === 'results' ? (
                   <>
                     <MobileQuickFilters
+                      search={search}
                       types={types}
                       selectedTypes={selectedTypes}
                       selectedCountry={selectedCountry}
@@ -2519,16 +2534,19 @@ function App() {
                       visibleCount={filteredFeatures.length}
                       selectedFilterCount={selectedFilterCount}
                       quickFilterState={mobileUI.quickFilterState}
+                      onSearchChange={setSearch}
                       onQuickTypeToggle={toggleQuickType}
                       onOpenFilters={openMobileFilters}
                     />
-                    <CompareTray
-                      compact
-                      comparedFeatures={comparedFeatures}
-                      selectedId={selectedId}
-                      onSelect={(id) => selectFeature(id)}
-                      onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
-                    />
+                    {comparedFeatures.length > 0 ? (
+                      <CompareTray
+                        compact
+                        comparedFeatures={comparedFeatures}
+                        selectedId={selectedId}
+                        onSelect={(id) => selectFeature(id)}
+                        onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+                      />
+                    ) : null}
                     <ResultsList
                       key={`results-mobile-${filterSignature}`}
                       features={filteredFeatures}
@@ -2610,13 +2628,6 @@ function App() {
 
                 {mobileUI.sheetMode === 'details' ? (
                   <div className="mobile-detail-wrap">
-                    <CompareTray
-                      compact
-                      comparedFeatures={comparedFeatures}
-                      selectedId={selectedId}
-                      onSelect={(id) => selectFeature(id)}
-                      onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
-                    />
                     <MobileDetailsView
                       selectedFeature={selectedFeature}
                       sameSpotFeatures={sameSpotFeatures}
@@ -2625,6 +2636,15 @@ function App() {
                       onSelect={(id) => selectFeature(id)}
                       onToggleCompare={toggleCompare}
                     />
+                    {comparedFeatures.length > 0 ? (
+                      <CompareTray
+                        compact
+                        comparedFeatures={comparedFeatures}
+                        selectedId={selectedId}
+                        onSelect={(id) => selectFeature(id)}
+                        onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+                      />
+                    ) : null}
                   </div>
                 ) : null}
 

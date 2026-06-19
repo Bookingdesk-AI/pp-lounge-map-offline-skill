@@ -15,6 +15,7 @@ This update turns the lounge map into a compact internal operations console for 
 - Reordered filters so country and city lead the rail before brand, type, and facilities.
 - Added a lounge brand filter with matching URL state and mobile sheet parity.
 - Added country prefixes in geographic labels, with Taiwan rendered as `TW` instead of a flag emoji.
+- Improved mobile results with direct search, sturdier touch targets, adaptive sheet actions, and selected-lounge-first details.
 - Updated map tiles, markers, clusters, and focus states to match the enterprise console palette.
 - Added persistent design context in `.impeccable.md`.
 
