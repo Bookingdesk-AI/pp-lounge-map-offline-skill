@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { spawnSync } from 'node:child_process';
 
 const report = JSON.parse(fs.readFileSync(new URL('../public/data/source-intake-report.json', import.meta.url), 'utf8'));
 const candidates = JSON.parse(
@@ -9,6 +10,7 @@ const candidates = JSON.parse(
 const validationReport = JSON.parse(
   fs.readFileSync(new URL('../public/data/non-priority-validation-report.json', import.meta.url), 'utf8'),
 );
+const projectRoot = new URL('..', import.meta.url);
 
 test('source intake report records guarded public-source fetch policy', () => {
   assert.equal(report.policy.fetchMode, 'single_public_source_url_per_registry_entry');
@@ -16,9 +18,26 @@ test('source intake report records guarded public-source fetch policy', () => {
   assert.ok(report.policy.childPageLimit > 0);
   assert.equal(report.policy.rawSnapshotsCommitted, false);
   assert.match(report.policy.guardrail, /official\/public sources only/);
+  assert.equal(report.policy.execution.requiredRuntime, 'cloudflare');
+  assert.equal(report.policy.execution.localScrawl, 'blocked');
+  assert.equal(report.policy.execution.proofEnv, 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare');
   assert.ok(report.stats.totalSources >= 15);
   assert.ok(report.stats.childPagesFetched > 0);
   assert.ok(report.stats.knownAirportCodes > 1000);
+});
+
+test('source snapshot script blocks local scrawl by default', () => {
+  const result = spawnSync(process.execPath, ['scripts/scrape-source-snapshots.mjs'], {
+    cwd: projectRoot,
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      LOUNGE_GURU_SOURCE_INTAKE_RUNTIME: '',
+    },
+  });
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /local scrawl is blocked/);
 });
 
 test('source intake report keeps provenance without committing raw page content', () => {

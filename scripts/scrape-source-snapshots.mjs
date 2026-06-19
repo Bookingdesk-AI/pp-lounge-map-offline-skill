@@ -30,6 +30,8 @@ const oneworldAirportsUrl =
 const oneworldLoungeUrl =
   'https://api.oneworld.com/lounge/v1/lounges/airport';
 const oneworldLoungeQuery = 'app_id=2&app_key=A3676D53BD00428BA198937061A835DD';
+const requiredIntakeRuntime = 'cloudflare';
+const intakeRuntime = process.env.LOUNGE_GURU_SOURCE_INTAKE_RUNTIME || '';
 
 const LOUNGE_TERMS = [
   'lounge',
@@ -120,6 +122,17 @@ function sleep(ms) {
 
 function nowRunId() {
   return new Date().toISOString().replace(/[:.]/g, '-');
+}
+
+function requireCloudflareSourceIntakeRuntime() {
+  if (intakeRuntime === requiredIntakeRuntime) {
+    return;
+  }
+
+  throw new Error(
+    'Source intake must run from the Cloudflare-approved runner. ' +
+      'Set LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare only inside that runner; local scrawl is blocked.',
+  );
 }
 
 function safeName(value) {
@@ -634,6 +647,8 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
 }
 
 async function main() {
+  requireCloudflareSourceIntakeRuntime();
+
   const runId = nowRunId();
   const runDir = path.join(cacheRoot, runId);
   await fs.mkdir(runDir, { recursive: true });
@@ -660,6 +675,12 @@ async function main() {
       rawSnapshots: '.cache/source-snapshots',
       rawSnapshotsCommitted: false,
       guardrail: 'official/public sources only; no login, private API, captcha, or broad crawling',
+      execution: {
+        requiredRuntime: requiredIntakeRuntime,
+        runtime: intakeRuntime,
+        localScrawl: 'blocked',
+        proofEnv: 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare',
+      },
       timeoutMs,
       delayMs,
     },

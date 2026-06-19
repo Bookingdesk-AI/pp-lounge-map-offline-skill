@@ -71,6 +71,20 @@ Smoke schema:
 npx wrangler d1 execute lounge-guru-catalog --remote --command="SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
 ```
 
+## Source Intake Boundary
+
+`npm run scrape:sources` is blocked for local workstations. Source intake that fetches public pages must run only from the Cloudflare-approved runner with:
+
+```bash
+LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare npm run scrape:sources
+```
+
+After intake, publish only through the Cloudflare D1 snapshot path:
+
+```bash
+npm run db:catalog:push
+```
+
 ## Current Meaning
 
 Current data can fail the terminal gate and still be structurally valid. Candidate records remain `review` until location, hours, access policy, source conflicts, and airport identity are resolved.

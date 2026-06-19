@@ -15,6 +15,12 @@
     "rawSnapshots": ".cache/source-snapshots",
     "rawSnapshotsCommitted": false,
     "guardrail": "official/public sources only; no login, private API, captcha, or broad crawling",
+    "execution": {
+      "requiredRuntime": "cloudflare",
+      "runtime": "legacy-local-before-cloudflare-guardrail",
+      "localScrawl": "blocked",
+      "proofEnv": "LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare"
+    },
     "timeoutMs": 30000,
     "delayMs": 150
   },
