@@ -1500,6 +1500,7 @@
 
   .mobile-quick-filters,
   .mobile-detail-wrap,
+  .mobile-compare-wrap,
   .mobile-filter-wrap {
     padding: 0.62rem;
   }
@@ -1569,12 +1570,21 @@
   }
 
   .compare-tray.is-compact,
-  .mobile-detail-wrap .compare-tray {
+  .mobile-detail-wrap .compare-tray,
+  .mobile-compare-wrap .compare-tray {
     margin-bottom: 0.62rem;
     padding: 0.62rem;
     border-radius: 6px;
     border: 1px solid var(--line-soft);
     background: #ffffff;
+  }
+
+  .compare-empty {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    color: var(--text-soft);
+    font-size: 0.86rem;
   }
 
   .compare-tray.is-compact .section-title-row h2 {

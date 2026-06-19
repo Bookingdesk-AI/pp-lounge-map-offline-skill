@@ -259,7 +259,7 @@ export interface CloudflareSourceIntakePlan {
 
 export type SheetSnap = 'peek' | 'mid' | 'full';
 
-export type MobileSheetMode = 'results' | 'filters' | 'details' | 'intake';
+export type MobileSheetMode = 'results' | 'filters' | 'details' | 'compare' | 'intake';
 
 export type AppView = 'map' | 'intake' | 'schema' | 'sources';
 

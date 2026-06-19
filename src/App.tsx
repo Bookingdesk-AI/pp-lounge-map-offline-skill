@@ -178,7 +178,7 @@ function normalizeSheet(value: string | null): SheetSnap {
 }
 
 function normalizeMode(value: string | null): MobileSheetMode {
-  if (value === 'results' || value === 'filters' || value === 'details') {
+  if (value === 'results' || value === 'filters' || value === 'details' || value === 'compare') {
     return value;
   }
   if (INTERNAL_VIEWS_ENABLED && value === 'intake') {
@@ -771,7 +771,7 @@ function CompareTray({
       </div>
 
       {comparedFeatures.length === 0 ? (
-        null
+        <div className="compare-empty">No compare records</div>
       ) : (
         <>
           <div className="compare-card-grid">
@@ -2626,6 +2626,15 @@ function App() {
                 >
                   Details
                 </button>
+                <button
+                  type="button"
+                  className={mobileUI.sheetMode === 'compare' ? 'is-active' : ''}
+                  onClick={() =>
+                    setMobileUI((current) => ({ ...current, sheetMode: 'compare', sheetSnap: 'full' }))
+                  }
+                >
+                  Compare
+                </button>
                 {INTERNAL_VIEWS_ENABLED ? (
                   <button
                     type="button"
@@ -2762,6 +2771,18 @@ function App() {
                         onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
                       />
                     ) : null}
+                  </div>
+                ) : null}
+
+                {mobileUI.sheetMode === 'compare' ? (
+                  <div className="mobile-compare-wrap">
+                    <CompareTray
+                      compact
+                      comparedFeatures={comparedFeatures}
+                      selectedId={selectedId}
+                      onSelect={(id) => selectFeature(id)}
+                      onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+                    />
                   </div>
                 ) : null}
 
