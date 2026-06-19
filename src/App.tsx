@@ -1204,28 +1204,26 @@ function MobileQuickFilters({
   search,
   types,
   selectedTypes,
-  selectedCountry,
-  selectedCity,
-  selectedBrand,
   visibleCount,
   selectedFilterCount,
+  activeFilterChips,
   quickFilterState,
   onSearchChange,
   onQuickTypeToggle,
   onOpenFilters,
+  onClearFilters,
 }: {
   search: string;
   types: string[];
   selectedTypes: string[];
-  selectedCountry: string;
-  selectedCity: string;
-  selectedBrand: string;
   visibleCount: number;
   selectedFilterCount: number;
+  activeFilterChips: FilterSummaryChip[];
   quickFilterState: QuickFilterPreset;
   onSearchChange: (search: string) => void;
   onQuickTypeToggle: (type: string) => void;
   onOpenFilters: () => void;
+  onClearFilters: () => void;
 }) {
   return (
     <div className="mobile-quick-filters">
@@ -1265,11 +1263,7 @@ function MobileQuickFilters({
         })}
       </div>
 
-      <div className="mobile-filter-meta">
-        <span className="meta-chip">Country: {selectedCountry === 'ALL' ? 'All' : formatCountryLabel(selectedCountry)}</span>
-        <span className="meta-chip">City: {selectedCity === 'ALL' ? 'All' : selectedCity}</span>
-        <span className="meta-chip">Brand: {selectedBrand === 'ALL' ? 'All' : selectedBrand}</span>
-      </div>
+      <ActiveFilterSummary chips={activeFilterChips} onClearAll={onClearFilters} />
     </div>
   );
 }
@@ -1806,6 +1800,7 @@ function App() {
         const nextMeta = (await metaResponse.json()) as LoungeMeta;
         const canonical = canonicalResponse.ok
           ? ((await canonicalResponse.json()) as {
+              generatedAt?: string;
               records?: CanonicalLoungeRecord[];
               sources?: LoungeSourceRegistryEntry[];
               schema?: LoungeMeta['schema'];
@@ -1885,6 +1880,7 @@ function App() {
         const mergedMeta: LoungeMeta = canonical
           ? {
               ...nextMeta,
+              generatedAt: canonical.generatedAt ?? nextMeta.generatedAt,
               schema: canonical.schema ?? nextMeta.schema,
               quality: canonical.quality ?? nextMeta.quality,
               sources: sourceRegistry,
@@ -2462,7 +2458,7 @@ function App() {
           <h1>Lounge Guru</h1>
           <ViewTabs activeView={activeView} onChange={setActiveView} />
           <div className="system-stats" aria-label="Catalog status">
-            <span>{meta?.stats.totalFeatures ?? 0} records</span>
+            <span>{meta?.stats.totalCatalogRecords ?? meta?.stats.totalFeatures ?? 0} records</span>
             <span>{meta?.stats.uniqueAirports ?? 0} airports</span>
             <span>{meta?.stats.uniqueCountries ?? 0} countries</span>
             <span>{meta?.quality?.reviewQueue ?? 0} review</span>
@@ -2650,15 +2646,14 @@ function App() {
                       search={search}
                       types={types}
                       selectedTypes={selectedTypes}
-                      selectedCountry={selectedCountry}
-                      selectedCity={selectedCity}
-                      selectedBrand={selectedBrand}
                       visibleCount={filteredFeatures.length}
                       selectedFilterCount={selectedFilterCount}
+                      activeFilterChips={activeFilterChips}
                       quickFilterState={mobileUI.quickFilterState}
                       onSearchChange={setSearch}
                       onQuickTypeToggle={toggleQuickType}
                       onOpenFilters={openMobileFilters}
+                      onClearFilters={clearAppliedFilters}
                     />
                     {comparedFeatures.length > 0 ? (
                       <CompareTray

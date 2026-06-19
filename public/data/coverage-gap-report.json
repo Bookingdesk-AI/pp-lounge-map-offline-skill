@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-03-11T13:05:33.139Z",
+  "generatedAt": "2026-06-18T20:08:20.197Z",
   "goalId": "lounge-guru-worldwide-coverage",
   "goalVersion": "2026-06-18",
-  "catalogHash": "5bd98f4efac03f53d378d8482dd65fb069b13b7a2db25230df6324770be32892",
+  "catalogHash": "39dcb9f88a6ff0f55307813d8fdffee90fd0eb957b5f6da26b50fb3de765585f",
   "terminalPassed": false,
   "blockers": [
     "approved_records_below_target",

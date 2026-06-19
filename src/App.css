@@ -1537,17 +1537,29 @@
     padding-bottom: 0.1rem;
   }
 
-  .mobile-filter-meta {
+  .mobile-quick-filters .active-filters {
     margin-top: 0.5rem;
-    display: flex;
-    gap: 0.35rem;
-    flex-wrap: wrap;
+    padding: 0;
+    border: 0;
   }
 
-  .meta-chip {
-    cursor: default;
-    min-height: 34px;
-    font-size: 0.64rem;
+  .mobile-quick-filters .active-filter-list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.1rem;
+  }
+
+  .mobile-quick-filters .filter-chip {
+    flex: 0 0 auto;
+    min-height: 44px;
+    max-width: min(15rem, 78vw);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-quick-filters .filter-chip span {
+    flex: 0 0 auto;
   }
 
   .mobile-type-strip .quick-type-chip,

@@ -122,6 +122,26 @@ function hasAirportNormalization(properties, coordinates) {
   );
 }
 
+function latestIsoDate(values, fallback) {
+  const latest = values
+    .map((value) => new Date(value))
+    .filter((date) => !Number.isNaN(date.getTime()))
+    .reduce((current, date) => (date.getTime() > current.getTime() ? date : current), new Date(0));
+
+  return latest.getTime() > 0 ? latest.toISOString() : fallback;
+}
+
+function latestRetrievedAtForSource(records, sourceId, fallback) {
+  return latestIsoDate(
+    records.flatMap((record) =>
+      (record.sources ?? [])
+        .filter((source) => source.sourceId === sourceId)
+        .map((source) => source.retrievedAt),
+    ),
+    fallback,
+  );
+}
+
 function createOurAirportsSource(properties, coordinates, retrievedAt) {
   if (!hasAirportNormalization(properties, coordinates)) {
     return null;
@@ -284,8 +304,9 @@ export function createCanonicalRecord(feature, options = {}) {
   };
 }
 
-export function createSourceRegistryForCatalog(features, generatedAt, records = []) {
+export function createSourceRegistryForCatalog(features, generatedAt, records = [], options = {}) {
   const registry = cloneSourceRegistry();
+  const priorityPassGeneratedAt = options.priorityPassGeneratedAt ?? generatedAt;
   const deskTravelBrandDb = registry.find((source) => source.id === 'desk-travel-brand-database');
   if (deskTravelBrandDb) {
     deskTravelBrandDb.records = getBrandRegistry().length;
@@ -297,7 +318,7 @@ export function createSourceRegistryForCatalog(features, generatedAt, records = 
     priorityPass.records = records.filter((record) =>
       record.sources.some((source) => source.sourceId === 'priority-pass'),
     ).length;
-    priorityPass.lastRunAt = generatedAt;
+    priorityPass.lastRunAt = priorityPassGeneratedAt;
     priorityPass.issues = features.filter((feature) => findQualityConflicts(feature.properties ?? feature).length > 0).length;
   }
 
@@ -308,7 +329,7 @@ export function createSourceRegistryForCatalog(features, generatedAt, records = 
     const sourceRecords = records.filter((record) => record.sources.some((item) => item.sourceId === source.id));
     if (sourceRecords.length > 0) {
       source.records = sourceRecords.length;
-      source.lastRunAt = generatedAt;
+      source.lastRunAt = latestRetrievedAtForSource(sourceRecords, source.id, generatedAt);
       source.issues = sourceRecords.filter((record) => record.quality.reviewStatus !== 'approved').length;
     }
   }
@@ -316,7 +337,7 @@ export function createSourceRegistryForCatalog(features, generatedAt, records = 
   const ourAirports = registry.find((source) => source.id === 'ourairports');
   if (ourAirports) {
     ourAirports.records = new Set(features.map((feature) => clean((feature.properties ?? feature).airportCode))).size;
-    ourAirports.lastRunAt = generatedAt;
+    ourAirports.lastRunAt = latestRetrievedAtForSource(records, 'ourairports', priorityPassGeneratedAt);
   }
 
   return registry;
@@ -345,9 +366,16 @@ export function createSchemaMetadata() {
 }
 
 export function createCanonicalCatalog({ features, meta, additionalRecords = [] }) {
-  const generatedAt = meta.generatedAt ?? new Date().toISOString();
-  const records = [...features.map((feature) => createCanonicalRecord(feature, { generatedAt })), ...additionalRecords];
-  const sources = createSourceRegistryForCatalog(features, generatedAt, records);
+  const priorityPassGeneratedAt = meta.generatedAt ?? new Date().toISOString();
+  const generatedAt = latestIsoDate(
+    [priorityPassGeneratedAt, ...additionalRecords.flatMap((record) => (record.sources ?? []).map((source) => source.retrievedAt))],
+    priorityPassGeneratedAt,
+  );
+  const records = [
+    ...features.map((feature) => createCanonicalRecord(feature, { generatedAt: priorityPassGeneratedAt })),
+    ...additionalRecords,
+  ];
+  const sources = createSourceRegistryForCatalog(features, generatedAt, records, { priorityPassGeneratedAt });
   const brands = getBrandRegistry();
   const deskTravelBrandImport = createDeskTravelBrandImport({ generatedAt });
   const quality = summarizeQuality(records);

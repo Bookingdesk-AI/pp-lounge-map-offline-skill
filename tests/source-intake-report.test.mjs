@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import { spawnSync } from 'node:child_process';
 
 const report = JSON.parse(fs.readFileSync(new URL('../public/data/source-intake-report.json', import.meta.url), 'utf8'));
+const catalog = JSON.parse(fs.readFileSync(new URL('../public/data/lounge-guru-catalog.json', import.meta.url), 'utf8'));
 const candidates = JSON.parse(
   fs.readFileSync(new URL('../public/data/non-priority-lounge-candidates.json', import.meta.url), 'utf8'),
 );
@@ -12,6 +13,26 @@ const validationReport = JSON.parse(
 );
 const sourceRegistry = JSON.parse(fs.readFileSync(new URL('../public/data/source-registry.json', import.meta.url), 'utf8'));
 const projectRoot = new URL('..', import.meta.url);
+
+test('canonical reports use the latest source-run timestamp without refreshing PP provenance', () => {
+  assert.equal(catalog.generatedAt, report.generatedAt);
+
+  const priorityPassRecord = catalog.records.find((record) =>
+    record.sources.some((source) => source.sourceId === 'priority-pass'),
+  );
+  const nonPriorityRecord = catalog.records.find((record) =>
+    record.sources.some((source) => source.sourceId !== 'priority-pass' && source.sourceId !== 'ourairports'),
+  );
+  const priorityPassSource = sourceRegistry.find((source) => source.id === 'priority-pass');
+  const oneworldSource = sourceRegistry.find((source) => source.id === 'oneworld');
+
+  assert.ok(priorityPassRecord);
+  assert.ok(nonPriorityRecord);
+  assert.notEqual(priorityPassRecord.sources[0].retrievedAt, catalog.generatedAt);
+  assert.equal(nonPriorityRecord.sources[0].retrievedAt, report.generatedAt);
+  assert.equal(priorityPassSource.lastRunAt, priorityPassRecord.sources[0].retrievedAt);
+  assert.equal(oneworldSource.lastRunAt, report.generatedAt);
+});
 
 test('source intake report records guarded public-source fetch policy', () => {
   assert.equal(report.policy.fetchMode, 'single_public_source_url_per_registry_entry');
