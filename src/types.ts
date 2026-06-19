@@ -191,6 +191,35 @@ export interface LoungeMeta {
   }>;
 }
 
+export interface CoverageGapReport {
+  generatedAt: string;
+  goalId: string;
+  terminalPassed: boolean;
+  blockers: string[];
+  current: {
+    totalRecords: number;
+    approvedRecords: number;
+    reviewRecords: number;
+    approvedRatio: number;
+    sourceFamilyCoverageRatio: number;
+  };
+  deltas: {
+    approvedRecordsRemaining: number;
+    approvalsNeededForCurrentCatalogRatio: number;
+    reviewRecordsToResolve: number;
+    missingSourceFamilies: string[];
+  };
+  sourceFamilies: Array<{
+    id: string;
+    label: string;
+    mode: string;
+    acquisition: string;
+    present: boolean;
+    presentMembers: string[];
+    missingMembers: string[];
+  }>;
+}
+
 export type SheetSnap = 'peek' | 'mid' | 'full';
 
 export type MobileSheetMode = 'results' | 'filters' | 'details' | 'intake';

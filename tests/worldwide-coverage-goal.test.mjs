@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 
 const goal = JSON.parse(fs.readFileSync(new URL('../public/data/worldwide-coverage-goal.json', import.meta.url), 'utf8'));
+const coverageGap = JSON.parse(fs.readFileSync(new URL('../public/data/coverage-gap-report.json', import.meta.url), 'utf8'));
 const migrationSql = fs.readFileSync(new URL('../migrations/0001_lounge_guru_catalog.sql', import.meta.url), 'utf8');
 const seedSql = fs.readFileSync(new URL('../migrations/0002_seed_worldwide_coverage_goal.sql', import.meta.url), 'utf8');
 
@@ -73,4 +74,25 @@ test('coverage validator reports current progress without pretending terminal co
   assert.equal(summary.terminalPassed, false);
   assert.ok(summary.blockers.includes('approved_records_below_3800'));
   assert.ok(summary.blockers.includes('review_records_present'));
+  assert.deepEqual(summary.missingSourceFamilies, coverageGap.deltas.missingSourceFamilies);
+  assert.equal(summary.gapReport.catalogHash, coverageGap.catalogHash);
+});
+
+test('coverage gap report names terminal blockers and missing source lanes', () => {
+  assert.equal(coverageGap.goalId, goal.id);
+  assert.equal(coverageGap.terminalPassed, false);
+  assert.ok(coverageGap.blockers.includes('source_family_gaps_present'));
+  assert.ok(coverageGap.deltas.approvedRecordsRemaining > 0);
+  assert.ok(coverageGap.deltas.reviewRecordsToResolve > 0);
+  assert.deepEqual([...coverageGap.deltas.missingSourceFamilies].sort(), [
+    'card-network-programs',
+    'licensed-global-baseline',
+  ]);
+
+  const families = new Map(coverageGap.sourceFamilies.map((family) => [family.id, family]));
+  assert.equal(families.get('licensed-global-baseline')?.present, false);
+  assert.ok(families.get('licensed-global-baseline')?.missingMembers.includes('loungereview-api'));
+  assert.equal(families.get('card-network-programs')?.present, false);
+  assert.ok(families.get('card-network-programs')?.missingMembers.includes('visa-airport-companion'));
+  assert.equal(families.get('open-enrichment')?.present, true);
 });

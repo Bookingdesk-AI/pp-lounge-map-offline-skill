@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type {
   AppView,
   CanonicalLoungeRecord,
+  CoverageGapReport,
   LoungeBrandAsset,
   LoungeFeature,
   LoungeFeatureCollection,
@@ -1415,16 +1416,19 @@ function IntakeView({
   records,
   sources,
   meta,
+  coverageGap,
 }: {
   records: CanonicalLoungeRecord[];
   sources: LoungeSourceRegistryEntry[];
   meta: LoungeMeta | null;
+  coverageGap: CoverageGapReport | null;
 }) {
   const reviewRecords = records
     .filter((record) => record.quality.reviewStatus !== 'approved' || record.quality.conflicts.length > 0)
     .slice(0, 24);
   const activeSources = sources.filter((source) => source.status === 'active').length;
   const manualSources = sources.filter((source) => source.status === 'manual_review').length;
+  const missingFamilies = coverageGap?.sourceFamilies.filter((family) => !family.present) ?? [];
 
   return (
     <main className="console-view">
@@ -1445,7 +1449,56 @@ function IntakeView({
           <span>Manual</span>
           <strong>{manualSources}</strong>
         </div>
+        <div>
+          <span>Families</span>
+          <strong>
+            {coverageGap
+              ? `${coverageGap.sourceFamilies.length - missingFamilies.length}/${coverageGap.sourceFamilies.length}`
+              : 'n/a'}
+          </strong>
+        </div>
+        <div>
+          <span>Approved gap</span>
+          <strong>{coverageGap?.deltas.approvedRecordsRemaining ?? 0}</strong>
+        </div>
       </section>
+
+      {coverageGap ? (
+        <section className="console-panel">
+          <div className="panel-head">
+            <h2>Coverage gaps</h2>
+            <span className="compare-count">{missingFamilies.length}</span>
+          </div>
+          <div className="data-table-wrap">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Family</th>
+                  <th>Mode</th>
+                  <th>Missing</th>
+                  <th>Next</th>
+                </tr>
+              </thead>
+              <tbody>
+                {missingFamilies.length === 0 ? (
+                  <tr>
+                    <td colSpan={4}>No gaps</td>
+                  </tr>
+                ) : (
+                  missingFamilies.map((family) => (
+                    <tr key={family.id}>
+                      <td>{family.label}</td>
+                      <td>{family.mode}</td>
+                      <td>{family.missingMembers.join(', ')}</td>
+                      <td>{family.acquisition}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
 
       <section className="console-panel">
         <div className="panel-head">
@@ -1622,6 +1675,7 @@ function App() {
   const [canonicalRecords, setCanonicalRecords] = useState<CanonicalLoungeRecord[]>([]);
   const [sources, setSources] = useState<LoungeSourceRegistryEntry[]>([]);
   const [brands, setBrands] = useState<LoungeBrandAsset[]>([]);
+  const [coverageGap, setCoverageGap] = useState<CoverageGapReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<AppView>(initialUrlState.view);
@@ -1682,12 +1736,20 @@ function App() {
 
     async function loadData() {
       try {
-        const [geoJsonResponse, metaResponse, canonicalResponse, sourceResponse, brandResponse] = await Promise.all([
+        const [
+          geoJsonResponse,
+          metaResponse,
+          canonicalResponse,
+          sourceResponse,
+          brandResponse,
+          coverageGapResponse,
+        ] = await Promise.all([
           fetch('/data/lounges.geojson'),
           fetch('/data/meta.json'),
           fetch('/data/lounge-guru-catalog.json'),
           fetch('/data/source-registry.json'),
           fetch('/data/brand-registry.json'),
+          fetch('/data/coverage-gap-report.json'),
         ]);
 
         if (!geoJsonResponse.ok || !metaResponse.ok) {
@@ -1713,6 +1775,9 @@ function App() {
         const brandRegistry = brandResponse.ok
           ? ((await brandResponse.json()) as LoungeBrandAsset[])
           : canonical?.brands ?? nextMeta.brands ?? [];
+        const nextCoverageGap = coverageGapResponse.ok
+          ? ((await coverageGapResponse.json()) as CoverageGapReport)
+          : null;
         const canonicalRecords = canonical?.records ?? [];
         const canonicalById = new Map(canonicalRecords.map((record) => [record.lounge.id, record]));
         const nextFeatures: LoungeFeature[] = (geoJson.features ?? []).map((feature) => {
@@ -1797,6 +1862,7 @@ function App() {
         setCanonicalRecords(canonicalRecords);
         setSources(sourceRegistry);
         setBrands(brandRegistry);
+        setCoverageGap(nextCoverageGap);
         setLoading(false);
       } catch (loadError) {
         if (!alive) {
@@ -2365,7 +2431,7 @@ function App() {
       </header>
 
       {activeView === 'intake' ? (
-        <IntakeView records={canonicalRecords} sources={sources} meta={meta} />
+        <IntakeView records={canonicalRecords} sources={sources} meta={meta} coverageGap={coverageGap} />
       ) : null}
 
       {activeView === 'schema' ? (
@@ -2650,7 +2716,7 @@ function App() {
 
                 {INTERNAL_VIEWS_ENABLED && mobileUI.sheetMode === 'intake' ? (
                   <div className="mobile-intake-wrap">
-                    <IntakeView records={canonicalRecords} sources={sources} meta={meta} />
+                    <IntakeView records={canonicalRecords} sources={sources} meta={meta} coverageGap={coverageGap} />
                   </div>
                 ) : null}
               </div>

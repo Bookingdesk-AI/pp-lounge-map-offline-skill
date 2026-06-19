@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createCoverageGapReport } from './lib/coverage-gap-report.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,6 +10,7 @@ const projectRoot = path.resolve(__dirname, '..');
 const goalPath = path.resolve(projectRoot, 'public', 'data', 'worldwide-coverage-goal.json');
 const catalogPath = path.resolve(projectRoot, 'public', 'data', 'lounge-guru-catalog.json');
 const sourceReportPath = path.resolve(projectRoot, 'public', 'data', 'source-intake-report.json');
+const migrationPath = path.resolve(projectRoot, 'migrations', '0001_lounge_guru_catalog.sql');
 const outputPath = path.resolve(projectRoot, '.cache', 'd1', 'lounge-guru-current-snapshot.sql');
 
 function sha256(value) {
@@ -36,7 +38,8 @@ async function readJson(filePath) {
   return JSON.parse(await fs.readFile(filePath, 'utf8'));
 }
 
-function summarize(catalog, goal) {
+function summarize(catalog, goal, migrationSql) {
+  const gapReport = createCoverageGapReport({ goal, catalog, sourceRegistry: catalog.sources ?? [], migrationSql });
   const records = catalog.records ?? [];
   const approvedRecords = records.filter((record) => record.quality?.reviewStatus === 'approved').length;
   const reviewRecords = records.length - approvedRecords;
@@ -93,6 +96,8 @@ function summarize(catalog, goal) {
     recordsWithoutSources,
     recordsWithoutQuality,
     sourceFamilies,
+    missingSourceFamilies: gapReport.deltas.missingSourceFamilies,
+    gapReport,
     approvedRatio: Number(approvedRatio.toFixed(4)),
     sourceFamilyCoverageRatio: Number(sourceFamilyCoverageRatio.toFixed(4)),
     terminalPassed: blockers.length === 0,
@@ -200,14 +205,15 @@ function insertValidationRun(goal, runId, summary) {
 }
 
 async function main() {
-  const [goal, catalog, sourceReport] = await Promise.all([
+  const [goal, catalog, sourceReport, migrationSql] = await Promise.all([
     readJson(goalPath),
     readJson(catalogPath),
     readJson(sourceReportPath),
+    fs.readFile(migrationPath, 'utf8'),
   ]);
   const catalogHash = sha256(JSON.stringify(catalog));
   const runId = `catalog-${catalogHash.slice(0, 16)}`;
-  const summary = summarize(catalog, goal);
+  const summary = summarize(catalog, goal, migrationSql);
   const statements = [
     upsertCoverageGoal(goal),
     'DELETE FROM coverage_validation_runs;',

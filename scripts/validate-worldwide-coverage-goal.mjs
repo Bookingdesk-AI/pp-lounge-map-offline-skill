@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createCoverageGapReport } from './lib/coverage-gap-report.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,6 +43,7 @@ function validateRequiredTables(goal, migrationSql) {
 }
 
 function buildSummary({ goal, catalog, sourceRegistry, migrationSql }) {
+  const gapReport = createCoverageGapReport({ goal, catalog, sourceRegistry, migrationSql });
   const records = catalog.records ?? [];
   const approvedRecords = records.filter((record) => record.quality?.reviewStatus === 'approved').length;
   const reviewRecords = records.length - approvedRecords;
@@ -112,6 +114,8 @@ function buildSummary({ goal, catalog, sourceRegistry, migrationSql }) {
     recordsWithoutSources,
     recordsWithoutQuality,
     sourceFamilyStatuses,
+    missingSourceFamilies: gapReport.deltas.missingSourceFamilies,
+    gapReport,
     tableStatuses,
     missingRegisteredMembers,
     terminalPassed: blockers.length === 0,

@@ -1,0 +1,448 @@
+{
+  "generatedAt": "2026-03-11T13:05:33.139Z",
+  "goalId": "lounge-guru-worldwide-coverage",
+  "goalVersion": "2026-06-18",
+  "catalogHash": "ba6440b85fd1d0409875f5d61fa9ca47c3a3bbaf9f05c3ab80fdce350c068a24",
+  "terminalPassed": false,
+  "blockers": [
+    "approved_records_below_target",
+    "approved_ratio_below_target",
+    "source_family_gaps_present",
+    "review_records_present"
+  ],
+  "targets": {
+    "minApprovedRecords": 3800,
+    "minApprovedRatio": 0.98,
+    "minSourceFamilyCoverageRatio": 1,
+    "maxReviewRecords": 0,
+    "maxUnknownAirportRecords": 0
+  },
+  "current": {
+    "totalRecords": 2644,
+    "approvedRecords": 1795,
+    "reviewRecords": 849,
+    "approvedRatio": 0.6789,
+    "sourceFamilyCoverageRatio": 0.75,
+    "unknownAirportRecords": 0,
+    "recordsWithoutSources": 0,
+    "recordsWithoutQuality": 0
+  },
+  "deltas": {
+    "approvedRecordsRemaining": 2005,
+    "approvalsNeededForCurrentCatalogRatio": 797,
+    "reviewRecordsToResolve": 849,
+    "missingSourceFamilies": [
+      "licensed-global-baseline",
+      "card-network-programs"
+    ]
+  },
+  "sourceFamilies": [
+    {
+      "id": "licensed-global-baseline",
+      "label": "Licensed global inventory baseline",
+      "mode": "licensed_api_or_commercial_data",
+      "acquisition": "Commercial approval, API contract, normalized snapshot, then field-level provenance.",
+      "present": false,
+      "presentMembers": [],
+      "missingMembers": [
+        "loungereview-api",
+        "holiday-extras-api"
+      ],
+      "members": [
+        {
+          "sourceId": "loungereview-api",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "licensed_api",
+          "records": 0,
+          "rightsNote": "Licensed API provider; no intake without approved commercial terms and key management."
+        },
+        {
+          "sourceId": "holiday-extras-api",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "licensed_api",
+          "records": 0,
+          "rightsNote": "Official API documentation; use only under approved commercial/API terms."
+        }
+      ]
+    },
+    {
+      "id": "collinson-networks",
+      "label": "Collinson access networks",
+      "mode": "licensed_or_approved_source_workbook",
+      "acquisition": "Approved workbook, licensed feed, or bounded official public pages only.",
+      "present": true,
+      "presentMembers": [
+        "priority-pass"
+      ],
+      "missingMembers": [
+        "loungekey",
+        "collinson-international"
+      ],
+      "members": [
+        {
+          "sourceId": "priority-pass",
+          "registered": true,
+          "status": "active",
+          "adapter": "csv_file",
+          "records": 1754,
+          "rightsNote": "Use only the approved source workbook or public official pages; do not bypass account controls."
+        },
+        {
+          "sourceId": "loungekey",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official public LoungeKey surface; licensed or partner access is required for complete record intake."
+        },
+        {
+          "sourceId": "collinson-international",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official Collinson corporate surface; use as network evidence and licensing path, not a raw scrape target."
+        }
+      ]
+    },
+    {
+      "id": "bank-issuer-programs",
+      "label": "Bank issuer lounge programs",
+      "mode": "official_public_or_partner_api",
+      "acquisition": "Official pages first; partner APIs or manual review for eligibility and guest policy.",
+      "present": true,
+      "presentMembers": [
+        "amex-global-lounge-collection",
+        "chase-sapphire",
+        "capital-one"
+      ],
+      "missingMembers": [
+        "citi-travel"
+      ],
+      "members": [
+        {
+          "sourceId": "amex-global-lounge-collection",
+          "registered": true,
+          "status": "manual_review",
+          "adapter": "official_page",
+          "records": 24,
+          "rightsNote": "Official public Amex page; treat partner eligibility as source evidence, not canonical operator data."
+        },
+        {
+          "sourceId": "chase-sapphire",
+          "registered": true,
+          "status": "manual_review",
+          "adapter": "official_page",
+          "records": 8,
+          "rightsNote": "Official public Chase page; parse only public location and policy text."
+        },
+        {
+          "sourceId": "capital-one",
+          "registered": true,
+          "status": "manual_review",
+          "adapter": "official_page",
+          "records": 6,
+          "rightsNote": "Official public Capital One page; retain URL provenance for every imported location."
+        },
+        {
+          "sourceId": "citi-travel",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official public Citi travel page; issuer-program mapping requires manual review before publishing records."
+        }
+      ]
+    },
+    {
+      "id": "card-network-programs",
+      "label": "Card network and benefit-platform programs",
+      "mode": "partner_api_or_manual_review",
+      "acquisition": "Official developer/program pages, partner contract, or manual review.",
+      "present": false,
+      "presentMembers": [],
+      "missingMembers": [
+        "visa-airport-companion",
+        "mastercard-airport-lounge-programs",
+        "mastercard-travel-pass",
+        "dragonpass"
+      ],
+      "members": [
+        {
+          "sourceId": "visa-airport-companion",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official public Visa program page; import only public program and eligibility evidence."
+        },
+        {
+          "sourceId": "mastercard-airport-lounge-programs",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "licensed_api",
+          "records": 0,
+          "rightsNote": "Official Mastercard developer product; use only with approved API credentials and contract terms."
+        },
+        {
+          "sourceId": "mastercard-travel-pass",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official public Mastercard Travel Pass page; retain URL provenance for every imported field."
+        },
+        {
+          "sourceId": "dragonpass",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official public DragonPass page; import only public program and location evidence."
+        }
+      ]
+    },
+    {
+      "id": "airline-alliance-lounges",
+      "label": "Airline alliance lounge finders",
+      "mode": "partner_api_or_manual_review",
+      "acquisition": "Official finder pages or approved partner path; use as cross-check evidence for access, not automatic approval.",
+      "present": true,
+      "presentMembers": [
+        "oneworld"
+      ],
+      "missingMembers": [
+        "star-alliance",
+        "skyteam"
+      ],
+      "members": [
+        {
+          "sourceId": "star-alliance",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review."
+        },
+        {
+          "sourceId": "oneworld",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 778,
+          "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review."
+        },
+        {
+          "sourceId": "skyteam",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review."
+        }
+      ]
+    },
+    {
+      "id": "airline-operated-lounges",
+      "label": "Airline-operated lounges",
+      "mode": "official_public_or_partner_api",
+      "acquisition": "Bounded official HTML/page intake plus manual review for conflict resolution.",
+      "present": true,
+      "presentMembers": [
+        "air-canada"
+      ],
+      "missingMembers": [
+        "united",
+        "delta",
+        "american"
+      ],
+      "members": [
+        {
+          "sourceId": "united",
+          "registered": true,
+          "status": "manual_review",
+          "adapter": "official_html",
+          "records": 0,
+          "rightsNote": "Official public airline location page."
+        },
+        {
+          "sourceId": "delta",
+          "registered": true,
+          "status": "manual_review",
+          "adapter": "official_html",
+          "records": 0,
+          "rightsNote": "Official public airline location page."
+        },
+        {
+          "sourceId": "american",
+          "registered": true,
+          "status": "manual_review",
+          "adapter": "official_html",
+          "records": 0,
+          "rightsNote": "Official public airline location page."
+        },
+        {
+          "sourceId": "air-canada",
+          "registered": true,
+          "status": "manual_review",
+          "adapter": "official_html",
+          "records": 14,
+          "rightsNote": "Official public airline location page."
+        }
+      ]
+    },
+    {
+      "id": "operator-operated-lounges",
+      "label": "Independent and contract lounge operators",
+      "mode": "official_public_or_partner_api",
+      "acquisition": "Official operator pages first; licensed operator feeds where public pages block automated intake.",
+      "present": true,
+      "presentMembers": [
+        "escape-lounges",
+        "airport-dimensions"
+      ],
+      "missingMembers": [
+        "plaza-premium",
+        "aspire-lounges",
+        "marhaba",
+        "primeclass",
+        "no1-lounges",
+        "be-relax"
+      ],
+      "members": [
+        {
+          "sourceId": "plaza-premium",
+          "registered": true,
+          "status": "manual_review",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official public operator page."
+        },
+        {
+          "sourceId": "escape-lounges",
+          "registered": true,
+          "status": "manual_review",
+          "adapter": "official_page",
+          "records": 13,
+          "rightsNote": "Official public operator page."
+        },
+        {
+          "sourceId": "airport-dimensions",
+          "registered": true,
+          "status": "manual_review",
+          "adapter": "official_page",
+          "records": 47,
+          "rightsNote": "Official public operator page."
+        },
+        {
+          "sourceId": "aspire-lounges",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official Aspire location surface; retain URL provenance for every imported field."
+        },
+        {
+          "sourceId": "marhaba",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official Marhaba location surface; retain URL provenance for every imported field."
+        },
+        {
+          "sourceId": "primeclass",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official Primeclass location surface; retain URL provenance for every imported field."
+        },
+        {
+          "sourceId": "no1-lounges",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official No1 Lounges location surface; retain URL provenance for every imported field."
+        },
+        {
+          "sourceId": "be-relax",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Official Be Relax location surface; classify spa-only records separately from lounge access."
+        }
+      ]
+    },
+    {
+      "id": "open-enrichment",
+      "label": "Open normalization and enrichment",
+      "mode": "open_data_enrichment",
+      "acquisition": "OurAirports CSV, OSM/Taginfo monitoring, and Nominatim only as cached, rate-limited fallback.",
+      "present": true,
+      "presentMembers": [
+        "ourairports"
+      ],
+      "missingMembers": [
+        "openstreetmap",
+        "nominatim"
+      ],
+      "members": [
+        {
+          "sourceId": "ourairports",
+          "registered": true,
+          "status": "active",
+          "adapter": "csv_file",
+          "records": 1754,
+          "rightsNote": "Open airport reference data; use for normalization only."
+        },
+        {
+          "sourceId": "openstreetmap",
+          "registered": true,
+          "status": "candidate",
+          "adapter": "open_data",
+          "records": 0,
+          "rightsNote": "Open data enrichment only; comply with ODbL attribution and do not treat as canonical lounge inventory."
+        },
+        {
+          "sourceId": "nominatim",
+          "registered": true,
+          "status": "blocked",
+          "adapter": "official_page",
+          "records": 0,
+          "rightsNote": "Fallback only; honor rate limits and cache results."
+        }
+      ]
+    }
+  ],
+  "tableStatuses": [
+    {
+      "table": "coverage_goals",
+      "present": true
+    },
+    {
+      "table": "catalog_runs",
+      "present": true
+    },
+    {
+      "table": "lounge_records",
+      "present": true
+    },
+    {
+      "table": "lounge_sources",
+      "present": true
+    },
+    {
+      "table": "source_runs",
+      "present": true
+    },
+    {
+      "table": "coverage_validation_runs",
+      "present": true
+    }
+  ]
+}
