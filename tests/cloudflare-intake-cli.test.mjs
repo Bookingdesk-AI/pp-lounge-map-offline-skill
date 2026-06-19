@@ -10,6 +10,7 @@ import {
   buildReportUrl,
   parseArgs,
   parseSourceIds,
+  redactRawPageContent,
   runCloudflareSourceIntake,
 } from '../scripts/run-cloudflare-source-intake.mjs';
 
@@ -125,7 +126,14 @@ test('Cloudflare intake CLI can request D1-derived report endpoint', async () =>
       {
         sourceId: 'dragonpass',
         url: 'https://www.dragonpass.com/',
-        fetchAttempts: [],
+        text: '<html>raw source body</html>',
+        fetchAttempts: [
+          {
+            url: 'https://www.dragonpass.com/',
+            status: 'fetched',
+            html: '<html>raw attempt body</html>',
+          },
+        ],
       },
     ],
   };
@@ -150,9 +158,47 @@ test('Cloudflare intake CLI can request D1-derived report endpoint', async () =>
   assert.equal(summary.fullCatalogIntakeReport, false);
   assert.equal(summary.coverageGateStillRequiresFullCloudflareReport, true);
   assert.equal(summary.outputPath, outputPath);
-  assert.deepEqual(JSON.parse(await fsp.readFile(outputPath, 'utf8')), reportBody);
+  const exportedReport = JSON.parse(await fsp.readFile(outputPath, 'utf8'));
+  assert.deepEqual(exportedReport, redactRawPageContent(reportBody));
+  assert.ok(!Object.hasOwn(exportedReport.sources[0], 'text'));
+  assert.ok(!Object.hasOwn(exportedReport.sources[0], 'html'));
+  assert.ok(!Object.hasOwn(exportedReport.sources[0].fetchAttempts[0], 'text'));
+  assert.ok(!Object.hasOwn(exportedReport.sources[0].fetchAttempts[0], 'html'));
   assert.doesNotMatch(lines.join('\n'), /secret-token/);
   await fsp.rm(tempDir, { recursive: true, force: true });
+});
+
+test('Cloudflare intake CLI redacts raw page content recursively', () => {
+  const redacted = redactRawPageContent({
+    ok: true,
+    html: '<html>root</html>',
+    sources: [
+      {
+        sourceId: 'visa-airport-companion',
+        text: '<html>source</html>',
+        fetchAttempts: [
+          {
+            status: 'fetched',
+            html: '<html>attempt</html>',
+          },
+        ],
+      },
+    ],
+  });
+
+  assert.deepEqual(redacted, {
+    ok: true,
+    sources: [
+      {
+        sourceId: 'visa-airport-companion',
+        fetchAttempts: [
+          {
+            status: 'fetched',
+          },
+        ],
+      },
+    ],
+  });
 });
 
 test('Cloudflare intake CLI dry-run report does not write output', async () => {

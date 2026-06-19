@@ -113,10 +113,27 @@ function parseJson(text) {
   }
 }
 
+export function redactRawPageContent(value) {
+  if (Array.isArray(value)) {
+    return value.map((item) => redactRawPageContent(item));
+  }
+
+  if (!value || typeof value !== 'object') {
+    return value;
+  }
+
+  return Object.fromEntries(
+    Object.entries(value)
+      .filter(([key]) => !['html', 'text'].includes(key))
+      .map(([key, entry]) => [key, redactRawPageContent(entry)]),
+  );
+}
+
 async function writeJsonOutput(outputPath, body) {
   const resolvedPath = path.resolve(outputPath);
+  const redactedBody = redactRawPageContent(body);
   await fs.mkdir(path.dirname(resolvedPath), { recursive: true });
-  await fs.writeFile(resolvedPath, `${JSON.stringify(body, null, 2)}\n`, 'utf8');
+  await fs.writeFile(resolvedPath, `${JSON.stringify(redactedBody, null, 2)}\n`, 'utf8');
   return resolvedPath;
 }
 
