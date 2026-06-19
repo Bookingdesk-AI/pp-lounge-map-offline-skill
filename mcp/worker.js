@@ -8,6 +8,7 @@ import {
   isStreamableMcpRequest,
 } from './server.js';
 import { McpRateLimiter } from './rate-limit.js';
+import { createSourceIntakeProbeResponse } from './source-intake.js';
 
 export { CatalogMcpAgent, McpRateLimiter };
 
@@ -17,6 +18,10 @@ export default {
 
     if (url.pathname === '/healthz') {
       return createHealthResponse();
+    }
+
+    if (url.pathname === '/admin/source-intake/probe') {
+      return createSourceIntakeProbeResponse(request, env);
     }
 
     if (isStreamableMcpRequest(request)) {

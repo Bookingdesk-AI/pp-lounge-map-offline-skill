@@ -86,6 +86,15 @@ LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare npm run scrape:sources
 
 Terminal coverage remains blocked while `public/data/source-intake-report.json` reports a legacy local runtime.
 
+Cloudflare probe path:
+
+```bash
+curl -X POST 'https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=mastercard-travel-pass' \
+  -H 'x-lounge-guru-intake-token: <secret>'
+```
+
+The probe writes a bounded `source_runs` row from the Worker runtime. It stores status, hashes, headers, and provenance only; raw page bodies stay out of D1 and git.
+
 After intake, publish only through the Cloudflare D1 snapshot path:
 
 ```bash
