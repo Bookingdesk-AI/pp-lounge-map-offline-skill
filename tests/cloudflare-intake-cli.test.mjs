@@ -259,5 +259,9 @@ test('package exposes Cloudflare-only intake command before evidence export', ()
     packageJson.scripts['intake:cloudflare:report:export'],
     'node scripts/run-cloudflare-source-intake.mjs --report --output=public/data/cloudflare-source-intake-report.json',
   );
+  assert.equal(
+    packageJson.scripts['intake:cloudflare:promote'],
+    'node scripts/promote-cloudflare-source-intake-report.mjs',
+  );
   assert.equal(packageJson.scripts['scrape:sources'], 'node scripts/scrape-source-snapshots.mjs');
 });
