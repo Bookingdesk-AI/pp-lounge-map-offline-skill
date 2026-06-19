@@ -22,6 +22,7 @@
     "validate:coverage": "node scripts/validate-worldwide-coverage-goal.mjs",
     "validate:json": "node scripts/validate-public-json.mjs",
     "goal:coverage": "node scripts/validate-worldwide-coverage-goal.mjs --strict",
+    "intake:cloudflare": "node scripts/run-cloudflare-source-intake.mjs && npm run intake:evidence",
     "intake:evidence": "node scripts/export-cloudflare-source-run-evidence.mjs",
     "db:catalog:sql": "node scripts/export-cloudflare-d1-snapshot.mjs",
     "db:catalog:push": "npm run db:catalog:sql && wrangler d1 execute lounge-guru-catalog --remote --config wrangler.mcp.toml --file .cache/d1/lounge-guru-current-snapshot.sql",
