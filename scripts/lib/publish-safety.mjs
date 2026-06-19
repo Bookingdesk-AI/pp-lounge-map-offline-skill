@@ -21,6 +21,28 @@ const FORBIDDEN_CONTENT_PATTERNS = [
   },
 ];
 
+
+async function validateMarkdownLinks({ content, filePath, skillDir, projectRoot, issues }) {
+  const linkPattern = /\[[^\]]+\]\(([^)]+)\)/gu;
+  for (const match of content.matchAll(linkPattern)) {
+    const target = match[1].trim();
+    if (!target || target.startsWith('#') || /^[a-z][a-z0-9+.-]*:/iu.test(target)) continue;
+
+    const [withoutQuery] = target.split(/[?#]/u);
+    const resolved = path.resolve(path.dirname(filePath), withoutQuery);
+    if (!resolved.startsWith(skillDir + path.sep)) {
+      issues.push(`${path.relative(projectRoot, filePath)} links outside offline skill bundle: ${target}`);
+      continue;
+    }
+
+    try {
+      await fs.stat(resolved);
+    } catch {
+      issues.push(`${path.relative(projectRoot, filePath)} has missing relative link: ${target}`);
+    }
+  }
+}
+
 async function walk(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true });
   const files = [];
@@ -84,6 +106,10 @@ export async function validateSkillBundleWithOptions({
       if (check.pattern.test(content)) {
         issues.push(`${check.message} (${relativePath})`);
       }
+    }
+
+    if (path.extname(filePath) === '.md') {
+      await validateMarkdownLinks({ content, filePath, skillDir, projectRoot, issues });
     }
 
     if (forbidHttpUrlsInMarkdown && path.extname(filePath) === '.md' && /https?:\/\//u.test(content)) {
