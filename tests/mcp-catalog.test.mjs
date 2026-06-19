@@ -87,3 +87,17 @@ test('get_lounge returns a known lounge by stable id', () => {
   assert.ok(lounge.sources.length > 0);
   assert.ok(lounge.canonical);
 });
+
+test('approved catalog records preserve airport normalization provenance', () => {
+  const known = getAllLounges().find((lounge) => lounge.sources.some((source) => source.sourceId === 'priority-pass'));
+  assert.ok(known);
+
+  const sourceIds = new Set(known.sources.map((source) => source.sourceId));
+  assert.ok(sourceIds.has('priority-pass'));
+  assert.ok(sourceIds.has('ourairports'));
+
+  const ourAirports = known.sources.find((source) => source.sourceId === 'ourairports');
+  assert.ok(ourAirports);
+  assert.ok(ourAirports.fieldCoverage.includes('airport.coordinates'));
+  assert.match(ourAirports.rightsNote, /normalization/);
+});

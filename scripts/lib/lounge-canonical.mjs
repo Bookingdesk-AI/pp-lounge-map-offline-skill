@@ -111,6 +111,39 @@ function getCoordinates(record) {
   };
 }
 
+function hasAirportNormalization(properties, coordinates) {
+  return Boolean(
+    clean(properties.airportCode) &&
+      clean(properties.airportName) &&
+      clean(properties.city) &&
+      clean(properties.country) &&
+      Number.isFinite(coordinates.lat) &&
+      Number.isFinite(coordinates.lon),
+  );
+}
+
+function createOurAirportsSource(properties, coordinates, retrievedAt) {
+  if (!hasAirportNormalization(properties, coordinates)) {
+    return null;
+  }
+
+  return {
+    sourceId: 'ourairports',
+    publisher: 'OurAirports',
+    url: 'https://ourairports.com/data/',
+    retrievedAt,
+    fieldCoverage: [
+      'airport.iata',
+      'airport.name',
+      'airport.city',
+      'airport.country',
+      'airport.coordinates',
+    ],
+    confidence: 0.9,
+    rightsNote: 'Open airport reference data; used for airport identity and coordinate normalization only.',
+  };
+}
+
 function splitNotes(value) {
   return clean(value)
     .replace(/\r/g, '\n')
@@ -198,6 +231,7 @@ export function createCanonicalRecord(feature, options = {}) {
   const freshness = calculateFreshness(generatedAt, 30);
   const reviewStatus = conflicts.length > 0 || completeness < 60 ? 'review' : 'approved';
   const notes = splitNotes(properties.openingHours);
+  const airportSource = createOurAirportsSource(properties, coordinates, generatedAt);
 
   return {
     lounge: {
@@ -240,7 +274,7 @@ export function createCanonicalRecord(feature, options = {}) {
     restrictions: cleanList(properties.conditions),
     guestPolicy: cleanList(properties.conditions).find((condition) => /guest|children|cardholder/i.test(condition)) ?? '',
     notes,
-    sources: [source],
+    sources: airportSource ? [source, airportSource] : [source],
     quality: {
       completeness,
       freshness,
@@ -326,9 +360,7 @@ export function createCanonicalCatalog({ features, meta, additionalRecords = [] 
       ...meta.stats,
       totalCatalogRecords: records.length,
       candidateRecords: additionalRecords.length,
-      nonPriorityRecords: additionalRecords.filter((record) =>
-        record.sources.some((source) => source.sourceId !== 'priority-pass'),
-      ).length,
+      nonPriorityRecords: additionalRecords.filter((record) => record.sources[0]?.sourceId !== 'priority-pass').length,
       totalSources: sources.length,
       reviewQueue: quality.reviewQueue,
       approvedRecords: records.length - quality.reviewQueue,

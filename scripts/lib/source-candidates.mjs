@@ -508,9 +508,7 @@ function makeSourceEvidenceLookup(report) {
 }
 
 export function createNonPriorityValidationReport({ records, report, generatedAt }) {
-  const nonPriorityRecords = records.filter((record) =>
-    record.sources.some((source) => source.sourceId !== 'priority-pass'),
-  );
+  const nonPriorityRecords = records.filter((record) => record.sources[0]?.sourceId !== 'priority-pass');
   const structuredLookup = makeStructuredLookup(report);
   const sourceEvidenceLookup = makeSourceEvidenceLookup(report);
   const rows = nonPriorityRecords.map((record) => {
