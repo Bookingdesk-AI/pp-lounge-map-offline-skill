@@ -5,6 +5,9 @@ import { execFileSync } from 'node:child_process';
 
 const goal = JSON.parse(fs.readFileSync(new URL('../public/data/worldwide-coverage-goal.json', import.meta.url), 'utf8'));
 const coverageGap = JSON.parse(fs.readFileSync(new URL('../public/data/coverage-gap-report.json', import.meta.url), 'utf8'));
+const intakePlan = JSON.parse(
+  fs.readFileSync(new URL('../public/data/cloudflare-source-intake-plan.json', import.meta.url), 'utf8'),
+);
 const migrationSql = fs.readFileSync(new URL('../migrations/0001_lounge_guru_catalog.sql', import.meta.url), 'utf8');
 const seedSql = fs.readFileSync(new URL('../migrations/0002_seed_worldwide_coverage_goal.sql', import.meta.url), 'utf8');
 
@@ -95,4 +98,24 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
   assert.equal(families.get('card-network-programs')?.present, false);
   assert.ok(families.get('card-network-programs')?.missingMembers.includes('visa-airport-companion'));
   assert.equal(families.get('open-enrichment')?.present, true);
+});
+
+test('Cloudflare source intake plan tracks missing source lanes', () => {
+  assert.equal(intakePlan.coverageGoalId, goal.id);
+  assert.equal(intakePlan.policy.requiredRuntime, 'cloudflare');
+  assert.equal(intakePlan.policy.localScrawl, 'blocked');
+  assert.equal(intakePlan.policy.rawSnapshotsCommitted, false);
+  assert.equal(intakePlan.summary.missingFamilies, coverageGap.deltas.missingSourceFamilies.length);
+  assert.equal(intakePlan.summary.tasks, intakePlan.tasks.length);
+
+  const taskSourceIds = new Set(intakePlan.tasks.map((task) => task.sourceId));
+  for (const family of coverageGap.sourceFamilies.filter((sourceFamily) => !sourceFamily.present)) {
+    for (const sourceId of family.missingMembers) {
+      assert.ok(taskSourceIds.has(sourceId), `missing intake task ${sourceId}`);
+    }
+  }
+
+  assert.ok(intakePlan.tasks.some((task) => task.action === 'credential_review' && task.status === 'blocked'));
+  assert.ok(intakePlan.tasks.some((task) => task.action === 'structured_adapter' && task.status === 'ready'));
+  assert.ok(intakePlan.tasks.some((task) => task.action === 'fetch_repair' && task.status === 'ready'));
 });

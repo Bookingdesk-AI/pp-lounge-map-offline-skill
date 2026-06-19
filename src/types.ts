@@ -220,6 +220,41 @@ export interface CoverageGapReport {
   }>;
 }
 
+export interface CloudflareSourceIntakePlan {
+  generatedAt: string;
+  coverageGoalId: string;
+  sourceRunId: string | null;
+  policy: {
+    requiredRuntime: 'cloudflare';
+    localScrawl: 'blocked';
+    rawSnapshotsCommitted: false;
+    proofEnv: string;
+  };
+  summary: {
+    missingFamilies: number;
+    tasks: number;
+    readyTasks: number;
+    blockedTasks: number;
+    fetchedWithoutRecords: number;
+  };
+  tasks: Array<{
+    familyId: string;
+    familyLabel: string;
+    sourceId: string;
+    publisher: string;
+    adapter: SourceAdapterKind | 'missing';
+    sourceStatus: SourceRunStatus | 'missing';
+    runStatus: string;
+    runRecords: number;
+    cloudflareSnapshot: boolean;
+    action: string;
+    status: 'ready' | 'blocked';
+    next: string;
+    url: string;
+    rightsNote: string;
+  }>;
+}
+
 export type SheetSnap = 'peek' | 'mid' | 'full';
 
 export type MobileSheetMode = 'results' | 'filters' | 'details' | 'intake';

@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type {
   AppView,
   CanonicalLoungeRecord,
+  CloudflareSourceIntakePlan,
   CoverageGapReport,
   LoungeBrandAsset,
   LoungeFeature,
@@ -1420,11 +1421,13 @@ function IntakeView({
   sources,
   meta,
   coverageGap,
+  intakePlan,
 }: {
   records: CanonicalLoungeRecord[];
   sources: LoungeSourceRegistryEntry[];
   meta: LoungeMeta | null;
   coverageGap: CoverageGapReport | null;
+  intakePlan: CloudflareSourceIntakePlan | null;
 }) {
   const reviewRecords = records
     .filter((record) => record.quality.reviewStatus !== 'approved' || record.quality.conflicts.length > 0)
@@ -1464,7 +1467,44 @@ function IntakeView({
           <span>Approved gap</span>
           <strong>{coverageGap?.deltas.approvedRecordsRemaining ?? 0}</strong>
         </div>
+        <div>
+          <span>Plan</span>
+          <strong>{intakePlan ? `${intakePlan.summary.readyTasks}/${intakePlan.summary.tasks}` : 'n/a'}</strong>
+        </div>
       </section>
+
+      {intakePlan ? (
+        <section className="console-panel">
+          <div className="panel-head">
+            <h2>Intake plan</h2>
+            <span className="compare-count">{intakePlan.summary.tasks}</span>
+          </div>
+          <div className="data-table-wrap">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Source</th>
+                  <th>Run</th>
+                  <th>Action</th>
+                  <th>State</th>
+                  <th>Next</th>
+                </tr>
+              </thead>
+              <tbody>
+                {intakePlan.tasks.map((task) => (
+                  <tr key={`${task.familyId}-${task.sourceId}`}>
+                    <td>{task.publisher}</td>
+                    <td>{task.runStatus}</td>
+                    <td>{task.action}</td>
+                    <td>{task.status}</td>
+                    <td>{task.next}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
 
       {coverageGap ? (
         <section className="console-panel">
@@ -1679,6 +1719,7 @@ function App() {
   const [sources, setSources] = useState<LoungeSourceRegistryEntry[]>([]);
   const [brands, setBrands] = useState<LoungeBrandAsset[]>([]);
   const [coverageGap, setCoverageGap] = useState<CoverageGapReport | null>(null);
+  const [intakePlan, setIntakePlan] = useState<CloudflareSourceIntakePlan | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<AppView>(initialUrlState.view);
@@ -1746,6 +1787,7 @@ function App() {
           sourceResponse,
           brandResponse,
           coverageGapResponse,
+          intakePlanResponse,
         ] = await Promise.all([
           fetch('/data/lounges.geojson'),
           fetch('/data/meta.json'),
@@ -1753,6 +1795,7 @@ function App() {
           fetch('/data/source-registry.json'),
           fetch('/data/brand-registry.json'),
           fetch('/data/coverage-gap-report.json'),
+          fetch('/data/cloudflare-source-intake-plan.json'),
         ]);
 
         if (!geoJsonResponse.ok || !metaResponse.ok) {
@@ -1780,6 +1823,9 @@ function App() {
           : canonical?.brands ?? nextMeta.brands ?? [];
         const nextCoverageGap = coverageGapResponse.ok
           ? ((await coverageGapResponse.json()) as CoverageGapReport)
+          : null;
+        const nextIntakePlan = intakePlanResponse.ok
+          ? ((await intakePlanResponse.json()) as CloudflareSourceIntakePlan)
           : null;
         const canonicalRecords = canonical?.records ?? [];
         const canonicalById = new Map(canonicalRecords.map((record) => [record.lounge.id, record]));
@@ -1866,6 +1912,7 @@ function App() {
         setSources(sourceRegistry);
         setBrands(brandRegistry);
         setCoverageGap(nextCoverageGap);
+        setIntakePlan(nextIntakePlan);
         setLoading(false);
       } catch (loadError) {
         if (!alive) {
@@ -2434,7 +2481,13 @@ function App() {
       </header>
 
       {activeView === 'intake' ? (
-        <IntakeView records={canonicalRecords} sources={sources} meta={meta} coverageGap={coverageGap} />
+        <IntakeView
+          records={canonicalRecords}
+          sources={sources}
+          meta={meta}
+          coverageGap={coverageGap}
+          intakePlan={intakePlan}
+        />
       ) : null}
 
       {activeView === 'schema' ? (
@@ -2719,7 +2772,13 @@ function App() {
 
                 {INTERNAL_VIEWS_ENABLED && mobileUI.sheetMode === 'intake' ? (
                   <div className="mobile-intake-wrap">
-                    <IntakeView records={canonicalRecords} sources={sources} meta={meta} coverageGap={coverageGap} />
+                    <IntakeView
+                      records={canonicalRecords}
+                      sources={sources}
+                      meta={meta}
+                      coverageGap={coverageGap}
+                      intakePlan={intakePlan}
+                    />
                   </div>
                 ) : null}
               </div>

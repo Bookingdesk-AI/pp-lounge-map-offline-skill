@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createBrandLogoSvg } from './lib/brand-registry.mjs';
+import { createCloudflareSourceIntakePlan } from './lib/cloudflare-source-intake-plan.mjs';
 import { createCoverageGapReport } from './lib/coverage-gap-report.mjs';
 import { createCanonicalCatalog } from './lib/lounge-canonical.mjs';
 import {
@@ -21,6 +22,7 @@ const outputBrandsPath = path.resolve(projectRoot, 'public', 'data', 'brand-regi
 const outputBrandImportPath = path.resolve(projectRoot, 'public', 'data', 'desk-travel-brand-import.json');
 const outputQualityPath = path.resolve(projectRoot, 'public', 'data', 'quality-report.json');
 const outputCoverageGapPath = path.resolve(projectRoot, 'public', 'data', 'coverage-gap-report.json');
+const outputIntakePlanPath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-intake-plan.json');
 const sourceIntakeReportPath = path.resolve(projectRoot, 'public', 'data', 'source-intake-report.json');
 const outputCandidatePath = path.resolve(projectRoot, 'public', 'data', 'non-priority-lounge-candidates.json');
 const outputValidationPath = path.resolve(projectRoot, 'public', 'data', 'non-priority-validation-report.json');
@@ -65,6 +67,11 @@ async function main() {
     sourceRegistry: catalog.sources,
     migrationSql,
   });
+  const intakePlan = createCloudflareSourceIntakePlan({
+    coverageGap: coverageGapReport,
+    sourceRegistry: catalog.sources,
+    sourceIntakeReport: intakeReport,
+  });
 
   const serialized = JSON.stringify(catalog);
   const forbiddenFragments = [projectRoot, path.resolve(projectRoot, '..'), process.env.HOME || ''].filter(Boolean);
@@ -78,6 +85,7 @@ async function main() {
   await fs.mkdir(outputBrandLogoDir, { recursive: true });
   await fs.writeFile(outputCatalogPath, `${JSON.stringify(catalog, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputCoverageGapPath, `${JSON.stringify(coverageGapReport, null, 2)}\n`, 'utf8');
+  await fs.writeFile(outputIntakePlanPath, `${JSON.stringify(intakePlan, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputCandidatePath, `${JSON.stringify(candidateRecords, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputValidationPath, `${JSON.stringify(validationReport, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputSourcesPath, `${JSON.stringify(catalog.sources, null, 2)}\n`, 'utf8');

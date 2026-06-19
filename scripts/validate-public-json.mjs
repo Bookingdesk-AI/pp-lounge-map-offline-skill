@@ -115,6 +115,34 @@ function validateCoverage(goal, gap) {
   );
 }
 
+function validateIntakePlan(plan, gap) {
+  issue(plan?.coverageGoalId === gap?.goalId, 'cloudflare-source-intake-plan.json: goal id mismatch');
+  issue(plan?.policy?.requiredRuntime === 'cloudflare', 'cloudflare-source-intake-plan.json: required runtime mismatch');
+  issue(plan?.policy?.localScrawl === 'blocked', 'cloudflare-source-intake-plan.json: local scrawl not blocked');
+  issue(plan?.policy?.rawSnapshotsCommitted === false, 'cloudflare-source-intake-plan.json: raw snapshots should not be committed');
+  issue(Array.isArray(plan?.tasks) && plan.tasks.length > 0, 'cloudflare-source-intake-plan.json: tasks missing');
+  issue(
+    plan?.summary?.tasks === plan?.tasks?.length,
+    'cloudflare-source-intake-plan.json: summary task count mismatch',
+  );
+
+  const planFamilies = new Set((plan?.tasks ?? []).map((task) => task.familyId));
+  for (const familyId of gap?.deltas?.missingSourceFamilies ?? []) {
+    issue(planFamilies.has(familyId), `cloudflare-source-intake-plan.json: missing family ${familyId} not planned`);
+  }
+
+  for (const [index, task] of (plan?.tasks ?? []).entries()) {
+    const prefix = `cloudflare-source-intake-plan.json.tasks[${index}]`;
+    issue(Boolean(task.sourceId), `${prefix}: sourceId missing`);
+    issue(Boolean(task.publisher), `${prefix}: publisher missing`);
+    issue(['ready', 'blocked'].includes(task.status), `${prefix}: status invalid`);
+    issue(Boolean(task.action), `${prefix}: action missing`);
+    issue(Boolean(task.next), `${prefix}: next missing`);
+    issue(/^https:\/\//.test(task.url ?? ''), `${prefix}: url must be https`);
+    issue(Boolean(task.rightsNote), `${prefix}: rightsNote missing`);
+  }
+}
+
 function validateSourceIntake(report) {
   issue(report?.policy?.execution?.requiredRuntime === 'cloudflare', 'source-intake-report.json: required runtime mismatch');
   issue(report?.policy?.execution?.localScrawl === 'blocked', 'source-intake-report.json: local scrawl not blocked');
@@ -164,11 +192,13 @@ const catalog = readJson('public/data/lounge-guru-catalog.json');
 const geoJson = readJson('public/data/lounges.geojson');
 const goal = readJson('public/data/worldwide-coverage-goal.json');
 const gap = readJson('public/data/coverage-gap-report.json');
+const intakePlan = readJson('public/data/cloudflare-source-intake-plan.json');
 const sourceIntake = readJson('public/data/source-intake-report.json');
 
 validateCatalog(catalog);
 validateGeoJson(geoJson);
 validateCoverage(goal, gap);
+validateIntakePlan(intakePlan, gap);
 validateSourceIntake(sourceIntake);
 validateArrays();
 

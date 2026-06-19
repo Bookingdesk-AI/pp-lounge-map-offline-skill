@@ -27,6 +27,7 @@ npm run validate:json
 ```
 
 Gap report: `public/data/coverage-gap-report.json`.
+Cloudflare intake plan: `public/data/cloudflare-source-intake-plan.json`.
 
 ## Terminal Criteria
 
