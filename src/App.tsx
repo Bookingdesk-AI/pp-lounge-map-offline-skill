@@ -43,6 +43,7 @@ interface InitialUrlState {
   selectedTypes: string[];
   selectedCountry: string;
   selectedCity: string;
+  selectedBrand: string;
   selectedFacilities: string[];
   selectedId: string | null;
   sheet: SheetSnap;
@@ -56,8 +57,15 @@ interface MobileFilterDraft {
   types: string[];
   country: string;
   city: string;
+  brand: string;
   facilities: string[];
   sort: SortOption;
+}
+
+interface BrandFilterOption {
+  value: string;
+  label: string;
+  count: number;
 }
 
 interface FilterSummaryChip {
@@ -66,11 +74,98 @@ interface FilterSummaryChip {
   onRemove: () => void;
 }
 
+const COUNTRY_FLAG_CODE_OVERRIDES: Record<string, string> = {
+  curacao: 'CW',
+  'democratic republic of the congo': 'CD',
+  'republic of the congo': 'CG',
+  'south korea': 'KR',
+  taiwan: 'TW',
+  tanzania: 'TZ',
+  turkey: 'TR',
+  'united states of america': 'US',
+};
+
+const ISO_REGION_CODES = [
+  'AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ',
+  'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS',
+  'BT', 'BV', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN',
+  'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE',
+  'EG', 'EH', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FK', 'FM', 'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF',
+  'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY', 'HK', 'HM',
+  'HN', 'HR', 'HT', 'HU', 'ID', 'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JM',
+  'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LC',
+  'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK',
+  'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA',
+  'NC', 'NE', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 'OM', 'PA', 'PE', 'PF', 'PG',
+  'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'PS', 'PT', 'PW', 'PY', 'QA', 'RE', 'RO', 'RS', 'RU', 'RW',
+  'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI', 'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'SS',
+  'ST', 'SV', 'SX', 'SY', 'SZ', 'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TM', 'TN', 'TO',
+  'TR', 'TT', 'TV', 'TW', 'TZ', 'UA', 'UG', 'UM', 'US', 'UY', 'UZ', 'VA', 'VC', 'VE', 'VG', 'VI',
+  'VN', 'VU', 'WF', 'WS', 'YE', 'YT', 'ZA', 'ZM', 'ZW',
+];
+
+let countryCodeByName: Map<string, string> | null = null;
+
 function parseListParam(params: URLSearchParams, key: string) {
   return (params.get(key) ?? '')
     .split(',')
     .map((value) => value.trim())
     .filter(Boolean);
+}
+
+function normalizeCountryKey(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function getCountryCodeByName() {
+  if (countryCodeByName) {
+    return countryCodeByName;
+  }
+
+  countryCodeByName = new Map(
+    Object.entries(COUNTRY_FLAG_CODE_OVERRIDES).map(([country, code]) => [normalizeCountryKey(country), code]),
+  );
+
+  if (typeof Intl.DisplayNames !== 'function') {
+    return countryCodeByName;
+  }
+
+  const displayNames = new Intl.DisplayNames(['en'], { type: 'region' });
+
+  for (const code of ISO_REGION_CODES) {
+    const countryName = displayNames.of(code);
+    if (countryName) {
+      countryCodeByName.set(normalizeCountryKey(countryName), code);
+    }
+  }
+
+  return countryCodeByName;
+}
+
+function countryFlag(country: string) {
+  if (normalizeCountryKey(country) === 'taiwan') {
+    return 'TW';
+  }
+
+  const code = getCountryCodeByName().get(normalizeCountryKey(country));
+  if (!code || !/^[A-Z]{2}$/.test(code)) {
+    return '';
+  }
+
+  return String.fromCodePoint(
+    ...code.split('').map((letter) => 0x1f1e6 + letter.charCodeAt(0) - 65),
+  );
+}
+
+function formatCountryLabel(country: string) {
+  const flag = countryFlag(country);
+  return flag ? `${flag} ${country}` : country;
 }
 
 function normalizeSheet(value: string | null): SheetSnap {
@@ -132,6 +227,7 @@ function readInitialUrlState(): InitialUrlState {
     selectedTypes: parseListParam(params, 'type'),
     selectedCountry: params.get('country') ?? 'ALL',
     selectedCity: params.get('city') ?? 'ALL',
+    selectedBrand: params.get('brand') ?? 'ALL',
     selectedFacilities: parseListParam(params, 'facilities'),
     selectedId: params.get('selected'),
     sheet: hasSheet ? normalizeSheet(params.get('sheet')) : isInitialMobile ? 'peek' : 'mid',
@@ -264,9 +360,11 @@ function compactList(values: string[], fallback: string, limit = values.length, 
 
 function locationLabel(feature: LoungeFeature) {
   const cityOrCountry = feature.properties.city || feature.properties.country;
+  const place = formatCountryLabel(feature.properties.country);
+  const location = feature.properties.city ? `${countryFlag(feature.properties.country)} ${cityOrCountry}`.trim() : place;
   return feature.properties.terminal !== 'Unknown'
-    ? `${cityOrCountry} · ${feature.properties.terminal}`
-    : cityOrCountry;
+    ? `${location} · ${feature.properties.terminal}`
+    : location;
 }
 
 function detailLocation(feature: LoungeFeature) {
@@ -275,6 +373,15 @@ function detailLocation(feature: LoungeFeature) {
 
 function getFeatureBrandAsset(feature: LoungeFeature) {
   return feature.properties.canonical?.lounge.brandAsset;
+}
+
+function getFeatureBrandName(feature: LoungeFeature) {
+  return (
+    getFeatureBrandAsset(feature)?.name ??
+    feature.properties.canonical?.lounge.brand ??
+    feature.properties.provider ??
+    'Priority Pass'
+  ).trim();
 }
 
 function BrandMark({
@@ -490,45 +597,37 @@ function FilterControls({
   selectedTypes,
   selectedCountry,
   selectedCity,
+  selectedBrand,
   countries,
   cityOptions,
+  brandOptions,
   selectedFacilities,
   facilityOptions,
   toggleType,
   toggleFacility,
   setSelectedCountry,
   setSelectedCity,
+  setSelectedBrand,
 }: {
   types: string[];
   typeCounts: Map<string, number>;
   selectedTypes: string[];
   selectedCountry: string;
   selectedCity: string;
+  selectedBrand: string;
   countries: string[];
   cityOptions: string[];
+  brandOptions: BrandFilterOption[];
   selectedFacilities: string[];
   facilityOptions: string[];
   toggleType: (type: string) => void;
   toggleFacility: (facility: string) => void;
   setSelectedCountry: (country: string) => void;
   setSelectedCity: (city: string) => void;
+  setSelectedBrand: (brand: string) => void;
 }) {
   return (
     <>
-      <section className="control-group">
-        <div className="control-label">Type</div>
-        <div className="pill-grid">
-          {types.map((type) => (
-            <TypePill
-              key={type}
-              label={`${type} (${typeCounts.get(type) ?? 0})`}
-              active={selectedTypes.includes(type)}
-              onClick={() => toggleType(type)}
-            />
-          ))}
-        </div>
-      </section>
-
       <section className="control-group split">
         <label>
           <span className="control-label">Country</span>
@@ -543,7 +642,7 @@ function FilterControls({
             <option value="ALL">All countries</option>
             {countries.map((country) => (
               <option key={country} value={country}>
-                {country}
+                {formatCountryLabel(country)}
               </option>
             ))}
           </select>
@@ -560,6 +659,34 @@ function FilterControls({
             ))}
           </select>
         </label>
+      </section>
+
+      <section className="control-group">
+        <label>
+          <span className="control-label">Brand</span>
+          <select value={selectedBrand} onChange={(event) => setSelectedBrand(event.target.value)}>
+            <option value="ALL">All brands</option>
+            {brandOptions.map((brand) => (
+              <option key={brand.value} value={brand.value}>
+                {brand.label} ({brand.count})
+              </option>
+            ))}
+          </select>
+        </label>
+      </section>
+
+      <section className="control-group">
+        <div className="control-label">Type</div>
+        <div className="pill-grid">
+          {types.map((type) => (
+            <TypePill
+              key={type}
+              label={`${type} (${typeCounts.get(type) ?? 0})`}
+              active={selectedTypes.includes(type)}
+              onClick={() => toggleType(type)}
+            />
+          ))}
+        </div>
       </section>
 
       <section className="control-group">
@@ -827,7 +954,7 @@ function ResultsList({
         const compared = comparedIds.has(feature.properties.id);
         const compareDisabled = compareLimitReached && !compared;
         const brandAsset = getFeatureBrandAsset(feature);
-        const brandName = brandAsset?.name ?? feature.properties.canonical?.lounge.brand ?? feature.properties.provider ?? 'Priority Pass';
+        const brandName = getFeatureBrandName(feature);
 
         return (
           <article
@@ -923,7 +1050,7 @@ function SameSpotList({
           >
             <strong>{spot.properties.name}</strong>
             <span>
-              {spot.properties.airportCode} · {spot.properties.city || spot.properties.country}
+              {spot.properties.airportCode} · {locationLabel(spot)}
             </span>
           </button>
         ))}
@@ -951,8 +1078,7 @@ function DetailPanel({
 }) {
   const compared = comparedIds.has(selectedFeature.properties.id);
   const brandAsset = getFeatureBrandAsset(selectedFeature);
-  const brandName =
-    brandAsset?.name ?? selectedFeature.properties.canonical?.lounge.brand ?? selectedFeature.properties.provider ?? 'Priority Pass';
+  const brandName = getFeatureBrandName(selectedFeature);
 
   return (
     <aside className="detail-panel detail-panel-overlay">
@@ -1074,6 +1200,7 @@ function MobileQuickFilters({
   selectedTypes,
   selectedCountry,
   selectedCity,
+  selectedBrand,
   visibleCount,
   selectedFilterCount,
   quickFilterState,
@@ -1084,6 +1211,7 @@ function MobileQuickFilters({
   selectedTypes: string[];
   selectedCountry: string;
   selectedCity: string;
+  selectedBrand: string;
   visibleCount: number;
   selectedFilterCount: number;
   quickFilterState: QuickFilterPreset;
@@ -1119,8 +1247,9 @@ function MobileQuickFilters({
       </div>
 
       <div className="mobile-filter-meta">
-        <span className="meta-chip">Country: {selectedCountry === 'ALL' ? 'All' : selectedCountry}</span>
+        <span className="meta-chip">Country: {selectedCountry === 'ALL' ? 'All' : formatCountryLabel(selectedCountry)}</span>
         <span className="meta-chip">City: {selectedCity === 'ALL' ? 'All' : selectedCity}</span>
+        <span className="meta-chip">Brand: {selectedBrand === 'ALL' ? 'All' : selectedBrand}</span>
       </div>
     </div>
   );
@@ -1152,8 +1281,7 @@ function MobileDetailsView({
 
   const compared = comparedIds.has(selectedFeature.properties.id);
   const brandAsset = getFeatureBrandAsset(selectedFeature);
-  const brandName =
-    brandAsset?.name ?? selectedFeature.properties.canonical?.lounge.brand ?? selectedFeature.properties.provider ?? 'Priority Pass';
+  const brandName = getFeatureBrandName(selectedFeature);
 
   return (
     <div className="mobile-selected-view">
@@ -1488,6 +1616,7 @@ function App() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>(initialUrlState.selectedTypes);
   const [selectedCountry, setSelectedCountry] = useState(initialUrlState.selectedCountry);
   const [selectedCity, setSelectedCity] = useState(initialUrlState.selectedCity);
+  const [selectedBrand, setSelectedBrand] = useState(initialUrlState.selectedBrand);
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>(initialUrlState.selectedFacilities);
   const [sort, setSort] = useState<SortOption>(
     initialUrlState.sort === 'country_city' && initialUrlState.search ? 'best_match' : initialUrlState.sort,
@@ -1509,6 +1638,7 @@ function App() {
     types: initialUrlState.selectedTypes,
     country: initialUrlState.selectedCountry,
     city: initialUrlState.selectedCity,
+    brand: initialUrlState.selectedBrand,
     facilities: initialUrlState.selectedFacilities,
     sort,
   });
@@ -1685,6 +1815,21 @@ function App() {
   const types = meta?.filters.types ?? [];
   const facilityOptions = meta?.filters.facilities ?? [];
 
+  const brandOptions = useMemo<BrandFilterOption[]>(() => {
+    const counts = new Map<string, number>();
+
+    for (const feature of features) {
+      const brandName = getFeatureBrandName(feature);
+      if (brandName) {
+        counts.set(brandName, (counts.get(brandName) ?? 0) + 1);
+      }
+    }
+
+    return [...counts.entries()]
+      .map(([label, count]) => ({ value: label, label, count }))
+      .sort((first, second) => first.label.localeCompare(second.label));
+  }, [features]);
+
   const cityOptions = useMemo(() => {
     if (!meta) {
       return [];
@@ -1737,6 +1882,10 @@ function App() {
         return false;
       }
 
+      if (selectedBrand !== 'ALL' && getFeatureBrandName(feature) !== selectedBrand) {
+        return false;
+      }
+
       if (
         selectedFacilities.length > 0 &&
         !selectedFacilities.every((facility) => properties.facilities.includes(facility))
@@ -1746,7 +1895,7 @@ function App() {
 
       return matchesSearch(properties, query);
     });
-  }, [features, query, selectedCountry, selectedCity, selectedFacilities]);
+  }, [features, query, selectedBrand, selectedCountry, selectedCity, selectedFacilities]);
 
   const filteredFeatures = useMemo(() => {
     const narrowed =
@@ -1834,10 +1983,11 @@ function App() {
         [...selectedTypes].sort().join(','),
         selectedCountry,
         selectedCity,
+        selectedBrand,
         [...selectedFacilities].sort().join(','),
         sort,
       ].join('|'),
-    [search, selectedTypes, selectedCountry, selectedCity, selectedFacilities, sort],
+    [search, selectedTypes, selectedCountry, selectedCity, selectedBrand, selectedFacilities, sort],
   );
 
   const typeCounts = useMemo(() => {
@@ -1867,6 +2017,10 @@ function App() {
 
     if (selectedCity !== 'ALL') {
       params.set('city', selectedCity);
+    }
+
+    if (selectedBrand !== 'ALL') {
+      params.set('brand', selectedBrand);
     }
 
     if (selectedFacilities.length > 0) {
@@ -1901,6 +2055,7 @@ function App() {
     selectedTypes,
     selectedCountry,
     selectedCity,
+    selectedBrand,
     selectedFacilities,
     selectedId,
     sort,
@@ -1977,6 +2132,7 @@ function App() {
     setSelectedTypes([]);
     setSelectedCountry('ALL');
     setSelectedCity('ALL');
+    setSelectedBrand('ALL');
     setSelectedFacilities([]);
     setSort('country_city');
   }, []);
@@ -1995,17 +2151,19 @@ function App() {
       types: [...selectedTypes],
       country: selectedCountry,
       city: selectedCity,
+      brand: selectedBrand,
       facilities: [...selectedFacilities],
       sort,
     });
     setMobileUI((current) => ({ ...current, sheetMode: 'filters', sheetSnap: 'full' }));
-  }, [search, selectedTypes, selectedCountry, selectedCity, selectedFacilities, sort]);
+  }, [search, selectedTypes, selectedCountry, selectedCity, selectedBrand, selectedFacilities, sort]);
 
   const applyMobileFilters = useCallback(() => {
     setSearch(mobileFilterDraft.search);
     setSelectedTypes([...mobileFilterDraft.types]);
     setSelectedCountry(mobileFilterDraft.country);
     setSelectedCity(mobileFilterDraft.city);
+    setSelectedBrand(mobileFilterDraft.brand);
     setSelectedFacilities([...mobileFilterDraft.facilities]);
     setSort(mobileFilterDraft.sort);
     setMobileUI((current) => ({
@@ -2022,6 +2180,7 @@ function App() {
       types: [],
       country: 'ALL',
       city: 'ALL',
+      brand: 'ALL',
       facilities: [],
       sort: 'country_city',
     });
@@ -2115,7 +2274,7 @@ function App() {
     if (selectedCountry !== 'ALL') {
       chips.push({
         key: 'country',
-        label: selectedCountry,
+        label: formatCountryLabel(selectedCountry),
         onRemove: () => {
           setSelectedCountry('ALL');
           setSelectedCity('ALL');
@@ -2131,6 +2290,14 @@ function App() {
       });
     }
 
+    if (selectedBrand !== 'ALL') {
+      chips.push({
+        key: 'brand',
+        label: selectedBrand,
+        onRemove: () => setSelectedBrand('ALL'),
+      });
+    }
+
     for (const facility of selectedFacilities) {
       chips.push({
         key: `facility-${facility}`,
@@ -2140,7 +2307,7 @@ function App() {
     }
 
     return chips;
-  }, [search, selectedTypes, selectedCountry, selectedCity, selectedFacilities, toggleType, toggleFacility]);
+  }, [search, selectedTypes, selectedCountry, selectedCity, selectedBrand, selectedFacilities, toggleType, toggleFacility]);
 
   if (loading) {
     return <div className="state-screen">Loading...</div>;
@@ -2155,6 +2322,7 @@ function App() {
     selectedFacilities.length +
     (selectedCountry !== 'ALL' ? 1 : 0) +
     (selectedCity !== 'ALL' ? 1 : 0) +
+    (selectedBrand !== 'ALL' ? 1 : 0) +
     (search.trim() ? 1 : 0);
 
   return (
@@ -2216,14 +2384,17 @@ function App() {
               selectedTypes={selectedTypes}
               selectedCountry={selectedCountry}
               selectedCity={selectedCity}
+              selectedBrand={selectedBrand}
               countries={countries}
               cityOptions={cityOptions}
+              brandOptions={brandOptions}
               selectedFacilities={selectedFacilities}
               facilityOptions={facilityOptions}
               toggleType={toggleType}
               toggleFacility={toggleFacility}
               setSelectedCountry={setSelectedCountry}
               setSelectedCity={setSelectedCity}
+              setSelectedBrand={setSelectedBrand}
             />
           </div>
 
@@ -2344,6 +2515,7 @@ function App() {
                       selectedTypes={selectedTypes}
                       selectedCountry={selectedCountry}
                       selectedCity={selectedCity}
+                      selectedBrand={selectedBrand}
                       visibleCount={filteredFeatures.length}
                       selectedFilterCount={selectedFilterCount}
                       quickFilterState={mobileUI.quickFilterState}
@@ -2406,8 +2578,10 @@ function App() {
                       selectedTypes={mobileFilterDraft.types}
                       selectedCountry={mobileFilterDraft.country}
                       selectedCity={mobileFilterDraft.city}
+                      selectedBrand={mobileFilterDraft.brand}
                       countries={countries}
                       cityOptions={draftCityOptions}
+                      brandOptions={brandOptions}
                       selectedFacilities={mobileFilterDraft.facilities}
                       facilityOptions={facilityOptions}
                       toggleType={toggleDraftType}
@@ -2417,6 +2591,9 @@ function App() {
                       }
                       setSelectedCity={(city) =>
                         setMobileFilterDraft((current) => ({ ...current, city }))
+                      }
+                      setSelectedBrand={(brand) =>
+                        setMobileFilterDraft((current) => ({ ...current, brand }))
                       }
                     />
 
