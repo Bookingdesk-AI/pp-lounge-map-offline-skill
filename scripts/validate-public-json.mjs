@@ -111,13 +111,29 @@ function validateCoverage(goal, gap) {
     'coverage-gap-report.json: source intake runtime missing',
   );
   issue(
-    gap?.current?.cloudflareSourceRuntimePassed === (gap?.current?.sourceIntakeRuntime === 'cloudflare'),
+    gap?.current?.cloudflareSourceRuntimePassed ===
+      (gap?.current?.sourceIntakeRuntime === 'cloudflare' &&
+        Boolean(gap?.current?.cloudflareSourceEvidence) &&
+        gap?.current?.cloudflareSourceEvidence?.fullSourceIntakeReportRequired !== true),
     'coverage-gap-report.json: Cloudflare source runtime status mismatch',
+  );
+  issue(
+    typeof gap?.current?.cloudflareSourceEvidence?.readyTasksWithCloudflareEvidence === 'number',
+    'coverage-gap-report.json: Cloudflare source evidence missing',
+  );
+  issue(
+    typeof gap?.current?.cloudflareSourceEvidence?.readyTaskCoverageRatio === 'number',
+    'coverage-gap-report.json: Cloudflare ready task ratio missing',
   );
   issue(
     gap?.current?.sourceIntakeRuntime === 'cloudflare' ||
       gap?.blockers?.includes('source_intake_runtime_not_cloudflare'),
     'coverage-gap-report.json: non-Cloudflare source runtime not blocked',
+  );
+  issue(
+    gap?.current?.cloudflareSourceEvidence?.fullSourceIntakeReportRequired !== true ||
+      gap?.blockers?.includes('source_intake_runtime_not_cloudflare'),
+    'coverage-gap-report.json: probe-only source evidence not blocked',
   );
   issue(
     Array.isArray(gap?.deltas?.missingSourceFamilies) && gap.deltas.missingSourceFamilies.length > 0,

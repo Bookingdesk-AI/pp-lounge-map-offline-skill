@@ -10,6 +10,7 @@ const projectRoot = path.resolve(__dirname, '..');
 const goalPath = path.resolve(projectRoot, 'public', 'data', 'worldwide-coverage-goal.json');
 const catalogPath = path.resolve(projectRoot, 'public', 'data', 'lounge-guru-catalog.json');
 const sourceReportPath = path.resolve(projectRoot, 'public', 'data', 'source-intake-report.json');
+const sourceRunEvidencePath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-run-evidence.json');
 const migrationPath = path.resolve(projectRoot, 'migrations', '0001_lounge_guru_catalog.sql');
 const outputPath = path.resolve(projectRoot, '.cache', 'd1', 'lounge-guru-current-snapshot.sql');
 
@@ -38,13 +39,14 @@ async function readJson(filePath) {
   return JSON.parse(await fs.readFile(filePath, 'utf8'));
 }
 
-function summarize(catalog, goal, migrationSql, sourceReport) {
+function summarize(catalog, goal, migrationSql, sourceReport, sourceRunEvidence) {
   const gapReport = createCoverageGapReport({
     goal,
     catalog,
     sourceRegistry: catalog.sources ?? [],
     migrationSql,
     sourceIntakeReport: sourceReport,
+    sourceRunEvidence,
   });
   const records = catalog.records ?? [];
   const approvedRecords = records.filter((record) => record.quality?.reviewStatus === 'approved').length;
@@ -89,7 +91,7 @@ function summarize(catalog, goal, migrationSql, sourceReport) {
   if (recordsWithoutQuality > goal.terminalGoal.maxRecordsWithoutQuality) {
     blockers.push('records_without_quality_present');
   }
-  if (goal.terminalGoal.requiresCloudflareSourceRuntime && gapReport.current.sourceIntakeRuntime !== 'cloudflare') {
+  if (goal.terminalGoal.requiresCloudflareSourceRuntime && !gapReport.current.cloudflareSourceRuntimePassed) {
     blockers.push('source_intake_runtime_not_cloudflare');
   }
 
@@ -106,6 +108,7 @@ function summarize(catalog, goal, migrationSql, sourceReport) {
     recordsWithoutQuality,
     sourceIntakeRuntime: gapReport.current.sourceIntakeRuntime,
     cloudflareSourceRuntimePassed: gapReport.current.cloudflareSourceRuntimePassed,
+    cloudflareSourceEvidence: gapReport.current.cloudflareSourceEvidence,
     sourceFamilies,
     missingSourceFamilies: gapReport.deltas.missingSourceFamilies,
     gapReport,
@@ -216,15 +219,16 @@ function insertValidationRun(goal, runId, summary) {
 }
 
 async function main() {
-  const [goal, catalog, sourceReport, migrationSql] = await Promise.all([
+  const [goal, catalog, sourceReport, sourceRunEvidence, migrationSql] = await Promise.all([
     readJson(goalPath),
     readJson(catalogPath),
     readJson(sourceReportPath),
+    readJson(sourceRunEvidencePath),
     fs.readFile(migrationPath, 'utf8'),
   ]);
   const catalogHash = sha256(JSON.stringify(catalog));
   const runId = `catalog-${catalogHash.slice(0, 16)}`;
-  const summary = summarize(catalog, goal, migrationSql, sourceReport);
+  const summary = summarize(catalog, goal, migrationSql, sourceReport, sourceRunEvidence);
   const statements = [
     upsertCoverageGoal(goal),
     'DELETE FROM coverage_validation_runs;',

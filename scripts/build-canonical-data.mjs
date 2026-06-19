@@ -24,6 +24,7 @@ const outputQualityPath = path.resolve(projectRoot, 'public', 'data', 'quality-r
 const outputCoverageGapPath = path.resolve(projectRoot, 'public', 'data', 'coverage-gap-report.json');
 const outputIntakePlanPath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-intake-plan.json');
 const sourceIntakeReportPath = path.resolve(projectRoot, 'public', 'data', 'source-intake-report.json');
+const sourceRunEvidencePath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-run-evidence.json');
 const outputCandidatePath = path.resolve(projectRoot, 'public', 'data', 'non-priority-lounge-candidates.json');
 const outputValidationPath = path.resolve(projectRoot, 'public', 'data', 'non-priority-validation-report.json');
 const outputBrandLogoDir = path.resolve(projectRoot, 'public', 'data', 'brand-logos');
@@ -38,10 +39,21 @@ async function readSourceIntakeReport() {
   }
 }
 
+async function readSourceRunEvidence() {
+  try {
+    return JSON.parse(await fs.readFile(sourceRunEvidencePath, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
 async function main() {
   const geoJson = JSON.parse(await fs.readFile(geoJsonPath, 'utf8'));
   const meta = JSON.parse(await fs.readFile(metaPath, 'utf8'));
-  const intakeReport = await readSourceIntakeReport();
+  const [intakeReport, sourceRunEvidence] = await Promise.all([
+    readSourceIntakeReport(),
+    readSourceRunEvidence(),
+  ]);
   const candidateRecords = createNonPriorityCandidateRecords({
     report: intakeReport,
     features: geoJson.features ?? [],
@@ -67,6 +79,7 @@ async function main() {
     sourceRegistry: catalog.sources,
     migrationSql,
     sourceIntakeReport: intakeReport,
+    sourceRunEvidence,
   });
   const intakePlan = createCloudflareSourceIntakePlan({
     coverageGap: coverageGapReport,

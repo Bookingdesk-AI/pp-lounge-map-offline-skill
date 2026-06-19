@@ -40,15 +40,48 @@ function sourceIntakeRuntime(sourceIntakeReport) {
   return sourceIntakeReport?.policy?.execution?.runtime ?? 'missing';
 }
 
-function hasRequiredCloudflareSourceRuntime(goal, sourceIntakeReport) {
+function cloudflareSourceEvidence(sourceRunEvidence) {
+  const stats = sourceRunEvidence?.stats ?? {};
+  const readyTasks = Number(stats.readyTasks ?? 0);
+  const readyTasksWithCloudflareEvidence = Number(stats.readyTasksWithCloudflareEvidence ?? 0);
+
+  return {
+    sourceRunsRead: Number(stats.sourceRunsRead ?? 0),
+    cloudflareSourceRuns: Number(stats.cloudflareSourceRuns ?? 0),
+    uniqueSources: Number(stats.uniqueSources ?? 0),
+    fetched: Number(stats.fetched ?? 0),
+    cloudflareSnapshots: Number(stats.cloudflareSnapshots ?? 0),
+    readyTasks,
+    readyTasksWithCloudflareEvidence,
+    readyTaskCoverageRatio: readyTasks > 0 ? Number((readyTasksWithCloudflareEvidence / readyTasks).toFixed(4)) : 0,
+    fullSourceIntakeReportRequired: Boolean(sourceRunEvidence?.terminalImpact?.coverageGateStillRequiresFullCloudflareReport),
+  };
+}
+
+function hasRequiredCloudflareSourceRuntime(goal, sourceIntakeReport, sourceRunEvidence = null) {
   if (!goal.terminalGoal.requiresCloudflareSourceRuntime) {
     return true;
   }
 
-  return sourceIntakeRuntime(sourceIntakeReport) === 'cloudflare';
+  if (sourceIntakeRuntime(sourceIntakeReport) !== 'cloudflare') {
+    return false;
+  }
+
+  if (!sourceRunEvidence) {
+    return false;
+  }
+
+  return sourceRunEvidence?.terminalImpact?.coverageGateStillRequiresFullCloudflareReport !== true;
 }
 
-export function createCoverageGapReport({ goal, catalog, sourceRegistry, migrationSql, sourceIntakeReport = null }) {
+export function createCoverageGapReport({
+  goal,
+  catalog,
+  sourceRegistry,
+  migrationSql,
+  sourceIntakeReport = null,
+  sourceRunEvidence = null,
+}) {
   const records = catalog.records ?? [];
   const counts = sourceRecordCounts(catalog);
   const sourceStatus = sourceStatuses(sourceRegistry, counts);
@@ -63,7 +96,8 @@ export function createCoverageGapReport({ goal, catalog, sourceRegistry, migrati
   }).length;
   const tableStatuses = validateRequiredTables(goal, migrationSql);
   const sourceRuntime = sourceIntakeRuntime(sourceIntakeReport);
-  const cloudflareSourceRuntimePassed = hasRequiredCloudflareSourceRuntime(goal, sourceIntakeReport);
+  const cloudflareEvidence = cloudflareSourceEvidence(sourceRunEvidence);
+  const cloudflareSourceRuntimePassed = hasRequiredCloudflareSourceRuntime(goal, sourceIntakeReport, sourceRunEvidence);
   const requiredFamilies = goal.sourceFamilies.filter((family) => family.requiredForTerminal);
   const sourceFamilies = requiredFamilies.map((family) => {
     const members = family.members ?? [family.id];
@@ -140,6 +174,7 @@ export function createCoverageGapReport({ goal, catalog, sourceRegistry, migrati
       recordsWithoutQuality,
       sourceIntakeRuntime: sourceRuntime,
       cloudflareSourceRuntimePassed,
+      cloudflareSourceEvidence: cloudflareEvidence,
     },
     deltas: {
       approvedRecordsRemaining: approvedRecordRemaining,

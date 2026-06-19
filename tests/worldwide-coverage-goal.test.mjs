@@ -8,6 +8,9 @@ const coverageGap = JSON.parse(fs.readFileSync(new URL('../public/data/coverage-
 const intakePlan = JSON.parse(
   fs.readFileSync(new URL('../public/data/cloudflare-source-intake-plan.json', import.meta.url), 'utf8'),
 );
+const cloudflareEvidence = JSON.parse(
+  fs.readFileSync(new URL('../public/data/cloudflare-source-run-evidence.json', import.meta.url), 'utf8'),
+);
 const migrationSql = fs.readFileSync(new URL('../migrations/0001_lounge_guru_catalog.sql', import.meta.url), 'utf8');
 const seedSql = fs.readFileSync(new URL('../migrations/0002_seed_worldwide_coverage_goal.sql', import.meta.url), 'utf8');
 
@@ -80,6 +83,11 @@ test('coverage validator reports current progress without pretending terminal co
   assert.ok(summary.blockers.includes('review_records_present'));
   assert.equal(summary.sourceIntakeRuntime, coverageGap.current.sourceIntakeRuntime);
   assert.equal(summary.cloudflareSourceRuntimePassed, false);
+  assert.equal(
+    summary.cloudflareSourceEvidence.readyTasksWithCloudflareEvidence,
+    cloudflareEvidence.stats.readyTasksWithCloudflareEvidence,
+  );
+  assert.equal(summary.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
   assert.ok(summary.blockers.includes('source_intake_runtime_not_cloudflare'));
   assert.deepEqual(summary.missingSourceFamilies, coverageGap.deltas.missingSourceFamilies);
   assert.equal(summary.gapReport.catalogHash, coverageGap.catalogHash);
@@ -92,6 +100,12 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
   assert.ok(coverageGap.blockers.includes('source_intake_runtime_not_cloudflare'));
   assert.equal(coverageGap.current.sourceIntakeRuntime, 'legacy-local-before-cloudflare-guardrail');
   assert.equal(coverageGap.current.cloudflareSourceRuntimePassed, false);
+  assert.equal(
+    coverageGap.current.cloudflareSourceEvidence.readyTasksWithCloudflareEvidence,
+    cloudflareEvidence.stats.readyTasksWithCloudflareEvidence,
+  );
+  assert.equal(coverageGap.current.cloudflareSourceEvidence.readyTaskCoverageRatio, 1);
+  assert.equal(coverageGap.current.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
   assert.equal(coverageGap.deltas.sourceIntakeRuntimeRequired, 'cloudflare');
   assert.ok(coverageGap.deltas.approvedRecordsRemaining > 0);
   assert.ok(coverageGap.deltas.reviewRecordsToResolve > 0);

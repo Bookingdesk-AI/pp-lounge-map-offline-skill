@@ -28,7 +28,18 @@
     "recordsWithoutSources": 0,
     "recordsWithoutQuality": 0,
     "sourceIntakeRuntime": "legacy-local-before-cloudflare-guardrail",
-    "cloudflareSourceRuntimePassed": false
+    "cloudflareSourceRuntimePassed": false,
+    "cloudflareSourceEvidence": {
+      "sourceRunsRead": 4,
+      "cloudflareSourceRuns": 4,
+      "uniqueSources": 3,
+      "fetched": 3,
+      "cloudflareSnapshots": 3,
+      "readyTasks": 3,
+      "readyTasksWithCloudflareEvidence": 3,
+      "readyTaskCoverageRatio": 1,
+      "fullSourceIntakeReportRequired": true
+    }
   },
   "deltas": {
     "approvedRecordsRemaining": 2005,
