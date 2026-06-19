@@ -24,10 +24,12 @@ Progress check:
 ```bash
 npm run validate:coverage
 npm run validate:json
+npm run intake:evidence
 ```
 
 Gap report: `public/data/coverage-gap-report.json`.
 Cloudflare intake plan: `public/data/cloudflare-source-intake-plan.json`.
+Cloudflare source-run evidence: `public/data/cloudflare-source-run-evidence.json`.
 
 ## Terminal Criteria
 
@@ -94,6 +96,14 @@ curl -X POST 'https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=
 ```
 
 The probe writes a bounded `source_runs` row from the Worker runtime. It stores status, hashes, headers, and provenance only; raw page bodies stay out of D1 and git.
+
+Export public evidence from remote D1 without fetching source pages locally:
+
+```bash
+npm run intake:evidence
+```
+
+This writes `public/data/cloudflare-source-run-evidence.json` from D1 `source_runs`. It records only source IDs, run IDs, HTTP status, byte counts, hashes, robots status, and ready-task coverage.
 
 After intake, publish only through the Cloudflare D1 snapshot path:
 

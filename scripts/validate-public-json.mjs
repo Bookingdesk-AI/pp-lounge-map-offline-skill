@@ -182,6 +182,47 @@ function validateSourceIntake(report) {
   }
 }
 
+function validateCloudflareSourceRunEvidence(evidence, intakePlan) {
+  issue(evidence?.policy?.source === 'cloudflare-d1-source_runs', 'cloudflare-source-run-evidence.json: source mismatch');
+  issue(evidence?.policy?.database === 'lounge-guru-catalog', 'cloudflare-source-run-evidence.json: database mismatch');
+  issue(evidence?.policy?.binding === 'LOUNGE_GURU_DB', 'cloudflare-source-run-evidence.json: binding mismatch');
+  issue(evidence?.policy?.localScrawl === 'blocked', 'cloudflare-source-run-evidence.json: local scrawl not blocked');
+  issue(evidence?.policy?.rawSnapshotsCommitted === false, 'cloudflare-source-run-evidence.json: raw snapshots should not be committed');
+  issue(
+    evidence?.policy?.rawPageContentCommitted === false,
+    'cloudflare-source-run-evidence.json: raw page content should not be committed',
+  );
+  issue(Array.isArray(evidence?.sources), 'cloudflare-source-run-evidence.json: sources missing');
+  issue(Array.isArray(evidence?.readyTaskEvidence), 'cloudflare-source-run-evidence.json: ready task evidence missing');
+  issue(
+    evidence?.stats?.uniqueSources === evidence?.sources?.length,
+    'cloudflare-source-run-evidence.json: unique source count mismatch',
+  );
+
+  const readyTasks = (intakePlan?.tasks ?? []).filter((task) => task.status === 'ready').map((task) => task.sourceId);
+  const evidenceTasks = new Set((evidence?.readyTaskEvidence ?? []).map((task) => task.sourceId));
+  for (const sourceId of readyTasks) {
+    issue(evidenceTasks.has(sourceId), `cloudflare-source-run-evidence.json: ready task ${sourceId} missing`);
+  }
+
+  for (const [index, source] of (evidence?.sources ?? []).entries()) {
+    const prefix = `cloudflare-source-run-evidence.json.sources[${index}]`;
+    issue(Boolean(source.sourceId), `${prefix}: sourceId missing`);
+    issue(/^https:\/\//.test(source.url ?? ''), `${prefix}: url must be https`);
+    issue(Boolean(source.runId), `${prefix}: runId missing`);
+    assertIsoDate(source.generatedAt, `${prefix}: generatedAt invalid`);
+    issue(source.cloudflareSnapshot === true, `${prefix}: Cloudflare snapshot missing`);
+    issue(!Object.hasOwn(source, 'html') && !Object.hasOwn(source, 'text'), `${prefix}: raw page content leaked`);
+    for (const [attemptIndex, attempt] of (source.fetchAttempts ?? []).entries()) {
+      const attemptPrefix = `${prefix}.fetchAttempts[${attemptIndex}]`;
+      issue(!Object.hasOwn(attempt, 'html') && !Object.hasOwn(attempt, 'text'), `${attemptPrefix}: raw page content leaked`);
+      if (attempt.url) {
+        issue(/^https:\/\//.test(attempt.url), `${attemptPrefix}: url must be https`);
+      }
+    }
+  }
+}
+
 function validateArrays() {
   const brandRegistry = readJson('public/data/brand-registry.json');
   const sourceRegistry = readJson('public/data/source-registry.json');
@@ -222,12 +263,14 @@ const goal = readJson('public/data/worldwide-coverage-goal.json');
 const gap = readJson('public/data/coverage-gap-report.json');
 const intakePlan = readJson('public/data/cloudflare-source-intake-plan.json');
 const sourceIntake = readJson('public/data/source-intake-report.json');
+const cloudflareEvidence = readJson('public/data/cloudflare-source-run-evidence.json');
 
 validateCatalog(catalog);
 validateGeoJson(geoJson);
 validateCoverage(goal, gap);
 validateIntakePlan(intakePlan, gap);
 validateSourceIntake(sourceIntake);
+validateCloudflareSourceRunEvidence(cloudflareEvidence, intakePlan);
 validateArrays();
 
 if (issues.length > 0) {
