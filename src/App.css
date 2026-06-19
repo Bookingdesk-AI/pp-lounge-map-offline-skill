@@ -1378,6 +1378,10 @@
     gap: 0.58rem;
   }
 
+  .app-shell.is-mobile .topbar .search-wrap {
+    display: none;
+  }
+
   .topbar h1 {
     font-size: 1.08rem;
   }

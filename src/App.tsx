@@ -2728,6 +2728,7 @@ function App() {
         <label className="search-wrap">
           <span>Search</span>
           <input
+            type="search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Airport, city, lounge"
@@ -2969,6 +2970,7 @@ function App() {
                     <label className="sort-control mobile-search-control">
                       <span>Search</span>
                       <input
+                        type="search"
                         value={mobileFilterDraft.search}
                         onChange={(event) =>
                           setMobileFilterDraft((current) => ({ ...current, search: event.target.value }))
