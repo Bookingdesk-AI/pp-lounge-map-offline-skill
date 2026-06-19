@@ -49,6 +49,14 @@ Removed or suppressed copy:
 - Browser verification at mobile width.
 - Runtime copy scan for landing/helper copy.
 
+## Review Surface
+
+- Production URL: `https://loungeguru.desk.travel/`
+- Desktop: results rail, filters, compare, map, and detail overlay.
+- Mobile sheet modes: `Results`, `Filters`, `Details`, `Compare`, `Review`.
+- Dev-only intake views remain hidden from production navigation.
+- Current public catalog health: 2,644 records generated at `2026-06-18T20:08:20.197Z`.
+
 ## Deploy Note
 
 This UI-only deploy can use the current checked-in public data and run `npm run deploy:web` after `npx vite build`.

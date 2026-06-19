@@ -101,6 +101,16 @@ After intake, publish only through the Cloudflare D1 snapshot path:
 npm run db:catalog:push
 ```
 
+## Cloudflare Probe Evidence
+
+Verified Worker-runtime probe rows in remote D1:
+
+- `visa-airport-companion`: runtime `cloudflare`, status `fetched`, Cloudflare snapshot `true`.
+- `mastercard-travel-pass`: runtime `cloudflare`, status `fetched`, Cloudflare snapshot `true`.
+- `dragonpass`: runtime `cloudflare`, status `fetched`, Cloudflare snapshot `true`.
+
+These rows prove the guarded Worker intake path can fetch and persist source-run evidence from Cloudflare. They do not complete the terminal gate until the public source-intake and coverage reports are rebuilt from Cloudflare D1 evidence.
+
 ## Current Meaning
 
 Current data can fail the terminal gate and still be structurally valid. Candidate records remain `review` until location, hours, access policy, source conflicts, and airport identity are resolved.
