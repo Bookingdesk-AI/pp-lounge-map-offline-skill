@@ -31,3 +31,9 @@
 - Post gate: `npm run validate:publish:offline` passed.
 - Post scan: grep review found expected public source URLs inside bundled catalog data; this is review noise for this broad pattern, not a credential blocker. Publish validator still forbids HTTP URLs in markdown and validates required offline artifacts.
 - Git hygiene: pre-existing unrelated package/smoke-deploy changes remain unstaged; cycle changes are committed separately.
+
+## Phase E — Issue Cycle
+
+- Persistent blocker review: root `skills/pp-lounge-map-offline` remains absent while bundled offline skill lives under `out/pp-lounge-map-offline-skill`, but this run has only one observed occurrence in the local cycle evidence, so it is not marked `PERSISTENT_BLOCKER` yet.
+- Ledger action: no append to `openclaw/reports/skill-security-issues.md` required.
+- Next hardening candidate: align source/package path expectations or add a small path-discovery note to reduce future scope ambiguity.
