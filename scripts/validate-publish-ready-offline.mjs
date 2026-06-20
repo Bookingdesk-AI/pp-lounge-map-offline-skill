@@ -14,7 +14,7 @@ const projectRoot = path.resolve(__dirname, '..');
 
 async function main() {
   const { skillDir } = getOfflineSkillPaths(projectRoot);
-  const issues = await validateSkillBundleWithOptions({
+  const validationOptions = {
     projectRoot,
     skillDir,
     expectedName: OFFLINE_SKILL_NAME,
@@ -26,7 +26,8 @@ async function main() {
       path.join('references', 'publishing.md'),
     ],
     forbidHttpUrlsInMarkdown: true,
-  });
+  };
+  const issues = await validateSkillBundleWithOptions(validationOptions);
 
   if (issues.length > 0) {
     for (const issue of issues) {
@@ -37,6 +38,16 @@ async function main() {
   }
 
   console.log('publish-check: offline skill bundle passed.');
+  console.log(
+    `publish-check: evidence ${JSON.stringify({
+      skill: validationOptions.expectedName,
+      skillDir: path.relative(projectRoot, validationOptions.skillDir),
+      requiredReferences: validationOptions.requiredReferences,
+      requiredAsset: validationOptions.assetRelativePath,
+      maxAssetBytes: validationOptions.maxAssetBytes,
+      markdownHttpUrlsForbidden: validationOptions.forbidHttpUrlsInMarkdown,
+    })}`,
+  );
 }
 
 main().catch((error) => {

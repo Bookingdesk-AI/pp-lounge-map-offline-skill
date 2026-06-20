@@ -19,3 +19,9 @@
 - Selected bounded improvement: improve publish-check operator evidence so reviewers can see the exact validated skill path, required references, required asset, and HTTP-forbid policy in the success output.
 - Change limit: one additive validation evidence improvement for the offline publish gate.
 - Reversibility: validator/reporting-only change; no destructive file movement or generated bundle deletion.
+
+## Phase C — Improvement Shipped
+
+- Added publish-check success evidence showing the validated skill path, required references, required asset, asset limit, and markdown HTTP-forbid policy.
+- Validation after change: `npm run validate:publish:offline` passed.
+- Evidence added: JSON success line for `skillDir`, `requiredReferences`, `requiredAsset`, `maxAssetBytes`, and `markdownHttpUrlsForbidden`.
