@@ -25,3 +25,9 @@
 - Added publish-check success evidence showing the validated skill path, required references, required asset, asset limit, and markdown HTTP-forbid policy.
 - Validation after change: `npm run validate:publish:offline` passed.
 - Evidence added: JSON success line for `skillDir`, `requiredReferences`, `requiredAsset`, `maxAssetBytes`, and `markdownHttpUrlsForbidden`.
+
+## Phase D — Review and Verify
+
+- Post gate: `npm run validate:publish:offline` passed.
+- Post scan: grep review found expected public source URLs inside bundled catalog data; this is review noise for this broad pattern, not a credential blocker. Publish validator still forbids HTTP URLs in markdown and validates required offline artifacts.
+- Git hygiene: pre-existing unrelated package/smoke-deploy changes remain unstaged; cycle changes are committed separately.
