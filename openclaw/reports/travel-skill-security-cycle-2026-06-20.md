@@ -12,3 +12,10 @@
 - Required bundled references covered by validator: `references/mcp.md`, `references/safety.md`, `references/publishing.md`.
 - Required bundled asset covered by validator: `assets/catalog.json`.
 - Security snapshot: offline publish bundle passed existing safety validation; missing root skill path is a scope/layout note, not mutated in this phase.
+
+## Phase B — Fix Plan
+
+- Severity: low for validated bundle safety; medium review-friction because requested root `skills/pp-lounge-map-offline` path is absent while the packaged offline skill exists under `out/pp-lounge-map-offline-skill`.
+- Selected bounded improvement: improve publish-check operator evidence so reviewers can see the exact validated skill path, required references, required asset, and HTTP-forbid policy in the success output.
+- Change limit: one additive validation evidence improvement for the offline publish gate.
+- Reversibility: validator/reporting-only change; no destructive file movement or generated bundle deletion.
