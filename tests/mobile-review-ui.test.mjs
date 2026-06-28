@@ -17,6 +17,9 @@ test('mobile review exposes compact section tabs with source proof workflow', ()
   assert.match(appSource, /Proof/);
   assert.match(appSource, /readyMemberGapsWithCloudflareEvidence/);
   assert.match(appSource, /sourceLaneStats/);
+  assert.match(appSource, /formatSourceRuntime/);
+  assert.match(appSource, /return 'Legacy local'/);
+  assert.match(appSource, /title={sourceRuntime}/);
   assert.match(appSource, /review-lane-grid/);
   assert.match(appSource, /row\.gap\.status === 'ready' && !row\.evidence\?\.cloudflareSnapshot/);
   assert.match(appSource, /href={gap\.url}/);

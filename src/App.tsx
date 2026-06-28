@@ -1426,6 +1426,26 @@ function formatBlockerLabel(blocker: string) {
   }
 }
 
+function formatSourceRuntime(runtime: string, runtimePassed: boolean) {
+  if (runtimePassed) {
+    return 'Cloudflare';
+  }
+
+  if (runtime === 'legacy-local-before-cloudflare-guardrail') {
+    return 'Legacy local';
+  }
+
+  if (runtime === 'unknown') {
+    return 'Unknown';
+  }
+
+  return runtime
+    .split('-')
+    .filter(Boolean)
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
 function MobileReviewView({
   records,
   meta,
@@ -1449,6 +1469,7 @@ function MobileReviewView({
   const blockerLabels = coverageGap?.blockers.map(formatBlockerLabel) ?? [];
   const sourceRuntime = coverageGap?.current.sourceIntakeRuntime ?? 'unknown';
   const runtimePassed = coverageGap?.current.cloudflareSourceRuntimePassed === true;
+  const runtimeLabel = formatSourceRuntime(sourceRuntime, runtimePassed);
   const readyEvidence = cloudflareEvidence
     ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks}`
     : 'n/a';
@@ -1519,7 +1540,7 @@ function MobileReviewView({
         </div>
         <div>
           <span>Runtime</span>
-          <strong>{runtimePassed ? 'Cloudflare' : sourceRuntime}</strong>
+          <strong title={sourceRuntime}>{runtimeLabel}</strong>
         </div>
         <div>
           <span>CF ready</span>
