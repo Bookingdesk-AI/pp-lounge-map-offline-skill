@@ -20,6 +20,7 @@ test('mobile review exposes compact section tabs with source proof workflow', ()
   assert.match(appSource, /review-lane-grid/);
   assert.match(appSource, /row\.gap\.status === 'ready' && !row\.evidence\?\.cloudflareSnapshot/);
   assert.match(appSource, /href={gap\.url}/);
+  assert.match(appSource, /{gap\.sourceId}/);
   assert.doesNotMatch(appSource, /sourceGapRows\.slice/);
 });
 

@@ -1647,6 +1647,7 @@ function MobileReviewView({
                       <strong>{gap.publisher}</strong>
                       <span className="code">{gap.next}</span>
                     </span>
+                    <span className="code">{gap.sourceId}</span>
                     <span>{gap.familyLabel}</span>
                     <span>{`${gap.terminalFamilyBlocked ? 'terminal' : gap.status} · ${evidence?.cloudflareSnapshot ? 'CF' : 'No CF'}`}</span>
                   </a>
