@@ -160,6 +160,15 @@ if (jsonOutput) {
     `Source proof: ${summary.cloudflareSourceEvidence.readyMemberGapsWithCloudflareEvidence}/` +
       `${summary.cloudflareSourceEvidence.readyMemberGaps}`,
   );
+  if (summary.gapReport.nextCloudflareIntake) {
+    const intake = summary.gapReport.nextCloudflareIntake;
+    console.log(`Cloudflare token: ${intake.requiredTokenEnv}`);
+    console.log(
+      `Cloudflare lanes: ready ${intake.readySourceIds.length}, ` +
+        `cred ${intake.credentialSourceIds.length}, rights ${intake.rightsReviewSourceIds.length}`,
+    );
+    console.log(`Cloudflare report: ${intake.commands.report}`);
+  }
   console.log(`Schema tables: ${summary.tableStatuses.filter((table) => table.present).length}/${summary.tableStatuses.length}`);
   if (summary.terminalPassed) {
     console.log('Terminal goal: passed');

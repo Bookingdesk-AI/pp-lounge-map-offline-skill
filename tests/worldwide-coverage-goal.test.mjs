@@ -82,6 +82,9 @@ test('coverage validator reports current progress without pretending terminal co
   const summary = JSON.parse(output);
 
   assert.match(textOutput, /Source proof: 3\/16/);
+  assert.match(textOutput, /Cloudflare token: LOUNGE_GURU_INTAKE_TOKEN/);
+  assert.match(textOutput, /Cloudflare lanes: ready 16, cred 3, rights 3/);
+  assert.match(textOutput, /Cloudflare report: npm run intake:cloudflare:report:export/);
   assert.equal(summary.goalId, goal.id);
   assert.equal(summary.database.databaseName, 'lounge-guru-catalog');
   assert.ok(summary.totalRecords > 0);
