@@ -1935,6 +1935,10 @@
     outline: 0;
   }
 
+  .review-row.is-preflight {
+    margin-top: 0.44rem;
+  }
+
   .review-row strong,
   .review-row span {
     overflow: hidden;
@@ -1956,6 +1960,7 @@
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.28rem;
+    overflow: visible;
   }
 
   .review-row-badges .code {

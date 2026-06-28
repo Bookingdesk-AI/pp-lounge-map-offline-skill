@@ -230,6 +230,24 @@ export interface CoverageGapReport {
     missingSourceFamilies: string[];
     sourceIntakeRuntimeRequired?: string | null;
   };
+  nextCloudflareIntake?: {
+    requiredTokenEnv: string;
+    localScrawl: 'blocked';
+    missingRuntime: boolean;
+    fullReportRequired: boolean;
+    readySourceIds: string[];
+    credentialSourceIds: string[];
+    rightsReviewSourceIds: string[];
+    commands: {
+      probe: string;
+      evidence: string;
+      report: string;
+      promote: string;
+      rebuild: string;
+      pushD1: string;
+      validate: string;
+    };
+  };
   sourceFamilies: Array<{
     id: string;
     label: string;

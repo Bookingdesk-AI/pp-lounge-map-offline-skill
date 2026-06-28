@@ -17,6 +17,10 @@ test('mobile review exposes compact section tabs with source proof workflow', ()
   assert.match(appSource, /Proof/);
   assert.match(appSource, /readyMemberGapsWithCloudflareEvidence/);
   assert.match(appSource, /sourceLaneStats/);
+  assert.match(appSource, /nextCloudflareIntake/);
+  assert.match(appSource, /preflightStats/);
+  assert.match(appSource, /LOUNGE_GURU_INTAKE_TOKEN|intakePreflight\.requiredTokenEnv/);
+  assert.match(appSource, /report:export/);
   assert.match(appSource, /blockerRows/);
   assert.match(appSource, /approvedRecordsRemaining/);
   assert.match(appSource, /approvalsNeededForCurrentCatalogRatio/);
@@ -50,6 +54,7 @@ test('mobile review tabs keep production touch targets', () => {
   assert.match(appCss, /\.mobile-review-tabs button:focus-visible\s*{/);
   assert.match(appCss, /\.review-blocker-grid\s*{/);
   assert.match(appCss, /\.review-lane-grid\s*{/);
+  assert.match(appCss, /\.review-row\.is-preflight\s*{[^}]*margin-top:\s*0\.44rem;/s);
   assert.match(appCss, /\.review-row-badges\s*{[^}]*flex-wrap:\s*wrap;/s);
   assert.match(appCss, /\.review-row\s*{[^}]*text-decoration:\s*none;/s);
 });

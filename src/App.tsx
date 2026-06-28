@@ -1569,6 +1569,15 @@ function MobileReviewView({
     { label: 'Blocked', value: sourceGapRows.filter((row) => row.gap.status === 'blocked').length },
     { label: 'CF', value: sourceGapRows.filter((row) => row.evidence?.cloudflareSnapshot).length },
   ];
+  const intakePreflight = coverageGap?.nextCloudflareIntake;
+  const preflightStats = intakePreflight
+    ? [
+        { label: 'Ready', value: intakePreflight.readySourceIds.length },
+        { label: 'Cred', value: intakePreflight.credentialSourceIds.length },
+        { label: 'Rights', value: intakePreflight.rightsReviewSourceIds.length },
+        { label: 'Report', value: intakePreflight.fullReportRequired ? 'Need' : 'OK' },
+      ]
+    : [];
   const [activeTab, setActiveTab] = useState<MobileReviewTab>('blockers');
   const blockerRows = coverageGap
     ? [
@@ -1729,6 +1738,24 @@ function MobileReviewView({
                 </span>
               ))}
             </div>
+            {intakePreflight ? (
+              <div className="review-row is-preflight">
+                <span className="review-row-head">
+                  <strong>Cloudflare</strong>
+                  <span className="code">{intakePreflight.requiredTokenEnv}</span>
+                </span>
+                <span className="review-row-badges" aria-label="Cloudflare intake preflight">
+                  {preflightStats.map((stat) => (
+                    <span key={stat.label} className="code" title={stat.label === 'Ready' ? intakePreflight.commands.probe : undefined}>
+                      {stat.label} {stat.value}
+                    </span>
+                  ))}
+                </span>
+                <span className="code" title={intakePreflight.commands.report}>
+                  report:export
+                </span>
+              </div>
+            ) : null}
             <div className="review-list">
               {sourceGaps.map(({ gap, evidence }) => (
                   <a
