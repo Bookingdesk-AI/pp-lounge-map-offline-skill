@@ -1345,6 +1345,8 @@ function MobileDetailsView({
   const compared = comparedIds.has(selectedFeature.properties.id);
   const brandAsset = getFeatureBrandAsset(selectedFeature);
   const brandName = getFeatureBrandName(selectedFeature);
+  const selectedSource = selectedFeature.properties.canonical?.sources[0] ?? selectedFeature.properties.sources?.[0];
+  const selectedQuality = selectedFeature.properties.canonical?.quality ?? selectedFeature.properties.quality;
 
   return (
     <div className="mobile-selected-view">
@@ -1358,8 +1360,12 @@ function MobileDetailsView({
       <p>{selectedFeature.properties.airportName}</p>
       <small>{locationLabel(selectedFeature)}</small>
       <div className="quality-row">
-        <span>{selectedFeature.properties.canonical?.sources[0]?.publisher ?? 'Priority Pass'}</span>
-        <span>{selectedFeature.properties.canonical?.quality.reviewStatus ?? 'approved'}</span>
+        <span>{selectedSource?.publisher ?? 'Unknown'}</span>
+        <span className="code">{selectedSource?.sourceId ?? 'unknown'}</span>
+        <span className="code">{formatSourceConfidence(selectedSource?.confidence)}</span>
+        <span className="code">{formatSourceDate(selectedSource?.retrievedAt)}</span>
+        <span className="code">{selectedQuality?.completeness ?? 0}%</span>
+        <span>{selectedQuality?.reviewStatus ?? 'approved'}</span>
       </div>
     </div>
 

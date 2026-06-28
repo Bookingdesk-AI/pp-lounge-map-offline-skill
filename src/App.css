@@ -2009,6 +2009,14 @@
     font-size: 1.08rem;
   }
 
+  .mobile-selected-summary .quality-row {
+    margin-top: 0.46rem;
+  }
+
+  .mobile-selected-summary .quality-row .code {
+    white-space: nowrap;
+  }
+
   .mobile-detail-accordion {
     border: 1px solid var(--line-soft);
     border-radius: 6px;

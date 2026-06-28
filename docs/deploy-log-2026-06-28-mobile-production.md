@@ -8,6 +8,7 @@
 - Added compact source confidence and retrieval-date badges to mobile Review queue rows.
 - Added Cloudflare intake preflight commands to the coverage gap report.
 - Added compact Cloudflare intake preflight status to mobile Review Sources.
+- Added compact source and quality badges to mobile Details.
 - Preserved unrelated dirty script changes outside this closeout.
 
 ## Verification
@@ -26,6 +27,7 @@
 - Local mobile Review queue check: source confidence and retrieval-date badges
 - Coverage report check: Cloudflare token, probe, report, promote, rebuild, D1 push, and validation commands
 - Local mobile Sources check: token, ready, credential, rights, and report state
+- Local mobile Details check: source ID, confidence, retrieved date, completeness, and review status
 
 ## Deploy
 
