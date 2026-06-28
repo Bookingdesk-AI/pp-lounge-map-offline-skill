@@ -1833,6 +1833,41 @@
     min-height: 34px;
   }
 
+  .review-blocker-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.38rem;
+    margin-top: 0.5rem;
+  }
+
+  .review-blocker-grid > span {
+    min-width: 0;
+    display: grid;
+    gap: 0.18rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    padding: 0.52rem;
+    background: var(--surface-1);
+  }
+
+  .review-blocker-grid span span {
+    overflow: hidden;
+    color: var(--text-soft);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .review-blocker-grid strong {
+    overflow: hidden;
+    color: var(--text-main);
+    font-size: 0.88rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .review-lane-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));

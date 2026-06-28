@@ -17,6 +17,11 @@ test('mobile review exposes compact section tabs with source proof workflow', ()
   assert.match(appSource, /Proof/);
   assert.match(appSource, /readyMemberGapsWithCloudflareEvidence/);
   assert.match(appSource, /sourceLaneStats/);
+  assert.match(appSource, /blockerRows/);
+  assert.match(appSource, /approvedRecordsRemaining/);
+  assert.match(appSource, /approvalsNeededForCurrentCatalogRatio/);
+  assert.match(appSource, /reviewRecordsToResolve/);
+  assert.match(appSource, /aria-label={`\$\{row\.label\} \$\{row\.value\}`}/);
   assert.match(appSource, /formatSourceRuntime/);
   assert.match(appSource, /return 'Legacy local'/);
   assert.match(appSource, /title={sourceRuntime}/);
@@ -32,6 +37,7 @@ test('mobile review exposes compact section tabs with source proof workflow', ()
 test('mobile review tabs keep production touch targets', () => {
   assert.match(appCss, /\.mobile-review-tabs button\s*{[^}]*min-height:\s*44px;/s);
   assert.match(appCss, /\.mobile-review-tabs button:focus-visible\s*{/);
+  assert.match(appCss, /\.review-blocker-grid\s*{/);
   assert.match(appCss, /\.review-lane-grid\s*{/);
   assert.match(appCss, /\.review-row\s*{[^}]*text-decoration:\s*none;/s);
 });

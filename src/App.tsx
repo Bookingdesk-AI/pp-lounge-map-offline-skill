@@ -1511,6 +1511,15 @@ function MobileReviewView({
     { label: 'CF', value: sourceGapRows.filter((row) => row.evidence?.cloudflareSnapshot).length },
   ];
   const [activeTab, setActiveTab] = useState<MobileReviewTab>('blockers');
+  const blockerRows = coverageGap
+    ? [
+        { label: 'Approved count', value: coverageGap.deltas.approvedRecordsRemaining },
+        { label: 'Approved ratio', value: coverageGap.deltas.approvalsNeededForCurrentCatalogRatio },
+        { label: 'Source families', value: coverageGap.deltas.missingSourceFamilies.length },
+        { label: 'Review records', value: coverageGap.deltas.reviewRecordsToResolve },
+        { label: 'Runtime', value: runtimeLabel },
+      ]
+    : [];
   const tabCounts: Record<MobileReviewTab, number> = {
     blockers: blockerLabels.length,
     sources: intakePlan?.summary.memberGaps ?? 0,
@@ -1581,10 +1590,11 @@ function MobileReviewView({
         {blockerLabels.length === 0 ? (
           <div className="compare-empty">No blockers</div>
         ) : (
-          <div className="review-chip-list">
-            {blockerLabels.map((label) => (
-              <span key={label} className="filter-chip">
-                {label}
+          <div className="review-blocker-grid">
+            {blockerRows.map((row) => (
+              <span key={row.label} aria-label={`${row.label} ${row.value}`}>
+                <span>{row.label}</span>
+                <strong>{row.value}</strong>
               </span>
             ))}
           </div>
