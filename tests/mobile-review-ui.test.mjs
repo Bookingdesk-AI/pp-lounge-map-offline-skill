@@ -16,9 +16,13 @@ test('mobile review exposes compact section tabs with source proof workflow', ()
   assert.match(appSource, /aria-selected=/);
   assert.match(appSource, /Proof/);
   assert.match(appSource, /readyMemberGapsWithCloudflareEvidence/);
+  assert.match(appSource, /sourceLaneStats/);
+  assert.match(appSource, /review-lane-grid/);
+  assert.match(appSource, /row\.gap\.status === 'ready' && !row\.evidence\?\.cloudflareSnapshot/);
 });
 
 test('mobile review tabs keep production touch targets', () => {
   assert.match(appCss, /\.mobile-review-tabs button\s*{[^}]*min-height:\s*44px;/s);
   assert.match(appCss, /\.mobile-review-tabs button:focus-visible\s*{/);
+  assert.match(appCss, /\.review-lane-grid\s*{/);
 });

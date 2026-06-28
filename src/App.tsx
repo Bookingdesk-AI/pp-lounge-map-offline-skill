@@ -1461,9 +1461,33 @@ function MobileReviewView({
       evidence,
     ]),
   );
-  const sourceGaps = [...(intakePlan?.memberGaps ?? [])]
-    .sort((first, second) => Number(second.terminalFamilyBlocked) - Number(first.terminalFamilyBlocked))
-    .slice(0, 10);
+  const sourceGapRows = (intakePlan?.memberGaps ?? [])
+    .map((gap) => ({
+      gap,
+      evidence: sourceGapEvidence.get(`${gap.familyId}-${gap.sourceId}`),
+    }))
+    .sort((first, second) => {
+      const rank = (row: { gap: CloudflareSourceIntakePlan['memberGaps'][number]; evidence?: { cloudflareSnapshot: boolean } }) => {
+        if (row.gap.status === 'ready' && !row.evidence?.cloudflareSnapshot) {
+          return 0;
+        }
+        if (row.gap.status === 'ready') {
+          return 1;
+        }
+        if (!row.gap.terminalFamilyBlocked) {
+          return 2;
+        }
+        return 3;
+      };
+      return rank(first) - rank(second) || first.gap.publisher.localeCompare(second.gap.publisher);
+    });
+  const sourceGaps = sourceGapRows.slice(0, 14);
+  const sourceLaneStats = [
+    { label: 'Ready', value: sourceGapRows.filter((row) => row.gap.status === 'ready').length },
+    { label: 'No CF', value: sourceGapRows.filter((row) => !row.evidence?.cloudflareSnapshot).length },
+    { label: 'Blocked', value: sourceGapRows.filter((row) => row.gap.status === 'blocked').length },
+    { label: 'CF', value: sourceGapRows.filter((row) => row.evidence?.cloudflareSnapshot).length },
+  ];
   const [activeTab, setActiveTab] = useState<MobileReviewTab>('blockers');
   const tabCounts: Record<MobileReviewTab, number> = {
     blockers: blockerLabels.length,
@@ -1601,21 +1625,28 @@ function MobileReviewView({
         {sourceGaps.length === 0 ? (
           <div className="compare-empty">No source gaps</div>
         ) : (
-          <div className="review-list">
-            {sourceGaps.map((gap) => {
-              const evidence = sourceGapEvidence.get(`${gap.familyId}-${gap.sourceId}`);
-              return (
-                <div key={`${gap.familyId}-${gap.sourceId}`} className="review-row">
-                  <span className="review-row-head">
-                    <strong>{gap.publisher}</strong>
-                    <span className="code">{gap.next}</span>
-                  </span>
-                  <span>{gap.familyLabel}</span>
-                  <span>{`${gap.terminalFamilyBlocked ? 'terminal' : gap.status} · ${evidence?.cloudflareSnapshot ? 'CF' : 'No CF'}`}</span>
-                </div>
-              );
-            })}
-          </div>
+          <>
+            <div className="review-lane-grid" aria-label="Source lanes">
+              {sourceLaneStats.map((stat) => (
+                <span key={stat.label}>
+                  <strong>{stat.value}</strong>
+                  <span>{stat.label}</span>
+                </span>
+              ))}
+            </div>
+            <div className="review-list">
+              {sourceGaps.map(({ gap, evidence }) => (
+                  <div key={`${gap.familyId}-${gap.sourceId}`} className="review-row">
+                    <span className="review-row-head">
+                      <strong>{gap.publisher}</strong>
+                      <span className="code">{gap.next}</span>
+                    </span>
+                    <span>{gap.familyLabel}</span>
+                    <span>{`${gap.terminalFamilyBlocked ? 'terminal' : gap.status} · ${evidence?.cloudflareSnapshot ? 'CF' : 'No CF'}`}</span>
+                  </div>
+                ))}
+            </div>
+          </>
         )}
         </section>
       ) : null}

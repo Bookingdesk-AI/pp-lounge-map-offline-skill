@@ -1833,6 +1833,42 @@
     min-height: 34px;
   }
 
+  .review-lane-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.32rem;
+    margin-top: 0.5rem;
+  }
+
+  .review-lane-grid > span {
+    min-width: 0;
+    display: grid;
+    gap: 0.08rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    background: var(--surface-1);
+    padding: 0.42rem 0.36rem;
+  }
+
+  .review-lane-grid strong,
+  .review-lane-grid span span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .review-lane-grid strong {
+    color: var(--text-main);
+    font-size: 0.86rem;
+  }
+
+  .review-lane-grid span span {
+    color: var(--text-soft);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+  }
+
   .review-list {
     display: grid;
     gap: 0.44rem;
