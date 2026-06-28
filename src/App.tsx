@@ -1441,7 +1441,16 @@ function MobileReviewView({
   const readyEvidence = cloudflareEvidence
     ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks}`
     : 'n/a';
+  const sourceProof = cloudflareEvidence
+    ? `${cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence}/${cloudflareEvidence.stats.readyMemberGaps}`
+    : 'n/a';
   const cloudflareSources = cloudflareEvidence?.sources ?? [];
+  const sourceGapEvidence = new Map(
+    (cloudflareEvidence?.readyMemberGapEvidence ?? []).map((evidence) => [
+      `${evidence.familyId}-${evidence.sourceId}`,
+      evidence,
+    ]),
+  );
   const sourceGaps = [...(intakePlan?.memberGaps ?? [])]
     .sort((first, second) => Number(second.terminalFamilyBlocked) - Number(first.terminalFamilyBlocked))
     .slice(0, 10);
@@ -1476,6 +1485,10 @@ function MobileReviewView({
         <div>
           <span>Sources</span>
           <strong>{intakePlan?.summary.memberGaps ?? 'n/a'}</strong>
+        </div>
+        <div>
+          <span>Proof</span>
+          <strong>{sourceProof}</strong>
         </div>
       </section>
 
@@ -1548,16 +1561,19 @@ function MobileReviewView({
           <div className="compare-empty">No source gaps</div>
         ) : (
           <div className="review-list">
-            {sourceGaps.map((gap) => (
-              <div key={`${gap.familyId}-${gap.sourceId}`} className="review-row">
-                <span className="review-row-head">
-                  <strong>{gap.publisher}</strong>
-                  <span className="code">{gap.next}</span>
-                </span>
-                <span>{gap.familyLabel}</span>
-                <span>{gap.terminalFamilyBlocked ? 'terminal' : gap.status}</span>
-              </div>
-            ))}
+            {sourceGaps.map((gap) => {
+              const evidence = sourceGapEvidence.get(`${gap.familyId}-${gap.sourceId}`);
+              return (
+                <div key={`${gap.familyId}-${gap.sourceId}`} className="review-row">
+                  <span className="review-row-head">
+                    <strong>{gap.publisher}</strong>
+                    <span className="code">{gap.next}</span>
+                  </span>
+                  <span>{gap.familyLabel}</span>
+                  <span>{`${gap.terminalFamilyBlocked ? 'terminal' : gap.status} · ${evidence?.cloudflareSnapshot ? 'CF' : 'No CF'}`}</span>
+                </div>
+              );
+            })}
           </div>
         )}
       </section>
