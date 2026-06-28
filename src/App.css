@@ -1761,6 +1761,59 @@
     white-space: nowrap;
   }
 
+  .mobile-review-tabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.32rem;
+    border-bottom: 1px solid var(--line-soft);
+    padding-bottom: 0.44rem;
+  }
+
+  .mobile-review-tabs button {
+    min-width: 0;
+    min-height: 44px;
+    display: grid;
+    align-content: center;
+    gap: 0.1rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    background: #ffffff;
+    color: var(--text-soft);
+    font: inherit;
+    text-align: center;
+  }
+
+  .mobile-review-tabs button.is-active {
+    border-color: var(--brand-blue);
+    background: var(--surface-2);
+    color: var(--brand-blue);
+  }
+
+  .mobile-review-tabs button:focus-visible {
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 0 3px rgba(36, 86, 166, 0.18);
+    outline: 0;
+  }
+
+  .mobile-review-tabs span,
+  .mobile-review-tabs strong {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-review-tabs span {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+  }
+
+  .mobile-review-tabs strong {
+    color: var(--text-main);
+    font-size: 0.82rem;
+  }
+
   .mobile-review-panel {
     padding: 0.62rem;
   }

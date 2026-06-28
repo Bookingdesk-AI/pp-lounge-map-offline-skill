@@ -49,6 +49,16 @@ const MOBILE_MODE_LABELS: Record<MobileSheetMode, string> = {
   intake: 'Intake',
 };
 
+type MobileReviewTab = 'blockers' | 'sources' | 'cf' | 'families' | 'queue';
+
+const MOBILE_REVIEW_TABS: Array<{ id: MobileReviewTab; label: string }> = [
+  { id: 'blockers', label: 'Blockers' },
+  { id: 'sources', label: 'Sources' },
+  { id: 'cf', label: 'CF' },
+  { id: 'families', label: 'Families' },
+  { id: 'queue', label: 'Queue' },
+];
+
 interface InitialUrlState {
   search: string;
   selectedTypes: string[];
@@ -1454,6 +1464,14 @@ function MobileReviewView({
   const sourceGaps = [...(intakePlan?.memberGaps ?? [])]
     .sort((first, second) => Number(second.terminalFamilyBlocked) - Number(first.terminalFamilyBlocked))
     .slice(0, 10);
+  const [activeTab, setActiveTab] = useState<MobileReviewTab>('blockers');
+  const tabCounts: Record<MobileReviewTab, number> = {
+    blockers: blockerLabels.length,
+    sources: intakePlan?.summary.memberGaps ?? 0,
+    cf: cloudflareSources.length,
+    families: missingFamilies.length,
+    queue: reviewRecords.length,
+  };
 
   return (
     <div className="mobile-review-view">
@@ -1492,7 +1510,24 @@ function MobileReviewView({
         </div>
       </section>
 
-      <section className="mobile-review-panel">
+      <div className="mobile-review-tabs" role="tablist" aria-label="Review sections">
+        {MOBILE_REVIEW_TABS.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            className={activeTab === tab.id ? 'is-active' : ''}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            <span>{tab.label}</span>
+            <strong>{tabCounts[tab.id]}</strong>
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'blockers' ? (
+        <section className="mobile-review-panel">
         <div className="section-title-row">
           <h2>Blockers</h2>
           <span className="compare-count">{blockerLabels.length}</span>
@@ -1508,9 +1543,11 @@ function MobileReviewView({
             ))}
           </div>
         )}
-      </section>
+        </section>
+      ) : null}
 
-      <section className="mobile-review-panel">
+      {activeTab === 'cf' ? (
+        <section className="mobile-review-panel">
         <div className="section-title-row">
           <h2>CF sources</h2>
           <span className="compare-count">{cloudflareSources.length}</span>
@@ -1531,9 +1568,11 @@ function MobileReviewView({
             ))}
           </div>
         )}
-      </section>
+        </section>
+      ) : null}
 
-      <section className="mobile-review-panel">
+      {activeTab === 'families' ? (
+        <section className="mobile-review-panel">
         <div className="section-title-row">
           <h2>Families</h2>
           <span className="compare-count">{missingFamilies.length}</span>
@@ -1550,9 +1589,11 @@ function MobileReviewView({
             ))}
           </div>
         )}
-      </section>
+        </section>
+      ) : null}
 
-      <section className="mobile-review-panel">
+      {activeTab === 'sources' ? (
+        <section className="mobile-review-panel">
         <div className="section-title-row">
           <h2>Sources</h2>
           <span className="compare-count">{intakePlan?.summary.memberGaps ?? 0}</span>
@@ -1576,9 +1617,11 @@ function MobileReviewView({
             })}
           </div>
         )}
-      </section>
+        </section>
+      ) : null}
 
-      <section className="mobile-review-panel">
+      {activeTab === 'queue' ? (
+        <section className="mobile-review-panel">
         <div className="section-title-row">
           <h2>Queue</h2>
           <span className="compare-count">{reviewRecords.length}</span>
@@ -1604,7 +1647,8 @@ function MobileReviewView({
             ))}
           </div>
         )}
-      </section>
+        </section>
+      ) : null}
     </div>
   );
 }
