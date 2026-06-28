@@ -1497,10 +1497,11 @@ function MobileReviewView({
   intakePlan: CloudflareSourceIntakePlan | null;
   onSelect: (id: string) => void;
 }) {
-  const reviewRecords = records
-    .filter((record) => record.quality.reviewStatus !== 'approved' || record.quality.conflicts.length > 0)
-    .sort(reviewQueueSort)
-    .slice(0, 12);
+  const reviewRecordCandidates = records.filter(
+    (record) => record.quality.reviewStatus !== 'approved' || record.quality.conflicts.length > 0,
+  );
+  const nonPriorityPassReviewTotal = reviewRecordCandidates.filter((record) => !isPriorityPassRecord(record)).length;
+  const reviewRecords = [...reviewRecordCandidates].sort(reviewQueueSort).slice(0, 12);
   const reviewRecordTotal = coverageGap?.current.reviewRecords ?? meta?.quality?.reviewQueue ?? reviewRecords.length;
   const missingFamilies = coverageGap?.sourceFamilies.filter((family) => !family.present) ?? [];
   const blockerLabels = coverageGap?.blockers.map(formatBlockerLabel) ?? [];
@@ -1599,6 +1600,10 @@ function MobileReviewView({
         <div>
           <span>Proof</span>
           <strong>{sourceProof}</strong>
+        </div>
+        <div>
+          <span>Non-PP</span>
+          <strong>{nonPriorityPassReviewTotal}</strong>
         </div>
       </section>
 
