@@ -1951,6 +1951,18 @@
     gap: 0.5rem;
   }
 
+  .review-row-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.28rem;
+  }
+
+  .review-row-badges .code {
+    max-width: 100%;
+    white-space: nowrap;
+  }
+
   .mobile-sheet .results {
     padding: 0.62rem 0.62rem calc(0.8rem + env(safe-area-inset-bottom));
   }

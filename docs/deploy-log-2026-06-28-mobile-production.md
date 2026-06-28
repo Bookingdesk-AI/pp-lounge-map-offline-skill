@@ -5,6 +5,7 @@
 - Verified production mobile map workflow after the compact sheet redesign.
 - Rebuilt and redeployed the current Pages bundle for review.
 - Added compact source IDs to mobile Review queue rows.
+- Added compact source confidence and retrieval-date badges to mobile Review queue rows.
 - Preserved unrelated dirty script changes outside this closeout.
 
 ## Verification
@@ -20,6 +21,7 @@
 - Live desktop viewport check at `1440x900`
 - Local mobile Review check at `390x844`: `Proof 3/16`
 - Local mobile Review queue check: airport, completeness, and source ID badges
+- Local mobile Review queue check: source confidence and retrieval-date badges
 
 ## Deploy
 

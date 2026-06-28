@@ -1448,6 +1448,27 @@ function formatSourceRuntime(runtime: string, runtimePassed: boolean) {
     .join(' ');
 }
 
+function formatSourceConfidence(confidence?: number) {
+  if (typeof confidence !== 'number' || Number.isNaN(confidence)) {
+    return 'n/a';
+  }
+
+  return `C${Math.round(confidence * 100)}`;
+}
+
+function formatSourceDate(retrievedAt?: string) {
+  if (!retrievedAt) {
+    return 'n/a';
+  }
+
+  const date = new Date(retrievedAt);
+  if (Number.isNaN(date.getTime())) {
+    return 'n/a';
+  }
+
+  return retrievedAt.slice(0, 10);
+}
+
 function isPriorityPassRecord(record: CanonicalLoungeRecord) {
   return record.sources.some(
     (source) => source.sourceId === 'priority-pass' || source.publisher.toLowerCase() === 'priority pass',
@@ -1742,26 +1763,34 @@ function MobileReviewView({
           <div className="compare-empty">No review records</div>
         ) : (
           <div className="review-list">
-            {reviewRecords.map((record) => (
-              <button
-                key={record.lounge.id}
-                type="button"
-                className="review-row is-action"
-                aria-label={`${record.lounge.name} ${record.airport.iata} ${record.quality.completeness}%`}
-                onClick={() => onSelect(record.lounge.id)}
-              >
-                <span className="review-row-head">
-                  <strong>{record.lounge.name}</strong>
-                  <span className="code">{record.airport.iata}</span>
-                  <span className="code">{record.quality.completeness}%</span>
-                </span>
-                <span className="review-row-head">
-                  <span>{record.sources[0]?.publisher ?? 'Unknown'}</span>
-                  <span className="code">{record.sources[0]?.sourceId ?? 'unknown'}</span>
-                </span>
-                <span>{record.quality.conflicts.join(', ') || record.quality.reviewStatus}</span>
-              </button>
-            ))}
+            {reviewRecords.map((record) => {
+              const primarySource = record.sources[0];
+
+              return (
+                <button
+                  key={record.lounge.id}
+                  type="button"
+                  className="review-row is-action"
+                  aria-label={`${record.lounge.name} ${record.airport.iata} ${record.quality.completeness}% ${formatSourceConfidence(primarySource?.confidence)}`}
+                  onClick={() => onSelect(record.lounge.id)}
+                >
+                  <span className="review-row-head">
+                    <strong>{record.lounge.name}</strong>
+                    <span className="code">{record.airport.iata}</span>
+                    <span className="code">{record.quality.completeness}%</span>
+                  </span>
+                  <span className="review-row-head">
+                    <span>{primarySource?.publisher ?? 'Unknown'}</span>
+                    <span className="review-row-badges">
+                      <span className="code">{primarySource?.sourceId ?? 'unknown'}</span>
+                      <span className="code">{formatSourceConfidence(primarySource?.confidence)}</span>
+                      <span className="code">{formatSourceDate(primarySource?.retrievedAt)}</span>
+                    </span>
+                  </span>
+                  <span>{record.quality.conflicts.join(', ') || record.quality.reviewStatus}</span>
+                </button>
+              );
+            })}
           </div>
         )}
         </section>
