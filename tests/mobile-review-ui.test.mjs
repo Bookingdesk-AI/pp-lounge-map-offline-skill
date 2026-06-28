@@ -31,6 +31,8 @@ test('mobile review exposes compact section tabs with source proof workflow', ()
   assert.match(appSource, /nonPriorityPassReviewTotal/);
   assert.match(appSource, /Non-PP/);
   assert.match(appSource, /\[\.\.\.reviewRecordCandidates\]\.sort\(reviewQueueSort\)\.slice\(0, 12\)/);
+  assert.match(appSource, /record\.quality\.completeness}%/);
+  assert.match(appSource, /aria-label={`\$\{record\.lounge\.name\} \$\{record\.airport\.iata\} \$\{record\.quality\.completeness\}%`}/);
   assert.match(appSource, /review-lane-grid/);
   assert.match(appSource, /row\.gap\.status === 'ready' && !row\.evidence\?\.cloudflareSnapshot/);
   assert.match(appSource, /href={gap\.url}/);

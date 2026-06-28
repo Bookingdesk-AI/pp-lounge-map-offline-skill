@@ -1747,11 +1747,13 @@ function MobileReviewView({
                 key={record.lounge.id}
                 type="button"
                 className="review-row is-action"
+                aria-label={`${record.lounge.name} ${record.airport.iata} ${record.quality.completeness}%`}
                 onClick={() => onSelect(record.lounge.id)}
               >
                 <span className="review-row-head">
                   <strong>{record.lounge.name}</strong>
                   <span className="code">{record.airport.iata}</span>
+                  <span className="code">{record.quality.completeness}%</span>
                 </span>
                 <span>{record.sources[0]?.publisher ?? 'Unknown'}</span>
                 <span>{record.quality.conflicts.join(', ') || record.quality.reviewStatus}</span>
