@@ -1386,9 +1386,26 @@
     font-size: 1.08rem;
   }
 
+  .app-shell.is-mobile .system-stats {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.04rem;
+    scrollbar-width: none;
+  }
+
+  .app-shell.is-mobile .system-stats::-webkit-scrollbar {
+    display: none;
+  }
+
   .system-stats span {
+    flex: 0 0 auto;
     min-height: 26px;
     font-size: 0.62rem;
+  }
+
+  .app-shell.is-mobile .system-stats span:nth-child(n + 5) {
+    display: none;
   }
 
   .view-tabs {
