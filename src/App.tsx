@@ -1421,12 +1421,14 @@ function MobileReviewView({
   meta,
   coverageGap,
   cloudflareEvidence,
+  intakePlan,
   onSelect,
 }: {
   records: CanonicalLoungeRecord[];
   meta: LoungeMeta | null;
   coverageGap: CoverageGapReport | null;
   cloudflareEvidence: CloudflareSourceRunEvidence | null;
+  intakePlan: CloudflareSourceIntakePlan | null;
   onSelect: (id: string) => void;
 }) {
   const reviewRecords = records
@@ -1467,6 +1469,10 @@ function MobileReviewView({
         <div>
           <span>CF ready</span>
           <strong>{readyEvidence}</strong>
+        </div>
+        <div>
+          <span>Sources</span>
+          <strong>{intakePlan?.summary.memberGaps ?? 'n/a'}</strong>
         </div>
       </section>
 
@@ -3065,6 +3071,7 @@ function App() {
                       meta={meta}
                       coverageGap={coverageGap}
                       cloudflareEvidence={cloudflareEvidence}
+                      intakePlan={intakePlan}
                       onSelect={(id) => selectFeature(id)}
                     />
                   </div>

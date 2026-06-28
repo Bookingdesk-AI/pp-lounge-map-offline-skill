@@ -155,27 +155,42 @@ function validateIntakePlan(plan, gap) {
     plan?.summary?.tasks === plan?.tasks?.length,
     'cloudflare-source-intake-plan.json: summary task count mismatch',
   );
+  issue(Array.isArray(plan?.memberGaps), 'cloudflare-source-intake-plan.json: memberGaps missing');
+  issue(
+    plan?.summary?.memberGaps === plan?.memberGaps?.length,
+    'cloudflare-source-intake-plan.json: summary member gap count mismatch',
+  );
 
   const planFamilies = new Set((plan?.tasks ?? []).map((task) => task.familyId));
   for (const familyId of gap?.deltas?.missingSourceFamilies ?? []) {
     issue(planFamilies.has(familyId), `cloudflare-source-intake-plan.json: missing family ${familyId} not planned`);
   }
 
-  for (const [index, task] of (plan?.tasks ?? []).entries()) {
-    const prefix = `cloudflare-source-intake-plan.json.tasks[${index}]`;
-    issue(Boolean(task.sourceId), `${prefix}: sourceId missing`);
-    issue(Boolean(task.publisher), `${prefix}: publisher missing`);
-    issue(['ready', 'blocked'].includes(task.status), `${prefix}: status invalid`);
-    issue(Boolean(task.action), `${prefix}: action missing`);
-    issue(Boolean(task.next), `${prefix}: next missing`);
-    issue(/^https:\/\//.test(task.url ?? ''), `${prefix}: url must be https`);
-    if (task.fetchUrls) {
-      issue(Array.isArray(task.fetchUrls), `${prefix}: fetchUrls must be an array`);
-      for (const [urlIndex, url] of task.fetchUrls.entries()) {
+  function validatePlanItem(item, prefix) {
+    issue(Boolean(item.sourceId), `${prefix}: sourceId missing`);
+    issue(Boolean(item.publisher), `${prefix}: publisher missing`);
+    issue(['ready', 'blocked'].includes(item.status), `${prefix}: status invalid`);
+    issue(Boolean(item.action), `${prefix}: action missing`);
+    issue(Boolean(item.next), `${prefix}: next missing`);
+    issue(/^https:\/\//.test(item.url ?? ''), `${prefix}: url must be https`);
+    if (item.fetchUrls) {
+      issue(Array.isArray(item.fetchUrls), `${prefix}: fetchUrls must be an array`);
+      for (const [urlIndex, url] of item.fetchUrls.entries()) {
         issue(/^https:\/\//.test(url), `${prefix}.fetchUrls[${urlIndex}]: url must be https`);
       }
     }
-    issue(Boolean(task.rightsNote), `${prefix}: rightsNote missing`);
+    issue(Boolean(item.rightsNote), `${prefix}: rightsNote missing`);
+  }
+
+  for (const [index, task] of (plan?.tasks ?? []).entries()) {
+    validatePlanItem(task, `cloudflare-source-intake-plan.json.tasks[${index}]`);
+  }
+
+  for (const [index, gapItem] of (plan?.memberGaps ?? []).entries()) {
+    const prefix = `cloudflare-source-intake-plan.json.memberGaps[${index}]`;
+    validatePlanItem(gapItem, prefix);
+    issue(typeof gapItem.familyPresent === 'boolean', `${prefix}: familyPresent missing`);
+    issue(typeof gapItem.terminalFamilyBlocked === 'boolean', `${prefix}: terminalFamilyBlocked missing`);
   }
 }
 

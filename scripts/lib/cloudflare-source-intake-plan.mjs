@@ -57,30 +57,39 @@ function actionForSource({ registrySource, runSource }) {
 export function createCloudflareSourceIntakePlan({ coverageGap, sourceRegistry, sourceIntakeReport }) {
   const registry = sourceById(sourceRegistry);
   const runs = sourceRunById(sourceIntakeReport);
+  const sourceFamilies = coverageGap?.sourceFamilies ?? [];
   const missingFamilies = (coverageGap?.sourceFamilies ?? []).filter((family) => !family.present);
+  const buildPlanItem = (family, sourceId) => {
+    const registrySource = registry.get(sourceId);
+    const runSource = runs.get(sourceId);
+    const action = actionForSource({ registrySource, runSource });
+    return {
+      familyId: family.id,
+      familyLabel: family.label,
+      sourceId,
+      publisher: registrySource?.publisher ?? sourceId,
+      adapter: registrySource?.adapter ?? 'missing',
+      sourceStatus: registrySource?.status ?? 'missing',
+      runStatus: runSource?.status ?? 'not_run',
+      runRecords: Number(runSource?.records ?? 0),
+      cloudflareSnapshot: Boolean(runSource?.snapshotFile),
+      action: action.action,
+      status: action.status,
+      next: action.next,
+      url: registrySource?.url ?? runSource?.url ?? '',
+      fetchUrls: [...new Set([registrySource?.url, ...(registrySource?.fetchUrls ?? [])].filter(Boolean))],
+      rightsNote: registrySource?.rightsNote ?? '',
+    };
+  };
   const tasks = missingFamilies.flatMap((family) =>
-    (family.missingMembers ?? []).map((sourceId) => {
-      const registrySource = registry.get(sourceId);
-      const runSource = runs.get(sourceId);
-      const action = actionForSource({ registrySource, runSource });
-      return {
-        familyId: family.id,
-        familyLabel: family.label,
-        sourceId,
-        publisher: registrySource?.publisher ?? sourceId,
-        adapter: registrySource?.adapter ?? 'missing',
-        sourceStatus: registrySource?.status ?? 'missing',
-        runStatus: runSource?.status ?? 'not_run',
-        runRecords: Number(runSource?.records ?? 0),
-        cloudflareSnapshot: Boolean(runSource?.snapshotFile),
-        action: action.action,
-        status: action.status,
-        next: action.next,
-        url: registrySource?.url ?? runSource?.url ?? '',
-        fetchUrls: [...new Set([registrySource?.url, ...(registrySource?.fetchUrls ?? [])].filter(Boolean))],
-        rightsNote: registrySource?.rightsNote ?? '',
-      };
-    }),
+    (family.missingMembers ?? []).map((sourceId) => buildPlanItem(family, sourceId)),
+  );
+  const memberGaps = sourceFamilies.flatMap((family) =>
+    (family.missingMembers ?? []).map((sourceId) => ({
+      ...buildPlanItem(family, sourceId),
+      familyPresent: Boolean(family.present),
+      terminalFamilyBlocked: !family.present,
+    })),
   );
 
   const blockedTasks = tasks.filter((task) => task.status === 'blocked').length;
@@ -97,11 +106,13 @@ export function createCloudflareSourceIntakePlan({ coverageGap, sourceRegistry, 
     },
     summary: {
       missingFamilies: missingFamilies.length,
+      memberGaps: memberGaps.length,
       tasks: tasks.length,
       readyTasks: tasks.length - blockedTasks,
       blockedTasks,
       fetchedWithoutRecords: tasks.filter((task) => task.cloudflareSnapshot && task.runRecords === 0).length,
     },
     tasks,
+    memberGaps,
   };
 }

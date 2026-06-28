@@ -239,12 +239,20 @@ export interface CloudflareSourceIntakePlan {
   };
   summary: {
     missingFamilies: number;
+    memberGaps: number;
     tasks: number;
     readyTasks: number;
     blockedTasks: number;
     fetchedWithoutRecords: number;
   };
-  tasks: Array<{
+  tasks: CloudflareSourceIntakePlanItem[];
+  memberGaps: Array<CloudflareSourceIntakePlanItem & {
+    familyPresent: boolean;
+    terminalFamilyBlocked: boolean;
+  }>;
+}
+
+export interface CloudflareSourceIntakePlanItem {
     familyId: string;
     familyLabel: string;
     sourceId: string;
@@ -260,7 +268,6 @@ export interface CloudflareSourceIntakePlan {
     url: string;
     fetchUrls?: string[];
     rightsNote: string;
-  }>;
 }
 
 export interface CloudflareSourceRunEvidence {

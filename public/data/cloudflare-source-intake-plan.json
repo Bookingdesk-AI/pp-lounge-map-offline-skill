@@ -10,6 +10,7 @@
   },
   "summary": {
     "missingFamilies": 2,
+    "memberGaps": 22,
     "tasks": 6,
     "readyTasks": 3,
     "blockedTasks": 3,
@@ -131,6 +132,472 @@
         "https://en.dragonpass.com.cn/"
       ],
       "rightsNote": "Official public DragonPass page; import only public program and location evidence."
+    }
+  ],
+  "memberGaps": [
+    {
+      "familyId": "licensed-global-baseline",
+      "familyLabel": "Licensed global inventory baseline",
+      "sourceId": "loungereview-api",
+      "publisher": "LoungeReview API",
+      "adapter": "licensed_api",
+      "sourceStatus": "candidate",
+      "runStatus": "skipped",
+      "runRecords": 0,
+      "cloudflareSnapshot": false,
+      "action": "credential_review",
+      "status": "blocked",
+      "next": "Credentials",
+      "url": "https://loungereview.com/api/",
+      "fetchUrls": [
+        "https://loungereview.com/api/"
+      ],
+      "rightsNote": "Licensed API provider; no intake without approved commercial terms and key management.",
+      "familyPresent": false,
+      "terminalFamilyBlocked": true
+    },
+    {
+      "familyId": "licensed-global-baseline",
+      "familyLabel": "Licensed global inventory baseline",
+      "sourceId": "holiday-extras-api",
+      "publisher": "Holiday Extras API",
+      "adapter": "licensed_api",
+      "sourceStatus": "candidate",
+      "runStatus": "skipped",
+      "runRecords": 0,
+      "cloudflareSnapshot": false,
+      "action": "credential_review",
+      "status": "blocked",
+      "next": "Credentials",
+      "url": "https://docs.holidayextras.co.uk/",
+      "fetchUrls": [
+        "https://docs.holidayextras.co.uk/"
+      ],
+      "rightsNote": "Official API documentation; use only under approved commercial/API terms.",
+      "familyPresent": false,
+      "terminalFamilyBlocked": true
+    },
+    {
+      "familyId": "collinson-networks",
+      "familyLabel": "Collinson access networks",
+      "sourceId": "loungekey",
+      "publisher": "LoungeKey",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "skipped",
+      "runRecords": 0,
+      "cloudflareSnapshot": false,
+      "action": "rights_review",
+      "status": "blocked",
+      "next": "Rights",
+      "url": "https://www.loungekey.com/",
+      "fetchUrls": [
+        "https://www.loungekey.com/"
+      ],
+      "rightsNote": "Official public LoungeKey surface; licensed or partner access is required for complete record intake.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "collinson-networks",
+      "familyLabel": "Collinson access networks",
+      "sourceId": "collinson-international",
+      "publisher": "Collinson International",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "fetched",
+      "runRecords": 0,
+      "cloudflareSnapshot": true,
+      "action": "structured_adapter",
+      "status": "ready",
+      "next": "Adapter",
+      "url": "https://www.collinsongroup.com/",
+      "fetchUrls": [
+        "https://www.collinsongroup.com/"
+      ],
+      "rightsNote": "Official Collinson corporate surface; use as network evidence and licensing path, not a raw scrape target.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "bank-issuer-programs",
+      "familyLabel": "Bank issuer lounge programs",
+      "sourceId": "citi-travel",
+      "publisher": "Citi Travel",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "fetched",
+      "runRecords": 0,
+      "cloudflareSnapshot": true,
+      "action": "structured_adapter",
+      "status": "ready",
+      "next": "Adapter",
+      "url": "https://www.cititravel.com/",
+      "fetchUrls": [
+        "https://www.cititravel.com/"
+      ],
+      "rightsNote": "Official public Citi travel page; issuer-program mapping requires manual review before publishing records.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "card-network-programs",
+      "familyLabel": "Card network and benefit-platform programs",
+      "sourceId": "visa-airport-companion",
+      "publisher": "Visa Airport Companion",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "fetch_error",
+      "runRecords": 0,
+      "cloudflareSnapshot": false,
+      "action": "fetch_repair",
+      "status": "ready",
+      "next": "Fetch",
+      "url": "https://www.visaairportcompanion.com/",
+      "fetchUrls": [
+        "https://www.visaairportcompanion.com/",
+        "https://visaairportcompanion.ca/",
+        "https://www.visa.gp/pay-with-visa/find-a-card/benefits/visa-airport-companion.html"
+      ],
+      "rightsNote": "Official public Visa program page; import only public program and eligibility evidence.",
+      "familyPresent": false,
+      "terminalFamilyBlocked": true
+    },
+    {
+      "familyId": "card-network-programs",
+      "familyLabel": "Card network and benefit-platform programs",
+      "sourceId": "mastercard-airport-lounge-programs",
+      "publisher": "Mastercard Airport Lounge Programs",
+      "adapter": "licensed_api",
+      "sourceStatus": "candidate",
+      "runStatus": "skipped",
+      "runRecords": 0,
+      "cloudflareSnapshot": false,
+      "action": "credential_review",
+      "status": "blocked",
+      "next": "Credentials",
+      "url": "https://developer.mastercard.com/product/mastercard-airport-lounge-programs",
+      "fetchUrls": [
+        "https://developer.mastercard.com/product/mastercard-airport-lounge-programs"
+      ],
+      "rightsNote": "Official Mastercard developer product; use only with approved API credentials and contract terms.",
+      "familyPresent": false,
+      "terminalFamilyBlocked": true
+    },
+    {
+      "familyId": "card-network-programs",
+      "familyLabel": "Card network and benefit-platform programs",
+      "sourceId": "mastercard-travel-pass",
+      "publisher": "Mastercard Travel Pass",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "fetched",
+      "runRecords": 0,
+      "cloudflareSnapshot": true,
+      "action": "structured_adapter",
+      "status": "ready",
+      "next": "Adapter",
+      "url": "https://mastercardtravelpass.dragonpass.com/",
+      "fetchUrls": [
+        "https://mastercardtravelpass.dragonpass.com/"
+      ],
+      "rightsNote": "Official public Mastercard Travel Pass page; retain URL provenance for every imported field.",
+      "familyPresent": false,
+      "terminalFamilyBlocked": true
+    },
+    {
+      "familyId": "card-network-programs",
+      "familyLabel": "Card network and benefit-platform programs",
+      "sourceId": "dragonpass",
+      "publisher": "DragonPass",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "fetched",
+      "runRecords": 0,
+      "cloudflareSnapshot": true,
+      "action": "structured_adapter",
+      "status": "ready",
+      "next": "Adapter",
+      "url": "https://en.dragonpass.com.cn/",
+      "fetchUrls": [
+        "https://en.dragonpass.com.cn/"
+      ],
+      "rightsNote": "Official public DragonPass page; import only public program and location evidence.",
+      "familyPresent": false,
+      "terminalFamilyBlocked": true
+    },
+    {
+      "familyId": "airline-alliance-lounges",
+      "familyLabel": "Airline alliance lounge finders",
+      "sourceId": "star-alliance",
+      "publisher": "Star Alliance Lounge Finder",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "http_error",
+      "runRecords": 0,
+      "cloudflareSnapshot": true,
+      "action": "fetch_repair",
+      "status": "ready",
+      "next": "Fetch",
+      "url": "https://www.staralliance.com/en/lounge-finder",
+      "fetchUrls": [
+        "https://www.staralliance.com/en/lounge-finder"
+      ],
+      "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "airline-alliance-lounges",
+      "familyLabel": "Airline alliance lounge finders",
+      "sourceId": "skyteam",
+      "publisher": "SkyTeam Lounges",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "http_error",
+      "runRecords": 0,
+      "cloudflareSnapshot": true,
+      "action": "fetch_repair",
+      "status": "ready",
+      "next": "Fetch",
+      "url": "https://www.skyteam.com/en/about/lounges/",
+      "fetchUrls": [
+        "https://www.skyteam.com/en/about/lounges/"
+      ],
+      "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "airline-operated-lounges",
+      "familyLabel": "Airline-operated lounges",
+      "sourceId": "united",
+      "publisher": "United Club and Polaris Lounges",
+      "adapter": "official_html",
+      "sourceStatus": "manual_review",
+      "runStatus": "fetch_error",
+      "runRecords": 0,
+      "cloudflareSnapshot": false,
+      "action": "fetch_repair",
+      "status": "ready",
+      "next": "Fetch",
+      "url": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+      "fetchUrls": [
+        "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html"
+      ],
+      "rightsNote": "Official public airline location page.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "airline-operated-lounges",
+      "familyLabel": "Airline-operated lounges",
+      "sourceId": "delta",
+      "publisher": "Delta Sky Club",
+      "adapter": "official_html",
+      "sourceStatus": "manual_review",
+      "runStatus": "fetched",
+      "runRecords": 23,
+      "cloudflareSnapshot": true,
+      "action": "review_import",
+      "status": "ready",
+      "next": "Review",
+      "url": "https://www.delta.com/us/en/delta-sky-club/locations",
+      "fetchUrls": [
+        "https://www.delta.com/us/en/delta-sky-club/locations"
+      ],
+      "rightsNote": "Official public airline location page.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "airline-operated-lounges",
+      "familyLabel": "Airline-operated lounges",
+      "sourceId": "american",
+      "publisher": "American Airlines Admirals Club",
+      "adapter": "official_html",
+      "sourceStatus": "manual_review",
+      "runStatus": "http_error",
+      "runRecords": 0,
+      "cloudflareSnapshot": true,
+      "action": "fetch_repair",
+      "status": "ready",
+      "next": "Fetch",
+      "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+      "fetchUrls": [
+        "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp"
+      ],
+      "rightsNote": "Official public airline location page.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "operator-operated-lounges",
+      "familyLabel": "Independent and contract lounge operators",
+      "sourceId": "plaza-premium",
+      "publisher": "Plaza Premium Lounge",
+      "adapter": "official_page",
+      "sourceStatus": "manual_review",
+      "runStatus": "skipped",
+      "runRecords": 0,
+      "cloudflareSnapshot": false,
+      "action": "rights_review",
+      "status": "blocked",
+      "next": "Rights",
+      "url": "https://www.plazapremiumlounge.com/en-uk",
+      "fetchUrls": [
+        "https://www.plazapremiumlounge.com/en-uk"
+      ],
+      "rightsNote": "Official public operator page.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "operator-operated-lounges",
+      "familyLabel": "Independent and contract lounge operators",
+      "sourceId": "aspire-lounges",
+      "publisher": "Aspire Lounges",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "http_error",
+      "runRecords": 0,
+      "cloudflareSnapshot": true,
+      "action": "fetch_repair",
+      "status": "ready",
+      "next": "Fetch",
+      "url": "https://www.executivelounges.com/airport-lounges",
+      "fetchUrls": [
+        "https://www.executivelounges.com/airport-lounges"
+      ],
+      "rightsNote": "Official Aspire location surface; retain URL provenance for every imported field.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "operator-operated-lounges",
+      "familyLabel": "Independent and contract lounge operators",
+      "sourceId": "marhaba",
+      "publisher": "Marhaba Airport Lounges",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "fetched",
+      "runRecords": 27,
+      "cloudflareSnapshot": true,
+      "action": "review_import",
+      "status": "ready",
+      "next": "Review",
+      "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
+      "fetchUrls": [
+        "https://www.marhabaservices.com/ae/english/airport-lounges/"
+      ],
+      "rightsNote": "Official Marhaba location surface; retain URL provenance for every imported field.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "operator-operated-lounges",
+      "familyLabel": "Independent and contract lounge operators",
+      "sourceId": "primeclass",
+      "publisher": "Primeclass Lounge",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "fetch_error",
+      "runRecords": 0,
+      "cloudflareSnapshot": false,
+      "action": "fetch_repair",
+      "status": "ready",
+      "next": "Fetch",
+      "url": "https://www.primeclass.com.tr/en/lounge",
+      "fetchUrls": [
+        "https://www.primeclass.com.tr/en/lounge"
+      ],
+      "rightsNote": "Official Primeclass location surface; retain URL provenance for every imported field.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "operator-operated-lounges",
+      "familyLabel": "Independent and contract lounge operators",
+      "sourceId": "no1-lounges",
+      "publisher": "No1 Lounges",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "fetched",
+      "runRecords": 73,
+      "cloudflareSnapshot": true,
+      "action": "review_import",
+      "status": "ready",
+      "next": "Review",
+      "url": "https://no1lounges.com/airport-lounges/",
+      "fetchUrls": [
+        "https://no1lounges.com/airport-lounges/"
+      ],
+      "rightsNote": "Official No1 Lounges location surface; retain URL provenance for every imported field.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "operator-operated-lounges",
+      "familyLabel": "Independent and contract lounge operators",
+      "sourceId": "be-relax",
+      "publisher": "Be Relax",
+      "adapter": "official_page",
+      "sourceStatus": "candidate",
+      "runStatus": "fetched",
+      "runRecords": 0,
+      "cloudflareSnapshot": true,
+      "action": "structured_adapter",
+      "status": "ready",
+      "next": "Adapter",
+      "url": "https://www.berelax.com/locations/",
+      "fetchUrls": [
+        "https://www.berelax.com/locations/"
+      ],
+      "rightsNote": "Official Be Relax location surface; classify spa-only records separately from lounge access.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "open-enrichment",
+      "familyLabel": "Open normalization and enrichment",
+      "sourceId": "openstreetmap",
+      "publisher": "OpenStreetMap",
+      "adapter": "open_data",
+      "sourceStatus": "candidate",
+      "runStatus": "fetched",
+      "runRecords": 0,
+      "cloudflareSnapshot": true,
+      "action": "structured_adapter",
+      "status": "ready",
+      "next": "Adapter",
+      "url": "https://www.openstreetmap.org/",
+      "fetchUrls": [
+        "https://www.openstreetmap.org/"
+      ],
+      "rightsNote": "Open data enrichment only; comply with ODbL attribution and do not treat as canonical lounge inventory.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "open-enrichment",
+      "familyLabel": "Open normalization and enrichment",
+      "sourceId": "nominatim",
+      "publisher": "OpenStreetMap Nominatim",
+      "adapter": "official_page",
+      "sourceStatus": "blocked",
+      "runStatus": "skipped",
+      "runRecords": 0,
+      "cloudflareSnapshot": false,
+      "action": "rights_review",
+      "status": "blocked",
+      "next": "Rights",
+      "url": "https://operations.osmfoundation.org/policies/nominatim/",
+      "fetchUrls": [
+        "https://operations.osmfoundation.org/policies/nominatim/"
+      ],
+      "rightsNote": "Fallback only; honor rate limits and cache results.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
     }
   ]
 }

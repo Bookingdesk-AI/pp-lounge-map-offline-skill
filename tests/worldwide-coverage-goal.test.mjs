@@ -129,6 +129,7 @@ test('Cloudflare source intake plan tracks missing source lanes', () => {
   assert.equal(intakePlan.policy.rawSnapshotsCommitted, false);
   assert.equal(intakePlan.summary.missingFamilies, coverageGap.deltas.missingSourceFamilies.length);
   assert.equal(intakePlan.summary.tasks, intakePlan.tasks.length);
+  assert.equal(intakePlan.summary.memberGaps, intakePlan.memberGaps.length);
 
   const taskSourceIds = new Set(intakePlan.tasks.map((task) => task.sourceId));
   for (const family of coverageGap.sourceFamilies.filter((sourceFamily) => !sourceFamily.present)) {
@@ -136,6 +137,19 @@ test('Cloudflare source intake plan tracks missing source lanes', () => {
       assert.ok(taskSourceIds.has(sourceId), `missing intake task ${sourceId}`);
     }
   }
+
+  const memberGapIds = new Set(intakePlan.memberGaps.map((gap) => gap.sourceId));
+  for (const sourceId of ['loungekey', 'united', 'plaza-premium']) {
+    assert.ok(memberGapIds.has(sourceId), `missing member gap ${sourceId}`);
+  }
+  assert.equal(
+    intakePlan.memberGaps.find((gap) => gap.sourceId === 'plaza-premium')?.familyPresent,
+    true,
+  );
+  assert.equal(
+    intakePlan.memberGaps.find((gap) => gap.sourceId === 'visa-airport-companion')?.terminalFamilyBlocked,
+    true,
+  );
 
   assert.ok(intakePlan.tasks.some((task) => task.action === 'credential_review' && task.status === 'blocked'));
   assert.ok(intakePlan.tasks.some((task) => task.action === 'structured_adapter' && task.status === 'ready'));
