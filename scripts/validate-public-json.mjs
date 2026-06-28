@@ -143,6 +143,23 @@ function validateCoverage(goal, gap) {
     typeof gap?.deltas?.approvedRecordsRemaining === 'number',
     'coverage-gap-report.json: approvedRecordsRemaining missing',
   );
+  issue(
+    gap?.nextCloudflareIntake?.requiredTokenEnv === 'LOUNGE_GURU_INTAKE_TOKEN',
+    'coverage-gap-report.json: Cloudflare intake token preflight missing',
+  );
+  issue(
+    gap?.nextCloudflareIntake?.localScrawl === 'blocked',
+    'coverage-gap-report.json: local scrawl preflight missing',
+  );
+  issue(
+    Array.isArray(gap?.nextCloudflareIntake?.readySourceIds),
+    'coverage-gap-report.json: ready Cloudflare source ids missing',
+  );
+  issue(
+    typeof gap?.nextCloudflareIntake?.commands?.report === 'string' &&
+      gap.nextCloudflareIntake.commands.report.includes('intake:cloudflare:report:export'),
+    'coverage-gap-report.json: Cloudflare report command missing',
+  );
 }
 
 function validateIntakePlan(plan, gap) {

@@ -6,6 +6,7 @@
 - Rebuilt and redeployed the current Pages bundle for review.
 - Added compact source IDs to mobile Review queue rows.
 - Added compact source confidence and retrieval-date badges to mobile Review queue rows.
+- Added Cloudflare intake preflight commands to the coverage gap report.
 - Preserved unrelated dirty script changes outside this closeout.
 
 ## Verification
@@ -22,6 +23,7 @@
 - Local mobile Review check at `390x844`: `Proof 3/16`
 - Local mobile Review queue check: airport, completeness, and source ID badges
 - Local mobile Review queue check: source confidence and retrieval-date badges
+- Coverage report check: Cloudflare token, probe, report, promote, rebuild, D1 push, and validation commands
 
 ## Deploy
 

@@ -97,6 +97,9 @@ test('coverage validator reports current progress without pretending terminal co
     cloudflareEvidence.stats.readyTasksWithCloudflareEvidence,
   );
   assert.equal(summary.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
+  assert.equal(summary.gapReport.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
+  assert.equal(summary.gapReport.nextCloudflareIntake.localScrawl, 'blocked');
+  assert.ok(summary.gapReport.nextCloudflareIntake.commands.report.includes('intake:cloudflare:report:export'));
   assert.equal(
     summary.cloudflareSourceEvidence.readyMemberGapsWithCloudflareEvidence,
     cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence,
@@ -127,6 +130,15 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
   assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGapCoverageRatio, 0.1875);
   assert.equal(coverageGap.current.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
   assert.equal(coverageGap.deltas.sourceIntakeRuntimeRequired, 'cloudflare');
+  assert.equal(coverageGap.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
+  assert.equal(coverageGap.nextCloudflareIntake.localScrawl, 'blocked');
+  assert.equal(coverageGap.nextCloudflareIntake.missingRuntime, true);
+  assert.equal(coverageGap.nextCloudflareIntake.fullReportRequired, true);
+  assert.ok(coverageGap.nextCloudflareIntake.readySourceIds.includes('visa-airport-companion'));
+  assert.ok(coverageGap.nextCloudflareIntake.credentialSourceIds.includes('loungereview-api'));
+  assert.ok(coverageGap.nextCloudflareIntake.commands.probe.startsWith('npm run intake:cloudflare -- --source-ids='));
+  assert.equal(coverageGap.nextCloudflareIntake.commands.report, 'npm run intake:cloudflare:report:export');
+  assert.equal(coverageGap.nextCloudflareIntake.commands.promote, 'npm run intake:cloudflare:promote');
   assert.ok(coverageGap.deltas.approvedRecordsRemaining > 0);
   assert.ok(coverageGap.deltas.reviewRecordsToResolve > 0);
   assert.deepEqual([...coverageGap.deltas.missingSourceFamilies].sort(), [

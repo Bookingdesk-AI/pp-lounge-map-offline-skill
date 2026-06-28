@@ -64,6 +64,53 @@ function cloudflareSourceEvidence(sourceRunEvidence) {
   };
 }
 
+function intakeSourceRunById(sourceIntakeReport) {
+  return new Map((sourceIntakeReport?.sources ?? []).map((source) => [source.sourceId, source]));
+}
+
+function createNextCloudflareIntake({ sourceFamilies, sourceIntakeReport, cloudflareEvidence, sourceRuntime }) {
+  const runs = intakeSourceRunById(sourceIntakeReport);
+  const missingMembers = sourceFamilies.flatMap((family) =>
+    family.members
+      .filter((member) => member.records === 0)
+      .map((member) => ({
+        ...member,
+        familyId: family.id,
+        runStatus: runs.get(member.sourceId)?.status ?? 'not_run',
+      })),
+  );
+  const credentialSourceIds = missingMembers
+    .filter((member) => member.adapter === 'licensed_api')
+    .map((member) => member.sourceId);
+  const rightsReviewSourceIds = missingMembers
+    .filter((member) => member.runStatus === 'skipped' && member.adapter !== 'licensed_api')
+    .map((member) => member.sourceId);
+  const readySourceIds = missingMembers
+    .filter((member) => member.adapter !== 'licensed_api' && member.runStatus !== 'skipped')
+    .map((member) => member.sourceId);
+  const uniqueReadySourceIds = [...new Set(readySourceIds)];
+  const sourceIdArg = uniqueReadySourceIds.join(',');
+
+  return {
+    requiredTokenEnv: 'LOUNGE_GURU_INTAKE_TOKEN',
+    localScrawl: 'blocked',
+    missingRuntime: sourceRuntime !== 'cloudflare',
+    fullReportRequired: cloudflareEvidence.fullSourceIntakeReportRequired,
+    readySourceIds: uniqueReadySourceIds,
+    credentialSourceIds: [...new Set(credentialSourceIds)],
+    rightsReviewSourceIds: [...new Set(rightsReviewSourceIds)],
+    commands: {
+      probe: sourceIdArg ? `npm run intake:cloudflare -- --source-ids=${sourceIdArg}` : '',
+      evidence: 'npm run intake:evidence',
+      report: 'npm run intake:cloudflare:report:export',
+      promote: 'npm run intake:cloudflare:promote',
+      rebuild: 'npm run build:canonical-data',
+      pushD1: 'npm run db:catalog:push',
+      validate: 'npm run validate:coverage',
+    },
+  };
+}
+
 function hasRequiredCloudflareSourceRuntime(goal, sourceIntakeReport, sourceRunEvidence = null) {
   if (!goal.terminalGoal.requiresCloudflareSourceRuntime) {
     return true;
@@ -123,6 +170,12 @@ export function createCoverageGapReport({
   const approvedRecordRemaining = Math.max(0, goal.terminalGoal.minApprovedRecords - approvedRecords);
   const targetApprovedForCurrentCatalog = Math.ceil(records.length * goal.terminalGoal.minApprovedRatio);
   const approvalRatioRemaining = Math.max(0, targetApprovedForCurrentCatalog - approvedRecords);
+  const nextCloudflareIntake = createNextCloudflareIntake({
+    sourceFamilies,
+    sourceIntakeReport,
+    cloudflareEvidence,
+    sourceRuntime,
+  });
   const blockers = [];
 
   if (approvedRecordRemaining > 0) {
@@ -189,6 +242,7 @@ export function createCoverageGapReport({
       missingSourceFamilies: sourceFamilies.filter((family) => !family.present).map((family) => family.id),
       sourceIntakeRuntimeRequired: goal.terminalGoal.requiresCloudflareSourceRuntime ? 'cloudflare' : null,
     },
+    nextCloudflareIntake,
     sourceFamilies,
     tableStatuses,
   };

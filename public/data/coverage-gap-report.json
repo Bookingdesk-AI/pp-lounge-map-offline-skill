@@ -54,6 +54,49 @@
     ],
     "sourceIntakeRuntimeRequired": "cloudflare"
   },
+  "nextCloudflareIntake": {
+    "requiredTokenEnv": "LOUNGE_GURU_INTAKE_TOKEN",
+    "localScrawl": "blocked",
+    "missingRuntime": true,
+    "fullReportRequired": true,
+    "readySourceIds": [
+      "collinson-international",
+      "citi-travel",
+      "visa-airport-companion",
+      "mastercard-travel-pass",
+      "dragonpass",
+      "star-alliance",
+      "skyteam",
+      "united",
+      "delta",
+      "american",
+      "aspire-lounges",
+      "marhaba",
+      "primeclass",
+      "no1-lounges",
+      "be-relax",
+      "openstreetmap"
+    ],
+    "credentialSourceIds": [
+      "loungereview-api",
+      "holiday-extras-api",
+      "mastercard-airport-lounge-programs"
+    ],
+    "rightsReviewSourceIds": [
+      "loungekey",
+      "plaza-premium",
+      "nominatim"
+    ],
+    "commands": {
+      "probe": "npm run intake:cloudflare -- --source-ids=collinson-international,citi-travel,visa-airport-companion,mastercard-travel-pass,dragonpass,star-alliance,skyteam,united,delta,american,aspire-lounges,marhaba,primeclass,no1-lounges,be-relax,openstreetmap",
+      "evidence": "npm run intake:evidence",
+      "report": "npm run intake:cloudflare:report:export",
+      "promote": "npm run intake:cloudflare:promote",
+      "rebuild": "npm run build:canonical-data",
+      "pushD1": "npm run db:catalog:push",
+      "validate": "npm run validate:coverage"
+    }
+  },
   "sourceFamilies": [
     {
       "id": "licensed-global-baseline",
