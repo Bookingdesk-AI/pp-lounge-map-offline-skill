@@ -4,13 +4,14 @@
 
 - Verified production mobile map workflow after the compact sheet redesign.
 - Rebuilt and redeployed the current Pages bundle for review.
+- Added compact source IDs to mobile Review queue rows.
 - Preserved unrelated dirty script changes outside this closeout.
 
 ## Verification
 
 - `npm run lint`
 - `npx tsc -b`
-- `npm run test` (`67/67`)
+- `npm run test` (`70/70`)
 - `npm run validate:json`
 - `npm run validate:coverage` (`Source proof: 3/16`)
 - `npx vite build`
@@ -18,6 +19,7 @@
 - Live tablet viewport check at `768x1024`
 - Live desktop viewport check at `1440x900`
 - Local mobile Review check at `390x844`: `Proof 3/16`
+- Local mobile Review queue check: airport, completeness, and source ID badges
 
 ## Deploy
 

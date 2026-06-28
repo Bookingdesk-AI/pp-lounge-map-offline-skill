@@ -1755,7 +1755,10 @@ function MobileReviewView({
                   <span className="code">{record.airport.iata}</span>
                   <span className="code">{record.quality.completeness}%</span>
                 </span>
-                <span>{record.sources[0]?.publisher ?? 'Unknown'}</span>
+                <span className="review-row-head">
+                  <span>{record.sources[0]?.publisher ?? 'Unknown'}</span>
+                  <span className="code">{record.sources[0]?.sourceId ?? 'unknown'}</span>
+                </span>
                 <span>{record.quality.conflicts.join(', ') || record.quality.reviewStatus}</span>
               </button>
             ))}
