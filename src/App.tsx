@@ -1442,6 +1442,9 @@ function MobileReviewView({
     ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks}`
     : 'n/a';
   const cloudflareSources = cloudflareEvidence?.sources ?? [];
+  const sourceGaps = [...(intakePlan?.memberGaps ?? [])]
+    .sort((first, second) => Number(second.terminalFamilyBlocked) - Number(first.terminalFamilyBlocked))
+    .slice(0, 10);
 
   return (
     <div className="mobile-review-view">
@@ -1530,6 +1533,29 @@ function MobileReviewView({
               <div key={family.id} className="review-row">
                 <strong>{family.label}</strong>
                 <span>{family.missingMembers.join(', ')}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="mobile-review-panel">
+        <div className="section-title-row">
+          <h2>Sources</h2>
+          <span className="compare-count">{intakePlan?.summary.memberGaps ?? 0}</span>
+        </div>
+        {sourceGaps.length === 0 ? (
+          <div className="compare-empty">No source gaps</div>
+        ) : (
+          <div className="review-list">
+            {sourceGaps.map((gap) => (
+              <div key={`${gap.familyId}-${gap.sourceId}`} className="review-row">
+                <span className="review-row-head">
+                  <strong>{gap.publisher}</strong>
+                  <span className="code">{gap.next}</span>
+                </span>
+                <span>{gap.familyLabel}</span>
+                <span>{gap.terminalFamilyBlocked ? 'terminal' : gap.status}</span>
               </div>
             ))}
           </div>
