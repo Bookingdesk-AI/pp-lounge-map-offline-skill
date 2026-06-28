@@ -23,9 +23,11 @@ test('deploy smoke parses HTTPS base URL and record threshold', () => {
   assert.deepEqual(parseSmokeArgs(['--base-url=https://preview.example.com/path', '--min-records=100']), {
     baseUrl: 'https://preview.example.com',
     minCatalogRecords: 100,
+    adminReport: 'forbidden',
   });
   assert.throws(() => parseSmokeArgs(['--base-url=http://example.com']), /must use HTTPS/);
   assert.throws(() => parseSmokeArgs(['--min-records=0']), /positive number/);
+  assert.throws(() => parseSmokeArgs(['--admin-report=open']), /forbidden or static-fallback/);
   assert.throws(() => parseSmokeArgs(['--unknown']), /Unknown argument/);
 });
 
@@ -112,6 +114,30 @@ test('deploy smoke fails when admin report is not guarded', async () => {
     }),
     /admin guard 200/,
   );
+});
+
+test('deploy smoke can explicitly accept static preview fallback for admin report', async () => {
+  const summary = await runDeploySmoke({
+    args: ['--base-url=https://preview.example.com', '--admin-report=static-fallback'],
+    fetchImpl: async (url) => {
+      if (String(url).endsWith('/data/lounge-guru-catalog.json')) {
+        return jsonResponse({
+          stats: {
+            totalCatalogRecords: 2644,
+          },
+        });
+      }
+      return new Response('<html></html>', {
+        status: 200,
+        headers: {
+          'content-type': 'text/html',
+        },
+      });
+    },
+    log: () => {},
+  });
+
+  assert.equal(summary.adminReportGuard, 'static-fallback');
 });
 
 test('package exposes deploy smoke command', () => {
