@@ -1448,6 +1448,40 @@ function formatSourceRuntime(runtime: string, runtimePassed: boolean) {
     .join(' ');
 }
 
+function isPriorityPassRecord(record: CanonicalLoungeRecord) {
+  return record.sources.some(
+    (source) => source.sourceId === 'priority-pass' || source.publisher.toLowerCase() === 'priority pass',
+  );
+}
+
+function reviewQueueSort(first: CanonicalLoungeRecord, second: CanonicalLoungeRecord) {
+  const firstPriorityPass = isPriorityPassRecord(first);
+  const secondPriorityPass = isPriorityPassRecord(second);
+
+  if (firstPriorityPass !== secondPriorityPass) {
+    return firstPriorityPass ? 1 : -1;
+  }
+
+  const firstManualReview = first.quality.conflicts.includes('manual_review_required');
+  const secondManualReview = second.quality.conflicts.includes('manual_review_required');
+
+  if (firstManualReview !== secondManualReview) {
+    return firstManualReview ? -1 : 1;
+  }
+
+  const completenessDelta = first.quality.completeness - second.quality.completeness;
+  if (completenessDelta !== 0) {
+    return completenessDelta;
+  }
+
+  const conflictDelta = second.quality.conflicts.length - first.quality.conflicts.length;
+  if (conflictDelta !== 0) {
+    return conflictDelta;
+  }
+
+  return `${first.airport.iata}|${first.lounge.name}`.localeCompare(`${second.airport.iata}|${second.lounge.name}`);
+}
+
 function MobileReviewView({
   records,
   meta,
@@ -1465,6 +1499,7 @@ function MobileReviewView({
 }) {
   const reviewRecords = records
     .filter((record) => record.quality.reviewStatus !== 'approved' || record.quality.conflicts.length > 0)
+    .sort(reviewQueueSort)
     .slice(0, 12);
   const reviewRecordTotal = coverageGap?.current.reviewRecords ?? meta?.quality?.reviewQueue ?? reviewRecords.length;
   const missingFamilies = coverageGap?.sourceFamilies.filter((family) => !family.present) ?? [];

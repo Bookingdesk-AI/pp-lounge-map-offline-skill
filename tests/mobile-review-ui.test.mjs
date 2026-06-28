@@ -25,6 +25,9 @@ test('mobile review exposes compact section tabs with source proof workflow', ()
   assert.match(appSource, /formatSourceRuntime/);
   assert.match(appSource, /return 'Legacy local'/);
   assert.match(appSource, /title={sourceRuntime}/);
+  assert.match(appSource, /isPriorityPassRecord/);
+  assert.match(appSource, /manual_review_required/);
+  assert.match(appSource, /\.sort\(reviewQueueSort\)\s*\.slice\(0, 12\)/);
   assert.match(appSource, /review-lane-grid/);
   assert.match(appSource, /row\.gap\.status === 'ready' && !row\.evidence\?\.cloudflareSnapshot/);
   assert.match(appSource, /href={gap\.url}/);
