@@ -63,6 +63,14 @@ test('D1 seed migration installs the active worldwide coverage goal', () => {
 });
 
 test('coverage validator reports current progress without pretending terminal completion', () => {
+  const textOutput = execFileSync(
+    process.execPath,
+    ['scripts/validate-worldwide-coverage-goal.mjs'],
+    {
+      cwd: new URL('..', import.meta.url),
+      encoding: 'utf8',
+    },
+  );
   const output = execFileSync(
     process.execPath,
     ['scripts/validate-worldwide-coverage-goal.mjs', '--json'],
@@ -73,6 +81,7 @@ test('coverage validator reports current progress without pretending terminal co
   );
   const summary = JSON.parse(output);
 
+  assert.match(textOutput, /Source proof: 3\/16/);
   assert.equal(summary.goalId, goal.id);
   assert.equal(summary.database.databaseName, 'lounge-guru-catalog');
   assert.ok(summary.totalRecords > 0);

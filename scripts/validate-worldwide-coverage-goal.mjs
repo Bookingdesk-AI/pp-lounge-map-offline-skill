@@ -156,6 +156,10 @@ if (jsonOutput) {
   console.log(`Approved ratio: ${(summary.approvedRatio * 100).toFixed(2)}%`);
   console.log(`Source families: ${(summary.sourceFamilyCoverageRatio * 100).toFixed(2)}%`);
   console.log(`Source intake: ${summary.sourceIntakeRuntime}`);
+  console.log(
+    `Source proof: ${summary.cloudflareSourceEvidence.readyMemberGapsWithCloudflareEvidence}/` +
+      `${summary.cloudflareSourceEvidence.readyMemberGaps}`,
+  );
   console.log(`Schema tables: ${summary.tableStatuses.filter((table) => table.present).length}/${summary.tableStatuses.length}`);
   if (summary.terminalPassed) {
     console.log('Terminal goal: passed');
