@@ -1257,6 +1257,8 @@ function MobileQuickFilters({
         <span>Search</span>
         <input
           type="search"
+          inputMode="search"
+          enterKeyHint="search"
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}
           placeholder="Airport, city, lounge"
@@ -2891,6 +2893,8 @@ function App() {
           <span>Search</span>
           <input
             type="search"
+            inputMode="search"
+            enterKeyHint="search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Airport, city, lounge"
@@ -3133,6 +3137,8 @@ function App() {
                       <span>Search</span>
                       <input
                         type="search"
+                        inputMode="search"
+                        enterKeyHint="search"
                         value={mobileFilterDraft.search}
                         onChange={(event) =>
                           setMobileFilterDraft((current) => ({ ...current, search: event.target.value }))
