@@ -22,6 +22,8 @@ test('mobile review exposes compact section tabs with source proof workflow', ()
   assert.match(appSource, /href={gap\.url}/);
   assert.match(appSource, /{gap\.sourceId}/);
   assert.doesNotMatch(appSource, /sourceGapRows\.slice/);
+  assert.match(appSource, /reviewRecordTotal/);
+  assert.match(appSource, /reviewRecords\.length} \/ {reviewRecordTotal}/);
 });
 
 test('mobile review tabs keep production touch targets', () => {

@@ -1444,6 +1444,7 @@ function MobileReviewView({
   const reviewRecords = records
     .filter((record) => record.quality.reviewStatus !== 'approved' || record.quality.conflicts.length > 0)
     .slice(0, 12);
+  const reviewRecordTotal = coverageGap?.current.reviewRecords ?? meta?.quality?.reviewQueue ?? reviewRecords.length;
   const missingFamilies = coverageGap?.sourceFamilies.filter((family) => !family.present) ?? [];
   const blockerLabels = coverageGap?.blockers.map(formatBlockerLabel) ?? [];
   const sourceRuntime = coverageGap?.current.sourceIntakeRuntime ?? 'unknown';
@@ -1494,7 +1495,7 @@ function MobileReviewView({
     sources: intakePlan?.summary.memberGaps ?? 0,
     cf: cloudflareSources.length,
     families: missingFamilies.length,
-    queue: reviewRecords.length,
+    queue: reviewRecordTotal,
   };
 
   return (
@@ -1662,7 +1663,7 @@ function MobileReviewView({
         <section className="mobile-review-panel">
         <div className="section-title-row">
           <h2>Queue</h2>
-          <span className="compare-count">{reviewRecords.length}</span>
+          <span className="compare-count">{reviewRecords.length} / {reviewRecordTotal}</span>
         </div>
         {reviewRecords.length === 0 ? (
           <div className="compare-empty">No review records</div>
