@@ -1481,7 +1481,7 @@ function MobileReviewView({
       };
       return rank(first) - rank(second) || first.gap.publisher.localeCompare(second.gap.publisher);
     });
-  const sourceGaps = sourceGapRows.slice(0, 14);
+  const sourceGaps = sourceGapRows;
   const sourceLaneStats = [
     { label: 'Ready', value: sourceGapRows.filter((row) => row.gap.status === 'ready').length },
     { label: 'No CF', value: sourceGapRows.filter((row) => !row.evidence?.cloudflareSnapshot).length },
@@ -1636,14 +1636,20 @@ function MobileReviewView({
             </div>
             <div className="review-list">
               {sourceGaps.map(({ gap, evidence }) => (
-                  <div key={`${gap.familyId}-${gap.sourceId}`} className="review-row">
+                  <a
+                    key={`${gap.familyId}-${gap.sourceId}`}
+                    className="review-row is-action"
+                    href={gap.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <span className="review-row-head">
                       <strong>{gap.publisher}</strong>
                       <span className="code">{gap.next}</span>
                     </span>
                     <span>{gap.familyLabel}</span>
                     <span>{`${gap.terminalFamilyBlocked ? 'terminal' : gap.status} · ${evidence?.cloudflareSnapshot ? 'CF' : 'No CF'}`}</span>
-                  </div>
+                  </a>
                 ))}
             </div>
           </>

@@ -1886,6 +1886,7 @@
     color: var(--text-soft);
     padding: 0.52rem;
     text-align: left;
+    text-decoration: none;
     font: inherit;
   }
 
