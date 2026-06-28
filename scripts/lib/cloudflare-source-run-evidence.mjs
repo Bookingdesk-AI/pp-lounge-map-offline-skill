@@ -98,6 +98,15 @@ export function createCloudflareSourceRunEvidence({ d1Result, sourceIntakePlan, 
     status: latestBySource.get(sourceId)?.status ?? 'missing',
     cloudflareSnapshot: Boolean(latestBySource.get(sourceId)?.cloudflareSnapshot),
   }));
+  const readyMemberGaps = (sourceIntakePlan?.memberGaps ?? []).filter((gap) => gap.status === 'ready');
+  const readyMemberGapEvidence = readyMemberGaps.map((gap) => ({
+    sourceId: gap.sourceId,
+    familyId: gap.familyId,
+    terminalFamilyBlocked: Boolean(gap.terminalFamilyBlocked),
+    present: latestBySource.has(gap.sourceId),
+    status: latestBySource.get(gap.sourceId)?.status ?? 'missing',
+    cloudflareSnapshot: Boolean(latestBySource.get(gap.sourceId)?.cloudflareSnapshot),
+  }));
   const sources = [...latestBySource.values()].sort((left, right) => left.sourceId.localeCompare(right.sourceId));
   const fetched = sources.filter((source) => source.status === 'fetched').length;
   const cloudflareSnapshots = sources.filter((source) => source.cloudflareSnapshot).length;
@@ -121,8 +130,11 @@ export function createCloudflareSourceRunEvidence({ d1Result, sourceIntakePlan, 
       cloudflareSnapshots,
       readyTasks: readyTaskIds.length,
       readyTasksWithCloudflareEvidence: readyTaskEvidence.filter((task) => task.cloudflareSnapshot).length,
+      readyMemberGaps: readyMemberGaps.length,
+      readyMemberGapsWithCloudflareEvidence: readyMemberGapEvidence.filter((gap) => gap.cloudflareSnapshot).length,
     },
     readyTaskEvidence,
+    readyMemberGapEvidence,
     sources,
     terminalImpact: {
       sourceIntakeReportRuntimeUnchanged: true,

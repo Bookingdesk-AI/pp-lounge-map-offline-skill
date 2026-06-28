@@ -208,6 +208,20 @@ export interface CoverageGapReport {
     recordsWithoutQuality?: number;
     sourceIntakeRuntime?: string;
     cloudflareSourceRuntimePassed?: boolean;
+    cloudflareSourceEvidence?: {
+      sourceRunsRead: number;
+      cloudflareSourceRuns: number;
+      uniqueSources: number;
+      fetched: number;
+      cloudflareSnapshots: number;
+      readyTasks: number;
+      readyTasksWithCloudflareEvidence: number;
+      readyTaskCoverageRatio: number;
+      readyMemberGaps: number;
+      readyMemberGapsWithCloudflareEvidence: number;
+      readyMemberGapCoverageRatio: number;
+      fullSourceIntakeReportRequired: boolean;
+    };
   };
   deltas: {
     approvedRecordsRemaining: number;
@@ -288,9 +302,19 @@ export interface CloudflareSourceRunEvidence {
     cloudflareSnapshots: number;
     readyTasks: number;
     readyTasksWithCloudflareEvidence: number;
+    readyMemberGaps: number;
+    readyMemberGapsWithCloudflareEvidence: number;
   };
   readyTaskEvidence: Array<{
     sourceId: string;
+    present: boolean;
+    status: string;
+    cloudflareSnapshot: boolean;
+  }>;
+  readyMemberGapEvidence: Array<{
+    sourceId: string;
+    familyId: string;
+    terminalFamilyBlocked: boolean;
     present: boolean;
     status: string;
     cloudflareSnapshot: boolean;

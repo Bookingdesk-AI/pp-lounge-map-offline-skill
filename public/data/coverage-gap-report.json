@@ -38,6 +38,9 @@
       "readyTasks": 3,
       "readyTasksWithCloudflareEvidence": 3,
       "readyTaskCoverageRatio": 1,
+      "readyMemberGaps": 16,
+      "readyMemberGapsWithCloudflareEvidence": 3,
+      "readyMemberGapCoverageRatio": 0.1875,
       "fullSourceIntakeReportRequired": true
     }
   },

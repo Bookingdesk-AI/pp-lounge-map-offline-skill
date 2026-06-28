@@ -226,6 +226,10 @@ function validateCloudflareSourceRunEvidence(evidence, intakePlan) {
   issue(Array.isArray(evidence?.sources), 'cloudflare-source-run-evidence.json: sources missing');
   issue(Array.isArray(evidence?.readyTaskEvidence), 'cloudflare-source-run-evidence.json: ready task evidence missing');
   issue(
+    Array.isArray(evidence?.readyMemberGapEvidence),
+    'cloudflare-source-run-evidence.json: ready member gap evidence missing',
+  );
+  issue(
     evidence?.stats?.uniqueSources === evidence?.sources?.length,
     'cloudflare-source-run-evidence.json: unique source count mismatch',
   );
@@ -234,6 +238,21 @@ function validateCloudflareSourceRunEvidence(evidence, intakePlan) {
   const evidenceTasks = new Set((evidence?.readyTaskEvidence ?? []).map((task) => task.sourceId));
   for (const sourceId of readyTasks) {
     issue(evidenceTasks.has(sourceId), `cloudflare-source-run-evidence.json: ready task ${sourceId} missing`);
+  }
+
+  const readyMemberGaps = (intakePlan?.memberGaps ?? []).filter((gap) => gap.status === 'ready');
+  issue(
+    evidence?.stats?.readyMemberGaps === readyMemberGaps.length,
+    'cloudflare-source-run-evidence.json: ready member gap count mismatch',
+  );
+  const memberGapKeys = new Set(
+    (evidence?.readyMemberGapEvidence ?? []).map((gap) => `${gap.familyId}:${gap.sourceId}`),
+  );
+  for (const gap of readyMemberGaps) {
+    issue(
+      memberGapKeys.has(`${gap.familyId}:${gap.sourceId}`),
+      `cloudflare-source-run-evidence.json: ready member gap ${gap.sourceId} missing`,
+    );
   }
 
   for (const [index, source] of (evidence?.sources ?? []).entries()) {

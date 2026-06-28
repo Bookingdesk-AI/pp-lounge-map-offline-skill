@@ -44,6 +44,8 @@ function cloudflareSourceEvidence(sourceRunEvidence) {
   const stats = sourceRunEvidence?.stats ?? {};
   const readyTasks = Number(stats.readyTasks ?? 0);
   const readyTasksWithCloudflareEvidence = Number(stats.readyTasksWithCloudflareEvidence ?? 0);
+  const readyMemberGaps = Number(stats.readyMemberGaps ?? 0);
+  const readyMemberGapsWithCloudflareEvidence = Number(stats.readyMemberGapsWithCloudflareEvidence ?? 0);
 
   return {
     sourceRunsRead: Number(stats.sourceRunsRead ?? 0),
@@ -54,6 +56,10 @@ function cloudflareSourceEvidence(sourceRunEvidence) {
     readyTasks,
     readyTasksWithCloudflareEvidence,
     readyTaskCoverageRatio: readyTasks > 0 ? Number((readyTasksWithCloudflareEvidence / readyTasks).toFixed(4)) : 0,
+    readyMemberGaps,
+    readyMemberGapsWithCloudflareEvidence,
+    readyMemberGapCoverageRatio:
+      readyMemberGaps > 0 ? Number((readyMemberGapsWithCloudflareEvidence / readyMemberGaps).toFixed(4)) : 0,
     fullSourceIntakeReportRequired: Boolean(sourceRunEvidence?.terminalImpact?.coverageGateStillRequiresFullCloudflareReport),
   };
 }

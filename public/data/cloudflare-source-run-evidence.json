@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-28T06:54:13.924Z",
+  "generatedAt": "2026-06-28T07:31:08.340Z",
   "policy": {
     "source": "cloudflare-d1-source_runs",
     "database": "lounge-guru-catalog",
@@ -16,7 +16,9 @@
     "fetched": 3,
     "cloudflareSnapshots": 3,
     "readyTasks": 3,
-    "readyTasksWithCloudflareEvidence": 3
+    "readyTasksWithCloudflareEvidence": 3,
+    "readyMemberGaps": 16,
+    "readyMemberGapsWithCloudflareEvidence": 3
   },
   "readyTaskEvidence": [
     {
@@ -36,6 +38,136 @@
       "present": true,
       "status": "fetched",
       "cloudflareSnapshot": true
+    }
+  ],
+  "readyMemberGapEvidence": [
+    {
+      "sourceId": "collinson-international",
+      "familyId": "collinson-networks",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "citi-travel",
+      "familyId": "bank-issuer-programs",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "visa-airport-companion",
+      "familyId": "card-network-programs",
+      "terminalFamilyBlocked": true,
+      "present": true,
+      "status": "fetched",
+      "cloudflareSnapshot": true
+    },
+    {
+      "sourceId": "mastercard-travel-pass",
+      "familyId": "card-network-programs",
+      "terminalFamilyBlocked": true,
+      "present": true,
+      "status": "fetched",
+      "cloudflareSnapshot": true
+    },
+    {
+      "sourceId": "dragonpass",
+      "familyId": "card-network-programs",
+      "terminalFamilyBlocked": true,
+      "present": true,
+      "status": "fetched",
+      "cloudflareSnapshot": true
+    },
+    {
+      "sourceId": "star-alliance",
+      "familyId": "airline-alliance-lounges",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "skyteam",
+      "familyId": "airline-alliance-lounges",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "united",
+      "familyId": "airline-operated-lounges",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "delta",
+      "familyId": "airline-operated-lounges",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "american",
+      "familyId": "airline-operated-lounges",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "aspire-lounges",
+      "familyId": "operator-operated-lounges",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "marhaba",
+      "familyId": "operator-operated-lounges",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "primeclass",
+      "familyId": "operator-operated-lounges",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "no1-lounges",
+      "familyId": "operator-operated-lounges",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "be-relax",
+      "familyId": "operator-operated-lounges",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "openstreetmap",
+      "familyId": "open-enrichment",
+      "terminalFamilyBlocked": false,
+      "present": false,
+      "status": "missing",
+      "cloudflareSnapshot": false
     }
   ],
   "sources": [

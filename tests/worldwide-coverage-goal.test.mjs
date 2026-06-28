@@ -88,6 +88,11 @@ test('coverage validator reports current progress without pretending terminal co
     cloudflareEvidence.stats.readyTasksWithCloudflareEvidence,
   );
   assert.equal(summary.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
+  assert.equal(
+    summary.cloudflareSourceEvidence.readyMemberGapsWithCloudflareEvidence,
+    cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence,
+  );
+  assert.equal(summary.cloudflareSourceEvidence.readyMemberGaps, cloudflareEvidence.stats.readyMemberGaps);
   assert.ok(summary.blockers.includes('source_intake_runtime_not_cloudflare'));
   assert.deepEqual(summary.missingSourceFamilies, coverageGap.deltas.missingSourceFamilies);
   assert.equal(summary.gapReport.catalogHash, coverageGap.catalogHash);
@@ -105,6 +110,12 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
     cloudflareEvidence.stats.readyTasksWithCloudflareEvidence,
   );
   assert.equal(coverageGap.current.cloudflareSourceEvidence.readyTaskCoverageRatio, 1);
+  assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGaps, cloudflareEvidence.stats.readyMemberGaps);
+  assert.equal(
+    coverageGap.current.cloudflareSourceEvidence.readyMemberGapsWithCloudflareEvidence,
+    cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence,
+  );
+  assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGapCoverageRatio, 0.1875);
   assert.equal(coverageGap.current.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
   assert.equal(coverageGap.deltas.sourceIntakeRuntimeRequired, 'cloudflare');
   assert.ok(coverageGap.deltas.approvedRecordsRemaining > 0);
