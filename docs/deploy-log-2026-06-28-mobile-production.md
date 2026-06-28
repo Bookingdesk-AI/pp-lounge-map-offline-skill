@@ -10,6 +10,7 @@
 - Added compact Cloudflare intake preflight status to mobile Review Sources.
 - Added compact source and quality badges to mobile Details.
 - Added Cloudflare token, lane, and report command lines to coverage validation output.
+- Added mobile copy actions for Cloudflare probe, report, and promote commands.
 - Preserved unrelated dirty script changes outside this closeout.
 
 ## Verification
@@ -30,6 +31,7 @@
 - Local mobile Sources check: token, ready, credential, rights, and report state
 - Local mobile Details check: source ID, confidence, retrieved date, completeness, and review status
 - Coverage validation check: terminal output names token, lane counts, and report command
+- Local mobile Sources check: probe, report, and promote command actions
 
 ## Deploy
 

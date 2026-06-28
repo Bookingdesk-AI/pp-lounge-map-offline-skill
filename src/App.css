@@ -1968,6 +1968,18 @@
     white-space: nowrap;
   }
 
+  .review-command-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.32rem;
+  }
+
+  .review-command-row .ghost-link {
+    min-width: 0;
+    min-height: 44px;
+    padding-inline: 0.32rem;
+  }
+
   .mobile-sheet .results {
     padding: 0.62rem 0.62rem calc(0.8rem + env(safe-area-inset-bottom));
   }

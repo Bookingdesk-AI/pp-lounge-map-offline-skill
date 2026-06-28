@@ -1585,6 +1585,13 @@ function MobileReviewView({
       ]
     : [];
   const [activeTab, setActiveTab] = useState<MobileReviewTab>('blockers');
+  const copyPreflightCommand = useCallback((command: string) => {
+    if (!navigator.clipboard) {
+      return;
+    }
+
+    void navigator.clipboard.writeText(command);
+  }, []);
   const blockerRows = coverageGap
     ? [
         { label: 'Approved count', value: coverageGap.deltas.approvedRecordsRemaining },
@@ -1759,6 +1766,23 @@ function MobileReviewView({
                 </span>
                 <span className="code" title={intakePreflight.commands.report}>
                   report:export
+                </span>
+                <span className="review-command-row" aria-label="Cloudflare commands">
+                  {[
+                    ['Probe', intakePreflight.commands.probe],
+                    ['Report', intakePreflight.commands.report],
+                    ['Promote', intakePreflight.commands.promote],
+                  ].map(([label, command]) => (
+                    <button
+                      key={label}
+                      type="button"
+                      className="ghost-link"
+                      title={command}
+                      onClick={() => copyPreflightCommand(command)}
+                    >
+                      {label}
+                    </button>
+                  ))}
                 </span>
               </div>
             ) : null}

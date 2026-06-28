@@ -19,8 +19,12 @@ test('mobile review exposes compact section tabs with source proof workflow', ()
   assert.match(appSource, /sourceLaneStats/);
   assert.match(appSource, /nextCloudflareIntake/);
   assert.match(appSource, /preflightStats/);
+  assert.match(appSource, /copyPreflightCommand/);
   assert.match(appSource, /LOUNGE_GURU_INTAKE_TOKEN|intakePreflight\.requiredTokenEnv/);
   assert.match(appSource, /report:export/);
+  assert.match(appSource, /aria-label="Cloudflare commands"/);
+  assert.match(appSource, /intakePreflight\.commands\.probe/);
+  assert.match(appSource, /intakePreflight\.commands\.promote/);
   assert.match(appSource, /blockerRows/);
   assert.match(appSource, /approvedRecordsRemaining/);
   assert.match(appSource, /approvalsNeededForCurrentCatalogRatio/);
@@ -56,5 +60,7 @@ test('mobile review tabs keep production touch targets', () => {
   assert.match(appCss, /\.review-lane-grid\s*{/);
   assert.match(appCss, /\.review-row\.is-preflight\s*{[^}]*margin-top:\s*0\.44rem;/s);
   assert.match(appCss, /\.review-row-badges\s*{[^}]*flex-wrap:\s*wrap;/s);
+  assert.match(appCss, /\.review-command-row\s*{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/s);
+  assert.match(appCss, /\.review-command-row \.ghost-link\s*{[^}]*min-height:\s*44px;/s);
   assert.match(appCss, /\.review-row\s*{[^}]*text-decoration:\s*none;/s);
 });
