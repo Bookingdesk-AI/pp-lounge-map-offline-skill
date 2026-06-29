@@ -37,6 +37,12 @@ node skills/lounge-guru-offline/scripts/print-offline-mcp-config.mjs
 - No secret/API key requirement
 - Read-only query workflows
 
+Reviewer reference files that must ship with this offline bundle:
+
+- `references/mcp.md` — local MCP startup and client configuration guidance
+- `references/safety.md` — offline trust boundary and safe-use notes
+- `references/publishing.md` — public bundle publishing checks and evidence expectations
+
 ## Keywords
 
 offline lounge lookup, priority pass lounge map, airport lounge comparison, travel MCP skill, local lounge catalog, air-gapped travel tooling
