@@ -75,6 +75,7 @@ export async function validateSkillBundleWithOptions({
   assetRelativePath,
   requiredReferences = [],
   forbidHttpUrlsInMarkdown = false,
+  docsThatMustReferenceRequiredReferences = [],
 }) {
   const issues = [];
   const files = await walk(skillDir);
@@ -139,6 +140,23 @@ export async function validateSkillBundleWithOptions({
         await fs.stat(referencePath);
       } catch {
         issues.push(`Missing required reference: ${reference}`);
+      }
+    }
+
+    for (const doc of docsThatMustReferenceRequiredReferences) {
+      const docPath = path.join(skillDir, doc);
+      let docText;
+      try {
+        docText = await fs.readFile(docPath, 'utf8');
+      } catch {
+        issues.push(`${doc} could not be read while checking required offline references.`);
+        continue;
+      }
+
+      for (const reference of requiredReferences) {
+        if (!docText.includes(reference)) {
+          issues.push(`${doc} must reference ${reference} so required offline guidance ships with the bundle.`);
+        }
       }
     }
   } catch {

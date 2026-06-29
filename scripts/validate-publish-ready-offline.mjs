@@ -26,6 +26,7 @@ async function main() {
       path.join('references', 'publishing.md'),
     ],
     forbidHttpUrlsInMarkdown: true,
+    docsThatMustReferenceRequiredReferences: ['SKILL.md', 'README.md'],
   };
   const issues = await validateSkillBundleWithOptions(validationOptions);
 
@@ -46,6 +47,7 @@ async function main() {
       requiredAsset: validationOptions.assetRelativePath,
       maxAssetBytes: validationOptions.maxAssetBytes,
       markdownHttpUrlsForbidden: validationOptions.forbidHttpUrlsInMarkdown,
+      docsThatMustReferenceRequiredReferences: validationOptions.docsThatMustReferenceRequiredReferences,
     })}`,
   );
 }
