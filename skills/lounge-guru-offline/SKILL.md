@@ -57,3 +57,4 @@ Use this skill when the task is about the bundled offline lounge snapshot.
 - Local MCP setup: [references/mcp.md](references/mcp.md)
 - Offline trust boundary: [references/safety.md](references/safety.md)
 - Marketplace packaging notes: [references/publishing.md](references/publishing.md)
+- Operator trust evidence checklist: [references/operator-trust-evidence.md](references/operator-trust-evidence.md)
