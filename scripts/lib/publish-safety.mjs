@@ -20,6 +20,16 @@ const FORBIDDEN_CONTENT_PATTERNS = [
     message: 'API key instructions are not allowed in the public bundle.',
   },
 ];
+const SECRET_CONTENT_PATTERNS = [
+  { label: 'aws-access-key', pattern: /AKIA[0-9A-Z]{16}/u },
+  { label: 'private-key', pattern: /-----BEGIN (?:RSA|EC|OPENSSH|PGP|PRIVATE) KEY-----/u },
+  { label: 'slack-token', pattern: /xox[baprs]-/u },
+  { label: 'github-token', pattern: /ghp_[A-Za-z0-9]{36,}/u },
+  { label: 'github-pat', pattern: /github_pat_[A-Za-z0-9_]{20,}/u },
+  { label: 'google-api-key', pattern: /AIza[0-9A-Za-z\-_]{35}/u },
+  { label: 'openai-key', pattern: /sk-[A-Za-z0-9]{20,}/u },
+  { label: 'assigned-secret-field', pattern: /\b(?:api[_-]?key|secret|token|password)\s*[:=]\s*\S+/iu },
+];
 
 
 async function validateMarkdownLinks({ content, filePath, skillDir, projectRoot, issues }) {
@@ -108,6 +118,17 @@ export async function validateSkillBundleWithOptions({
         issues.push(`${check.message} (${relativePath})`);
       }
     }
+
+    content.split('\n').forEach((line, index) => {
+      const matchedLabels = SECRET_CONTENT_PATTERNS
+        .filter(({ pattern }) => pattern.test(line))
+        .map(({ label }) => label);
+      if (matchedLabels.length > 0) {
+        issues.push(
+          `Secret-like content detected in ${relativePath}:${index + 1} (${matchedLabels.join(', ')}); inspect locally without echoing matched content.`,
+        );
+      }
+    });
 
     if (path.extname(filePath) === '.md') {
       await validateMarkdownLinks({ content, filePath, skillDir, projectRoot, issues });
