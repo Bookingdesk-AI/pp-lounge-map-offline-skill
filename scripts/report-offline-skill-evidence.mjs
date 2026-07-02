@@ -10,13 +10,13 @@ const scopes = [
     label: 'source',
     root: path.join(projectRoot, 'skills', 'lounge-guru-offline'),
     expectedSkill: 'lounge-guru-offline',
-    required: ['SKILL.md', 'README.md', 'references/mcp.md', 'references/safety.md', 'references/publishing.md'],
+    required: ['SKILL.md', 'README.md', 'references/mcp.md', 'references/safety.md', 'references/publishing.md', 'references/operator-trust-evidence.md'],
   },
   {
     label: 'pp-export-mirror',
     root: path.join(projectRoot, 'out', 'pp-lounge-map-offline-skill', 'skills', 'pp-lounge-map-offline'),
     expectedSkill: 'pp-lounge-map-offline',
-    required: ['SKILL.md', 'README.md', 'references/mcp.md', 'references/safety.md', 'references/publishing.md'],
+    required: ['SKILL.md', 'README.md', 'references/mcp.md', 'references/safety.md', 'references/publishing.md', 'references/operator-trust-evidence.md'],
   },
 ];
 
@@ -38,10 +38,12 @@ async function main() {
     }
 
     let frontmatterName = null;
+    let operatorTrustEvidenceReferenced = false;
     const skillPath = path.join(scope.root, 'SKILL.md');
     if (await exists(skillPath)) {
       const text = await fs.readFile(skillPath, 'utf8');
       frontmatterName = text.match(/^---\n[\s\S]*?^name:\s*([^\n]+)$/mu)?.[1]?.trim() ?? null;
+      operatorTrustEvidenceReferenced = text.includes('references/operator-trust-evidence.md');
     }
 
     report.push({
@@ -51,7 +53,8 @@ async function main() {
       frontmatterName,
       requiredFiles: scope.required.length,
       missingRequiredFiles: missing,
-      status: missing.length === 0 && frontmatterName === scope.expectedSkill ? 'ready' : 'needs-attention',
+      operatorTrustEvidenceReferenced,
+      status: missing.length === 0 && frontmatterName === scope.expectedSkill && operatorTrustEvidenceReferenced ? 'ready' : 'needs-attention',
     });
   }
 
