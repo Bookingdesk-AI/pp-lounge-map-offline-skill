@@ -30,3 +30,8 @@ Severity classification:
 - Planned changes are low-risk, additive validator/reporting hardening.
 
 Phase guard note: Phase B plan is committed and pushed before any Phase C mutations.
+
+## Phase C: Improve
+
+Shipped: packaged offline validator now requires `references/operator-trust-evidence.md`, and README lists that evidence checklist with other required references.
+Verification during implementation: `npm run skill:validate:offline` passed from `out/pp-lounge-map-offline-skill` with required references 4/4 and catalog records checked 1853.

@@ -42,6 +42,7 @@ node skills/lounge-guru-offline/scripts/print-offline-mcp-config.mjs
 - Local MCP setup: [references/mcp.md](references/mcp.md)
 - Offline trust boundary: [references/safety.md](references/safety.md)
 - Marketplace packaging notes: [references/publishing.md](references/publishing.md)
+- Operator trust evidence checklist: [references/operator-trust-evidence.md](references/operator-trust-evidence.md)
 
 ## Keywords
 
