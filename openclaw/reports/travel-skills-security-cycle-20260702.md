@@ -50,3 +50,11 @@ Post scan notes:
 - Packaged offline skill validation passed against `out/pp-lounge-map-offline-skill`.
 - Non-catalog text scan found only validator regex literals for token patterns, not leaked values.
 - Catalog URL provenance was excluded from secret/path evidence summarization because it is expected bundled source attribution, not runtime boundary drift.
+
+## Phase E: Issue Cycle
+
+PERSISTENT_BLOCKER recorded in `openclaw/reports/skill-security-issues.md`:
+- `skills/pp-lounge-map-offline/SKILL.md` is missing while the packaged offline skill exists under `out/pp-lounge-map-offline-skill`.
+- Repeat evidence count in reports: >=4.
+
+Next hardening candidate: restore or document the source-to-package mapping for `skills/pp-lounge-map-offline` so packaged offline validation has a clear source trace.
