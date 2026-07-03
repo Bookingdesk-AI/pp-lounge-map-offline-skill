@@ -35,3 +35,18 @@ Phase guard note: Phase B plan is committed and pushed before any Phase C mutati
 
 Shipped: packaged offline validator now requires `references/operator-trust-evidence.md`, and README lists that evidence checklist with other required references.
 Verification during implementation: `npm run skill:validate:offline` passed from `out/pp-lounge-map-offline-skill` with required references 4/4 and catalog records checked 1853.
+
+## Phase D: Review + Verify
+
+Post verification:
+- From `out/pp-lounge-map-offline-skill`, `npm run skill:validate:offline` passed.
+- Required references: 4/4, including `references/operator-trust-evidence.md`.
+- Required files: 6/6.
+- Markdown links checked: 8.
+- Catalog records checked: 1853.
+
+Post scan notes:
+- Source path `skills/pp-lounge-map-offline/SKILL.md` is missing and remains a source/package traceability blocker.
+- Packaged offline skill validation passed against `out/pp-lounge-map-offline-skill`.
+- Non-catalog text scan found only validator regex literals for token patterns, not leaked values.
+- Catalog URL provenance was excluded from secret/path evidence summarization because it is expected bundled source attribution, not runtime boundary drift.
