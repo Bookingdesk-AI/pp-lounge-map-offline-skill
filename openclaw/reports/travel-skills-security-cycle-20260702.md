@@ -16,3 +16,17 @@ Initial findings:
 - pp-lounge-map: source path skills/pp-lounge-map-offline/SKILL.md is missing; packaged out/pp-lounge-map-offline-skill exists and must remain the verification target until source path is restored.
 
 Phase guard note: this file records Phase A evidence so the phase can be committed and pushed before Phase B begins.
+
+## Phase B: Fix Plan
+
+Planned bounded improvements:
+- circulus-map: referenced-file integrity improvement by making the offline security review reference part of the required validation set.
+- all-routes: operator evidence improvement by making validation output explicitly report hosted documentation URL counts and allowed documentation-only posture.
+- pp-lounge-map: referenced-file integrity improvement in the packaged offline skill by requiring the operator trust evidence checklist file referenced by SKILL.md.
+
+Severity classification:
+- No high-severity secret leakage was observed in the scoped pre-scan evidence.
+- pp-lounge-map missing source path `skills/pp-lounge-map-offline/SKILL.md` is a medium operator-trust blocker for source/package traceability; package validation can continue against `out/pp-lounge-map-offline-skill`.
+- Planned changes are low-risk, additive validator/reporting hardening.
+
+Phase guard note: Phase B plan is committed and pushed before any Phase C mutations.
