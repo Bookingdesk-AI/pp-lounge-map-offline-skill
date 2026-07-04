@@ -28,19 +28,23 @@ const evidence = {
   requiredFilePaths: [],
   frontmatterKeysChecked: [],
   catalogRecordsChecked: 0,
+  secretPatternsChecked: 0,
+  secretOrPathFindingsRedacted: 0,
+  secretPatternFindingsByLabel: {},
 };
 
 const secretPatterns = [
-  /AKIA[0-9A-Z]{16}/u,
-  /-----BEGIN (?:RSA|EC|OPENSSH|PGP|PRIVATE) KEY-----/u,
-  /xox[baprs]-/u,
-  /ghp_[A-Za-z0-9]{36,}/u,
-  /github_pat_[A-Za-z0-9_]{20,}/u,
-  /AIza[0-9A-Za-z\-_]{35}/u,
-  /sk-[A-Za-z0-9]{20,}/u,
-  /\b(?:api[_-]?key|secret|token|password)\s*[:=]\s*\S+/iu,
-  /\/(?:Users|home)\/[A-Za-z0-9][A-Za-z0-9._-]+/u,
+  { label: 'aws-access-key', pattern: /AKIA[0-9A-Z]{16}/u },
+  { label: 'private-key', pattern: /-----BEGIN (?:RSA|EC|OPENSSH|PGP|PRIVATE) KEY-----/u },
+  { label: 'slack-token', pattern: /xox[baprs]-/u },
+  { label: 'github-token', pattern: /ghp_[A-Za-z0-9]{36,}/u },
+  { label: 'github-pat', pattern: /github_pat_[A-Za-z0-9_]{20,}/u },
+  { label: 'google-api-key', pattern: /AIza[0-9A-Za-z\-_]{35}/u },
+  { label: 'openai-key', pattern: /sk-[A-Za-z0-9]{20,}/u },
+  { label: 'assigned-secret-field', pattern: /\b(?:api[_-]?key|secret|token|password)\s*[:=]\s*\S+/iu },
+  { label: 'personal-absolute-path', pattern: /\/(?:Users|home)\/[A-Za-z0-9][A-Za-z0-9._-]+/u },
 ];
+evidence.secretPatternsChecked = secretPatterns.length;
 const textExtensions = new Set(['.md', '.yaml', '.yml', '.json', '.mjs']);
 
 async function walk(dir) {
@@ -148,14 +152,22 @@ for (const filePath of await walk(skillDir)) {
   if (path.extname(filePath) === '.md') await validateMarkdownLinks(filePath, text);
   if (relativePath === 'assets/catalog.json') continue;
   text.split('\n').forEach((line, index) => {
-    if (secretPatterns.some((pattern) => pattern.test(line))) {
-      issues.push(`${path.relative(bundleRoot, filePath)}:${index + 1} contains secret-like or local-path text; inspect without echoing match content.`);
+    const matchedLabels = secretPatterns
+      .filter(({ pattern }) => pattern.test(line))
+      .map(({ label }) => label);
+    if (matchedLabels.length) {
+      evidence.secretOrPathFindingsRedacted += matchedLabels.length;
+      for (const label of matchedLabels) evidence.secretPatternFindingsByLabel[label] = (evidence.secretPatternFindingsByLabel[label] || 0) + 1;
+      issues.push(`${path.relative(bundleRoot, filePath)}:${index + 1} contains redacted secret/path pattern(s): ${matchedLabels.join(', ')}; inspect without echoing match content.`);
     }
   });
 }
 
 if (issues.length) {
   for (const issue of issues) console.error(`offline-skill-security: ${issue}`);
+  console.error('offline-skill-security: failure guidance: keep matched secret/path content redacted, repair missing references or catalog artifacts first, then rerun node scripts/validate-offline-skill-security.mjs from the packaged offline skill root.');
+  console.error('offline-skill-security: remediation checklist: (1) restore missing SKILL/README/reference links, (2) keep runtime lookup local and read-only, (3) replace credential-like values with placeholders, (4) document package drift before publishing.');
+  console.error(`offline-skill-security: evidence ${JSON.stringify(evidence)}`);
   process.exitCode = 1;
 } else {
   console.log(`${expectedName}: offline skill security validation passed.`);
