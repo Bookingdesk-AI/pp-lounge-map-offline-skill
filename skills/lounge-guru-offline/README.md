@@ -41,6 +41,7 @@ Reviewer reference files that must ship with this offline bundle:
 
 - `references/mcp.md` — local MCP startup and client configuration guidance
 - `references/safety.md` — offline trust boundary and safe-use notes
+- `references/operator-trust-evidence.md` — reviewer checklist for checked artifacts, residual risk, and safe-use evidence
 - `references/publishing.md` — public bundle publishing checks and evidence expectations
 
 ## Keywords

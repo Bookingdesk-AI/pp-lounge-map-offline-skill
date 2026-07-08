@@ -23,6 +23,7 @@ async function main() {
     requiredReferences: [
       path.join('references', 'mcp.md'),
       path.join('references', 'safety.md'),
+      path.join('references', 'operator-trust-evidence.md'),
       path.join('references', 'publishing.md'),
     ],
     forbidHttpUrlsInMarkdown: true,
