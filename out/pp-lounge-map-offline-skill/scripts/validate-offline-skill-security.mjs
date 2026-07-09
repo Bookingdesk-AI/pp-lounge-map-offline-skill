@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -20,6 +21,8 @@ const issues = [];
 const evidence = {
   skill: expectedName,
   filesScanned: 0,
+  checkedFileInventoryDigest: null,
+  checkedFileInventorySample: [],
   markdownFilesChecked: 0,
   markdownLinksChecked: 0,
   requiredReferencesChecked: requiredReferences.length,
@@ -85,6 +88,19 @@ async function walk(dir) {
     else files.push(fullPath);
   }
   return files;
+}
+
+
+function recordCheckedFileInventory(filePaths) {
+  const relativePaths = filePaths
+    .map((filePath) => path.relative(skillDir, filePath).split(path.sep).join('/'))
+    .sort((left, right) => left.localeCompare(right));
+  evidence.checkedFileInventoryDigest = crypto
+    .createHash('sha256')
+    .update(relativePaths.join('\n'))
+    .digest('hex');
+  evidence.checkedFileInventorySample = relativePaths.slice(0, 10);
+  return new Set(filePaths);
 }
 
 function frontmatter(text) {
@@ -173,7 +189,8 @@ try {
   issues.push('assets/catalog.json could not be parsed as JSON.');
 }
 
-for (const filePath of await walk(skillDir)) {
+const checkedFileSet = recordCheckedFileInventory(await walk(skillDir));
+for (const filePath of checkedFileSet) {
   evidence.filesScanned += 1;
   if (!textExtensions.has(path.extname(filePath))) continue;
   const relativePath = path.relative(skillDir, filePath);
