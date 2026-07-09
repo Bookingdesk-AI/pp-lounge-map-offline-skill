@@ -31,6 +31,8 @@ const evidence = {
   secretPatternsChecked: 0,
   secretOrPathFindingsRedacted: 0,
   secretPatternFindingsByLabel: {},
+  unsafeUrlBoundaryChecks: 0,
+  unsafeUrlBoundaryFindings: 0,
 };
 
 const secretPatterns = [
@@ -46,6 +48,33 @@ const secretPatterns = [
 ];
 evidence.secretPatternsChecked = secretPatterns.length;
 const textExtensions = new Set(['.md', '.yaml', '.yml', '.json', '.mjs']);
+
+
+function inspectUrlBoundary(filePath, line, index) {
+  const urlPattern = /https?:\/\/[^\s,;)"'<>`]+/giu;
+  for (const [urlCandidate] of line.matchAll(urlPattern)) {
+    const rawUrl = urlCandidate.replace(/[.,;:!?]+$/u, '');
+    let parsed;
+    try {
+      parsed = new URL(rawUrl);
+    } catch {
+      evidence.unsafeUrlBoundaryFindings += 1;
+      issues.push(`${path.relative(bundleRoot, filePath)}:${index + 1} contains an unparsable HTTP(S) URL; inspect without echoing URL content.`);
+      continue;
+    }
+    const encodedControl = /%(?:00|0a|0d)/iu.test(rawUrl);
+    const credentialBearing = Boolean(parsed.username || parsed.password);
+    const tokenLikeParam = [...parsed.searchParams.keys()].some((key) => /(?:token|secret|password|api[_-]?key|auth|credential)/iu.test(key));
+    if (encodedControl || credentialBearing || tokenLikeParam) {
+      evidence.unsafeUrlBoundaryFindings += 1;
+      issues.push(`${path.relative(bundleRoot, filePath)}:${index + 1} contains unsafe URL boundary evidence: ${[
+        credentialBearing ? 'userinfo' : null,
+        tokenLikeParam ? 'token-like-query' : null,
+        encodedControl ? 'encoded-control' : null,
+      ].filter(Boolean).join(', ')}; inspect without echoing URL content.`);
+    }
+  }
+}
 
 async function walk(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true });
@@ -152,6 +181,8 @@ for (const filePath of await walk(skillDir)) {
   if (path.extname(filePath) === '.md') await validateMarkdownLinks(filePath, text);
   if (relativePath === 'assets/catalog.json') continue;
   text.split('\n').forEach((line, index) => {
+    evidence.unsafeUrlBoundaryChecks += 1;
+    inspectUrlBoundary(filePath, line, index);
     const matchedLabels = secretPatterns
       .filter(({ pattern }) => pattern.test(line))
       .map(({ label }) => label);
