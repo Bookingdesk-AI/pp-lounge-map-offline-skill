@@ -11,3 +11,12 @@ Pre-scan checks performed:
 - SKILL frontmatter, required references, local files, and packaged artifacts.
 
 Initial severity classification: no critical secret leakage observed before edits; remaining work is bounded hardening/evidence improvement.
+
+## Phase B — Fix Plan
+
+Selected bounded hardening features:
+- circulus-map-offline: improve operator evidence by making validation output include required reference/file path counts and inventory digest already suitable for review.
+- all-routes-offline: improve operator evidence by adding explicit unsafe URL and secret/path finding counts to validation success output.
+- pp-lounge-map-offline: improve operator evidence by surfacing required reference/file counts and unsafe URL finding counts in packaged validator success output.
+
+Severity: low hardening/evidence improvements. No destructive change planned.
