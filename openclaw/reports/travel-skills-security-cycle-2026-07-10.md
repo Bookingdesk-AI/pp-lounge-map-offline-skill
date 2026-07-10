@@ -30,3 +30,9 @@ Shipped one bounded operator-trust evidence improvement for this repo by making 
 Post-edit validation passed for the offline skill security validator. Verification included referenced-file integrity, SKILL frontmatter checks, local/offline boundary checks, unsafe URL boundary scanning, and redacted secret/path pattern scanning.
 
 No secret-like matches were emitted in validation output. No unsafe credential-bearing or token-query HTTP(S) URL boundaries were reported.
+
+## Phase E — Issue Cycle
+
+No repeated blocker reached the >=3-run threshold in this run. No PERSISTENT_BLOCKER entry was appended.
+
+Next hardening target: add or improve a packaged manifest/checksum surface so reviewers can compare exported offline skill artifacts against the expected file inventory without relying only on validator console output.
