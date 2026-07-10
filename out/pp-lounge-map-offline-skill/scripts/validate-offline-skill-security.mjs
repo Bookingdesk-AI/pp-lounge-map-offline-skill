@@ -219,5 +219,11 @@ if (issues.length) {
   process.exitCode = 1;
 } else {
   console.log(`${expectedName}: offline skill security validation passed.`);
+  console.log(
+    `offline-skill-security: required references ${evidence.requiredReferencePaths.length}/${evidence.requiredReferencesChecked}; required files ${evidence.requiredFilePaths.length}/${evidence.requiredFilesChecked}; markdown links ${evidence.markdownLinksChecked}; inventory digest ${evidence.checkedFileInventoryDigest}`,
+  );
+  console.log(
+    `offline-skill-security: unsafe URL boundary checks ${evidence.unsafeUrlBoundaryChecks}; unsafe URL findings ${evidence.unsafeUrlBoundaryFindings}; redacted secret/path findings ${evidence.secretOrPathFindingsRedacted}`,
+  );
   console.log(`offline-skill-security: evidence ${JSON.stringify(evidence)}`);
 }

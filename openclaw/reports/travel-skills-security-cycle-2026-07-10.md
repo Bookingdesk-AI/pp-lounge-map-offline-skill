@@ -20,3 +20,7 @@ Selected bounded hardening features:
 - pp-lounge-map-offline: improve operator evidence by surfacing required reference/file counts and unsafe URL finding counts in packaged validator success output.
 
 Severity: low hardening/evidence improvements. No destructive change planned.
+
+## Phase C — Improve
+
+Shipped one bounded operator-trust evidence improvement for this repo by making offline skill validation success output easier to review without opening the raw JSON evidence blob.
