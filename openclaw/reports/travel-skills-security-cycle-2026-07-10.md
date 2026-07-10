@@ -24,3 +24,9 @@ Severity: low hardening/evidence improvements. No destructive change planned.
 ## Phase C — Improve
 
 Shipped one bounded operator-trust evidence improvement for this repo by making offline skill validation success output easier to review without opening the raw JSON evidence blob.
+
+## Phase D — Review + Verify
+
+Post-edit validation passed for the offline skill security validator. Verification included referenced-file integrity, SKILL frontmatter checks, local/offline boundary checks, unsafe URL boundary scanning, and redacted secret/path pattern scanning.
+
+No secret-like matches were emitted in validation output. No unsafe credential-bearing or token-query HTTP(S) URL boundaries were reported.
