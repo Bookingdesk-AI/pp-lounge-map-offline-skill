@@ -33,6 +33,16 @@ async function collectIntegrityEvidence(skillDir) {
     .sort((left, right) => left.localeCompare(right));
   let markdownFilesChecked = 0;
   let markdownLinksChecked = 0;
+  const requiredFilesPresent = [];
+  const missingRequiredFiles = [];
+  for (const requiredPath of ['SKILL.md', 'README.md', 'references/mcp.md', 'references/safety.md', 'references/operator-trust-evidence.md', 'references/publishing.md']) {
+    try {
+      await fs.stat(path.join(skillDir, requiredPath));
+      requiredFilesPresent.push(requiredPath);
+    } catch {
+      missingRequiredFiles.push(requiredPath);
+    }
+  }
   for (const filePath of files) {
     if (path.extname(filePath) !== '.md') continue;
     markdownFilesChecked += 1;
@@ -50,6 +60,8 @@ async function collectIntegrityEvidence(skillDir) {
     checkedFileInventorySample: relativePaths.slice(0, 10),
     markdownFilesChecked,
     markdownLinksChecked,
+    requiredFilesPresent,
+    missingRequiredFiles,
   };
 }
 
