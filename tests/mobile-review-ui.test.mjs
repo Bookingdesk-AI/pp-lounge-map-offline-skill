@@ -14,7 +14,11 @@ test('mobile review exposes compact section tabs with source evidence workflow',
   assert.match(appSource, /aria-label="Review sections"/);
   assert.match(appSource, /role="tab"/);
   assert.match(appSource, /aria-selected=/);
-  assert.doesNotMatch(appSource, />Proof</);
+  assert.doesNotMatch(appSource, /Proof/);
+  assert.match(appSource, />CF evidence</);
+  assert.match(appSource, />CF tasks</);
+  assert.match(appSource, />CF gaps</);
+  assert.match(appSource, /readyMemberGapsWithCloudflareEvidence/);
   assert.match(appSource, /No evidence/);
   assert.match(appSource, /readyMemberGapEvidence/);
   assert.match(appSource, /cloudflareSignalStats/);

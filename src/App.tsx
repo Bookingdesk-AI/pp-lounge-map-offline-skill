@@ -2139,8 +2139,11 @@ function MobileReviewView({
   const sourceRuntime = coverageGap?.current.sourceIntakeRuntime ?? 'unknown';
   const runtimePassed = coverageGap?.current.cloudflareSourceRuntimePassed === true;
   const runtimeLabel = formatSourceRuntime(sourceRuntime, runtimePassed);
-  const readyEvidence = cloudflareEvidence
+  const readyTaskEvidence = cloudflareEvidence
     ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks}`
+    : 'n/a';
+  const readyGapEvidence = cloudflareEvidence
+    ? `${cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence}/${cloudflareEvidence.stats.readyMemberGaps}`
     : 'n/a';
   const cloudflareSources = cloudflareEvidence?.sources ?? [];
   const cloudflareSignalStats = cloudflareSources.reduce(
@@ -2245,8 +2248,12 @@ function MobileReviewView({
           <strong title={sourceRuntime}>{runtimeLabel}</strong>
         </div>
         <div>
-          <span>CF ready</span>
-          <strong>{readyEvidence}</strong>
+          <span>CF tasks</span>
+          <strong>{readyTaskEvidence}</strong>
+        </div>
+        <div>
+          <span>CF gaps</span>
+          <strong>{readyGapEvidence}</strong>
         </div>
         <div>
           <span>Signals</span>
@@ -2306,7 +2313,7 @@ function MobileReviewView({
       {activeTab === 'cf' ? (
         <section className="mobile-review-panel">
         <div className="section-title-row">
-          <h2>Source proof</h2>
+          <h2>CF evidence</h2>
           <span className="compare-count">{cloudflareSources.length}</span>
         </div>
         {cloudflareSources.length === 0 ? (
@@ -2641,6 +2648,9 @@ function IntakeView({
     }),
     { records: 0, airports: 0, links: 0 },
   );
+  const readyGapEvidence = cloudflareEvidence
+    ? `${cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence}/${cloudflareEvidence.stats.readyMemberGaps}`
+    : 'n/a';
 
   return (
     <main className="console-view">
@@ -2688,6 +2698,10 @@ function IntakeView({
         <div>
           <span>Signals</span>
           <strong>{cloudflareSignalStats.records}</strong>
+        </div>
+        <div>
+          <span>CF gaps</span>
+          <strong>{readyGapEvidence}</strong>
         </div>
       </section>
 
