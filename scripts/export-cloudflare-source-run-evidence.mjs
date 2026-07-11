@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { createCloudflareSourceRunEvidence } from './lib/cloudflare-source-run-evidence.mjs';
 
@@ -53,6 +53,38 @@ async function readD1Result() {
   return JSON.parse(stdout);
 }
 
+function withoutGeneratedAt(value) {
+  return {
+    ...value,
+    generatedAt: null,
+  };
+}
+
+export function evidenceMatchesExceptGeneratedAt(left, right) {
+  return JSON.stringify(withoutGeneratedAt(left)) === JSON.stringify(withoutGeneratedAt(right));
+}
+
+async function readExistingEvidence(filePath) {
+  try {
+    return JSON.parse(await fs.readFile(filePath, 'utf8'));
+  } catch (error) {
+    if (error?.code === 'ENOENT') {
+      return null;
+    }
+    throw error;
+  }
+}
+
+export async function writeEvidenceIfChanged(filePath, evidence) {
+  const existing = await readExistingEvidence(filePath);
+  if (existing && evidenceMatchesExceptGeneratedAt(existing, evidence)) {
+    return false;
+  }
+
+  await fs.writeFile(filePath, `${JSON.stringify(evidence, null, 2)}\n`, 'utf8');
+  return true;
+}
+
 async function main() {
   const [d1Result, sourceIntakePlan] = await Promise.all([
     readD1Result(),
@@ -63,14 +95,17 @@ async function main() {
     sourceIntakePlan,
   });
 
-  await fs.writeFile(outputPath, `${JSON.stringify(evidence, null, 2)}\n`, 'utf8');
+  const changed = await writeEvidenceIfChanged(outputPath, evidence);
   console.log(
     `cloudflare-source-run-evidence: ${evidence.stats.uniqueSources} sources, ` +
-      `${evidence.stats.readyTasksWithCloudflareEvidence}/${evidence.stats.readyTasks} ready tasks`,
+      `${evidence.stats.readyTasksWithCloudflareEvidence}/${evidence.stats.readyTasks} ready tasks, ` +
+      `${changed ? 'updated' : 'unchanged'}`,
   );
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

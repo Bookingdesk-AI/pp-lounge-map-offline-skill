@@ -1,8 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 
 import { createCloudflareSourceRunEvidence } from '../scripts/lib/cloudflare-source-run-evidence.mjs';
+import {
+  evidenceMatchesExceptGeneratedAt,
+  writeEvidenceIfChanged,
+} from '../scripts/export-cloudflare-source-run-evidence.mjs';
 
 const publicEvidence = JSON.parse(
   fs.readFileSync(new URL('../public/data/cloudflare-source-run-evidence.json', import.meta.url), 'utf8'),
@@ -146,5 +153,37 @@ test('public Cloudflare evidence covers current ready intake tasks only', () => 
     assert.ok(source.sha256);
     assert.ok(!Object.hasOwn(source, 'text'));
     assert.ok(!Object.hasOwn(source, 'html'));
+  }
+});
+
+test('Cloudflare evidence export does not rewrite timestamp-only changes', async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), 'lounge-guru-evidence-test-'));
+  const outputPath = path.join(tempDir, 'evidence.json');
+  const existing = {
+    generatedAt: '2026-06-01T00:00:00.000Z',
+    policy: { source: 'cloudflare-d1-source_runs' },
+    stats: { uniqueSources: 3 },
+    sources: [{ sourceId: 'visa-airport-companion', sha256: 'abc' }],
+  };
+  const next = {
+    ...existing,
+    generatedAt: '2026-07-11T19:55:24.064Z',
+  };
+
+  try {
+    await writeFile(outputPath, `${JSON.stringify(existing, null, 2)}\n`, 'utf8');
+
+    assert.equal(evidenceMatchesExceptGeneratedAt(existing, next), true);
+    assert.equal(await writeEvidenceIfChanged(outputPath, next), false);
+    assert.deepEqual(JSON.parse(await readFile(outputPath, 'utf8')), existing);
+
+    const changed = {
+      ...next,
+      stats: { uniqueSources: 4 },
+    };
+    assert.equal(await writeEvidenceIfChanged(outputPath, changed), true);
+    assert.deepEqual(JSON.parse(await readFile(outputPath, 'utf8')), changed);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
   }
 });
