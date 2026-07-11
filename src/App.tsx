@@ -2143,6 +2143,14 @@ function MobileReviewView({
     ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks}`
     : 'n/a';
   const cloudflareSources = cloudflareEvidence?.sources ?? [];
+  const cloudflareSignalStats = cloudflareSources.reduce(
+    (totals, source) => ({
+      records: totals.records + Number(source.records ?? 0),
+      airports: totals.airports + Number(source.airportCodeCount ?? 0),
+      links: totals.links + Number(source.loungeLinkCount ?? 0),
+    }),
+    { records: 0, airports: 0, links: 0 },
+  );
   const sourceGapEvidence = new Map(
     (cloudflareEvidence?.readyMemberGapEvidence ?? []).map((evidence) => [
       `${evidence.familyId}-${evidence.sourceId}`,
@@ -2241,6 +2249,10 @@ function MobileReviewView({
           <strong>{readyEvidence}</strong>
         </div>
         <div>
+          <span>Signals</span>
+          <strong>{cloudflareSignalStats.records}</strong>
+        </div>
+        <div>
           <span>Sources</span>
           <strong>{intakePlan?.summary.memberGaps ?? 'n/a'}</strong>
         </div>
@@ -2308,7 +2320,11 @@ function MobileReviewView({
                   <span className="code">{source.httpStatus ?? 'n/a'}</span>
                 </span>
                 <span>{source.sourceId}</span>
-                <span>{source.cloudflareSnapshot ? source.status : 'missing'}</span>
+                <span className="review-row-badges" aria-label={`${source.sourceId} signals`}>
+                  <span className="code">{source.cloudflareSnapshot ? source.status : 'missing'}</span>
+                  <span className="code">A {source.airportCodeCount ?? 0}</span>
+                  <span className="code">L {source.loungeLinkCount ?? 0}</span>
+                </span>
               </div>
             ))}
           </div>
@@ -2589,6 +2605,7 @@ function IntakeView({
   meta,
   coverageGap,
   intakePlan,
+  cloudflareEvidence,
   nonPriorityValidation,
 }: {
   records: CanonicalLoungeRecord[];
@@ -2596,6 +2613,7 @@ function IntakeView({
   meta: LoungeMeta | null;
   coverageGap: CoverageGapReport | null;
   intakePlan: CloudflareSourceIntakePlan | null;
+  cloudflareEvidence: CloudflareSourceRunEvidence | null;
   nonPriorityValidation: NonPriorityValidationReport | null;
 }) {
   const reviewRecords = records
@@ -2614,6 +2632,15 @@ function IntakeView({
   const sampleReviewRows = (nonPriorityValidation?.rows ?? [])
     .filter((row) => row.reviewAction.action === 'manual_review')
     .slice(0, 12);
+  const cloudflareSources = cloudflareEvidence?.sources ?? [];
+  const cloudflareSignalStats = cloudflareSources.reduce(
+    (totals, source) => ({
+      records: totals.records + Number(source.records ?? 0),
+      airports: totals.airports + Number(source.airportCodeCount ?? 0),
+      links: totals.links + Number(source.loungeLinkCount ?? 0),
+    }),
+    { records: 0, airports: 0, links: 0 },
+  );
 
   return (
     <main className="console-view">
@@ -2657,6 +2684,10 @@ function IntakeView({
         <div>
           <span>Manual rows</span>
           <strong>{nonPriorityValidation?.stats.byDecision.review ?? 0}</strong>
+        </div>
+        <div>
+          <span>Signals</span>
+          <strong>{cloudflareSignalStats.records}</strong>
         </div>
       </section>
 
@@ -2751,6 +2782,39 @@ function IntakeView({
                     <td>{task.action}</td>
                     <td>{task.status}</td>
                     <td>{task.next}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
+
+      {cloudflareSources.length > 0 ? (
+        <section className="console-panel">
+          <div className="panel-head">
+            <h2>CF evidence</h2>
+            <span className="compare-count">{cloudflareSignalStats.records}</span>
+          </div>
+          <div className="data-table-wrap">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Source</th>
+                  <th>Status</th>
+                  <th>Airports</th>
+                  <th>Links</th>
+                  <th>HTTP</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cloudflareSources.map((source) => (
+                  <tr key={source.sourceId}>
+                    <td>{source.publisher}</td>
+                    <td>{source.status}</td>
+                    <td>{source.airportCodeCount ?? 0}</td>
+                    <td>{source.loungeLinkCount ?? 0}</td>
+                    <td>{source.httpStatus ?? 'n/a'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -3774,6 +3838,7 @@ function App() {
           meta={meta}
           coverageGap={coverageGap}
           intakePlan={intakePlan}
+          cloudflareEvidence={cloudflareEvidence}
           nonPriorityValidation={nonPriorityValidation}
         />
       ) : null}
@@ -4122,6 +4187,7 @@ function App() {
                       meta={meta}
                       coverageGap={coverageGap}
                       intakePlan={intakePlan}
+                      cloudflareEvidence={cloudflareEvidence}
                       nonPriorityValidation={nonPriorityValidation}
                     />
                   </div>

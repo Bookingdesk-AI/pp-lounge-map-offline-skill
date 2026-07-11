@@ -349,6 +349,9 @@ export interface CloudflareSourceRunEvidence {
     httpStatus: number | null;
     bytes: number;
     sha256: string | null;
+    records?: number;
+    airportCodeCount?: number;
+    loungeLinkCount?: number;
   }>;
 }
 

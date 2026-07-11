@@ -17,6 +17,12 @@ test('mobile review exposes compact section tabs with source evidence workflow',
   assert.doesNotMatch(appSource, />Proof</);
   assert.match(appSource, /No evidence/);
   assert.match(appSource, /readyMemberGapEvidence/);
+  assert.match(appSource, /cloudflareSignalStats/);
+  assert.match(appSource, />Signals</);
+  assert.match(appSource, /airportCodeCount/);
+  assert.match(appSource, /loungeLinkCount/);
+  assert.match(appSource, /A \{source\.airportCodeCount \?\? 0\}/);
+  assert.match(appSource, /L \{source\.loungeLinkCount \?\? 0\}/);
   assert.match(appSource, /sourceLaneStats/);
   assert.match(appSource, /nextCloudflareIntake/);
   assert.match(appSource, /preflightStats/);
