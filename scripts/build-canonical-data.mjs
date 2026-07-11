@@ -95,7 +95,7 @@ async function main() {
   const intakePlan = createCloudflareSourceIntakePlan({
     coverageGap: coverageGapReport,
     sourceRegistry: catalog.sources,
-    sourceIntakeReport: intakeReport,
+    sourceRunReport: cloudflareSourceIntakeReport,
   });
 
   const serialized = JSON.stringify(catalog);

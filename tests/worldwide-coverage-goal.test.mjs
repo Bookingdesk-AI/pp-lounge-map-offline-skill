@@ -11,6 +11,9 @@ const intakePlan = JSON.parse(
 const cloudflareEvidence = JSON.parse(
   fs.readFileSync(new URL('../public/data/cloudflare-source-run-evidence.json', import.meta.url), 'utf8'),
 );
+const cloudflareReport = JSON.parse(
+  fs.readFileSync(new URL('../public/data/cloudflare-source-intake-report.json', import.meta.url), 'utf8'),
+);
 const migrationSql = fs.readFileSync(new URL('../migrations/0001_lounge_guru_catalog.sql', import.meta.url), 'utf8');
 const seedSql = fs.readFileSync(new URL('../migrations/0002_seed_worldwide_coverage_goal.sql', import.meta.url), 'utf8');
 
@@ -193,6 +196,7 @@ test('Cloudflare source intake plan tracks missing source lanes', () => {
   assert.equal(intakePlan.policy.requiredRuntime, 'cloudflare');
   assert.equal(intakePlan.policy.localScrawl, 'blocked');
   assert.equal(intakePlan.policy.rawSnapshotsCommitted, false);
+  assert.equal(intakePlan.sourceRunId, cloudflareReport.runId);
   assert.equal(intakePlan.summary.missingFamilies, coverageGap.deltas.missingSourceFamilies.length);
   assert.equal(intakePlan.summary.tasks, intakePlan.tasks.length);
   assert.equal(intakePlan.summary.memberGaps, intakePlan.memberGaps.length);
@@ -219,7 +223,9 @@ test('Cloudflare source intake plan tracks missing source lanes', () => {
 
   assert.ok(intakePlan.tasks.some((task) => task.action === 'credential_review' && task.status === 'blocked'));
   assert.ok(intakePlan.tasks.some((task) => task.action === 'structured_adapter' && task.status === 'ready'));
-  assert.ok(intakePlan.tasks.some((task) => task.action === 'fetch_repair' && task.status === 'ready'));
+  assert.ok(intakePlan.memberGaps.some((task) => task.action === 'fetch_repair' && task.status === 'ready'));
+  assert.equal(intakePlan.tasks.find((task) => task.sourceId === 'visa-airport-companion')?.runStatus, 'fetched');
+  assert.equal(intakePlan.tasks.find((task) => task.sourceId === 'visa-airport-companion')?.cloudflareSnapshot, true);
   assert.ok(
     intakePlan.tasks
       .find((task) => task.sourceId === 'visa-airport-companion')

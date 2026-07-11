@@ -1,17 +1,25 @@
-function sourceRunById(sourceIntakeReport) {
-  return new Map((sourceIntakeReport?.sources ?? []).map((source) => [source.sourceId, source]));
+function sourceRunById(sourceRunReport) {
+  return new Map((sourceRunReport?.sources ?? []).map((source) => [source.sourceId, source]));
 }
 
 function sourceById(sourceRegistry) {
   return new Map((sourceRegistry ?? []).map((source) => [source.id, source]));
 }
 
-function actionForSource({ registrySource, runSource }) {
-  if (registrySource?.adapter === 'licensed_api') {
+function actionForSource({ sourceId, registrySource, runSource, intakeHints }) {
+  if (registrySource?.adapter === 'licensed_api' || intakeHints.credentialSourceIds.has(sourceId)) {
     return {
       action: 'credential_review',
       status: 'blocked',
       next: 'Credentials',
+    };
+  }
+
+  if (!runSource && intakeHints.rightsReviewSourceIds.has(sourceId)) {
+    return {
+      action: 'rights_review',
+      status: 'blocked',
+      next: 'Rights',
     };
   }
 
@@ -54,15 +62,23 @@ function actionForSource({ registrySource, runSource }) {
   };
 }
 
-export function createCloudflareSourceIntakePlan({ coverageGap, sourceRegistry, sourceIntakeReport }) {
+function hasCloudflareSnapshot(runSource) {
+  return Boolean(runSource?.cloudflareSnapshot || runSource?.snapshotFile);
+}
+
+export function createCloudflareSourceIntakePlan({ coverageGap, sourceRegistry, sourceRunReport }) {
   const registry = sourceById(sourceRegistry);
-  const runs = sourceRunById(sourceIntakeReport);
+  const runs = sourceRunById(sourceRunReport);
   const sourceFamilies = coverageGap?.sourceFamilies ?? [];
   const missingFamilies = (coverageGap?.sourceFamilies ?? []).filter((family) => !family.present);
+  const intakeHints = {
+    credentialSourceIds: new Set(coverageGap?.nextCloudflareIntake?.credentialSourceIds ?? []),
+    rightsReviewSourceIds: new Set(coverageGap?.nextCloudflareIntake?.rightsReviewSourceIds ?? []),
+  };
   const buildPlanItem = (family, sourceId) => {
     const registrySource = registry.get(sourceId);
     const runSource = runs.get(sourceId);
-    const action = actionForSource({ registrySource, runSource });
+    const action = actionForSource({ sourceId, registrySource, runSource, intakeHints });
     return {
       familyId: family.id,
       familyLabel: family.label,
@@ -72,7 +88,7 @@ export function createCloudflareSourceIntakePlan({ coverageGap, sourceRegistry, 
       sourceStatus: registrySource?.status ?? 'missing',
       runStatus: runSource?.status ?? 'not_run',
       runRecords: Number(runSource?.records ?? 0),
-      cloudflareSnapshot: Boolean(runSource?.snapshotFile),
+      cloudflareSnapshot: hasCloudflareSnapshot(runSource),
       action: action.action,
       status: action.status,
       next: action.next,
@@ -97,7 +113,7 @@ export function createCloudflareSourceIntakePlan({ coverageGap, sourceRegistry, 
   return {
     generatedAt: coverageGap?.generatedAt ?? new Date().toISOString(),
     coverageGoalId: coverageGap?.goalId ?? '',
-    sourceRunId: sourceIntakeReport?.runId ?? null,
+    sourceRunId: sourceRunReport?.runId ?? null,
     policy: {
       requiredRuntime: 'cloudflare',
       localScrawl: 'blocked',

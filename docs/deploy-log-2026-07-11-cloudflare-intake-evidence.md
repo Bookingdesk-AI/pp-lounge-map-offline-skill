@@ -100,3 +100,29 @@ Date: 2026-07-11
 
 - The five blocked official sources still return `403` or `520` from Cloudflare.
 - Terminal coverage remains blocked until source-family coverage is complete, review records are cleared, and a promotable full Cloudflare catalog report exists.
+
+## Cloudflare Plan Source Alignment
+
+Date: 2026-07-11
+
+### Change
+
+- Changed the review plan to use `cloudflare-source-intake-report.json`.
+- Kept candidate generation on the legacy source report until a promotable Cloudflare catalog report exists.
+- Regenerated `cloudflare-source-run-evidence.json` from D1 against the corrected plan.
+
+### Verification
+
+- `env -u CLOUDFLARE_API_TOKEN npm run intake:evidence`
+- `npm run build:canonical-data`
+- `npm run validate:coverage`
+
+### Data State
+
+- Source proof: `11/16`
+- Terminal tasks: `3/3`
+- Fetched sources: `11/16`
+
+### Blocker
+
+- Terminal coverage remains blocked by missing licensed global baseline, card-network catalog coverage, open review records, and the non-promotable source-intake runtime.
