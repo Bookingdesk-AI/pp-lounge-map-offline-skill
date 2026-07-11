@@ -68,16 +68,43 @@ function intakeSourceRunById(sourceIntakeReport) {
   return new Map((sourceIntakeReport?.sources ?? []).map((source) => [source.sourceId, source]));
 }
 
-function createNextCloudflareIntake({ sourceFamilies, sourceIntakeReport, cloudflareEvidence, sourceRuntime }) {
+function isAccessBlockedRun(runSource) {
+  if (runSource?.status !== 'http_error') {
+    return false;
+  }
+
+  const attempts = runSource.fetchAttempts ?? [];
+  if (attempts.length === 0) {
+    return false;
+  }
+
+  const blockStatuses = new Set([401, 403, 429, 520, 521, 522, 523, 524]);
+  return attempts.every((attempt) => attempt.status === 'http_error' && blockStatuses.has(Number(attempt.httpStatus)));
+}
+
+function createNextCloudflareIntake({
+  sourceFamilies,
+  sourceIntakeReport,
+  cloudflareSourceIntakeReport,
+  cloudflareEvidence,
+  sourceRuntime,
+}) {
   const runs = intakeSourceRunById(sourceIntakeReport);
+  const cloudflareRuns = intakeSourceRunById(cloudflareSourceIntakeReport);
   const missingMembers = sourceFamilies.flatMap((family) =>
     family.members
       .filter((member) => member.records === 0)
-      .map((member) => ({
-        ...member,
-        familyId: family.id,
-        runStatus: runs.get(member.sourceId)?.status ?? 'not_run',
-      })),
+      .map((member) => {
+        const run = runs.get(member.sourceId);
+        const cloudflareRun = cloudflareRuns.get(member.sourceId);
+        const evidenceRun = cloudflareRun ?? run;
+        return {
+          ...member,
+          familyId: family.id,
+          runStatus: run?.status ?? cloudflareRun?.status ?? 'not_run',
+          accessBlocked: isAccessBlockedRun(evidenceRun),
+        };
+      }),
   );
   const credentialSourceIds = missingMembers
     .filter((member) => member.adapter === 'licensed_api')
@@ -88,6 +115,7 @@ function createNextCloudflareIntake({ sourceFamilies, sourceIntakeReport, cloudf
   const readySourceIds = missingMembers
     .filter((member) => member.adapter !== 'licensed_api' && member.runStatus !== 'skipped')
     .map((member) => member.sourceId);
+  const accessBlockedSourceIds = missingMembers.filter((member) => member.accessBlocked).map((member) => member.sourceId);
   const uniqueReadySourceIds = [...new Set(readySourceIds)];
   const sourceIdArg = uniqueReadySourceIds.join(',');
 
@@ -97,6 +125,7 @@ function createNextCloudflareIntake({ sourceFamilies, sourceIntakeReport, cloudf
     missingRuntime: sourceRuntime !== 'cloudflare',
     fullReportRequired: cloudflareEvidence.fullSourceIntakeReportRequired,
     readySourceIds: uniqueReadySourceIds,
+    accessBlockedSourceIds: [...new Set(accessBlockedSourceIds)],
     credentialSourceIds: [...new Set(credentialSourceIds)],
     rightsReviewSourceIds: [...new Set(rightsReviewSourceIds)],
     commands: {
@@ -133,6 +162,7 @@ export function createCoverageGapReport({
   sourceRegistry,
   migrationSql,
   sourceIntakeReport = null,
+  cloudflareSourceIntakeReport = null,
   sourceRunEvidence = null,
 }) {
   const records = catalog.records ?? [];
@@ -173,6 +203,7 @@ export function createCoverageGapReport({
   const nextCloudflareIntake = createNextCloudflareIntake({
     sourceFamilies,
     sourceIntakeReport,
+    cloudflareSourceIntakeReport,
     cloudflareEvidence,
     sourceRuntime,
   });

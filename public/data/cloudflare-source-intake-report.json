@@ -1,7 +1,7 @@
 {
   "ok": true,
-  "generatedAt": "2026-07-11T22:18:47.825Z",
-  "runId": "cloudflare-report-2026-07-11T22-18-47-825Z",
+  "generatedAt": "2026-07-11T22:31:12.509Z",
+  "runId": "cloudflare-report-2026-07-11T22-31-12-509Z",
   "policy": {
     "fetchMode": "cloudflare_d1_source_runs_report",
     "rawSnapshotsCommitted": false,
@@ -23,7 +23,7 @@
     "childPagesFetched": 0,
     "discoveredAirportCodes": 0,
     "discoveredLoungeLinks": 0,
-    "cloudflareSourceRuns": 23,
+    "cloudflareSourceRuns": 28,
     "readyTasks": 16,
     "readyTasksWithCloudflareEvidence": 11
   },
@@ -57,7 +57,41 @@
           "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
           "contentType": "text/html",
           "bytes": 442,
-          "sha256": "4d3fb37e6dfe15a6d3cb98abd678da7fda51af652a8f2bd62bb27c179b685bb8",
+          "sha256": "d3c1965825ab6d9ccf09d4e7c6da5f6b26a36ec8153e67cd11104da26556362e",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club.jsp",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club.jsp",
+          "contentType": "text/html",
+          "bytes": 426,
+          "sha256": "b0e8418b82c4ac54a8d8d2c71014576034682be3645a8e30b3acb4d3df37df68",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-access.jsp",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-access.jsp",
+          "contentType": "text/html",
+          "bytes": 439,
+          "sha256": "cffbadabc298aa2c7a6da4a20182306088b553bcd0314038e64ffe3b36b9a54b",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -67,8 +101,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-31-423Z-american",
-      "retrievedAt": "2026-07-11T22:18:31.423Z"
+      "runId": "cloudflare-probe-2026-07-11T22-28-38-902Z-american",
+      "retrievedAt": "2026-07-11T22:28:38.902Z"
     },
     {
       "sourceId": "aspire-lounges",
@@ -95,7 +129,7 @@
           "finalUrl": "https://www.aspirelounges.com/airport-lounges/",
           "contentType": "text/html; charset=UTF-8",
           "bytes": 4558,
-          "sha256": "bf8698ff8cba9e65c07c0fb1a79e631e8146e15d4dca246c9e6342fdb4e3cf87",
+          "sha256": "daab475049817fb07d1d9c1ca4e892d08933119880ef009dd934f841fad5e3eb",
           "robots": {
             "checked": true,
             "url": "https://www.executivelounges.com/robots.txt",
@@ -103,10 +137,44 @@
             "disallowed": false,
             "disallowRuleCount": 0
           }
+        },
+        {
+          "url": "https://www.aspirelounges.com/airport-lounges/",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.aspirelounges.com/airport-lounges/",
+          "contentType": "text/html; charset=UTF-8",
+          "bytes": 4558,
+          "sha256": "7318779c08faccadab81c0d68af97f675384484b7567db0633e2e5c8a4f66146",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aspirelounges.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
+        },
+        {
+          "url": "https://www.aspirelounges.com/",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.aspirelounges.com/",
+          "contentType": "text/html; charset=UTF-8",
+          "bytes": 4558,
+          "sha256": "26bcdac3a8fa55a27267ea4bff811a8decd3b4a867326b0af82371a1c6f0e03b",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aspirelounges.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-31-612Z-aspire-lounges",
-      "retrievedAt": "2026-07-11T22:18:31.612Z"
+      "runId": "cloudflare-probe-2026-07-11T22-28-39-301Z-aspire-lounges",
+      "retrievedAt": "2026-07-11T22:28:39.301Z"
     },
     {
       "sourceId": "be-relax",
@@ -521,10 +589,44 @@
             "disallowed": false,
             "disallowRuleCount": 0
           }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/",
+          "contentType": "text/html",
+          "bytes": 118,
+          "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/lounge-finder/",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/lounge-finder/",
+          "contentType": "text/html",
+          "bytes": 118,
+          "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-29-265Z-skyteam",
-      "retrievedAt": "2026-07-11T22:18:29.265Z"
+      "runId": "cloudflare-probe-2026-07-11T22-28-35-606Z-skyteam",
+      "retrievedAt": "2026-07-11T22:28:35.606Z"
     },
     {
       "sourceId": "star-alliance",
@@ -559,10 +661,44 @@
             "disallowed": false,
             "disallowRuleCount": 0
           }
+        },
+        {
+          "url": "https://www.staralliance.com/en/paid-lounge-entry",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.staralliance.com/en/paid-lounge-entry",
+          "contentType": "text/html",
+          "bytes": 118,
+          "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+          "robots": {
+            "checked": true,
+            "url": "https://www.staralliance.com/robots.txt",
+            "status": 403,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.staralliance.com/en/lounge-access-policy",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.staralliance.com/en/lounge-access-policy",
+          "contentType": "text/html",
+          "bytes": 118,
+          "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+          "robots": {
+            "checked": true,
+            "url": "https://www.staralliance.com/robots.txt",
+            "status": 403,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-27-725Z-star-alliance",
-      "retrievedAt": "2026-07-11T22:18:27.725Z"
+      "runId": "cloudflare-probe-2026-07-11T22-28-32-303Z-star-alliance",
+      "retrievedAt": "2026-07-11T22:28:32.303Z"
     },
     {
       "sourceId": "united",
@@ -597,10 +733,44 @@
             "disallowed": false,
             "disallowRuleCount": 0
           }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/united-club.html",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/united-club.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/lounge-access.html",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/lounge-access.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-30-784Z-united",
-      "retrievedAt": "2026-07-11T22:18:30.784Z"
+      "runId": "cloudflare-probe-2026-07-11T22-28-38-156Z-united",
+      "retrievedAt": "2026-07-11T22:28:38.156Z"
     },
     {
       "sourceId": "visa-airport-companion",

@@ -156,6 +156,10 @@ function validateCoverage(goal, gap) {
     'coverage-gap-report.json: ready Cloudflare source ids missing',
   );
   issue(
+    Array.isArray(gap?.nextCloudflareIntake?.accessBlockedSourceIds),
+    'coverage-gap-report.json: access-blocked Cloudflare source ids missing',
+  );
+  issue(
     typeof gap?.nextCloudflareIntake?.commands?.report === 'string' &&
       gap.nextCloudflareIntake.commands.report.includes('intake:cloudflare:report:export'),
     'coverage-gap-report.json: Cloudflare report command missing',

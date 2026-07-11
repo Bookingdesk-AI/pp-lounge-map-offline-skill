@@ -12,6 +12,7 @@ const goalPath = path.resolve(projectRoot, 'public', 'data', 'worldwide-coverage
 const catalogPath = path.resolve(projectRoot, 'public', 'data', 'lounge-guru-catalog.json');
 const sourceRegistryPath = path.resolve(projectRoot, 'public', 'data', 'source-registry.json');
 const sourceIntakeReportPath = path.resolve(projectRoot, 'public', 'data', 'source-intake-report.json');
+const cloudflareSourceIntakeReportPath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-intake-report.json');
 const sourceRunEvidencePath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-run-evidence.json');
 const migrationPath = path.resolve(projectRoot, 'migrations', '0001_lounge_guru_catalog.sql');
 
@@ -47,13 +48,22 @@ function validateRequiredTables(goal, migrationSql) {
   }));
 }
 
-function buildSummary({ goal, catalog, sourceRegistry, migrationSql, sourceIntakeReport, sourceRunEvidence }) {
+function buildSummary({
+  goal,
+  catalog,
+  sourceRegistry,
+  migrationSql,
+  sourceIntakeReport,
+  cloudflareSourceIntakeReport,
+  sourceRunEvidence,
+}) {
   const gapReport = createCoverageGapReport({
     goal,
     catalog,
     sourceRegistry,
     migrationSql,
     sourceIntakeReport,
+    cloudflareSourceIntakeReport,
     sourceRunEvidence,
   });
   const records = catalog.records ?? [];
@@ -150,9 +160,18 @@ const goal = readJson(goalPath);
 const catalog = readJson(catalogPath);
 const sourceRegistry = readJson(sourceRegistryPath);
 const sourceIntakeReport = readJson(sourceIntakeReportPath);
+const cloudflareSourceIntakeReport = readJson(cloudflareSourceIntakeReportPath);
 const sourceRunEvidence = readJson(sourceRunEvidencePath);
 const migrationSql = fs.readFileSync(migrationPath, 'utf8');
-const summary = buildSummary({ goal, catalog, sourceRegistry, migrationSql, sourceIntakeReport, sourceRunEvidence });
+const summary = buildSummary({
+  goal,
+  catalog,
+  sourceRegistry,
+  migrationSql,
+  sourceIntakeReport,
+  cloudflareSourceIntakeReport,
+  sourceRunEvidence,
+});
 
 if (jsonOutput) {
   console.log(JSON.stringify(summary, null, 2));
@@ -184,6 +203,7 @@ if (jsonOutput) {
     }
     console.log(
       `Cloudflare lanes: ready ${intake.readySourceIds.length}, ` +
+        `access ${intake.accessBlockedSourceIds?.length ?? 0}, ` +
         `cred ${intake.credentialSourceIds.length}, rights ${intake.rightsReviewSourceIds.length}`,
     );
     console.log(`Cloudflare report: ${intake.commands.report}`);
