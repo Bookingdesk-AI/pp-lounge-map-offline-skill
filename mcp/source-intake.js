@@ -6,6 +6,31 @@ const MAX_FETCH_URLS = 3;
 const MAX_BATCH_TASKS = 20;
 const MAX_DERIVED_ITEMS = 40;
 const CLOUDFLARE_FETCH_ADAPTERS = new Set(['official_page', 'official_html', 'open_data']);
+const LOUNGE_LINK_PATH_INCLUDE = [
+  /(^|\/)airport-lounges?(\/|$)/,
+  /(^|\/)global-lounges?(\/|$)/,
+  /(^|\/)lounges?(\/|$)/,
+  /(^|\/)locations?(\/|$)/,
+  /(^|\/)our-lounges?(\/|$)/,
+  /(^|\/)partner-lounges?(\/|$)/,
+  /(^|\/)services\/lounges?(\/|$)/,
+  /(^|\/)club-?[a-z0-9-]*(\/|$)/,
+  /(^|\/)clubrooms?(\/|$)/,
+  /(^|\/)terminal-[a-z0-9-]+-lounge(\/|$)/,
+];
+const LOUNGE_LINK_PATH_EXCLUDE = [
+  /(^|\/)blog(\/|$)/,
+  /(^|\/)careers?(\/|$)/,
+  /(^|\/)events?(\/|$)/,
+  /(^|\/)media(\/|$)/,
+  /(^|\/)meet-and-greet(\/|$)/,
+  /(^|\/)news(\/|$)/,
+  /(^|\/)newsroom(\/|$)/,
+  /(^|\/)press-room(\/|$)/,
+  /(^|\/)representative(\/|$)/,
+  /(^|\/)airport-representative(\/|$)/,
+  /(^|\/)how-to-[a-z0-9-]*(\/|$)/,
+];
 const COMMON_AIRPORT_CODE_FALSE_POSITIVES = new Set([
   'ADA',
   'ADD',
@@ -255,6 +280,7 @@ function decodeHtmlAttribute(value) {
 function extractLoungeLinks(html, baseUrl) {
   const links = [];
   const linkPattern = /\bhref\s*=\s*["']([^"']+)["']/gi;
+  const baseOrigin = new URL(baseUrl).origin;
 
   for (const match of html.matchAll(linkPattern)) {
     const rawHref = decodeHtmlAttribute(String(match[1] ?? '').trim());
@@ -269,12 +295,15 @@ function extractLoungeLinks(html, baseUrl) {
       continue;
     }
 
-    if (!['http:', 'https:'].includes(url.protocol) || url.origin !== new URL(baseUrl).origin) {
+    if (!['http:', 'https:'].includes(url.protocol) || url.origin !== baseOrigin) {
       continue;
     }
 
-    const searchable = `${url.pathname} ${url.search}`.toLowerCase();
-    if (!/(lounge|airport|terminal|location|club)/.test(searchable)) {
+    const path = url.pathname.toLowerCase();
+    if (
+      LOUNGE_LINK_PATH_EXCLUDE.some((pattern) => pattern.test(path)) ||
+      !LOUNGE_LINK_PATH_INCLUDE.some((pattern) => pattern.test(path))
+    ) {
       continue;
     }
 

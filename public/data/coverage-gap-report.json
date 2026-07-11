@@ -30,8 +30,8 @@
     "sourceIntakeRuntime": "legacy-local-before-cloudflare-guardrail",
     "cloudflareSourceRuntimePassed": false,
     "cloudflareSourceEvidence": {
-      "sourceRunsRead": 44,
-      "cloudflareSourceRuns": 44,
+      "sourceRunsRead": 60,
+      "cloudflareSourceRuns": 60,
       "uniqueSources": 11,
       "fetched": 11,
       "cloudflareSnapshots": 11,

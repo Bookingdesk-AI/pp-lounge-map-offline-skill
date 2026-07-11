@@ -98,7 +98,7 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
           return textResponse('User-agent: *\n');
         }
         return textResponse(
-          '<html><title>Mastercard Travel Pass</title><body>John F Kennedy International Airport (JFK)<a href="/airport-lounges/jfk">JFK lounge</a></body></html>',
+          '<html><title>Mastercard Travel Pass</title><body>John F Kennedy International Airport (JFK)<a href="/airport-lounges/jfk">JFK lounge</a><a href="/news/jfk-lounge-award">News</a></body></html>',
         );
       },
     },
