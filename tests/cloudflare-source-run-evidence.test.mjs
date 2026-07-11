@@ -8,6 +8,7 @@ import path from 'node:path';
 import { createCloudflareSourceRunEvidence } from '../scripts/lib/cloudflare-source-run-evidence.mjs';
 import {
   evidenceMatchesExceptGeneratedAt,
+  shouldRetryWithoutApiToken,
   writeEvidenceIfChanged,
 } from '../scripts/export-cloudflare-source-run-evidence.mjs';
 
@@ -186,4 +187,18 @@ test('Cloudflare evidence export does not rewrite timestamp-only changes', async
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }
+});
+
+test('Cloudflare evidence export retries only stale API token auth failures', () => {
+  const authError = Object.assign(new Error('Command failed'), {
+    stdout: JSON.stringify({
+      error: {
+        notes: [{ text: 'Authentication error [code: 10000]' }],
+      },
+    }),
+  });
+
+  assert.equal(shouldRetryWithoutApiToken(authError, { CLOUDFLARE_API_TOKEN: 'stale' }), true);
+  assert.equal(shouldRetryWithoutApiToken(authError, {}), false);
+  assert.equal(shouldRetryWithoutApiToken(new Error('network timeout'), { CLOUDFLARE_API_TOKEN: 'token' }), false);
 });

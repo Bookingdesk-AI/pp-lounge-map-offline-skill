@@ -23,7 +23,7 @@
     "validate:cloudflare-auth": "node scripts/validate-worldwide-coverage-goal.mjs --check-cloudflare-auth",
     "validate:json": "node scripts/validate-public-json.mjs",
     "goal:coverage": "node scripts/validate-worldwide-coverage-goal.mjs --strict",
-    "intake:cloudflare": "node scripts/run-cloudflare-source-intake.mjs && npm run intake:evidence",
+    "intake:cloudflare": "node scripts/run-cloudflare-source-intake-flow.mjs",
     "intake:cloudflare:report": "node scripts/run-cloudflare-source-intake.mjs --report",
     "intake:cloudflare:report:export": "node scripts/run-cloudflare-source-intake.mjs --report --output=public/data/cloudflare-source-intake-report.json",
     "intake:cloudflare:promote": "node scripts/promote-cloudflare-source-intake-report.mjs",

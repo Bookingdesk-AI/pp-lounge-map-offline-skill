@@ -13,6 +13,7 @@ import {
   redactRawPageContent,
   runCloudflareSourceIntake,
 } from '../scripts/run-cloudflare-source-intake.mjs';
+import { runCloudflareSourceIntakeFlow } from '../scripts/run-cloudflare-source-intake-flow.mjs';
 
 const packageJson = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 
@@ -104,6 +105,80 @@ test('Cloudflare intake CLI posts only to the Worker batch endpoint', async () =
   assert.equal(summary.fetched, 2);
   assert.equal(summary.next, 'npm run intake:evidence');
   assert.doesNotMatch(lines.join('\n'), /secret-token/);
+});
+
+test('Cloudflare intake flow preserves source ID args before evidence export', async () => {
+  const calls = [];
+  const evidenceCalls = [];
+  const summary = await runCloudflareSourceIntakeFlow({
+    args: ['--source-ids=visa-airport-companion,dragonpass'],
+    env: {
+      LOUNGE_GURU_INTAKE_TOKEN: 'secret-token',
+    },
+    fetchImpl: async (url, init) => {
+      calls.push({ url: String(url), init });
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          mode: 'batch',
+          totalTasks: 2,
+          fetched: 2,
+          results: [
+            { sourceId: 'visa-airport-companion', status: 'fetched', cloudflareRuntime: true, cloudflareSnapshot: true },
+            { sourceId: 'dragonpass', status: 'fetched', cloudflareRuntime: true, cloudflareSnapshot: true },
+          ],
+        }),
+        { status: 200, headers: { 'content-type': 'application/json' } },
+      );
+    },
+    exportEvidence: async (options) => {
+      evidenceCalls.push(options);
+      return { changed: false };
+    },
+    log: () => {},
+  });
+
+  assert.equal(
+    calls[0].url,
+    'https://loungeguru.desk.travel/admin/source-intake/probe-batch?sourceIds=visa-airport-companion%2Cdragonpass',
+  );
+  assert.equal(summary.fetched, 2);
+  assert.equal(evidenceCalls.length, 1);
+  assert.equal(evidenceCalls[0].env.LOUNGE_GURU_INTAKE_TOKEN, 'secret-token');
+});
+
+test('Cloudflare intake flow does not export evidence for dry runs or reports', async () => {
+  let evidenceCalls = 0;
+
+  await runCloudflareSourceIntakeFlow({
+    args: ['--dry-run', '--source-ids=dragonpass'],
+    env: {},
+    fetchImpl: async () => {
+      throw new Error('fetch should not run');
+    },
+    exportEvidence: async () => {
+      evidenceCalls += 1;
+    },
+    log: () => {},
+  });
+
+  await runCloudflareSourceIntakeFlow({
+    args: ['--report'],
+    env: {
+      LOUNGE_GURU_INTAKE_TOKEN: 'secret-token',
+    },
+    fetchImpl: async () =>
+      new Response(JSON.stringify({ ok: true, stats: {}, terminalImpact: {} }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      }),
+    exportEvidence: async () => {
+      evidenceCalls += 1;
+    },
+    log: () => {},
+  });
+
+  assert.equal(evidenceCalls, 0);
 });
 
 test('Cloudflare intake CLI can request D1-derived report endpoint', async () => {
@@ -249,7 +324,7 @@ test('Cloudflare intake CLI requires token for real runs without leaking token',
 test('package exposes Cloudflare-only intake command before evidence export', () => {
   assert.equal(
     packageJson.scripts['intake:cloudflare'],
-    'node scripts/run-cloudflare-source-intake.mjs && npm run intake:evidence',
+    'node scripts/run-cloudflare-source-intake-flow.mjs',
   );
   assert.equal(
     packageJson.scripts['intake:cloudflare:report'],

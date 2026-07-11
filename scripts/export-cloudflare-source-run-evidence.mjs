@@ -8,7 +8,7 @@ import { createCloudflareSourceRunEvidence } from './lib/cloudflare-source-run-e
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
-const outputPath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-run-evidence.json');
+const defaultOutputPath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-run-evidence.json');
 const intakePlanPath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-intake-plan.json');
 const query = [
   'SELECT id, generated_at, policy_json, stats_json, sources_json',
@@ -18,19 +18,38 @@ const query = [
   'LIMIT 100',
 ].join(' ');
 
-function argValue(name) {
+function argValue(args, name) {
   const prefix = `${name}=`;
-  const match = process.argv.find((arg) => arg.startsWith(prefix));
+  const match = args.find((arg) => arg.startsWith(prefix));
   return match ? match.slice(prefix.length) : null;
 }
 
-async function readD1Result() {
-  const input = argValue('--input');
-  if (input) {
-    return JSON.parse(await fs.readFile(path.resolve(projectRoot, input), 'utf8'));
+function withoutApiToken(env) {
+  const { CLOUDFLARE_API_TOKEN: _apiToken, ...rest } = env;
+  return rest;
+}
+
+function errorText(error) {
+  return [
+    error?.message,
+    error?.stdout,
+    error?.stderr,
+    ...(Array.isArray(error?.output) ? error.output : []),
+  ]
+    .filter(Boolean)
+    .join('\n');
+}
+
+export function shouldRetryWithoutApiToken(error, env = process.env) {
+  if (!env.CLOUDFLARE_API_TOKEN) {
+    return false;
   }
 
-  const stdout = execFileSync(
+  return /Authentication error|Invalid access token/i.test(errorText(error));
+}
+
+function executeWranglerD1(env = process.env) {
+  return execFileSync(
     'npx',
     [
       'wrangler',
@@ -47,9 +66,28 @@ async function readD1Result() {
     {
       cwd: projectRoot,
       encoding: 'utf8',
+      env,
       stdio: ['ignore', 'pipe', 'pipe'],
     },
   );
+}
+
+async function readD1Result({ args = process.argv.slice(2), env = process.env, log = console.log } = {}) {
+  const input = argValue(args, '--input');
+  if (input) {
+    return JSON.parse(await fs.readFile(path.resolve(projectRoot, input), 'utf8'));
+  }
+
+  let stdout;
+  try {
+    stdout = executeWranglerD1(env);
+  } catch (error) {
+    if (!shouldRetryWithoutApiToken(error, env)) {
+      throw error;
+    }
+    log('cloudflare-source-run-evidence: API token auth failed; retrying with OAuth');
+    stdout = executeWranglerD1(withoutApiToken(env));
+  }
   return JSON.parse(stdout);
 }
 
@@ -85,9 +123,14 @@ export async function writeEvidenceIfChanged(filePath, evidence) {
   return true;
 }
 
-async function main() {
+export async function exportCloudflareSourceRunEvidence({
+  args = process.argv.slice(2),
+  env = process.env,
+  output = defaultOutputPath,
+  log = console.log,
+} = {}) {
   const [d1Result, sourceIntakePlan] = await Promise.all([
-    readD1Result(),
+    readD1Result({ args, env, log }),
     fs.readFile(intakePlanPath, 'utf8').then(JSON.parse),
   ]);
   const evidence = createCloudflareSourceRunEvidence({
@@ -95,16 +138,17 @@ async function main() {
     sourceIntakePlan,
   });
 
-  const changed = await writeEvidenceIfChanged(outputPath, evidence);
-  console.log(
+  const changed = await writeEvidenceIfChanged(output, evidence);
+  log(
     `cloudflare-source-run-evidence: ${evidence.stats.uniqueSources} sources, ` +
       `${evidence.stats.readyTasksWithCloudflareEvidence}/${evidence.stats.readyTasks} ready tasks, ` +
       `${changed ? 'updated' : 'unchanged'}`,
   );
+  return { evidence, changed, outputPath: output };
 }
 
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
-  main().catch((error) => {
+  exportCloudflareSourceRunEvidence().catch((error) => {
     console.error(error);
     process.exitCode = 1;
   });
