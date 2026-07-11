@@ -80,6 +80,7 @@ test('Cloudflare source intake probe requires token auth', async () => {
 test('Cloudflare source intake probe writes bounded source run evidence', async () => {
   const d1 = createD1Mock();
   const fetchedUrls = [];
+  const fetchedHeaders = [];
   const response = await createSourceIntakeProbeResponse(
     new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=mastercard-travel-pass', {
       method: 'POST',
@@ -92,7 +93,8 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
       LOUNGE_GURU_DB: d1,
     },
     {
-      fetchImpl: async (url) => {
+      fetchImpl: async (url, init = {}) => {
+        fetchedHeaders.push(init.headers ?? {});
         fetchedUrls.push(url);
         if (String(url).endsWith('/robots.txt')) {
           return textResponse('User-agent: *\n');
@@ -113,6 +115,9 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
   assert.equal(body.stats.fetched, 1);
   assert.ok(fetchedUrls.includes('https://mastercardtravelpass.dragonpass.com/robots.txt'));
   assert.ok(fetchedUrls.includes('https://mastercardtravelpass.dragonpass.com/'));
+  assert.ok(fetchedHeaders.some((headers) => /Mozilla\/5\.0/.test(headers?.['user-agent'] ?? '')));
+  assert.ok(fetchedHeaders.every((headers) => headers?.['accept-language'] === 'en-US,en;q=0.9'));
+  assert.ok(fetchedHeaders.every((headers) => headers?.['cache-control'] === 'no-cache'));
   assert.equal(d1.calls.length, 1);
 
   const [, , policyJson, statsJson, sourcesJson] = d1.calls[0].params;

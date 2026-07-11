@@ -84,10 +84,10 @@ test('coverage validator reports current progress without pretending terminal co
   );
   const summary = JSON.parse(output);
 
-  assert.match(textOutput, /Source proof: 11\/16/);
+  assert.match(textOutput, /Source proof: 13\/16/);
   assert.match(textOutput, /Cloudflare token: LOUNGE_GURU_INTAKE_TOKEN/);
   assert.match(textOutput, /Cloudflare preflight: intake token (present|missing), API token (present|missing), local scrawl blocked/);
-  assert.match(textOutput, /Cloudflare lanes: ready 16, access 5, cred 3, rights 3/);
+  assert.match(textOutput, /Cloudflare lanes: ready 16, access 3, cred 3, rights 3/);
   assert.match(textOutput, /Cloudflare report: npm run intake:cloudflare:report:export/);
   assert.equal(summary.goalId, goal.id);
   assert.equal(summary.database.databaseName, 'lounge-guru-catalog');
@@ -109,8 +109,6 @@ test('coverage validator reports current progress without pretending terminal co
   assert.deepEqual([...summary.gapReport.nextCloudflareIntake.accessBlockedSourceIds].sort(), [
     'american',
     'aspire-lounges',
-    'skyteam',
-    'star-alliance',
     'united',
   ]);
   assert.deepEqual(Object.keys(summary.credentialPreflight).sort(), [
@@ -157,7 +155,7 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
     coverageGap.current.cloudflareSourceEvidence.readyMemberGapsWithCloudflareEvidence,
     cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence,
   );
-  assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGapCoverageRatio, 0.6875);
+  assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGapCoverageRatio, 0.8125);
   assert.equal(coverageGap.current.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
   assert.equal(coverageGap.deltas.sourceIntakeRuntimeRequired, 'cloudflare');
   assert.equal(coverageGap.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
@@ -168,8 +166,6 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
   assert.deepEqual([...coverageGap.nextCloudflareIntake.accessBlockedSourceIds].sort(), [
     'american',
     'aspire-lounges',
-    'skyteam',
-    'star-alliance',
     'united',
   ]);
   assert.ok(coverageGap.nextCloudflareIntake.credentialSourceIds.includes('loungereview-api'));

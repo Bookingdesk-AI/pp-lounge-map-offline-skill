@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-11T23:38:08.926Z",
+  "generatedAt": "2026-07-11T23:47:15.882Z",
   "policy": {
     "source": "cloudflare-d1-source_runs",
     "database": "lounge-guru-catalog",
@@ -10,16 +10,16 @@
     "guardrail": "official/public source-run evidence only; no local page fetch"
   },
   "stats": {
-    "sourceRunsRead": 92,
-    "cloudflareSourceRuns": 92,
-    "uniqueSources": 11,
+    "sourceRunsRead": 97,
+    "cloudflareSourceRuns": 97,
+    "uniqueSources": 13,
     "attemptedSources": 16,
-    "fetched": 11,
-    "cloudflareSnapshots": 11,
+    "fetched": 13,
+    "cloudflareSnapshots": 13,
     "readyTasks": 3,
     "readyTasksWithCloudflareEvidence": 3,
     "readyMemberGaps": 16,
-    "readyMemberGapsWithCloudflareEvidence": 11
+    "readyMemberGapsWithCloudflareEvidence": 13
   },
   "readyTaskEvidence": [
     {
@@ -87,16 +87,16 @@
       "familyId": "airline-alliance-lounges",
       "terminalFamilyBlocked": false,
       "present": true,
-      "status": "http_error",
-      "cloudflareSnapshot": false
+      "status": "fetched",
+      "cloudflareSnapshot": true
     },
     {
       "sourceId": "skyteam",
       "familyId": "airline-alliance-lounges",
       "terminalFamilyBlocked": false,
       "present": true,
-      "status": "http_error",
-      "cloudflareSnapshot": false
+      "status": "fetched",
+      "cloudflareSnapshot": true
     },
     {
       "sourceId": "united",
@@ -550,6 +550,210 @@
       ],
       "runId": "cloudflare-probe-2026-07-11T23-38-00-112Z-primeclass",
       "generatedAt": "2026-07-11T23:38:00.112Z",
+      "fetchMode": "cloudflare_single_source_probe"
+    },
+    {
+      "sourceId": "skyteam",
+      "publisher": "SkyTeam Lounges",
+      "url": "https://www.skyteam.com/en/about/lounges/",
+      "adapter": "official_page",
+      "status": "fetched",
+      "records": 40,
+      "airportCodeCount": 6,
+      "loungeLinkCount": 40,
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://www.skyteam.com/en/lounges/vancouver/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 271189,
+      "sha256": "03e3764a4a0a926fbb98954f05b1f61ff85d2508dc17bdbbb57b8c8ed2b54798",
+      "reason": null,
+      "fetchAttempts": [
+        {
+          "url": "https://www.skyteam.com/en/about/lounges/",
+          "status": "http_error",
+          "httpStatus": 404,
+          "finalUrl": "https://www.skyteam.com/en/about/lounges/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 187370,
+          "sha256": "1ecce4328b94a98ed578eef380b28f903d210d39f3490283fae5ebac4e62599b",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/vancouver/",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.skyteam.com/en/lounges/vancouver/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 271189,
+          "sha256": "03e3764a4a0a926fbb98954f05b1f61ff85d2508dc17bdbbb57b8c8ed2b54798",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/dubai/",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.skyteam.com/en/lounges/dubai/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 265640,
+          "sha256": "4598a8ddb455a302a9e92afe9fd1b3ceefdd85475de6fa42c02bbb128986fdee",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/sydney/",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.skyteam.com/en/lounges/sydney/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 267000,
+          "sha256": "e926b362a15fd98ad96c6513c3b66e4b819834c82fc29d9afd8399a41e58ae71",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/frankfurt/",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.skyteam.com/en/lounges/frankfurt/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 272392,
+          "sha256": "2cf4d93f41416718291680ca9bceba49a7567e76575fa98a2ef17ef899cb50ef",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.skyteam.com/en/lounges/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 299985,
+          "sha256": "51b7bd9f0ba1e540ecf83beff76c8950d5b0c643c4e42b683c24a1a67ad5311b",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/lounge-finder/",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.skyteam.com/en/lounges/lounge-finder/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 240344,
+          "sha256": "9a1980cd58ffb1dcbec2decb76fe2e6adc6e1e9f45def31ef23487d358f24181",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T23-47-03-828Z-skyteam",
+      "generatedAt": "2026-07-11T23:47:03.828Z",
+      "fetchMode": "cloudflare_single_source_probe"
+    },
+    {
+      "sourceId": "star-alliance",
+      "publisher": "Star Alliance Lounge Finder",
+      "url": "https://www.staralliance.com/en/lounge-finder",
+      "adapter": "official_page",
+      "status": "fetched",
+      "records": 0,
+      "airportCodeCount": 0,
+      "loungeLinkCount": 0,
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://www.staralliance.com/en/lounge-finder",
+      "httpStatus": 200,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 176201,
+      "sha256": "f76368cfb75ea22efa5c86829bfdb82e8ae019d13254574e5dd2fcfb139c641f",
+      "reason": null,
+      "fetchAttempts": [
+        {
+          "url": "https://www.staralliance.com/en/lounge-finder",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.staralliance.com/en/lounge-finder",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 176201,
+          "sha256": "f76368cfb75ea22efa5c86829bfdb82e8ae019d13254574e5dd2fcfb139c641f",
+          "robots": {
+            "checked": true,
+            "url": "https://www.staralliance.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 32
+          }
+        },
+        {
+          "url": "https://www.staralliance.com/en/paid-lounge-entry",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.staralliance.com/en/paid-lounge-entry",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 143764,
+          "sha256": "7e765b56c4951983f9c0386bd546f71b042f966edbe228a0f85769e0209bafeb",
+          "robots": {
+            "checked": true,
+            "url": "https://www.staralliance.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 32
+          }
+        },
+        {
+          "url": "https://www.staralliance.com/en/lounge-access-policy",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.staralliance.com/en/lounge-access-policy",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 148940,
+          "sha256": "7e946628a132043f35efd7e43a5adf688c46d6067023a0e3a45a1572fb7f29e6",
+          "robots": {
+            "checked": true,
+            "url": "https://www.staralliance.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 32
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T23-46-59-899Z-star-alliance",
+      "generatedAt": "2026-07-11T23:46:59.899Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {

@@ -30,17 +30,17 @@
     "sourceIntakeRuntime": "legacy-local-before-cloudflare-guardrail",
     "cloudflareSourceRuntimePassed": false,
     "cloudflareSourceEvidence": {
-      "sourceRunsRead": 92,
-      "cloudflareSourceRuns": 92,
-      "uniqueSources": 11,
-      "fetched": 11,
-      "cloudflareSnapshots": 11,
+      "sourceRunsRead": 97,
+      "cloudflareSourceRuns": 97,
+      "uniqueSources": 13,
+      "fetched": 13,
+      "cloudflareSnapshots": 13,
       "readyTasks": 3,
       "readyTasksWithCloudflareEvidence": 3,
       "readyTaskCoverageRatio": 1,
       "readyMemberGaps": 16,
-      "readyMemberGapsWithCloudflareEvidence": 11,
-      "readyMemberGapCoverageRatio": 0.6875,
+      "readyMemberGapsWithCloudflareEvidence": 13,
+      "readyMemberGapCoverageRatio": 0.8125,
       "fullSourceIntakeReportRequired": true
     }
   },
@@ -78,8 +78,6 @@
       "openstreetmap"
     ],
     "accessBlockedSourceIds": [
-      "star-alliance",
-      "skyteam",
       "united",
       "american",
       "aspire-lounges"

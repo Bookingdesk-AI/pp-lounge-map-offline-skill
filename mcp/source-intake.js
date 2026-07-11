@@ -1,6 +1,8 @@
 import intakePlan from '../public/data/cloudflare-source-intake-plan.json' with { type: 'json' };
 
-const USER_AGENT = 'lounge-guru-source-intake/1.0 (+https://loungeguru.desk.travel)';
+const USER_AGENT =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+  '(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
 const DEFAULT_TIMEOUT_MS = 12000;
 const MAX_FETCH_URLS = 8;
 const MAX_BATCH_TASKS = 20;
@@ -155,6 +157,9 @@ async function fetchText(url, fetchImpl, timeoutMs) {
       signal: controller.signal,
       headers: {
         accept: 'text/html,application/xhtml+xml,application/json,text/plain;q=0.9,*/*;q=0.8',
+        'accept-language': 'en-US,en;q=0.9',
+        'cache-control': 'no-cache',
+        pragma: 'no-cache',
         'user-agent': USER_AGENT,
       },
     });
