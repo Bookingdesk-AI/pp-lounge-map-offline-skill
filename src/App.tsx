@@ -37,6 +37,7 @@ const WORLD_ZOOM = 2;
 const MOBILE_MEDIA_QUERY = '(max-width: 980px)';
 const SHEET_ORDER: SheetSnap[] = ['peek', 'mid', 'full'];
 const COMPARE_LIMIT = 3;
+const MOBILE_REVIEW_ROW_STEP = 12;
 const INTERNAL_VIEWS_ENABLED = import.meta.env.DEV;
 const MOBILE_MODE_LABELS: Record<MobileSheetMode, string> = {
   results: 'Results',
@@ -2115,11 +2116,17 @@ function MobileReviewView({
     (record) => record.quality.reviewStatus !== 'approved' || record.quality.conflicts.length > 0,
   );
   const nonPriorityPassReviewTotal = reviewRecordCandidates.filter((record) => !isPriorityPassRecord(record)).length;
-  const reviewRecords = [...reviewRecordCandidates].sort(reviewQueueSort).slice(0, 12);
+  const sortedReviewRecords = [...reviewRecordCandidates].sort(reviewQueueSort);
+  const [mobileReviewRowLimit, setMobileReviewRowLimit] = useState(MOBILE_REVIEW_ROW_STEP);
+  const reviewRecords = sortedReviewRecords.slice(0, mobileReviewRowLimit);
   const reviewRecordTotal = coverageGap?.current.reviewRecords ?? meta?.quality?.reviewQueue ?? reviewRecords.length;
-  const mobileValidationRows = (nonPriorityValidation?.rows ?? [])
-    .filter((row) => row.reviewAction.action === 'manual_review')
-    .slice(0, 12);
+  const allMobileValidationRows = (nonPriorityValidation?.rows ?? []).filter(
+    (row) => row.reviewAction.action === 'manual_review',
+  );
+  const mobileValidationRows = allMobileValidationRows.slice(0, mobileReviewRowLimit);
+  const visibleQueueRows = mobileValidationRows.length || reviewRecords.length;
+  const mobileQueueTotal = allMobileValidationRows.length || sortedReviewRecords.length;
+  const hiddenQueueRows = Math.max(0, mobileQueueTotal - visibleQueueRows);
   const mobileReviewQueues = Object.entries(nonPriorityValidation?.stats.byReviewQueue ?? {}).sort(
     ([first], [second]) => first.localeCompare(second),
   );
@@ -2202,6 +2209,9 @@ function MobileReviewView({
     families: missingFamilies.length,
     queue: queueTotal,
   };
+  const showMoreReviewRows = useCallback(() => {
+    setMobileReviewRowLimit((current) => current + MOBILE_REVIEW_ROW_STEP);
+  }, []);
 
   return (
     <div className="mobile-review-view">
@@ -2408,7 +2418,7 @@ function MobileReviewView({
         <section className="mobile-review-panel">
         <div className="section-title-row">
           <h2>Queue</h2>
-          <span className="compare-count">{mobileValidationRows.length || reviewRecords.length} / {queueTotal}</span>
+          <span className="compare-count">{visibleQueueRows} / {queueTotal}</span>
         </div>
         {mobileReviewQueues.length > 0 ? (
           <div className="review-lane-grid is-mobile-queue" aria-label="Non-PP queues">
@@ -2460,6 +2470,16 @@ function MobileReviewView({
                 <span>{formatBlockerLabel(row.reviewAction.reason)}</span>
               </button>
             ))}
+            {hiddenQueueRows > 0 ? (
+              <button
+                type="button"
+                className="review-more-button"
+                aria-label={`Show ${Math.min(MOBILE_REVIEW_ROW_STEP, hiddenQueueRows)} more review rows`}
+                onClick={showMoreReviewRows}
+              >
+                More {Math.min(MOBILE_REVIEW_ROW_STEP, hiddenQueueRows)}
+              </button>
+            ) : null}
           </div>
         ) : reviewRecords.length === 0 ? (
           <div className="compare-empty">No review records</div>
@@ -2493,6 +2513,16 @@ function MobileReviewView({
                 </button>
               );
             })}
+            {hiddenQueueRows > 0 ? (
+              <button
+                type="button"
+                className="review-more-button"
+                aria-label={`Show ${Math.min(MOBILE_REVIEW_ROW_STEP, hiddenQueueRows)} more review rows`}
+                onClick={showMoreReviewRows}
+              >
+                More {Math.min(MOBILE_REVIEW_ROW_STEP, hiddenQueueRows)}
+              </button>
+            ) : null}
           </div>
         )}
         </section>

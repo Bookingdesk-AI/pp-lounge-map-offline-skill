@@ -39,7 +39,13 @@ test('mobile review exposes compact section tabs with source evidence workflow',
   assert.match(appSource, /reviewRecordCandidates/);
   assert.match(appSource, /nonPriorityPassReviewTotal/);
   assert.match(appSource, /Non-PP/);
-  assert.match(appSource, /\[\.\.\.reviewRecordCandidates\]\.sort\(reviewQueueSort\)\.slice\(0, 12\)/);
+  assert.match(appSource, /MOBILE_REVIEW_ROW_STEP = 12/);
+  assert.match(appSource, /sortedReviewRecords\.slice\(0, mobileReviewRowLimit\)/);
+  assert.match(appSource, /allMobileValidationRows\.slice\(0, mobileReviewRowLimit\)/);
+  assert.match(appSource, /hiddenQueueRows/);
+  assert.match(appSource, /showMoreReviewRows/);
+  assert.match(appSource, /aria-label={`Show \$\{Math\.min\(MOBILE_REVIEW_ROW_STEP, hiddenQueueRows\)\} more review rows`}/);
+  assert.match(appSource, /More \{Math\.min\(MOBILE_REVIEW_ROW_STEP, hiddenQueueRows\)\}/);
   assert.match(appSource, /record\.quality\.completeness}%/);
   assert.match(appSource, /aria-label={`\$\{record\.lounge\.name\} \$\{record\.airport\.iata\} \$\{record\.quality\.completeness\}% \$\{formatSourceConfidence\(primarySource\?\.confidence\)\}`}/);
   assert.match(appSource, /primarySource\?\.sourceId \?\? 'unknown'/);
@@ -81,6 +87,8 @@ test('mobile review tabs keep production touch targets', () => {
   assert.match(appCss, /\.review-row-badges\s*{[^}]*flex-wrap:\s*wrap;/s);
   assert.match(appCss, /\.review-command-row\s*{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/s);
   assert.match(appCss, /\.review-command-row \.ghost-link\s*{[^}]*min-height:\s*44px;/s);
+  assert.match(appCss, /\.review-more-button\s*{[^}]*min-height:\s*44px;/s);
+  assert.match(appCss, /\.review-more-button:focus-visible\s*{/);
   assert.match(appCss, /\.review-row\s*{[^}]*text-decoration:\s*none;/s);
   assert.match(appCss, /\.intake-review-grid\s*{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/s);
   assert.match(appCss, /\.review-lane-grid\.is-intake\s*{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/s);

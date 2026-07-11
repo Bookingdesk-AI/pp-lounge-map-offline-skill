@@ -237,6 +237,7 @@ function reviewQueueExpression() {
       hasPublishCount: panel.includes('publish'),
       hasManualRows: panel.includes('manual'),
       hasCandidateRow: /chase sapphire|american express|capital one|air canada|airport dimensions|escape|oneworld/i.test(panelText),
+      hasMoreButton: Boolean(document.querySelector('.review-more-button')),
       queueLaneCount: document.querySelectorAll('.review-lane-grid.is-mobile-queue > span').length,
       sourceRows: document.querySelectorAll('.review-list.is-compact .review-row').length,
       actionRows: document.querySelectorAll('.review-row.is-action').length,
@@ -253,6 +254,7 @@ function assertReviewQueue(result) {
   if (!result.hasPublishCount) failures.push('source decision counts missing');
   if (!result.hasManualRows) failures.push('manual labels missing');
   if (!result.hasCandidateRow) failures.push('manual review row missing');
+  if (!result.hasMoreButton) failures.push('review more action missing');
   if (result.queueLaneCount < 3) failures.push('queue lanes missing');
   if (result.sourceRows < 3) failures.push('source decision rows missing');
   if (result.actionRows < 1) failures.push('manual row actions missing');
