@@ -4,7 +4,45 @@ const USER_AGENT = 'lounge-guru-source-intake/1.0 (+https://loungeguru.desk.trav
 const DEFAULT_TIMEOUT_MS = 12000;
 const MAX_FETCH_URLS = 3;
 const MAX_BATCH_TASKS = 20;
+const MAX_DERIVED_ITEMS = 40;
 const CLOUDFLARE_FETCH_ADAPTERS = new Set(['official_page', 'official_html', 'open_data']);
+const COMMON_AIRPORT_CODE_FALSE_POSITIVES = new Set([
+  'ADA',
+  'ADD',
+  'ALL',
+  'AND',
+  'ANY',
+  'APP',
+  'API',
+  'ARE',
+  'ASP',
+  'CAN',
+  'CSS',
+  'CSV',
+  'DOM',
+  'FAQ',
+  'FOR',
+  'GET',
+  'HAD',
+  'HAS',
+  'HTML',
+  'HTTP',
+  'IMG',
+  'IOS',
+  'JSON',
+  'MAP',
+  'NEW',
+  'NOT',
+  'OUR',
+  'PDF',
+  'SDK',
+  'THE',
+  'URL',
+  'USA',
+  'WEB',
+  'WWW',
+  'YOU',
+]);
 
 function jsonResponse(body, init = {}) {
   return new Response(JSON.stringify(body, null, 2), {
@@ -99,7 +137,7 @@ async function fetchText(url, fetchImpl, timeoutMs) {
       ok: response.ok,
       status: response.status,
       statusText: response.statusText,
-      finalUrl: response.url,
+      finalUrl: response.url || String(url),
       contentType: response.headers.get('content-type') ?? '',
       text,
     };
@@ -173,10 +211,92 @@ function sourceFetchUrls(task) {
   return [...new Set([...(task.fetchUrls ?? []), task.url].filter(Boolean))].slice(0, MAX_FETCH_URLS);
 }
 
+function boundedPushUnique(items, value) {
+  if (items.length >= MAX_DERIVED_ITEMS || items.includes(value)) {
+    return;
+  }
+  items.push(value);
+}
+
+function validAirportCode(value) {
+  return /^[A-Z]{3}$/.test(value) && !COMMON_AIRPORT_CODE_FALSE_POSITIVES.has(value);
+}
+
+function extractAirportCodes(text) {
+  const airportCodes = [];
+  const patterns = [
+    /\b(?:iata|airportCode|airport_code|airport-code|stationCode|station_code|locationCode|location_code|airport)\b[^A-Z0-9]{0,24}["']?([A-Z]{3})\b/g,
+    /\b[A-Z][A-Za-z .'-]{2,80}\s+Airport\s*\(([A-Z]{3})\)/g,
+    /\(([A-Z]{3})\)\s*(?:Airport|Lounge|Terminal)\b/g,
+    /\/(?:airport|airports|lounges?|locations?)\/([A-Z]{3})(?:[/?#]|$)/g,
+  ];
+
+  for (const pattern of patterns) {
+    for (const match of text.matchAll(pattern)) {
+      const code = String(match[1] ?? '').toUpperCase();
+      if (validAirportCode(code)) {
+        boundedPushUnique(airportCodes, code);
+      }
+    }
+  }
+
+  return airportCodes.sort();
+}
+
+function decodeHtmlAttribute(value) {
+  return value
+    .replaceAll('&amp;', '&')
+    .replaceAll('&quot;', '"')
+    .replaceAll('&#39;', "'")
+    .replaceAll('&lt;', '<')
+    .replaceAll('&gt;', '>');
+}
+
+function extractLoungeLinks(html, baseUrl) {
+  const links = [];
+  const linkPattern = /\bhref\s*=\s*["']([^"']+)["']/gi;
+
+  for (const match of html.matchAll(linkPattern)) {
+    const rawHref = decodeHtmlAttribute(String(match[1] ?? '').trim());
+    if (!rawHref || rawHref.startsWith('#') || rawHref.startsWith('mailto:') || rawHref.startsWith('tel:')) {
+      continue;
+    }
+
+    let url;
+    try {
+      url = new URL(rawHref, baseUrl);
+    } catch {
+      continue;
+    }
+
+    if (!['http:', 'https:'].includes(url.protocol) || url.origin !== new URL(baseUrl).origin) {
+      continue;
+    }
+
+    const searchable = `${url.pathname} ${url.search}`.toLowerCase();
+    if (!/(lounge|airport|terminal|location|club)/.test(searchable)) {
+      continue;
+    }
+
+    url.hash = '';
+    boundedPushUnique(links, url.toString());
+  }
+
+  return links.sort();
+}
+
+function deriveSourceEvidence(response) {
+  return {
+    airportCodes: extractAirportCodes(response.text),
+    loungeLinks: extractLoungeLinks(response.text, response.finalUrl),
+  };
+}
+
 async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new Date().toISOString() }) {
   const runId = `cloudflare-probe-${generatedAt.replace(/[:.]/g, '-')}-${task.sourceId}`;
   const attempts = [];
   let fetched = null;
+  let derivedEvidence = { airportCodes: [], loungeLinks: [] };
 
   for (const fetchUrl of sourceFetchUrls(task)) {
     const robots = await fetchRobots(fetchUrl, fetchImpl, timeoutMs);
@@ -205,6 +325,7 @@ async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new
       attempts.push(attempt);
       if (response.ok) {
         fetched = attempt;
+        derivedEvidence = deriveSourceEvidence(response);
         break;
       }
     } catch (error) {
@@ -223,9 +344,9 @@ async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new
     url: task.url,
     adapter: task.adapter,
     status: fetched ? 'fetched' : attempts.at(-1)?.status ?? 'fetch_error',
-    records: 0,
-    airportCodes: [],
-    loungeLinks: [],
+    records: Math.max(derivedEvidence.airportCodes.length, derivedEvidence.loungeLinks.length),
+    airportCodes: derivedEvidence.airportCodes,
+    loungeLinks: derivedEvidence.loungeLinks,
     cloudflareSnapshot: Boolean(fetched),
     fetchAttempts: attempts,
     ...(fetched

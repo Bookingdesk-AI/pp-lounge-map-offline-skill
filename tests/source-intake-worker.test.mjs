@@ -97,7 +97,9 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
         if (String(url).endsWith('/robots.txt')) {
           return textResponse('User-agent: *\n');
         }
-        return textResponse('<html><title>Mastercard Travel Pass</title><body>Airport lounge program</body></html>');
+        return textResponse(
+          '<html><title>Mastercard Travel Pass</title><body>John F Kennedy International Airport (JFK)<a href="/airport-lounges/jfk">JFK lounge</a></body></html>',
+        );
       },
     },
   );
@@ -123,6 +125,9 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
   assert.equal(stats.totalSources, 1);
   assert.equal(sources[0].sourceId, 'mastercard-travel-pass');
   assert.equal(sources[0].cloudflareSnapshot, true);
+  assert.equal(sources[0].records, 1);
+  assert.deepEqual(sources[0].airportCodes, ['JFK']);
+  assert.deepEqual(sources[0].loungeLinks, ['https://mastercardtravelpass.dragonpass.com/airport-lounges/jfk']);
   assert.ok(sources[0].sha256);
   assert.ok(!Object.hasOwn(sources[0], 'text'));
   assert.ok(!Object.hasOwn(sources[0], 'html'));
@@ -280,7 +285,9 @@ test('Cloudflare source intake report returns D1-derived source report without r
         if (String(url).endsWith('/robots.txt')) {
           return textResponse('User-agent: *\n');
         }
-        return textResponse(`<html><title>${url}</title><body>raw body is not exported</body></html>`);
+        return textResponse(
+          `<html><title>${url}</title><body>Los Angeles International Airport (LAX)<a href="/airport-lounges/lax">LAX lounge</a>raw body is not exported</body></html>`,
+        );
       },
     },
   );
@@ -307,6 +314,8 @@ test('Cloudflare source intake report returns D1-derived source report without r
   assert.equal(body.stats.fetched, 16);
   assert.equal(body.stats.readyTasks, 16);
   assert.equal(body.stats.readyTasksWithCloudflareEvidence, 16);
+  assert.equal(body.stats.discoveredAirportCodes, 16);
+  assert.equal(body.stats.discoveredLoungeLinks, 16);
   assert.equal(body.terminalImpact.fullCatalogIntakeReport, false);
   assert.equal(body.terminalImpact.coverageGateStillRequiresFullCloudflareReport, true);
   assert.deepEqual(
@@ -335,8 +344,9 @@ test('Cloudflare source intake report returns D1-derived source report without r
     assert.ok(source.runId.startsWith('cloudflare-probe-'));
     assert.ok(source.retrievedAt);
     assert.ok(source.url.startsWith('https://'));
-    assert.ok(Array.isArray(source.airportCodes));
-    assert.ok(Array.isArray(source.loungeLinks));
+    assert.deepEqual(source.airportCodes, ['LAX']);
+    assert.equal(source.loungeLinks.length, 1);
+    assert.ok(source.loungeLinks[0].startsWith(new URL(source.finalUrl).origin));
     assert.ok(source.sha256);
     assert.ok(!Object.hasOwn(source, 'text'));
     assert.ok(!Object.hasOwn(source, 'html'));

@@ -1,7 +1,7 @@
 {
   "ok": true,
-  "generatedAt": "2026-07-11T22:31:12.509Z",
-  "runId": "cloudflare-report-2026-07-11T22-31-12-509Z",
+  "generatedAt": "2026-07-11T22:42:01.558Z",
+  "runId": "cloudflare-report-2026-07-11T22-42-01-558Z",
   "policy": {
     "fetchMode": "cloudflare_d1_source_runs_report",
     "rawSnapshotsCommitted": false,
@@ -21,9 +21,9 @@
     "httpErrors": 5,
     "fetchErrors": 0,
     "childPagesFetched": 0,
-    "discoveredAirportCodes": 0,
-    "discoveredLoungeLinks": 0,
-    "cloudflareSourceRuns": 28,
+    "discoveredAirportCodes": 8,
+    "discoveredLoungeLinks": 71,
+    "cloudflareSourceRuns": 44,
     "readyTasks": 16,
     "readyTasksWithCloudflareEvidence": 11
   },
@@ -57,7 +57,7 @@
           "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
           "contentType": "text/html",
           "bytes": 442,
-          "sha256": "d3c1965825ab6d9ccf09d4e7c6da5f6b26a36ec8153e67cd11104da26556362e",
+          "sha256": "c7870d1ab333901617d90e83a3bf4d09339203772c973b9fa84554e2c6008149",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -73,8 +73,8 @@
           "httpStatus": 403,
           "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club.jsp",
           "contentType": "text/html",
-          "bytes": 426,
-          "sha256": "b0e8418b82c4ac54a8d8d2c71014576034682be3645a8e30b3acb4d3df37df68",
+          "bytes": 428,
+          "sha256": "2e5b0e5536bb40a77e80340f55bce40d362f7a6e3920a402abee071d79536919",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -91,7 +91,7 @@
           "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-access.jsp",
           "contentType": "text/html",
           "bytes": 439,
-          "sha256": "cffbadabc298aa2c7a6da4a20182306088b553bcd0314038e64ffe3b36b9a54b",
+          "sha256": "3fe2cce99680f20f67b99ed1316aa644d4222f0ba1113534786f86234afe01ac",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -101,8 +101,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-28-38-902Z-american",
-      "retrievedAt": "2026-07-11T22:28:38.902Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-48-496Z-american",
+      "retrievedAt": "2026-07-11T22:41:48.496Z"
     },
     {
       "sourceId": "aspire-lounges",
@@ -129,7 +129,7 @@
           "finalUrl": "https://www.aspirelounges.com/airport-lounges/",
           "contentType": "text/html; charset=UTF-8",
           "bytes": 4558,
-          "sha256": "daab475049817fb07d1d9c1ca4e892d08933119880ef009dd934f841fad5e3eb",
+          "sha256": "c0d73b445c71ad60e0d8c26f5485e2f8cfa815b859314b5ee3af18720b555f0b",
           "robots": {
             "checked": true,
             "url": "https://www.executivelounges.com/robots.txt",
@@ -146,7 +146,7 @@
           "finalUrl": "https://www.aspirelounges.com/airport-lounges/",
           "contentType": "text/html; charset=UTF-8",
           "bytes": 4558,
-          "sha256": "7318779c08faccadab81c0d68af97f675384484b7567db0633e2e5c8a4f66146",
+          "sha256": "d555295b917e933dd95f14ac07c43f5ebe0ec57708fde24741969f700ad2de13",
           "robots": {
             "checked": true,
             "url": "https://www.aspirelounges.com/robots.txt",
@@ -163,7 +163,7 @@
           "finalUrl": "https://www.aspirelounges.com/",
           "contentType": "text/html; charset=UTF-8",
           "bytes": 4558,
-          "sha256": "26bcdac3a8fa55a27267ea4bff811a8decd3b4a867326b0af82371a1c6f0e03b",
+          "sha256": "d7023d3f301946100f9841bb9607bbda76eb9a9e3d4f249e727944b7a69899f5",
           "robots": {
             "checked": true,
             "url": "https://www.aspirelounges.com/robots.txt",
@@ -173,8 +173,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-28-39-301Z-aspire-lounges",
-      "retrievedAt": "2026-07-11T22:28:39.301Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-48-804Z-aspire-lounges",
+      "retrievedAt": "2026-07-11T22:41:48.804Z"
     },
     {
       "sourceId": "be-relax",
@@ -183,15 +183,26 @@
       "adapter": "official_page",
       "status": "fetched",
       "reason": null,
-      "records": 0,
-      "airportCodes": [],
-      "loungeLinks": [],
+      "records": 5,
+      "airportCodes": [
+        "AUH",
+        "DOH",
+        "DXB",
+        "EWR",
+        "JFK"
+      ],
+      "loungeLinks": [
+        "https://berelax.com/airport-representative/",
+        "https://berelax.com/news/eid-travel-at-zayed-international-the-airport-spa-reset-before-boarding",
+        "https://berelax.com/news/fifa-world-cup-2026-the-airport-calm-plan-every-fan-needs-before-boarding",
+        "https://berelax.com/news/flying-from-kuala-lumpur-during-eid-holiday-the-airport-spa-routine-to-use-before-boarding"
+      ],
       "cloudflareSnapshot": true,
       "finalUrl": "https://berelax.com/locations/",
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 1040555,
-      "sha256": "d17d2272dca6b3eeaf015056e4947168bdeadce9d492db8b3ddff66d2d84d73e",
+      "sha256": "9ad0447f5eb502da97a419252ee2b619f65b9a0124106a3d7d7229cd6bb89459",
       "fetchAttempts": [
         {
           "url": "https://www.berelax.com/locations/",
@@ -201,7 +212,7 @@
           "finalUrl": "https://berelax.com/locations/",
           "contentType": "text/html",
           "bytes": 1040555,
-          "sha256": "d17d2272dca6b3eeaf015056e4947168bdeadce9d492db8b3ddff66d2d84d73e",
+          "sha256": "9ad0447f5eb502da97a419252ee2b619f65b9a0124106a3d7d7229cd6bb89459",
           "robots": {
             "checked": true,
             "url": "https://www.berelax.com/robots.txt",
@@ -211,8 +222,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-41-902Z-be-relax",
-      "retrievedAt": "2026-07-11T22:18:41.902Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-56-535Z-be-relax",
+      "retrievedAt": "2026-07-11T22:41:56.535Z"
     },
     {
       "sourceId": "citi-travel",
@@ -249,8 +260,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-21-893Z-citi-travel",
-      "retrievedAt": "2026-07-11T22:18:21.893Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-36-827Z-citi-travel",
+      "retrievedAt": "2026-07-11T22:41:36.827Z"
     },
     {
       "sourceId": "collinson-international",
@@ -259,9 +270,12 @@
       "adapter": "official_page",
       "status": "fetched",
       "reason": null,
-      "records": 0,
+      "records": 2,
       "airportCodes": [],
-      "loungeLinks": [],
+      "loungeLinks": [
+        "https://www.collinsongroup.com/en-GB/newsroom/vienna-lounge-wins-europe-lounge-of-the-year",
+        "https://www.collinsongroup.com/en-GB/our-companies/airport-dimensions"
+      ],
       "cloudflareSnapshot": true,
       "finalUrl": "https://www.collinsongroup.com/en-GB",
       "httpStatus": 200,
@@ -287,8 +301,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-20-484Z-collinson-international",
-      "retrievedAt": "2026-07-11T22:18:20.484Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-35-638Z-collinson-international",
+      "retrievedAt": "2026-07-11T22:41:35.638Z"
     },
     {
       "sourceId": "delta",
@@ -297,15 +311,30 @@
       "adapter": "official_html",
       "status": "fetched",
       "reason": null,
-      "records": 0,
+      "records": 14,
       "airportCodes": [],
-      "loungeLinks": [],
+      "loungeLinks": [
+        "https://www.delta.com/ca/en/delta-sky-club/locations",
+        "https://www.delta.com/gb/en/delta-sky-club/locations",
+        "https://www.delta.com/us/en/airports/overview",
+        "https://www.delta.com/us/en/check-in-security/airport-security",
+        "https://www.delta.com/us/en/check-in-security/expedited-airport-security/overview",
+        "https://www.delta.com/us/en/delta-sky-club/access",
+        "https://www.delta.com/us/en/delta-sky-club/delta-one-lounge",
+        "https://www.delta.com/us/en/delta-sky-club/house-rules",
+        "https://www.delta.com/us/en/delta-sky-club/locations",
+        "https://www.delta.com/us/en/delta-sky-club/membership",
+        "https://www.delta.com/us/en/delta-sky-club/menu",
+        "https://www.delta.com/us/en/delta-sky-club/news-updates",
+        "https://www.delta.com/us/en/delta-sky-club/overview",
+        "https://www.delta.com/us/en/delta-sky-club/perks-amenities"
+      ],
       "cloudflareSnapshot": true,
       "finalUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 62077,
-      "sha256": "b609db0d88657b3f89e1c4b75e8eb0a4a96f9138b3e4fdbc854a377a142dc842",
+      "sha256": "5b88aa018aef500dda20f1de9e98261bca47e6b41ab4a10c6caf4f4b4e498111",
       "fetchAttempts": [
         {
           "url": "https://www.delta.com/us/en/delta-sky-club/locations",
@@ -315,7 +344,7 @@
           "finalUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
           "contentType": "text/html",
           "bytes": 62077,
-          "sha256": "b609db0d88657b3f89e1c4b75e8eb0a4a96f9138b3e4fdbc854a377a142dc842",
+          "sha256": "5b88aa018aef500dda20f1de9e98261bca47e6b41ab4a10c6caf4f4b4e498111",
           "robots": {
             "checked": true,
             "url": "https://www.delta.com/robots.txt",
@@ -325,8 +354,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-31-002Z-delta",
-      "retrievedAt": "2026-07-11T22:18:31.002Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-48-196Z-delta",
+      "retrievedAt": "2026-07-11T22:41:48.196Z"
     },
     {
       "sourceId": "dragonpass",
@@ -335,9 +364,11 @@
       "adapter": "official_page",
       "status": "fetched",
       "reason": null,
-      "records": 0,
+      "records": 1,
       "airportCodes": [],
-      "loungeLinks": [],
+      "loungeLinks": [
+        "https://www.dragonpass.com/airport"
+      ],
       "cloudflareSnapshot": true,
       "finalUrl": "https://www.dragonpass.com/",
       "httpStatus": 200,
@@ -363,8 +394,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-25-028Z-dragonpass",
-      "retrievedAt": "2026-07-11T22:18:25.028Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-40-061Z-dragonpass",
+      "retrievedAt": "2026-07-11T22:41:40.061Z"
     },
     {
       "sourceId": "marhaba",
@@ -373,15 +404,49 @@
       "adapter": "official_page",
       "status": "fetched",
       "reason": null,
-      "records": 0,
-      "airportCodes": [],
-      "loungeLinks": [],
+      "records": 29,
+      "airportCodes": [
+        "DXB",
+        "HUT",
+        "MEL"
+      ],
+      "loungeLinks": [
+        "https://www.marhabaservices.com/ae/english/airport-lounges",
+        "https://www.marhabaservices.com/ae/english/airport-lounges/al-maktoum-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/airport-lounges/dubai-international-airport-lounges.html",
+        "https://www.marhabaservices.com/ae/english/find-us-in-dubai-airport.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/clark-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/dallas-departure-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/geneva-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/helsinki-vantaa-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/hong-kong-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/istanbul-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/jakarta-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/karachi-terminal-M-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/king-fahd-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/kuala-lumpur-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/london-heathrow-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/macau-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/manila-terminal-1-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/melbourne-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/riogaleao-tom-jobim-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/rome-terminal-3-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/sharjah-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/singapore-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/taiwan-taoyuan-international-airport.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/toronto-pearson-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/vancouver-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/zanzibar-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/zurich-airport.html",
+        "https://www.marhabaservices.com/ae/english/how-to-access-lounge-at-dubai-airport.html",
+        "https://www.marhabaservices.com/ae/english/meet-and-greet/dubai-international-airport.html"
+      ],
       "cloudflareSnapshot": true,
       "finalUrl": "https://www.marhabaservices.com/ae/english/airport-lounges",
       "httpStatus": 200,
       "contentType": "text/html;charset=UTF-8",
       "bytes": 240161,
-      "sha256": "2271c35d5d3a9298182b9f884173506eab263deca2c3994c4d2f0e0df6ba8bfa",
+      "sha256": "d33e4ab88420311afb3329d5c8e0a3245e43f4de219140b65344017a2f31441c",
       "fetchAttempts": [
         {
           "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
@@ -391,7 +456,7 @@
           "finalUrl": "https://www.marhabaservices.com/ae/english/airport-lounges",
           "contentType": "text/html;charset=UTF-8",
           "bytes": 240161,
-          "sha256": "2271c35d5d3a9298182b9f884173506eab263deca2c3994c4d2f0e0df6ba8bfa",
+          "sha256": "d33e4ab88420311afb3329d5c8e0a3245e43f4de219140b65344017a2f31441c",
           "robots": {
             "checked": true,
             "url": "https://www.marhabaservices.com/robots.txt",
@@ -401,8 +466,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-31-772Z-marhaba",
-      "retrievedAt": "2026-07-11T22:18:31.772Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-49-774Z-marhaba",
+      "retrievedAt": "2026-07-11T22:41:49.774Z"
     },
     {
       "sourceId": "mastercard-travel-pass",
@@ -439,8 +504,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-24-407Z-mastercard-travel-pass",
-      "retrievedAt": "2026-07-11T22:18:24.407Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-39-373Z-mastercard-travel-pass",
+      "retrievedAt": "2026-07-11T22:41:39.373Z"
     },
     {
       "sourceId": "no1-lounges",
@@ -449,9 +514,28 @@
       "adapter": "official_page",
       "status": "fetched",
       "reason": null,
-      "records": 0,
+      "records": 18,
       "airportCodes": [],
-      "loungeLinks": [],
+      "loungeLinks": [
+        "https://no1lounges.com/discover-no1-lounges/",
+        "https://no1lounges.com/locations/birmingham/",
+        "https://no1lounges.com/locations/jersey/",
+        "https://no1lounges.com/locations/london-gatwick/",
+        "https://no1lounges.com/locations/london-heathrow/",
+        "https://no1lounges.com/locations/london-luton/",
+        "https://no1lounges.com/lounge-access-cards/",
+        "https://no1lounges.com/news/club-aspire-at-heathrow-t3-wins-award-for-dining-excellence/",
+        "https://no1lounges.com/news/clubrooms-at-heathrow-t3-official-launch/",
+        "https://no1lounges.com/news/no1-lounge-at-jersey-airport-announcement/",
+        "https://no1lounges.com/our-lounges/",
+        "https://no1lounges.com/our-lounges/club-aspire/",
+        "https://no1lounges.com/our-lounges/clubrooms/",
+        "https://no1lounges.com/our-lounges/my-lounge/",
+        "https://no1lounges.com/our-lounges/no1-lounges/",
+        "https://no1lounges.com/partner-lounges/",
+        "https://no1lounges.com/partner-lounges/aspire-lounges/",
+        "https://no1lounges.com/partner-lounges/the-club/"
+      ],
       "cloudflareSnapshot": true,
       "finalUrl": "https://no1lounges.com/our-lounges/",
       "httpStatus": 200,
@@ -477,8 +561,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-36-732Z-no1-lounges",
-      "retrievedAt": "2026-07-11T22:18:36.732Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-54-535Z-no1-lounges",
+      "retrievedAt": "2026-07-11T22:41:54.535Z"
     },
     {
       "sourceId": "openstreetmap",
@@ -495,7 +579,7 @@
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
       "bytes": 31183,
-      "sha256": "c87812b80cc1d301aba6374ab62c2c66fd8e97a70184eded12e638044892e1af",
+      "sha256": "3534e6991f050fa8865947928677b684c7a775fb106cb5983c2ba6b588f98863",
       "fetchAttempts": [
         {
           "url": "https://www.openstreetmap.org/",
@@ -505,7 +589,7 @@
           "finalUrl": "https://www.openstreetmap.org/",
           "contentType": "text/html; charset=utf-8",
           "bytes": 31183,
-          "sha256": "c87812b80cc1d301aba6374ab62c2c66fd8e97a70184eded12e638044892e1af",
+          "sha256": "3534e6991f050fa8865947928677b684c7a775fb106cb5983c2ba6b588f98863",
           "robots": {
             "checked": true,
             "url": "https://www.openstreetmap.org/robots.txt",
@@ -515,8 +599,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-43-512Z-openstreetmap",
-      "retrievedAt": "2026-07-11T22:18:43.512Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-58-408Z-openstreetmap",
+      "retrievedAt": "2026-07-11T22:41:58.408Z"
     },
     {
       "sourceId": "primeclass",
@@ -525,9 +609,13 @@
       "adapter": "official_page",
       "status": "fetched",
       "reason": null,
-      "records": 0,
+      "records": 3,
       "airportCodes": [],
-      "loungeLinks": [],
+      "loungeLinks": [
+        "https://tavoperationservices.com/en-EN/press-room/primeclass-unveils-a-new-era-of-lifestyle-airport-hospitality-in-sofia",
+        "https://tavoperationservices.com/en-EN/press-room/tav-os-and-kepler-club-announce-strategic-collaboration-to-expand-airport-hospitality-experiences",
+        "https://tavoperationservices.com/en-EN/services/lounges"
+      ],
       "cloudflareSnapshot": true,
       "finalUrl": "https://tavoperationservices.com/",
       "httpStatus": 200,
@@ -553,8 +641,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-33-823Z-primeclass",
-      "retrievedAt": "2026-07-11T22:18:33.823Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-51-533Z-primeclass",
+      "retrievedAt": "2026-07-11T22:41:51.533Z"
     },
     {
       "sourceId": "skyteam",
@@ -625,8 +713,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-28-35-606Z-skyteam",
-      "retrievedAt": "2026-07-11T22:28:35.606Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-45-444Z-skyteam",
+      "retrievedAt": "2026-07-11T22:41:45.444Z"
     },
     {
       "sourceId": "star-alliance",
@@ -697,8 +785,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-28-32-303Z-star-alliance",
-      "retrievedAt": "2026-07-11T22:28:32.303Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-43-076Z-star-alliance",
+      "retrievedAt": "2026-07-11T22:41:43.076Z"
     },
     {
       "sourceId": "united",
@@ -769,8 +857,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-28-38-156Z-united",
-      "retrievedAt": "2026-07-11T22:28:38.156Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-47-886Z-united",
+      "retrievedAt": "2026-07-11T22:41:47.886Z"
     },
     {
       "sourceId": "visa-airport-companion",
@@ -787,7 +875,7 @@
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 59310,
-      "sha256": "df58a2b074a262cef256926201bffb3e88bd136909b76c45c424b058157facfe",
+      "sha256": "2efecbb58c5fb23a4a6c9d17d132867c8038a6a60d87728dede93f9c70386b4f",
       "fetchAttempts": [
         {
           "url": "https://www.visaairportcompanion.com/",
@@ -797,7 +885,7 @@
           "finalUrl": "https://visaairportcompanion.ca/",
           "contentType": "text/html",
           "bytes": 59310,
-          "sha256": "df58a2b074a262cef256926201bffb3e88bd136909b76c45c424b058157facfe",
+          "sha256": "2efecbb58c5fb23a4a6c9d17d132867c8038a6a60d87728dede93f9c70386b4f",
           "robots": {
             "checked": true,
             "url": "https://www.visaairportcompanion.com/robots.txt",
@@ -807,8 +895,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-18-22-456Z-visa-airport-companion",
-      "retrievedAt": "2026-07-11T22:18:22.456Z"
+      "runId": "cloudflare-probe-2026-07-11T22-41-37-524Z-visa-airport-companion",
+      "retrievedAt": "2026-07-11T22:41:37.524Z"
     }
   ]
 }
