@@ -1,5 +1,5 @@
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type {
@@ -20,10 +20,7 @@ import type {
   SheetSnap,
   SortOption,
 } from './types';
-import {
-  LoungeClusterLayer,
-  type MapInteractionStatus,
-} from './map/cluster/LoungeClusterLayer';
+import { LoungeClusterLayer } from './map/cluster/LoungeClusterLayer';
 import { coordinateKey } from './map/cluster/coordinateKey';
 import './App.css';
 
@@ -87,6 +84,34 @@ interface BrandFilterOption {
   value: string;
   label: string;
   count: number;
+}
+
+interface AutocompleteOption {
+  value: string;
+  label: string;
+}
+
+interface AllRoutesAirportItem {
+  id: string;
+  name: string;
+  city: string;
+  country: string;
+  iata: string | null;
+  icao: string | null;
+  timezone?: string;
+}
+
+interface AllRoutesAirportsResponse {
+  items: AllRoutesAirportItem[];
+  total: number;
+}
+
+interface SearchCommandSuggestion {
+  id: string;
+  label: string;
+  detail: string;
+  query: string;
+  source: 'airport' | 'brand' | 'lounge';
 }
 
 interface FilterSummaryChip {
@@ -553,13 +578,11 @@ function MapView({
   selectedId,
   hoveredId,
   onSelect,
-  onInteractionStatusChange,
 }: {
   features: LoungeFeature[];
   selectedId: string | null;
   hoveredId: string | null;
   onSelect: (id: string) => void;
-  onInteractionStatusChange: (status: MapInteractionStatus) => void;
 }) {
   const selectedFeature = useMemo(
     () => features.find((feature) => feature.properties.id === selectedId),
@@ -585,7 +608,6 @@ function MapView({
         selectedId={selectedId}
         hoveredId={hoveredId}
         onSelect={onSelect}
-        onInteractionStatusChange={onInteractionStatusChange}
       />
 
       <FitBounds features={features} selectedId={selectedId} />
@@ -615,8 +637,419 @@ function SortControl({
   );
 }
 
+function AutocompleteFilter({
+  label,
+  value,
+  allLabel,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  allLabel: string;
+  options: AutocompleteOption[];
+  onChange: (value: string) => void;
+}) {
+  const selectedLabel = value === 'ALL' ? '' : options.find((option) => option.value === value)?.label ?? value;
+  const inputId = useId();
+  const listboxId = useId();
+  const [draft, setDraft] = useState(selectedLabel);
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    setDraft(selectedLabel);
+  }, [selectedLabel]);
+
+  const suggestions = useMemo(() => {
+    const normalizedDraft = draft.trim().toLowerCase();
+    const allOption = { value: 'ALL', label: allLabel };
+    const matches = normalizedDraft
+      ? [...options]
+          .map((option) => {
+            const normalizedLabel = option.label.toLowerCase();
+            const normalizedValue = option.value.toLowerCase();
+            const starts = normalizedLabel.startsWith(normalizedDraft) || normalizedValue.startsWith(normalizedDraft);
+            const contains = normalizedLabel.includes(normalizedDraft) || normalizedValue.includes(normalizedDraft);
+            return { option, rank: starts ? 0 : contains ? 1 : 2 };
+          })
+          .filter((entry) => entry.rank < 2)
+          .sort((first, second) => first.rank - second.rank || first.option.label.localeCompare(second.option.label))
+          .map((entry) => entry.option)
+      : options;
+    const allMatches = !normalizedDraft || allLabel.toLowerCase().includes(normalizedDraft);
+
+    return [...(allMatches ? [allOption] : []), ...matches].slice(0, 10);
+  }, [allLabel, draft, options]);
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [draft, suggestions.length]);
+
+  const selectOption = useCallback(
+    (option: AutocompleteOption) => {
+      onChange(option.value);
+      setDraft(option.value === 'ALL' ? '' : option.label);
+      setOpen(false);
+      setActiveIndex(0);
+    },
+    [onChange],
+  );
+
+  const commitDraft = useCallback(
+    (nextDraft: string) => {
+      const trimmedDraft = nextDraft.trim();
+      if (!trimmedDraft || trimmedDraft.toLowerCase() === allLabel.toLowerCase()) {
+        onChange('ALL');
+        setDraft('');
+        setOpen(false);
+        return;
+      }
+
+      const exactOption = options.find(
+        (option) => option.label.toLowerCase() === trimmedDraft.toLowerCase() || option.value === trimmedDraft,
+      );
+
+      if (exactOption) {
+        onChange(exactOption.value);
+        setDraft(exactOption.label);
+        setOpen(false);
+        return;
+      }
+
+      setDraft(selectedLabel);
+      setOpen(false);
+    },
+    [allLabel, onChange, options, selectedLabel],
+  );
+
+  return (
+    <div className="autocomplete-filter">
+      <label className="control-label" htmlFor={inputId}>
+        {label}
+      </label>
+      <input
+        id={inputId}
+        type="text"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded={open && suggestions.length > 0}
+        aria-controls={listboxId}
+        aria-activedescendant={open && suggestions[activeIndex] ? `${listboxId}-${activeIndex}` : undefined}
+        value={draft}
+        placeholder={allLabel}
+        autoComplete="off"
+        spellCheck={false}
+        onFocus={() => setOpen(true)}
+        onChange={(event) => {
+          const nextDraft = event.target.value;
+          setDraft(nextDraft);
+          setOpen(true);
+          if (!nextDraft.trim()) {
+            onChange('ALL');
+          }
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            setOpen(true);
+            setActiveIndex((current) => Math.min(current + 1, Math.max(suggestions.length - 1, 0)));
+            return;
+          }
+
+          if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            setOpen(true);
+            setActiveIndex((current) => Math.max(current - 1, 0));
+            return;
+          }
+
+          if (event.key === 'Enter') {
+            if (open && suggestions[activeIndex]) {
+              event.preventDefault();
+              selectOption(suggestions[activeIndex]);
+              return;
+            }
+            commitDraft(draft);
+            return;
+          }
+
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            setOpen(false);
+            setDraft(selectedLabel);
+          }
+        }}
+        onBlur={() => commitDraft(draft)}
+      />
+      {open && suggestions.length > 0 ? (
+        <div id={listboxId} className="autocomplete-menu" role="listbox" aria-label={`${label} suggestions`}>
+          {suggestions.map((option, index) => (
+            <button
+              id={`${listboxId}-${index}`}
+              key={`${option.value}-${option.label}`}
+              type="button"
+              role="option"
+              aria-selected={index === activeIndex}
+              className={index === activeIndex ? 'is-active' : ''}
+              onMouseDown={(event) => {
+                event.preventDefault();
+                selectOption(option);
+              }}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+const ALL_ROUTES_AIRPORTS_ENDPOINT = '/api/all-routes/airports';
+
+function formatAirportSuggestionLabel(airport: AllRoutesAirportItem) {
+  const code = airport.iata ?? airport.id;
+  return `${airport.city} (${code})`;
+}
+
+function formatAirportSuggestionDetail(airport: AllRoutesAirportItem) {
+  const codes = [airport.name, airport.icao].filter(Boolean).join(' · ');
+  return `${codes} · ${airport.country}`;
+}
+
+function SearchCommandCombobox({
+  search,
+  features,
+  brandOptions,
+  onSearchChange,
+}: {
+  search: string;
+  features: LoungeFeature[];
+  brandOptions: BrandFilterOption[];
+  onSearchChange: (search: string) => void;
+}) {
+  const inputId = useId();
+  const listboxId = useId();
+  const [draft, setDraft] = useState(search);
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [airports, setAirports] = useState<AllRoutesAirportItem[]>([]);
+  const [airportQuery, setAirportQuery] = useState('');
+
+  useEffect(() => {
+    setDraft(search);
+  }, [search]);
+
+  useEffect(() => {
+    const query = draft.trim();
+    if (query.length < 2) {
+      setAirports([]);
+      setAirportQuery('');
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => {
+      const params = new URLSearchParams({ query, limit: '8' });
+      fetch(`${ALL_ROUTES_AIRPORTS_ENDPOINT}?${params.toString()}`, {
+        signal: controller.signal,
+        headers: { Accept: 'application/json' },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('airport_search_failed');
+          }
+          return response.json() as Promise<AllRoutesAirportsResponse>;
+        })
+        .then((payload) => {
+          setAirports(Array.isArray(payload.items) ? payload.items : []);
+          setAirportQuery(query);
+        })
+        .catch((error: unknown) => {
+          if (error instanceof DOMException && error.name === 'AbortError') {
+            return;
+          }
+          setAirports([]);
+          setAirportQuery(query);
+        });
+    }, 160);
+
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [draft]);
+
+  const suggestions = useMemo<SearchCommandSuggestion[]>(() => {
+    const query = draft.trim().toLowerCase();
+    if (!query) {
+      return [];
+    }
+
+    const airportSuggestions =
+      airportQuery === draft.trim()
+        ? airports.map((airport) => ({
+            id: `airport-${airport.id}`,
+            label: formatAirportSuggestionLabel(airport),
+            detail: formatAirportSuggestionDetail(airport),
+            query: airport.iata ?? airport.id,
+            source: 'airport' as const,
+          }))
+        : [];
+
+    const brandSuggestions = brandOptions
+      .filter((brand) => brand.label.toLowerCase().includes(query))
+      .slice(0, 4)
+      .map((brand) => ({
+        id: `brand-${brand.value}`,
+        label: brand.label,
+        detail: `${brand.count} records`,
+        query: brand.label,
+        source: 'brand' as const,
+      }));
+
+    const seenLounges = new Set<string>();
+    const loungeSuggestions: SearchCommandSuggestion[] = [];
+    for (const feature of features) {
+      if (loungeSuggestions.length >= 4) {
+        break;
+      }
+      const { airportCode, airportName, city, name } = feature.properties;
+      const haystack = `${airportCode} ${airportName} ${city} ${name}`.toLowerCase();
+      if (!haystack.includes(query) || seenLounges.has(name)) {
+        continue;
+      }
+      seenLounges.add(name);
+      loungeSuggestions.push({
+        id: `lounge-${feature.properties.id}`,
+        label: name,
+        detail: `${airportCode} · ${city}`,
+        query: name,
+        source: 'lounge',
+      });
+    }
+
+    const sourceRank: Record<SearchCommandSuggestion['source'], number> = {
+      airport: 0,
+      brand: 1,
+      lounge: 2,
+    };
+
+    return [...airportSuggestions, ...brandSuggestions, ...loungeSuggestions]
+      .sort(
+        (first, second) =>
+          sourceRank[first.source] - sourceRank[second.source] ||
+          Number(!first.label.toLowerCase().startsWith(query)) -
+            Number(!second.label.toLowerCase().startsWith(query)) ||
+          first.label.localeCompare(second.label),
+      )
+      .slice(0, 10);
+  }, [airportQuery, airports, brandOptions, draft, features]);
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [draft, suggestions.length]);
+
+  const selectSuggestion = useCallback(
+    (suggestion: SearchCommandSuggestion) => {
+      setDraft(suggestion.query);
+      onSearchChange(suggestion.query);
+      setOpen(false);
+      setActiveIndex(0);
+    },
+    [onSearchChange],
+  );
+
+  const activeOptionId = open && suggestions[activeIndex] ? `${listboxId}-${activeIndex}` : undefined;
+
+  return (
+    <div className="rail-command-search">
+      <label htmlFor={inputId}>Search airport, city, brand</label>
+      <input
+        id={inputId}
+        type="search"
+        inputMode="search"
+        enterKeyHint="search"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded={open && suggestions.length > 0}
+        aria-controls={listboxId}
+        aria-activedescendant={activeOptionId}
+        value={draft}
+        onFocus={() => setOpen(true)}
+        onChange={(event) => {
+          const nextSearch = event.target.value;
+          setDraft(nextSearch);
+          onSearchChange(nextSearch);
+          setOpen(nextSearch.trim().length > 0);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            setOpen(true);
+            setActiveIndex((current) => Math.min(current + 1, Math.max(suggestions.length - 1, 0)));
+            return;
+          }
+          if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            setOpen(true);
+            setActiveIndex((current) => Math.max(current - 1, 0));
+            return;
+          }
+          if (event.key === 'Enter' && open && suggestions[activeIndex]) {
+            event.preventDefault();
+            selectSuggestion(suggestions[activeIndex]);
+            return;
+          }
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            setOpen(false);
+          }
+        }}
+        onBlur={() => {
+          window.setTimeout(() => setOpen(false), 120);
+        }}
+        placeholder="HGH, Hangzhou, Sapphire"
+        autoComplete="off"
+        spellCheck={false}
+      />
+      {open && suggestions.length > 0 ? (
+        <div id={listboxId} className="autocomplete-menu search-command-menu" role="listbox">
+          {suggestions.map((suggestion, index) => (
+            <button
+              id={`${listboxId}-${index}`}
+              key={suggestion.id}
+              type="button"
+              role="option"
+              aria-selected={index === activeIndex}
+              className={index === activeIndex ? 'is-active' : ''}
+              onMouseDown={(event) => {
+                event.preventDefault();
+                selectSuggestion(suggestion);
+              }}
+              onMouseEnter={() => setActiveIndex(index)}
+            >
+              <span>{suggestion.label}</span>
+              <small>{suggestion.detail}</small>
+            </button>
+          ))}
+        </div>
+      ) : null}
+      {open && draft.trim().length >= 2 && airportQuery === draft.trim() && suggestions.length === 0 ? (
+        <div className="autocomplete-menu search-command-menu" role="status">
+          <span className="autocomplete-empty">No matches</span>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function FilterControls({
+  variant = 'rail',
+  search = '',
   types,
+  features,
   typeCounts,
   selectedTypes,
   selectedCountry,
@@ -627,13 +1060,17 @@ function FilterControls({
   brandOptions,
   selectedFacilities,
   facilityOptions,
+  onSearchChange,
   toggleType,
   toggleFacility,
   setSelectedCountry,
   setSelectedCity,
   setSelectedBrand,
 }: {
+  variant?: 'rail' | 'sheet';
+  search?: string;
   types: string[];
+  features: LoungeFeature[];
   typeCounts: Map<string, number>;
   selectedTypes: string[];
   selectedCountry: string;
@@ -644,64 +1081,70 @@ function FilterControls({
   brandOptions: BrandFilterOption[];
   selectedFacilities: string[];
   facilityOptions: string[];
+  onSearchChange?: (search: string) => void;
   toggleType: (type: string) => void;
   toggleFacility: (facility: string) => void;
   setSelectedCountry: (country: string) => void;
   setSelectedCity: (city: string) => void;
   setSelectedBrand: (brand: string) => void;
 }) {
-  return (
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
+  const filterPanelId = useId();
+  const countryOptions = useMemo<AutocompleteOption[]>(
+    () => countries.map((country) => ({ value: country, label: formatCountryLabel(country) })),
+    [countries],
+  );
+  const cityAutocompleteOptions = useMemo<AutocompleteOption[]>(
+    () => cityOptions.map((city) => ({ value: city, label: city })),
+    [cityOptions],
+  );
+  const brandAutocompleteOptions = useMemo<AutocompleteOption[]>(
+    () => brandOptions.map((brand) => ({ value: brand.value, label: `${brand.label} (${brand.count})` })),
+    [brandOptions],
+  );
+  const panelFilterCount =
+    selectedTypes.length +
+    selectedFacilities.length +
+    (selectedCountry !== 'ALL' ? 1 : 0) +
+    (selectedCity !== 'ALL' ? 1 : 0) +
+    (selectedBrand !== 'ALL' ? 1 : 0);
+
+  const filterSections = (
     <>
-      <section className="control-group split">
-        <label>
-          <span className="control-label">Country</span>
-          <select
+      <section className="filter-panel-section filter-panel-section-location">
+        <div className="control-label">Location</div>
+        <div className="filter-panel-fields">
+          <AutocompleteFilter
+            label="Country"
             value={selectedCountry}
-            onChange={(event) => {
-              const nextCountry = event.target.value;
+            allLabel="All countries"
+            options={countryOptions}
+            onChange={(nextCountry) => {
               setSelectedCountry(nextCountry);
               setSelectedCity('ALL');
             }}
-          >
-            <option value="ALL">All countries</option>
-            {countries.map((country) => (
-              <option key={country} value={country}>
-                {formatCountryLabel(country)}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label>
-          <span className="control-label">City</span>
-          <select value={selectedCity} onChange={(event) => setSelectedCity(event.target.value)}>
-            <option value="ALL">All cities</option>
-            {cityOptions.map((city) => (
-              <option key={city} value={city}>
-                {city}
-              </option>
-            ))}
-          </select>
-        </label>
+          />
+          <AutocompleteFilter
+            label="City"
+            value={selectedCity}
+            allLabel="All cities"
+            options={cityAutocompleteOptions}
+            onChange={setSelectedCity}
+          />
+        </div>
       </section>
-
-      <section className="control-group">
-        <label>
-          <span className="control-label">Brand</span>
-          <select value={selectedBrand} onChange={(event) => setSelectedBrand(event.target.value)}>
-            <option value="ALL">All brands</option>
-            {brandOptions.map((brand) => (
-              <option key={brand.value} value={brand.value}>
-                {brand.label} ({brand.count})
-              </option>
-            ))}
-          </select>
-        </label>
+      <section className="filter-panel-section">
+        <AutocompleteFilter
+          label="Brand"
+          value={selectedBrand}
+          allLabel="All brands"
+          options={brandAutocompleteOptions}
+          onChange={setSelectedBrand}
+        />
       </section>
-
-      <section className="control-group">
+      <section className="filter-panel-section">
         <div className="control-label">Type</div>
-        <div className="pill-grid">
+        <div className="pill-grid is-panel">
           {types.map((type) => (
             <TypePill
               key={type}
@@ -712,10 +1155,9 @@ function FilterControls({
           ))}
         </div>
       </section>
-
-      <section className="control-group">
+      <section className="filter-panel-section">
         <div className="control-label">Facilities</div>
-        <div className="pill-grid small">
+        <div className="pill-grid is-panel">
           {facilityOptions.map((facility) => (
             <TypePill
               key={facility}
@@ -726,6 +1168,56 @@ function FilterControls({
           ))}
         </div>
       </section>
+    </>
+  );
+
+  if (variant === 'sheet') {
+    return <div className="filter-sheet-sections">{filterSections}</div>;
+  }
+
+  return (
+    <>
+      <section className="filter-primary-row">
+        <SearchCommandCombobox
+          search={search}
+          features={features}
+          brandOptions={brandOptions}
+          onSearchChange={onSearchChange ?? (() => undefined)}
+        />
+        <button
+          type="button"
+          className="filter-panel-trigger"
+          aria-expanded={filterPanelOpen}
+          aria-controls={filterPanelId}
+          aria-haspopup="dialog"
+          onClick={() => setFilterPanelOpen((current) => !current)}
+        >
+          <span>Filters</span>
+          <strong>{panelFilterCount}</strong>
+        </button>
+      </section>
+
+      {filterPanelOpen ? (
+        <section
+          id={filterPanelId}
+          className="filter-popover-panel"
+          role="dialog"
+          aria-label="Filters"
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              setFilterPanelOpen(false);
+            }
+          }}
+        >
+          <div className="filter-panel-head">
+            <h3>Filters</h3>
+            <button type="button" className="inline-link" onClick={() => setFilterPanelOpen(false)}>
+              Close
+            </button>
+          </div>
+          {filterSections}
+        </section>
+      ) : null}
     </>
   );
 }
@@ -743,12 +1235,6 @@ function ActiveFilterSummary({
 
   return (
     <div className="active-filters">
-      <div className="active-filters-head">
-        <p>Active filters</p>
-        <button type="button" className="inline-link" onClick={onClearAll}>
-          Clear all
-        </button>
-      </div>
       <div className="active-filter-list">
         {chips.map((chip) => (
           <button key={chip.key} type="button" className="filter-chip" onClick={chip.onRemove}>
@@ -756,6 +1242,9 @@ function ActiveFilterSummary({
             <span aria-hidden>×</span>
           </button>
         ))}
+        <button type="button" className="filter-chip clear-filter-chip" onClick={onClearAll}>
+          Clear all
+        </button>
       </div>
     </div>
   );
@@ -1181,46 +1670,10 @@ function DetailPanel({
   );
 }
 
-function MapLegend({
-  interactionStatus,
-  comparedCount,
-}: {
-  interactionStatus: MapInteractionStatus;
-  comparedCount: number;
-}) {
-  const [expanded, setExpanded] = useState(true);
-
-  return (
-    <div className={`map-legend ${expanded ? 'is-expanded' : 'is-collapsed'}`}>
-      <button
-        type="button"
-        className="map-legend-toggle"
-        onClick={() => setExpanded((current) => !current)}
-        aria-expanded={expanded}
-      >
-        <span className="eyebrow">Map</span>
-        <span>{expanded ? 'Hide' : 'Show'}</span>
-      </button>
-      {expanded ? (
-        <ul>
-          <li>
-            {interactionStatus === 'spiderfied'
-              ? 'Spiderfied'
-              : 'Clustered'}
-          </li>
-          <li>
-            {comparedCount > 0
-              ? `${comparedCount} compared`
-              : '0 compared'}
-          </li>
-        </ul>
-      ) : null}
-    </div>
-  );
-}
-
 function MobileQuickFilters({
   search,
+  features,
+  brandOptions,
   types,
   selectedTypes,
   visibleCount,
@@ -1233,6 +1686,8 @@ function MobileQuickFilters({
   onClearFilters,
 }: {
   search: string;
+  features: LoungeFeature[];
+  brandOptions: BrandFilterOption[];
   types: string[];
   selectedTypes: string[];
   visibleCount: number;
@@ -1253,17 +1708,12 @@ function MobileQuickFilters({
         </button>
       </div>
 
-      <label className="mobile-results-search">
-        <span>Search</span>
-        <input
-          type="search"
-          inputMode="search"
-          enterKeyHint="search"
-          value={search}
-          onChange={(event) => onSearchChange(event.target.value)}
-          placeholder="Airport, city, lounge"
-        />
-      </label>
+      <SearchCommandCombobox
+        search={search}
+        features={features}
+        brandOptions={brandOptions}
+        onSearchChange={onSearchChange}
+      />
 
       <div className="mobile-type-strip">
         {types.map((type) => {
@@ -1690,11 +2140,11 @@ function MobileReviewView({
       {activeTab === 'cf' ? (
         <section className="mobile-review-panel">
         <div className="section-title-row">
-          <h2>CF sources</h2>
+          <h2>Source proof</h2>
           <span className="compare-count">{cloudflareSources.length}</span>
         </div>
         {cloudflareSources.length === 0 ? (
-          <div className="compare-empty">No CF sources</div>
+          <div className="compare-empty">No source proof</div>
         ) : (
           <div className="review-list">
             {cloudflareSources.map((source) => (
@@ -1853,34 +2303,6 @@ function MobileReviewView({
         </section>
       ) : null}
     </div>
-  );
-}
-
-function SourceEvidenceStrip({ evidence }: { evidence: CloudflareSourceRunEvidence | null }) {
-  const sources = evidence?.sources ?? [];
-
-  if (sources.length === 0) {
-    return null;
-  }
-
-  return (
-    <section className="source-evidence-strip" aria-label="Cloudflare source evidence">
-      <div className="section-title-row">
-        <h2>CF sources</h2>
-        <span className="compare-count">
-          {evidence?.stats.readyTasksWithCloudflareEvidence ?? 0} / {evidence?.stats.readyTasks ?? 0}
-        </span>
-      </div>
-      <div className="source-evidence-list">
-        {sources.map((source) => (
-          <span key={source.sourceId} className="source-evidence-chip">
-            <strong>{source.publisher}</strong>
-            <span>{source.httpStatus ?? 'n/a'}</span>
-            <span>{source.cloudflareSnapshot ? source.status : 'missing'}</span>
-          </span>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -2257,7 +2679,6 @@ function App() {
 
   const [selectedId, setSelectedId] = useState<string | null>(initialUrlState.selectedId);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [mapInteractionStatus, setMapInteractionStatus] = useState<MapInteractionStatus>('clusters');
   const [compareIds, setCompareIds] = useState<string[]>([]);
 
   const [isMobile, setIsMobile] = useState(() => window.matchMedia(MOBILE_MEDIA_QUERY).matches);
@@ -2924,14 +3345,6 @@ function App() {
   const activeFilterChips = useMemo(() => {
     const chips: FilterSummaryChip[] = [];
 
-    if (search.trim()) {
-      chips.push({
-        key: 'search',
-        label: `Search: ${search.trim()}`,
-        onRemove: () => setSearch(''),
-      });
-    }
-
     for (const type of selectedTypes) {
       chips.push({
         key: `type-${type}`,
@@ -2976,7 +3389,7 @@ function App() {
     }
 
     return chips;
-  }, [search, selectedTypes, selectedCountry, selectedCity, selectedBrand, selectedFacilities, toggleType, toggleFacility]);
+  }, [selectedTypes, selectedCountry, selectedCity, selectedBrand, selectedFacilities, toggleType, toggleFacility]);
 
   if (loading) {
     return <div className="state-screen">Loading...</div>;
@@ -3066,9 +3479,10 @@ function App() {
           </div>
 
           <div className="rail-controls">
-            <ActiveFilterSummary chips={activeFilterChips} onClearAll={clearAppliedFilters} />
             <FilterControls
+              search={search}
               types={types}
+              features={features}
               typeCounts={typeCounts}
               selectedTypes={selectedTypes}
               selectedCountry={selectedCountry}
@@ -3079,15 +3493,15 @@ function App() {
               brandOptions={brandOptions}
               selectedFacilities={selectedFacilities}
               facilityOptions={facilityOptions}
+              onSearchChange={setSearch}
               toggleType={toggleType}
               toggleFacility={toggleFacility}
               setSelectedCountry={setSelectedCountry}
               setSelectedCity={setSelectedCity}
               setSelectedBrand={setSelectedBrand}
             />
+            <ActiveFilterSummary chips={activeFilterChips} onClearAll={clearAppliedFilters} />
           </div>
-
-          <SourceEvidenceStrip evidence={cloudflareEvidence} />
 
           {comparedFeatures.length > 0 ? (
             <CompareTray
@@ -3125,11 +3539,8 @@ function App() {
               selectedId={selectedId}
               hoveredId={hoveredId}
               onSelect={(id) => selectFeature(id)}
-              onInteractionStatusChange={setMapInteractionStatus}
             />
           </div>
-
-          <MapLegend interactionStatus={mapInteractionStatus} comparedCount={comparedFeatures.length} />
 
           {selectedFeature ? (
             <DetailPanel
@@ -3219,9 +3630,11 @@ function App() {
               <div className="mobile-sheet-body" ref={mobileSheetBodyRef}>
                 {mobileUI.sheetMode === 'results' ? (
                   <>
-                    <MobileQuickFilters
-                      search={search}
-                      types={types}
+                <MobileQuickFilters
+                  search={search}
+                  features={features}
+                  brandOptions={brandOptions}
+                  types={types}
                       selectedTypes={selectedTypes}
                       visibleCount={filteredFeatures.length}
                       selectedFilterCount={selectedFilterCount}
@@ -3288,7 +3701,9 @@ function App() {
                     </div>
 
                     <FilterControls
+                      variant="sheet"
                       types={types}
+                      features={features}
                       typeCounts={typeCounts}
                       selectedTypes={mobileFilterDraft.types}
                       selectedCountry={mobileFilterDraft.country}

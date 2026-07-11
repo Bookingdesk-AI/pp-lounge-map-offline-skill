@@ -10,14 +10,10 @@ import { asFreezableGroup } from './freezable';
 const CLUSTER_FREEZE_ZOOM = 10;
 const CLUSTER_MAX_RADIUS = 50;
 
-export type MapInteractionStatus = 'clusters' | 'spiderfied';
-
 function ClusterInteractionController({
   clusterRef,
-  onInteractionStatusChange,
 }: {
   clusterRef: RefObject<L.MarkerClusterGroup | null>;
-  onInteractionStatusChange: (status: MapInteractionStatus) => void;
 }) {
   const map = useMap();
   const freezeModeRef = useRef<'frozen' | 'live'>('live');
@@ -38,13 +34,9 @@ function ClusterInteractionController({
       freezeModeRef.current = 'live';
     }
 
-    onInteractionStatusChange('clusters');
-  }, [clusterRef, map, onInteractionStatusChange]);
+  }, [clusterRef, map]);
 
   useMapEvents({
-    zoomstart: () => {
-      onInteractionStatusChange('clusters');
-    },
     zoomend: syncFreezeState,
   });
 
@@ -60,13 +52,11 @@ export const LoungeClusterLayer = memo(function LoungeClusterLayer({
   selectedId,
   hoveredId,
   onSelect,
-  onInteractionStatusChange,
 }: {
   features: LoungeFeature[];
   selectedId: string | null;
   hoveredId: string | null;
   onSelect: (id: string) => void;
-  onInteractionStatusChange: (status: MapInteractionStatus) => void;
 }) {
   const clusterRef = useRef<L.MarkerClusterGroup | null>(null);
   const iconCreateFunction = useMemo(() => createClusterIcon, []);
@@ -89,10 +79,7 @@ export const LoungeClusterLayer = memo(function LoungeClusterLayer({
 
   return (
     <>
-      <ClusterInteractionController
-        clusterRef={clusterRef}
-        onInteractionStatusChange={onInteractionStatusChange}
-      />
+      <ClusterInteractionController clusterRef={clusterRef} />
 
       <MarkerClusterGroup
         ref={clusterRef}
@@ -101,12 +88,12 @@ export const LoungeClusterLayer = memo(function LoungeClusterLayer({
         maxClusterRadius={CLUSTER_MAX_RADIUS}
         zoomToBoundsOnClick
         spiderfyOnMaxZoom
-        spiderfyDistanceMultiplier={1.15}
+        spiderfyDistanceMultiplier={1.55}
         iconCreateFunction={iconCreateFunction}
         spiderLegPolylineOptions={{
-          weight: 2,
-          color: 'rgba(36, 86, 166, 0.72)',
-          opacity: 0.72,
+          weight: 2.4,
+          color: 'rgba(36, 86, 166, 0.68)',
+          opacity: 0.78,
         }}
       >
         {features.map((feature) => {
@@ -118,7 +105,11 @@ export const LoungeClusterLayer = memo(function LoungeClusterLayer({
             <Marker
               key={id}
               position={[lat, lon]}
-              icon={markerIcon(feature.properties.type, active)}
+              icon={markerIcon(
+                feature.properties.type,
+                active,
+                feature.properties.canonical?.lounge.programs ?? feature.properties.programs ?? [],
+              )}
               eventHandlers={{
                 click: () => onSelect(id),
               }}
