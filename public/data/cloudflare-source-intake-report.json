@@ -1,7 +1,7 @@
 {
   "ok": true,
-  "generatedAt": "2026-07-11T23:47:13.436Z",
-  "runId": "cloudflare-report-2026-07-11T23-47-13-436Z",
+  "generatedAt": "2026-07-11T23:56:00.358Z",
+  "runId": "cloudflare-report-2026-07-11T23-56-00-358Z",
   "policy": {
     "fetchMode": "cloudflare_d1_source_runs_report",
     "rawSnapshotsCommitted": false,
@@ -16,16 +16,16 @@
   },
   "stats": {
     "totalSources": 16,
-    "fetched": 13,
+    "fetched": 14,
     "skipped": 0,
-    "httpErrors": 3,
+    "httpErrors": 2,
     "fetchErrors": 0,
     "childPagesFetched": 0,
     "discoveredAirportCodes": 18,
-    "discoveredLoungeLinks": 83,
-    "cloudflareSourceRuns": 97,
+    "discoveredLoungeLinks": 92,
+    "cloudflareSourceRuns": 98,
     "readyTasks": 16,
-    "readyTasksWithCloudflareEvidence": 13
+    "readyTasksWithCloudflareEvidence": 14
   },
   "terminalImpact": {
     "fullCatalogIntakeReport": false,
@@ -194,17 +194,27 @@
       "publisher": "Aspire Lounges",
       "url": "https://www.executivelounges.com/airport-lounges",
       "adapter": "official_page",
-      "status": "http_error",
-      "reason": "fetch failed",
-      "records": 0,
+      "status": "fetched",
+      "reason": null,
+      "records": 9,
       "airportCodes": [],
-      "loungeLinks": [],
-      "cloudflareSnapshot": false,
-      "finalUrl": null,
-      "httpStatus": null,
-      "contentType": "",
-      "bytes": 0,
-      "sha256": null,
+      "loungeLinks": [
+        "https://no1lounges.com/locations/birmingham/",
+        "https://no1lounges.com/locations/jersey/",
+        "https://no1lounges.com/locations/london-gatwick/",
+        "https://no1lounges.com/locations/london-heathrow/",
+        "https://no1lounges.com/locations/london-luton/",
+        "https://no1lounges.com/our-lounges/",
+        "https://no1lounges.com/partner-lounges/",
+        "https://no1lounges.com/partner-lounges/aspire-lounges/",
+        "https://no1lounges.com/partner-lounges/the-club/"
+      ],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://no1lounges.com/partner-lounges/aspire-lounges/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 277013,
+      "sha256": "cd4cae49e63930a47d4b804304f33948237c57f60e5a29377cb9e4c29245022a",
       "fetchAttempts": [
         {
           "url": "https://www.executivelounges.com/airport-lounges",
@@ -214,7 +224,7 @@
           "finalUrl": "https://www.aspirelounges.com/airport-lounges/",
           "contentType": "text/html; charset=UTF-8",
           "bytes": 4558,
-          "sha256": "1383610f9a864a602f14ec6bcb78c8407e10c999cd2bd3abc07bcbd20dbf9a70",
+          "sha256": "08d05cf72b6757e9708709c7a57ef7c1c7e67a7d0a75d1a4990c9feb09e1d5db",
           "robots": {
             "checked": true,
             "url": "https://www.executivelounges.com/robots.txt",
@@ -231,7 +241,7 @@
           "finalUrl": "https://www.aspirelounges.com/airport-lounges/",
           "contentType": "text/html; charset=UTF-8",
           "bytes": 4558,
-          "sha256": "5b0b03c0babc409e19f6376d56df9b8e746295a036cba7546476c3ddb714b93e",
+          "sha256": "d34f244582173e5d16a59ccb89b56b99656dd45bc0f4004426323321224bfb21",
           "robots": {
             "checked": true,
             "url": "https://www.aspirelounges.com/robots.txt",
@@ -248,7 +258,7 @@
           "finalUrl": "https://www.aspirelounges.com/",
           "contentType": "text/html; charset=UTF-8",
           "bytes": 4558,
-          "sha256": "b1d8713944b35998563cebde0c5b18df66e7781320718904486c9601eb55ce8a",
+          "sha256": "22bc04edac45f18941b65dd0845cc07c7000a2884319c09f42dd2fde45cd5e86",
           "robots": {
             "checked": true,
             "url": "https://www.aspirelounges.com/robots.txt",
@@ -256,10 +266,27 @@
             "disallowed": false,
             "disallowRuleCount": 1
           }
+        },
+        {
+          "url": "https://no1lounges.com/partner-lounges/aspire-lounges/",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://no1lounges.com/partner-lounges/aspire-lounges/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 277013,
+          "sha256": "cd4cae49e63930a47d4b804304f33948237c57f60e5a29377cb9e4c29245022a",
+          "robots": {
+            "checked": true,
+            "url": "https://no1lounges.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T23-47-11-166Z-aspire-lounges",
-      "retrievedAt": "2026-07-11T23:47:11.166Z"
+      "runId": "cloudflare-probe-2026-07-11T23-55-55-730Z-aspire-lounges",
+      "retrievedAt": "2026-07-11T23:55:55.730Z"
     },
     {
       "sourceId": "be-relax",

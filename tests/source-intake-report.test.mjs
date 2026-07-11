@@ -72,6 +72,16 @@ test('Visa source intake has Cloudflare fetch repair candidates', () => {
   assert.ok(visa.fetchUrls.every((url) => url.startsWith('https://')));
 });
 
+test('Aspire intake keeps official operator partner fallback', () => {
+  const aspire = sourceRegistry.find((source) => source.id === 'aspire-lounges');
+
+  assert.equal(aspire.url, 'https://www.executivelounges.com/airport-lounges');
+  assert.ok(aspire.fetchUrls.includes('https://www.aspirelounges.com/airport-lounges/'));
+  assert.ok(aspire.fetchUrls.includes('https://no1lounges.com/partner-lounges/aspire-lounges/'));
+  assert.ok(aspire.fetchUrls.every((url) => url.startsWith('https://')));
+  assert.match(aspire.rightsNote, /operator partner/);
+});
+
 test('latest Visa intake failure remains Cloudflare-only evidence', () => {
   const visa = report.sources.find((source) => source.sourceId === 'visa-airport-companion');
 

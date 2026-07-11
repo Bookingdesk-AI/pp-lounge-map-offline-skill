@@ -622,9 +622,10 @@
       "fetchUrls": [
         "https://www.executivelounges.com/airport-lounges",
         "https://www.aspirelounges.com/airport-lounges/",
-        "https://www.aspirelounges.com/"
+        "https://www.aspirelounges.com/",
+        "https://no1lounges.com/partner-lounges/aspire-lounges/"
       ],
-      "rightsNote": "Official Aspire location surface; retain URL provenance for every imported field.",
+      "rightsNote": "Official Aspire and official operator partner location surfaces; retain URL provenance for every imported field.",
       "lastRunAt": null,
       "records": 0,
       "issues": 0,

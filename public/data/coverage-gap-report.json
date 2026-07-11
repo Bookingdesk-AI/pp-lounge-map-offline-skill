@@ -2,7 +2,7 @@
   "generatedAt": "2026-06-18T20:08:20.197Z",
   "goalId": "lounge-guru-worldwide-coverage",
   "goalVersion": "2026-06-18",
-  "catalogHash": "db50699ec8fcd918209305a7777d09e5eeb5b448555fc4e81c05d9c9f22444b4",
+  "catalogHash": "5a2eb86f42028195884a8ffa3502d7da13fc6882ad63ccd03055018cf16d95fb",
   "terminalPassed": false,
   "blockers": [
     "approved_records_below_target",
@@ -30,17 +30,17 @@
     "sourceIntakeRuntime": "legacy-local-before-cloudflare-guardrail",
     "cloudflareSourceRuntimePassed": false,
     "cloudflareSourceEvidence": {
-      "sourceRunsRead": 97,
-      "cloudflareSourceRuns": 97,
-      "uniqueSources": 13,
-      "fetched": 13,
-      "cloudflareSnapshots": 13,
+      "sourceRunsRead": 98,
+      "cloudflareSourceRuns": 98,
+      "uniqueSources": 14,
+      "fetched": 14,
+      "cloudflareSnapshots": 14,
       "readyTasks": 3,
       "readyTasksWithCloudflareEvidence": 3,
       "readyTaskCoverageRatio": 1,
       "readyMemberGaps": 16,
-      "readyMemberGapsWithCloudflareEvidence": 13,
-      "readyMemberGapCoverageRatio": 0.8125,
+      "readyMemberGapsWithCloudflareEvidence": 14,
+      "readyMemberGapCoverageRatio": 0.875,
       "fullSourceIntakeReportRequired": true
     }
   },
@@ -79,8 +79,7 @@
     ],
     "accessBlockedSourceIds": [
       "united",
-      "american",
-      "aspire-lounges"
+      "american"
     ],
     "credentialSourceIds": [
       "loungereview-api",
@@ -408,7 +407,7 @@
           "status": "candidate",
           "adapter": "official_page",
           "records": 0,
-          "rightsNote": "Official Aspire location surface; retain URL provenance for every imported field."
+          "rightsNote": "Official Aspire and official operator partner location surfaces; retain URL provenance for every imported field."
         },
         {
           "sourceId": "marhaba",

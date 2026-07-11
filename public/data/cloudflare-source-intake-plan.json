@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-06-18T20:08:20.197Z",
   "coverageGoalId": "lounge-guru-worldwide-coverage",
-  "sourceRunId": "cloudflare-report-2026-07-11T23-47-13-436Z",
+  "sourceRunId": "cloudflare-report-2026-07-11T23-56-00-358Z",
   "policy": {
     "requiredRuntime": "cloudflare",
     "localScrawl": "blocked",
@@ -481,19 +481,20 @@
       "publisher": "Aspire Lounges",
       "adapter": "official_page",
       "sourceStatus": "candidate",
-      "runStatus": "http_error",
-      "runRecords": 0,
-      "cloudflareSnapshot": false,
-      "action": "fetch_repair",
+      "runStatus": "fetched",
+      "runRecords": 9,
+      "cloudflareSnapshot": true,
+      "action": "review_import",
       "status": "ready",
-      "next": "Fetch",
+      "next": "Review",
       "url": "https://www.executivelounges.com/airport-lounges",
       "fetchUrls": [
         "https://www.executivelounges.com/airport-lounges",
         "https://www.aspirelounges.com/airport-lounges/",
-        "https://www.aspirelounges.com/"
+        "https://www.aspirelounges.com/",
+        "https://no1lounges.com/partner-lounges/aspire-lounges/"
       ],
-      "rightsNote": "Official Aspire location surface; retain URL provenance for every imported field.",
+      "rightsNote": "Official Aspire and official operator partner location surfaces; retain URL provenance for every imported field.",
       "familyPresent": true,
       "terminalFamilyBlocked": false
     },
