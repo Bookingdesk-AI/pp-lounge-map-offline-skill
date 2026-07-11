@@ -2,7 +2,7 @@ import intakePlan from '../public/data/cloudflare-source-intake-plan.json' with 
 
 const USER_AGENT = 'lounge-guru-source-intake/1.0 (+https://loungeguru.desk.travel)';
 const DEFAULT_TIMEOUT_MS = 12000;
-const MAX_FETCH_URLS = 3;
+const MAX_FETCH_URLS = 8;
 const MAX_BATCH_TASKS = 20;
 const MAX_DERIVED_ITEMS = 40;
 const CLOUDFLARE_FETCH_ADAPTERS = new Set(['official_page', 'official_html', 'open_data']);
@@ -14,6 +14,7 @@ const LOUNGE_LINK_PATH_INCLUDE = [
   /(^|\/)our-lounges?(\/|$)/,
   /(^|\/)partner-lounges?(\/|$)/,
   /(^|\/)services\/lounges?(\/|$)/,
+  /(^|\/)airportAmenities\/[a-z0-9-]+-club\.jsp$/i,
   /(^|\/)club-?[a-z0-9-]*(\/|$)/,
   /(^|\/)clubrooms?(\/|$)/,
   /(^|\/)terminal-[a-z0-9-]+-lounge(\/|$)/,
@@ -254,6 +255,9 @@ function extractAirportCodes(text) {
     /\b[A-Z][A-Za-z .'-]{2,80}\s+Airport\s*\(([A-Z]{3})\)/g,
     /\(([A-Z]{3})\)\s*(?:Airport|Lounge|Terminal)\b/g,
     /\/(?:airport|airports|lounges?|locations?)\/([A-Z]{3})(?:[/?#]|$)/g,
+    /\/airport\/([a-z]{3})-map\.html(?:[/?#]|$)/gi,
+    /\/airportAmenities\/([a-z]{3})-club\.jsp(?:[/?#]|$)/gi,
+    /\b(?:Airport|Lounge|Terminal)\b[^()]{0,80}\(([A-Z]{3})\)/g,
   ];
 
   for (const pattern of patterns) {
@@ -321,6 +325,17 @@ function deriveSourceEvidence(response) {
   };
 }
 
+function mergeDerivedEvidence(target, source) {
+  for (const code of source.airportCodes) {
+    boundedPushUnique(target.airportCodes, code);
+  }
+  for (const link of source.loungeLinks) {
+    boundedPushUnique(target.loungeLinks, link);
+  }
+  target.airportCodes.sort();
+  target.loungeLinks.sort();
+}
+
 async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new Date().toISOString() }) {
   const runId = `cloudflare-probe-${generatedAt.replace(/[:.]/g, '-')}-${task.sourceId}`;
   const attempts = [];
@@ -353,9 +368,8 @@ async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new
       };
       attempts.push(attempt);
       if (response.ok) {
-        fetched = attempt;
-        derivedEvidence = deriveSourceEvidence(response);
-        break;
+        fetched ??= attempt;
+        mergeDerivedEvidence(derivedEvidence, deriveSourceEvidence(response));
       }
     } catch (error) {
       attempts.push({

@@ -2,7 +2,7 @@
   "generatedAt": "2026-06-18T20:08:20.197Z",
   "goalId": "lounge-guru-worldwide-coverage",
   "goalVersion": "2026-06-18",
-  "catalogHash": "96a9d0f41ce89c7feffbf7e7adcc87bc6b631deb26941c9fff940028e086066c",
+  "catalogHash": "db50699ec8fcd918209305a7777d09e5eeb5b448555fc4e81c05d9c9f22444b4",
   "terminalPassed": false,
   "blockers": [
     "approved_records_below_target",
@@ -30,8 +30,8 @@
     "sourceIntakeRuntime": "legacy-local-before-cloudflare-guardrail",
     "cloudflareSourceRuntimePassed": false,
     "cloudflareSourceEvidence": {
-      "sourceRunsRead": 60,
-      "cloudflareSourceRuns": 60,
+      "sourceRunsRead": 76,
+      "cloudflareSourceRuns": 76,
       "uniqueSources": 11,
       "fetched": 11,
       "cloudflareSnapshots": 11,

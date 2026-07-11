@@ -432,6 +432,11 @@
       "freshnessDays": 14,
       "url": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
       "fetchUrls": [
+        "https://www.united.com/en/us/fly/travel/airport/sfo-map.html",
+        "https://www.united.com/en/us/fly/travel/airport/lax-map.html",
+        "https://www.united.com/en/us/fly/travel/airport/ewr-map.html",
+        "https://www.united.com/en/us/fly/travel/airport/iad-map.html",
+        "https://www.united.com/en/us/fly/travel/airport/ord-map.html",
         "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
         "https://www.united.com/en/us/fly/travel/airport/united-club.html",
         "https://www.united.com/en/us/fly/travel/airport/lounge-access.html"
@@ -469,6 +474,11 @@
       "freshnessDays": 14,
       "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
       "fetchUrls": [
+        "https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp",
+        "https://www.aa.com/i18n/travelInformation/airportAmenities/lax-club.jsp",
+        "https://www.aa.com/i18n/travelInformation/airportAmenities/jfk-club.jsp",
+        "https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp",
+        "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
         "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
         "https://www.aa.com/i18n/travel-info/clubs/admirals-club.jsp",
         "https://www.aa.com/i18n/travel-info/clubs/admirals-club-access.jsp"
@@ -539,6 +549,10 @@
       "freshnessDays": 14,
       "url": "https://www.skyteam.com/en/about/lounges/",
       "fetchUrls": [
+        "https://www.skyteam.com/en/lounges/vancouver/",
+        "https://www.skyteam.com/en/lounges/dubai/",
+        "https://www.skyteam.com/en/lounges/sydney/",
+        "https://www.skyteam.com/en/lounges/frankfurt/",
         "https://www.skyteam.com/en/about/lounges/",
         "https://www.skyteam.com/en/lounges/",
         "https://www.skyteam.com/en/lounges/lounge-finder/"

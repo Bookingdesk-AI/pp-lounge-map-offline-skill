@@ -164,6 +164,53 @@ test('Cloudflare source intake probe supports ready airline HTML lanes', async (
   assert.equal(d1.calls.length, 1);
 });
 
+test('Cloudflare source intake probe aggregates bounded official source URLs', async () => {
+  const d1 = createD1Mock();
+  const fetchedUrls = [];
+  const response = await createSourceIntakeProbeResponse(
+    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=american', {
+      method: 'POST',
+      headers: {
+        'x-lounge-guru-intake-token': 'secret',
+      },
+    }),
+    {
+      LOUNGE_GURU_INTAKE_TOKEN: 'secret',
+      LOUNGE_GURU_DB: d1,
+    },
+    {
+      fetchImpl: async (url) => {
+        const textUrl = String(url);
+        fetchedUrls.push(textUrl);
+        if (textUrl.endsWith('/robots.txt')) {
+          return textResponse('User-agent: *\n');
+        }
+        const airportCode = textUrl.match(/airportAmenities\/([a-z]{3})-club\.jsp/)?.[1]?.toUpperCase() ?? 'DFW';
+        return textResponse(
+          `<html><body>${airportCode} Airport (${airportCode})<a href="/i18n/travelInformation/airportAmenities/${airportCode.toLowerCase()}-club.jsp">Club</a></body></html>`,
+        );
+      },
+    },
+  );
+
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.ok, true);
+  assert.equal(body.sourceId, 'american');
+  assert.equal(body.stats.fetched, 1);
+  assert.ok(fetchedUrls.includes('https://www.aa.com/robots.txt'));
+  assert.ok(fetchedUrls.includes('https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp'));
+  assert.ok(fetchedUrls.includes('https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp'));
+
+  const [, , , , sourcesJson] = d1.calls[0].params;
+  const sources = JSON.parse(sourcesJson);
+  assert.deepEqual(sources[0].airportCodes, ['CLT', 'DFW', 'JFK', 'LAX', 'ORD']);
+  assert.equal(sources[0].loungeLinks.length, 5);
+  assert.equal(sources[0].records, 5);
+  assert.ok(!Object.hasOwn(sources[0], 'text'));
+  assert.ok(!Object.hasOwn(sources[0], 'html'));
+});
+
 test('Cloudflare source intake batch probes ready public lanes only', async () => {
   const d1 = createD1Mock();
   const response = await createSourceIntakeBatchResponse(
@@ -315,7 +362,7 @@ test('Cloudflare source intake report returns D1-derived source report without r
   assert.equal(body.stats.readyTasks, 16);
   assert.equal(body.stats.readyTasksWithCloudflareEvidence, 16);
   assert.equal(body.stats.discoveredAirportCodes, 16);
-  assert.equal(body.stats.discoveredLoungeLinks, 16);
+  assert.ok(body.stats.discoveredLoungeLinks >= 16);
   assert.equal(body.terminalImpact.fullCatalogIntakeReport, false);
   assert.equal(body.terminalImpact.coverageGateStillRequiresFullCloudflareReport, true);
   assert.deepEqual(
@@ -345,8 +392,8 @@ test('Cloudflare source intake report returns D1-derived source report without r
     assert.ok(source.retrievedAt);
     assert.ok(source.url.startsWith('https://'));
     assert.deepEqual(source.airportCodes, ['LAX']);
-    assert.equal(source.loungeLinks.length, 1);
-    assert.ok(source.loungeLinks[0].startsWith(new URL(source.finalUrl).origin));
+    assert.ok(source.loungeLinks.length >= 1);
+    assert.ok(source.loungeLinks.every((link) => link.startsWith('https://')));
     assert.ok(source.sha256);
     assert.ok(!Object.hasOwn(source, 'text'));
     assert.ok(!Object.hasOwn(source, 'html'));

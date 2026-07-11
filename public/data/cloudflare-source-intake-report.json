@@ -1,7 +1,7 @@
 {
   "ok": true,
-  "generatedAt": "2026-07-11T22:48:33.427Z",
-  "runId": "cloudflare-report-2026-07-11T22-48-33-427Z",
+  "generatedAt": "2026-07-11T23:07:36.399Z",
+  "runId": "cloudflare-report-2026-07-11T23-07-36-399Z",
   "policy": {
     "fetchMode": "cloudflare_d1_source_runs_report",
     "rawSnapshotsCommitted": false,
@@ -21,9 +21,9 @@
     "httpErrors": 5,
     "fetchErrors": 0,
     "childPagesFetched": 0,
-    "discoveredAirportCodes": 8,
+    "discoveredAirportCodes": 12,
     "discoveredLoungeLinks": 43,
-    "cloudflareSourceRuns": 60,
+    "cloudflareSourceRuns": 76,
     "readyTasks": 16,
     "readyTasksWithCloudflareEvidence": 11
   },
@@ -57,7 +57,92 @@
           "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
           "contentType": "text/html",
           "bytes": 442,
-          "sha256": "ed7fe33372fd3d9561424f657b4dd937579890e6cd8eb243f982f9538d35d553",
+          "sha256": "54d9ae5d22fcfa504d630767a14d47bf81b8089672573cf052ce8e899458c666",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp",
+          "contentType": "text/html",
+          "bytes": 436,
+          "sha256": "cee2f16dc686ab047dd24d5b1012804e14b7a77a8157138dceb7974ded15b96b",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/lax-club.jsp",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/lax-club.jsp",
+          "contentType": "text/html",
+          "bytes": 436,
+          "sha256": "9aa9bf2bbb636a0c3ffa99cb7b20b126c30a61ec321faa25e71638b77b9db9a9",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/jfk-club.jsp",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/jfk-club.jsp",
+          "contentType": "text/html",
+          "bytes": 436,
+          "sha256": "f336355673ab2d1b1a739acf7b7ab8a7adf53b262fc8efbfe06aac1e8ca2a057",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp",
+          "contentType": "text/html",
+          "bytes": 436,
+          "sha256": "012a15bc4f2a9c132c4000629f1f3f4f5e3ba7a381cdeb3c619c20304ec0b360",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
+          "contentType": "text/html",
+          "bytes": 436,
+          "sha256": "e5b52eadffca932cc41c8cffd9b5a708e9b89ed96df931181483a41236369c9f",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -74,7 +159,7 @@
           "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club.jsp",
           "contentType": "text/html",
           "bytes": 428,
-          "sha256": "4a9e235d4077456d24dbb2177e954b6d44e594e38cb6d45cd4e6753768712b89",
+          "sha256": "697dd919d332942fdcaa01e895a3c4b7bf5009d9f26cd8b52cd2e461489712c8",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -91,7 +176,7 @@
           "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-access.jsp",
           "contentType": "text/html",
           "bytes": 439,
-          "sha256": "b5afb89abdbf90fa201df7acf1a2619632dbb211be8ff75df045fd208518d62e",
+          "sha256": "dc47addda8f84fd536723c7e49c770355470f54446df3c273ffb709ccbabcd49",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -101,8 +186,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-21-549Z-american",
-      "retrievedAt": "2026-07-11T22:48:21.549Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-22-655Z-american",
+      "retrievedAt": "2026-07-11T23:07:22.655Z"
     },
     {
       "sourceId": "aspire-lounges",
@@ -129,7 +214,7 @@
           "finalUrl": "https://www.aspirelounges.com/airport-lounges/",
           "contentType": "text/html; charset=UTF-8",
           "bytes": 4558,
-          "sha256": "b4e9752db04522ae3c237ae20250ff163f2b39395f24dabc0219d0dbe83bfc80",
+          "sha256": "209e8b9c1bdb15d939905b47f77f9a6604ee6ae8867ea57fff1523dfccbc1f94",
           "robots": {
             "checked": true,
             "url": "https://www.executivelounges.com/robots.txt",
@@ -146,7 +231,7 @@
           "finalUrl": "https://www.aspirelounges.com/airport-lounges/",
           "contentType": "text/html; charset=UTF-8",
           "bytes": 4558,
-          "sha256": "c7ce9e6283184e8f3824a87e9f663c7c8baed34c18c41c4a94f40bcaeaa212a9",
+          "sha256": "e8fe31c3088cae5e67e0eba2ee0e34863f760df40ec1724fdac29e30ea3b6ac1",
           "robots": {
             "checked": true,
             "url": "https://www.aspirelounges.com/robots.txt",
@@ -163,7 +248,7 @@
           "finalUrl": "https://www.aspirelounges.com/",
           "contentType": "text/html; charset=UTF-8",
           "bytes": 4558,
-          "sha256": "ccf0d22112dd3dce234b4ed36bf87447963379d26980687a0c8d3b10dfe04174",
+          "sha256": "a431ebbb76467107e96727b70b19bfc376799be6ecb6c7a8aaf1e5d6aed38cf5",
           "robots": {
             "checked": true,
             "url": "https://www.aspirelounges.com/robots.txt",
@@ -173,8 +258,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-21-875Z-aspire-lounges",
-      "retrievedAt": "2026-07-11T22:48:21.875Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-23-363Z-aspire-lounges",
+      "retrievedAt": "2026-07-11T23:07:23.363Z"
     },
     {
       "sourceId": "be-relax",
@@ -183,13 +268,17 @@
       "adapter": "official_page",
       "status": "fetched",
       "reason": null,
-      "records": 5,
+      "records": 9,
       "airportCodes": [
         "AUH",
+        "CLT",
+        "DFW",
         "DOH",
         "DXB",
         "EWR",
-        "JFK"
+        "JFK",
+        "LHR",
+        "SIN"
       ],
       "loungeLinks": [],
       "cloudflareSnapshot": true,
@@ -197,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 1040555,
-      "sha256": "f78d8f2fe07aa14cd14cf1b8a81a3fd07a70c14fdf2e1457897fb45cb3d649c0",
+      "sha256": "fd3e8f129e286a73f8bf0ede265a78ca3aa7ac040e204395a90550c34c34e295",
       "fetchAttempts": [
         {
           "url": "https://www.berelax.com/locations/",
@@ -207,7 +296,7 @@
           "finalUrl": "https://berelax.com/locations/",
           "contentType": "text/html",
           "bytes": 1040555,
-          "sha256": "f78d8f2fe07aa14cd14cf1b8a81a3fd07a70c14fdf2e1457897fb45cb3d649c0",
+          "sha256": "fd3e8f129e286a73f8bf0ede265a78ca3aa7ac040e204395a90550c34c34e295",
           "robots": {
             "checked": true,
             "url": "https://www.berelax.com/robots.txt",
@@ -217,8 +306,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-28-884Z-be-relax",
-      "retrievedAt": "2026-07-11T22:48:28.884Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-31-629Z-be-relax",
+      "retrievedAt": "2026-07-11T23:07:31.629Z"
     },
     {
       "sourceId": "citi-travel",
@@ -255,8 +344,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-10-832Z-citi-travel",
-      "retrievedAt": "2026-07-11T22:48:10.832Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-08-146Z-citi-travel",
+      "retrievedAt": "2026-07-11T23:07:08.146Z"
     },
     {
       "sourceId": "collinson-international",
@@ -293,8 +382,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-09-616Z-collinson-international",
-      "retrievedAt": "2026-07-11T22:48:09.616Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-06-800Z-collinson-international",
+      "retrievedAt": "2026-07-11T23:07:06.800Z"
     },
     {
       "sourceId": "delta",
@@ -315,7 +404,7 @@
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 62077,
-      "sha256": "cd1cacc088ccca314291577750248e7aeed6bd26951a1d2d0e6fa6c0334ded34",
+      "sha256": "cf076b02c3f560c2145e48ad5b36f964c6b36a16ec1a388ec066e15123502d89",
       "fetchAttempts": [
         {
           "url": "https://www.delta.com/us/en/delta-sky-club/locations",
@@ -325,7 +414,7 @@
           "finalUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
           "contentType": "text/html",
           "bytes": 62077,
-          "sha256": "cd1cacc088ccca314291577750248e7aeed6bd26951a1d2d0e6fa6c0334ded34",
+          "sha256": "cf076b02c3f560c2145e48ad5b36f964c6b36a16ec1a388ec066e15123502d89",
           "robots": {
             "checked": true,
             "url": "https://www.delta.com/robots.txt",
@@ -335,8 +424,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-21-264Z-delta",
-      "retrievedAt": "2026-07-11T22:48:21.264Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-22-405Z-delta",
+      "retrievedAt": "2026-07-11T23:07:22.405Z"
     },
     {
       "sourceId": "dragonpass",
@@ -373,8 +462,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-13-688Z-dragonpass",
-      "retrievedAt": "2026-07-11T22:48:13.688Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-12-404Z-dragonpass",
+      "retrievedAt": "2026-07-11T23:07:12.404Z"
     },
     {
       "sourceId": "marhaba",
@@ -422,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=UTF-8",
       "bytes": 240161,
-      "sha256": "93bd0cd6ab758b18a960504aaf4cc0f35000694cd5bbd880edce59afdeb703c3",
+      "sha256": "68d0fd7a3e940930ed793bc9813965e28589e2072abbae1eedf8b4b14a6c6432",
       "fetchAttempts": [
         {
           "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
@@ -432,7 +521,7 @@
           "finalUrl": "https://www.marhabaservices.com/ae/english/airport-lounges",
           "contentType": "text/html;charset=UTF-8",
           "bytes": 240161,
-          "sha256": "93bd0cd6ab758b18a960504aaf4cc0f35000694cd5bbd880edce59afdeb703c3",
+          "sha256": "68d0fd7a3e940930ed793bc9813965e28589e2072abbae1eedf8b4b14a6c6432",
           "robots": {
             "checked": true,
             "url": "https://www.marhabaservices.com/robots.txt",
@@ -442,8 +531,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-23-117Z-marhaba",
-      "retrievedAt": "2026-07-11T22:48:23.117Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-24-559Z-marhaba",
+      "retrievedAt": "2026-07-11T23:07:24.559Z"
     },
     {
       "sourceId": "mastercard-travel-pass",
@@ -480,8 +569,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-12-843Z-mastercard-travel-pass",
-      "retrievedAt": "2026-07-11T22:48:12.843Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-11-449Z-mastercard-travel-pass",
+      "retrievedAt": "2026-07-11T23:07:11.449Z"
     },
     {
       "sourceId": "no1-lounges",
@@ -532,8 +621,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-26-765Z-no1-lounges",
-      "retrievedAt": "2026-07-11T22:48:26.765Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-29-561Z-no1-lounges",
+      "retrievedAt": "2026-07-11T23:07:29.561Z"
     },
     {
       "sourceId": "openstreetmap",
@@ -550,7 +639,7 @@
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
       "bytes": 31183,
-      "sha256": "dde35b3157591ee2cfed5ade5a73720df33e7588e604e604ddf842ba3e3afce7",
+      "sha256": "526062550d6872af804e7358c59ea2a7f897f1d1226a22e487c420f721d9c54c",
       "fetchAttempts": [
         {
           "url": "https://www.openstreetmap.org/",
@@ -560,7 +649,7 @@
           "finalUrl": "https://www.openstreetmap.org/",
           "contentType": "text/html; charset=utf-8",
           "bytes": 31183,
-          "sha256": "dde35b3157591ee2cfed5ade5a73720df33e7588e604e604ddf842ba3e3afce7",
+          "sha256": "526062550d6872af804e7358c59ea2a7f897f1d1226a22e487c420f721d9c54c",
           "robots": {
             "checked": true,
             "url": "https://www.openstreetmap.org/robots.txt",
@@ -570,8 +659,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-30-482Z-openstreetmap",
-      "retrievedAt": "2026-07-11T22:48:30.482Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-33-165Z-openstreetmap",
+      "retrievedAt": "2026-07-11T23:07:33.165Z"
     },
     {
       "sourceId": "primeclass",
@@ -610,8 +699,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-25-475Z-primeclass",
-      "retrievedAt": "2026-07-11T22:48:25.475Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-27-048Z-primeclass",
+      "retrievedAt": "2026-07-11T23:07:27.048Z"
     },
     {
       "sourceId": "skyteam",
@@ -636,6 +725,74 @@
           "reason": null,
           "httpStatus": 403,
           "finalUrl": "https://www.skyteam.com/en/about/lounges/",
+          "contentType": "text/html",
+          "bytes": 118,
+          "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/vancouver/",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/vancouver/",
+          "contentType": "text/html",
+          "bytes": 118,
+          "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/dubai/",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/dubai/",
+          "contentType": "text/html",
+          "bytes": 118,
+          "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/sydney/",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/sydney/",
+          "contentType": "text/html",
+          "bytes": 118,
+          "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/frankfurt/",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/frankfurt/",
           "contentType": "text/html",
           "bytes": 118,
           "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
@@ -682,8 +839,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-18-401Z-skyteam",
-      "retrievedAt": "2026-07-11T22:48:18.401Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-17-605Z-skyteam",
+      "retrievedAt": "2026-07-11T23:07:17.605Z"
     },
     {
       "sourceId": "star-alliance",
@@ -754,8 +911,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-15-971Z-star-alliance",
-      "retrievedAt": "2026-07-11T22:48:15.971Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-15-270Z-star-alliance",
+      "retrievedAt": "2026-07-11T23:07:15.270Z"
     },
     {
       "sourceId": "united",
@@ -780,6 +937,91 @@
           "reason": null,
           "httpStatus": 520,
           "finalUrl": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/sfo-map.html",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/sfo-map.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/lax-map.html",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/lax-map.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/ewr-map.html",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/ewr-map.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/iad-map.html",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/iad-map.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/ord-map.html",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/ord-map.html",
           "contentType": "text/plain; charset=UTF-8",
           "bytes": 16,
           "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
@@ -826,8 +1068,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-20-971Z-united",
-      "retrievedAt": "2026-07-11T22:48:20.971Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-21-742Z-united",
+      "retrievedAt": "2026-07-11T23:07:21.742Z"
     },
     {
       "sourceId": "visa-airport-companion",
@@ -844,7 +1086,7 @@
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 59310,
-      "sha256": "af7a21a1cb30d7c2a7278b9f1b859039618f064c5bec25c4eb2d9ff2a49f8a98",
+      "sha256": "722e615f708c3cf79ca0da4fc93cd670d75106680d46f869536d7eff90cf31c3",
       "fetchAttempts": [
         {
           "url": "https://www.visaairportcompanion.com/",
@@ -854,7 +1096,7 @@
           "finalUrl": "https://visaairportcompanion.ca/",
           "contentType": "text/html",
           "bytes": 59310,
-          "sha256": "af7a21a1cb30d7c2a7278b9f1b859039618f064c5bec25c4eb2d9ff2a49f8a98",
+          "sha256": "722e615f708c3cf79ca0da4fc93cd670d75106680d46f869536d7eff90cf31c3",
           "robots": {
             "checked": true,
             "url": "https://www.visaairportcompanion.com/robots.txt",
@@ -862,10 +1104,44 @@
             "disallowed": false,
             "disallowRuleCount": 0
           }
+        },
+        {
+          "url": "https://visaairportcompanion.ca/",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://visaairportcompanion.ca/",
+          "contentType": "text/html",
+          "bytes": 59310,
+          "sha256": "244c991d765306317d828138b91fea2a977040768f4b2eef7dd9cdd12a612332",
+          "robots": {
+            "checked": true,
+            "url": "https://visaairportcompanion.ca/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.visa.gp/pay-with-visa/find-a-card/benefits/visa-airport-companion.html",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://www.visa.gp/pay-with-visa/find-a-card/benefits/visa-airport-companion.html",
+          "contentType": "text/html;charset=utf-8",
+          "bytes": 57497,
+          "sha256": "5f815321247f52568ad8f18d37a89a0a1fb5a09ab9bbaba0189b37b15569b7a9",
+          "robots": {
+            "checked": true,
+            "url": "https://www.visa.gp/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-11-252Z-visa-airport-companion",
-      "retrievedAt": "2026-07-11T22:48:11.252Z"
+      "runId": "cloudflare-probe-2026-07-11T23-07-08-602Z-visa-airport-companion",
+      "retrievedAt": "2026-07-11T23:07:08.602Z"
     }
   ]
 }

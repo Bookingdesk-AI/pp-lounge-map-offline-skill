@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-11T22:48:32.455Z",
+  "generatedAt": "2026-07-11T23:07:35.290Z",
   "policy": {
     "source": "cloudflare-d1-source_runs",
     "database": "lounge-guru-catalog",
@@ -10,8 +10,8 @@
     "guardrail": "official/public source-run evidence only; no local page fetch"
   },
   "stats": {
-    "sourceRunsRead": 60,
-    "cloudflareSourceRuns": 60,
+    "sourceRunsRead": 76,
+    "cloudflareSourceRuns": 76,
     "uniqueSources": 11,
     "attemptedSources": 16,
     "fetched": 11,
@@ -178,15 +178,15 @@
       "url": "https://www.berelax.com/locations/",
       "adapter": "official_page",
       "status": "fetched",
-      "records": 5,
-      "airportCodeCount": 5,
+      "records": 9,
+      "airportCodeCount": 9,
       "loungeLinkCount": 0,
       "cloudflareSnapshot": true,
       "finalUrl": "https://berelax.com/locations/",
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 1040555,
-      "sha256": "f78d8f2fe07aa14cd14cf1b8a81a3fd07a70c14fdf2e1457897fb45cb3d649c0",
+      "sha256": "fd3e8f129e286a73f8bf0ede265a78ca3aa7ac040e204395a90550c34c34e295",
       "reason": null,
       "fetchAttempts": [
         {
@@ -196,7 +196,7 @@
           "finalUrl": "https://berelax.com/locations/",
           "contentType": "text/html",
           "bytes": 1040555,
-          "sha256": "f78d8f2fe07aa14cd14cf1b8a81a3fd07a70c14fdf2e1457897fb45cb3d649c0",
+          "sha256": "fd3e8f129e286a73f8bf0ede265a78ca3aa7ac040e204395a90550c34c34e295",
           "robots": {
             "checked": true,
             "url": "https://www.berelax.com/robots.txt",
@@ -206,8 +206,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-28-884Z-be-relax",
-      "generatedAt": "2026-07-11T22:48:28.884Z",
+      "runId": "cloudflare-probe-2026-07-11T23-07-31-629Z-be-relax",
+      "generatedAt": "2026-07-11T23:07:31.629Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -244,8 +244,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-10-832Z-citi-travel",
-      "generatedAt": "2026-07-11T22:48:10.832Z",
+      "runId": "cloudflare-probe-2026-07-11T23-07-08-146Z-citi-travel",
+      "generatedAt": "2026-07-11T23:07:08.146Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -282,8 +282,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-09-616Z-collinson-international",
-      "generatedAt": "2026-07-11T22:48:09.616Z",
+      "runId": "cloudflare-probe-2026-07-11T23-07-06-800Z-collinson-international",
+      "generatedAt": "2026-07-11T23:07:06.800Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -300,7 +300,7 @@
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 62077,
-      "sha256": "cd1cacc088ccca314291577750248e7aeed6bd26951a1d2d0e6fa6c0334ded34",
+      "sha256": "cf076b02c3f560c2145e48ad5b36f964c6b36a16ec1a388ec066e15123502d89",
       "reason": null,
       "fetchAttempts": [
         {
@@ -310,7 +310,7 @@
           "finalUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
           "contentType": "text/html",
           "bytes": 62077,
-          "sha256": "cd1cacc088ccca314291577750248e7aeed6bd26951a1d2d0e6fa6c0334ded34",
+          "sha256": "cf076b02c3f560c2145e48ad5b36f964c6b36a16ec1a388ec066e15123502d89",
           "robots": {
             "checked": true,
             "url": "https://www.delta.com/robots.txt",
@@ -320,8 +320,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-21-264Z-delta",
-      "generatedAt": "2026-07-11T22:48:21.264Z",
+      "runId": "cloudflare-probe-2026-07-11T23-07-22-405Z-delta",
+      "generatedAt": "2026-07-11T23:07:22.405Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -358,8 +358,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-13-688Z-dragonpass",
-      "generatedAt": "2026-07-11T22:48:13.688Z",
+      "runId": "cloudflare-probe-2026-07-11T23-07-12-404Z-dragonpass",
+      "generatedAt": "2026-07-11T23:07:12.404Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -376,7 +376,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=UTF-8",
       "bytes": 240161,
-      "sha256": "93bd0cd6ab758b18a960504aaf4cc0f35000694cd5bbd880edce59afdeb703c3",
+      "sha256": "68d0fd7a3e940930ed793bc9813965e28589e2072abbae1eedf8b4b14a6c6432",
       "reason": null,
       "fetchAttempts": [
         {
@@ -386,7 +386,7 @@
           "finalUrl": "https://www.marhabaservices.com/ae/english/airport-lounges",
           "contentType": "text/html;charset=UTF-8",
           "bytes": 240161,
-          "sha256": "93bd0cd6ab758b18a960504aaf4cc0f35000694cd5bbd880edce59afdeb703c3",
+          "sha256": "68d0fd7a3e940930ed793bc9813965e28589e2072abbae1eedf8b4b14a6c6432",
           "robots": {
             "checked": true,
             "url": "https://www.marhabaservices.com/robots.txt",
@@ -396,8 +396,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-23-117Z-marhaba",
-      "generatedAt": "2026-07-11T22:48:23.117Z",
+      "runId": "cloudflare-probe-2026-07-11T23-07-24-559Z-marhaba",
+      "generatedAt": "2026-07-11T23:07:24.559Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -434,8 +434,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-12-843Z-mastercard-travel-pass",
-      "generatedAt": "2026-07-11T22:48:12.843Z",
+      "runId": "cloudflare-probe-2026-07-11T23-07-11-449Z-mastercard-travel-pass",
+      "generatedAt": "2026-07-11T23:07:11.449Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -472,8 +472,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-26-765Z-no1-lounges",
-      "generatedAt": "2026-07-11T22:48:26.765Z",
+      "runId": "cloudflare-probe-2026-07-11T23-07-29-561Z-no1-lounges",
+      "generatedAt": "2026-07-11T23:07:29.561Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -490,7 +490,7 @@
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
       "bytes": 31183,
-      "sha256": "dde35b3157591ee2cfed5ade5a73720df33e7588e604e604ddf842ba3e3afce7",
+      "sha256": "526062550d6872af804e7358c59ea2a7f897f1d1226a22e487c420f721d9c54c",
       "reason": null,
       "fetchAttempts": [
         {
@@ -500,7 +500,7 @@
           "finalUrl": "https://www.openstreetmap.org/",
           "contentType": "text/html; charset=utf-8",
           "bytes": 31183,
-          "sha256": "dde35b3157591ee2cfed5ade5a73720df33e7588e604e604ddf842ba3e3afce7",
+          "sha256": "526062550d6872af804e7358c59ea2a7f897f1d1226a22e487c420f721d9c54c",
           "robots": {
             "checked": true,
             "url": "https://www.openstreetmap.org/robots.txt",
@@ -510,8 +510,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-30-482Z-openstreetmap",
-      "generatedAt": "2026-07-11T22:48:30.482Z",
+      "runId": "cloudflare-probe-2026-07-11T23-07-33-165Z-openstreetmap",
+      "generatedAt": "2026-07-11T23:07:33.165Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -548,8 +548,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-25-475Z-primeclass",
-      "generatedAt": "2026-07-11T22:48:25.475Z",
+      "runId": "cloudflare-probe-2026-07-11T23-07-27-048Z-primeclass",
+      "generatedAt": "2026-07-11T23:07:27.048Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -566,7 +566,7 @@
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 59310,
-      "sha256": "af7a21a1cb30d7c2a7278b9f1b859039618f064c5bec25c4eb2d9ff2a49f8a98",
+      "sha256": "722e615f708c3cf79ca0da4fc93cd670d75106680d46f869536d7eff90cf31c3",
       "reason": null,
       "fetchAttempts": [
         {
@@ -576,7 +576,7 @@
           "finalUrl": "https://visaairportcompanion.ca/",
           "contentType": "text/html",
           "bytes": 59310,
-          "sha256": "af7a21a1cb30d7c2a7278b9f1b859039618f064c5bec25c4eb2d9ff2a49f8a98",
+          "sha256": "722e615f708c3cf79ca0da4fc93cd670d75106680d46f869536d7eff90cf31c3",
           "robots": {
             "checked": true,
             "url": "https://www.visaairportcompanion.com/robots.txt",
@@ -584,10 +584,42 @@
             "disallowed": false,
             "disallowRuleCount": 0
           }
+        },
+        {
+          "url": "https://visaairportcompanion.ca/",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://visaairportcompanion.ca/",
+          "contentType": "text/html",
+          "bytes": 59310,
+          "sha256": "244c991d765306317d828138b91fea2a977040768f4b2eef7dd9cdd12a612332",
+          "robots": {
+            "checked": true,
+            "url": "https://visaairportcompanion.ca/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.visa.gp/pay-with-visa/find-a-card/benefits/visa-airport-companion.html",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.visa.gp/pay-with-visa/find-a-card/benefits/visa-airport-companion.html",
+          "contentType": "text/html;charset=utf-8",
+          "bytes": 57497,
+          "sha256": "5f815321247f52568ad8f18d37a89a0a1fb5a09ab9bbaba0189b37b15569b7a9",
+          "robots": {
+            "checked": true,
+            "url": "https://www.visa.gp/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-48-11-252Z-visa-airport-companion",
-      "generatedAt": "2026-07-11T22:48:11.252Z",
+      "runId": "cloudflare-probe-2026-07-11T23-07-08-602Z-visa-airport-companion",
+      "generatedAt": "2026-07-11T23:07:08.602Z",
       "fetchMode": "cloudflare_single_source_probe"
     }
   ],
