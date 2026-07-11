@@ -39,6 +39,22 @@ async function readJson(filePath) {
   return JSON.parse(await fs.readFile(filePath, 'utf8'));
 }
 
+async function writeFileAtomic(filePath, contents) {
+  const directory = path.dirname(filePath);
+  const temporaryPath = path.join(
+    directory,
+    `.${path.basename(filePath)}.${process.pid}.${Date.now()}.${crypto.randomBytes(6).toString('hex')}.tmp`,
+  );
+
+  try {
+    await fs.writeFile(temporaryPath, contents, 'utf8');
+    await fs.rename(temporaryPath, filePath);
+  } catch (error) {
+    await fs.rm(temporaryPath, { force: true }).catch(() => {});
+    throw error;
+  }
+}
+
 function summarize(catalog, goal, migrationSql, sourceReport, sourceRunEvidence) {
   const gapReport = createCoverageGapReport({
     goal,
@@ -243,7 +259,7 @@ async function main() {
   ];
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
-  await fs.writeFile(outputPath, `${statements.join('\n')}\n`, 'utf8');
+  await writeFileAtomic(outputPath, `${statements.join('\n')}\n`);
   console.log(JSON.stringify({
     outputPath: path.relative(projectRoot, outputPath),
     runId,
