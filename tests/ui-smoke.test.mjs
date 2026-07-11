@@ -12,6 +12,7 @@ test('UI smoke parses default live target and selected record', () => {
   assert.equal(options.selectedId, 'candidate-chase-sapphire-bos-chase-sapphire-lounge-by-the-club');
   assert.equal(options.expectedLogo, 'chase-sapphire.svg');
   assert.equal(options.timeoutMs, 20_000);
+  assert.equal(options.checkReviewQueue, false);
 });
 
 test('UI smoke accepts local preview options', () => {
@@ -21,6 +22,7 @@ test('UI smoke accepts local preview options', () => {
     '--expected-logo=priority-pass.svg',
     '--chrome-bin=/tmp/chrome',
     '--timeout-ms=7000',
+    '--check-review-queue',
   ]);
 
   assert.equal(options.baseUrl, 'http://127.0.0.1:4302');
@@ -28,6 +30,13 @@ test('UI smoke accepts local preview options', () => {
   assert.equal(options.expectedLogo, 'priority-pass.svg');
   assert.equal(options.chromeBin, '/tmp/chrome');
   assert.equal(options.timeoutMs, 7000);
+  assert.equal(options.checkReviewQueue, true);
+});
+
+test('UI smoke accepts review queue env flag', () => {
+  const options = parseUiSmokeArgs([], { LOUNGE_GURU_UI_SMOKE_CHECK_REVIEW_QUEUE: '1' });
+
+  assert.equal(options.checkReviewQueue, true);
 });
 
 test('UI smoke rejects unsafe or incomplete options', () => {

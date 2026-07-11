@@ -26,9 +26,14 @@ export function parseUiSmokeArgs(args, env = process.env) {
     expectedLogo: env.LOUNGE_GURU_UI_SMOKE_EXPECTED_LOGO || DEFAULT_EXPECTED_LOGO,
     chromeBin: env.CHROME_BIN || '',
     timeoutMs: Number(env.LOUNGE_GURU_UI_SMOKE_TIMEOUT_MS || 20_000),
+    checkReviewQueue: env.LOUNGE_GURU_UI_SMOKE_CHECK_REVIEW_QUEUE === '1',
   };
 
   for (const arg of args) {
+    if (arg === '--check-review-queue') {
+      options.checkReviewQueue = true;
+      continue;
+    }
     if (arg.startsWith('--base-url=')) {
       options.baseUrl = arg.slice('--base-url='.length);
       continue;
@@ -211,6 +216,51 @@ function assertViewport(result) {
   return failures;
 }
 
+function reviewQueueExpression() {
+  return `(() => {
+    const tabs = [...document.querySelectorAll('.mobile-review-tabs button')];
+    const queueTab = tabs.find((button) => button.innerText.toLowerCase().includes('queue'));
+    if (queueTab && queueTab.getAttribute('aria-selected') !== 'true') {
+      queueTab.click();
+    }
+    const root = document.documentElement;
+    const text = document.body.innerText;
+    const panelText = document.querySelector('.mobile-review-panel')?.innerText ?? '';
+    const panel = panelText.toLowerCase();
+    return {
+      width: 390,
+      height: 844,
+      mobile: true,
+      check: 'review-queue',
+      selectedTab: tabs.find((button) => button.getAttribute('aria-selected') === 'true')?.innerText ?? '',
+      hasOfficialQueue: panel.includes('official airport code review'),
+      hasPublishCount: panel.includes('publish'),
+      hasManualRows: panel.includes('manual'),
+      hasCandidateRow: /chase sapphire|american express|capital one|air canada|airport dimensions|escape|oneworld/i.test(panelText),
+      queueLaneCount: document.querySelectorAll('.review-lane-grid.is-mobile-queue > span').length,
+      sourceRows: document.querySelectorAll('.review-list.is-compact .review-row').length,
+      actionRows: document.querySelectorAll('.review-row.is-action').length,
+      hasForbiddenUiCopy: /Welcome|Get started|Discover|Powerful|Seamless|Intuitive|Unlock|Transform|All-in-one/.test(text),
+      horizontalOverflow: root.scrollWidth > root.clientWidth + 1,
+    };
+  })()`;
+}
+
+function assertReviewQueue(result) {
+  const failures = [];
+  if (!result.selectedTab?.toLowerCase().includes('queue')) failures.push('review queue tab not selected');
+  if (!result.hasOfficialQueue) failures.push('official queue missing');
+  if (!result.hasPublishCount) failures.push('source decision counts missing');
+  if (!result.hasManualRows) failures.push('manual labels missing');
+  if (!result.hasCandidateRow) failures.push('manual review row missing');
+  if (result.queueLaneCount < 3) failures.push('queue lanes missing');
+  if (result.sourceRows < 3) failures.push('source decision rows missing');
+  if (result.actionRows < 1) failures.push('manual row actions missing');
+  if (result.hasForbiddenUiCopy) failures.push('forbidden UI copy visible');
+  if (result.horizontalOverflow) failures.push('horizontal overflow');
+  return failures;
+}
+
 async function runViewport({ port, baseUrl, selectedId, expectedLogo, width, height, mobile, timeoutMs }) {
   const targetUrl = `${baseUrl}/?selected=${encodeURIComponent(selectedId)}&sheet=full&mode=details`;
   const target = await createTarget(port, 'about:blank');
@@ -254,6 +304,46 @@ async function runViewport({ port, baseUrl, selectedId, expectedLogo, width, hei
   }
 }
 
+async function runMobileReviewQueue({ port, baseUrl, timeoutMs }) {
+  const targetUrl = `${baseUrl}/?sheet=full&mode=review`;
+  const target = await createTarget(port, 'about:blank');
+  const client = await connectToTarget(target.webSocketDebuggerUrl);
+
+  try {
+    await client.send('Page.enable');
+    await client.send('Runtime.enable');
+    await client.send('Emulation.setDeviceMetricsOverride', {
+      width: 390,
+      height: 844,
+      deviceScaleFactor: 3,
+      mobile: true,
+    });
+    await client.send('Page.navigate', { url: targetUrl });
+
+    const deadline = Date.now() + timeoutMs;
+    let value = null;
+    while (Date.now() < deadline) {
+      const result = await client.send('Runtime.evaluate', {
+        returnByValue: true,
+        expression: reviewQueueExpression(),
+      });
+      value = result.result.value;
+      if (value?.selectedTab?.toLowerCase().includes('queue') && value?.hasCandidateRow) {
+        break;
+      }
+      await wait(250);
+    }
+
+    return {
+      ...value,
+      failures: assertReviewQueue(value ?? {}),
+    };
+  } finally {
+    await client.send('Target.closeTarget', { targetId: target.id }).catch(() => undefined);
+    client.close();
+  }
+}
+
 async function runWithChrome(options) {
   const chromeBin = findChrome(options.chromeBin);
   const port = await getFreePort();
@@ -287,6 +377,9 @@ async function runWithChrome(options) {
     for (const viewport of viewports) {
       results.push(await runViewport({ port, ...options, ...viewport }));
     }
+    if (options.checkReviewQueue) {
+      results.push(await runMobileReviewQueue({ port, ...options }));
+    }
     return results;
   } finally {
     if (!chrome.killed) {
@@ -312,7 +405,9 @@ export async function runUiSmoke({ args = process.argv.slice(2), env = process.e
   const options = parseUiSmokeArgs(args, env);
   const results = await runWithChrome(options);
   const failures = results.flatMap((result) =>
-    result.failures.map((failure) => `${result.mobile ? 'mobile' : 'desktop'}: ${failure}`),
+    result.failures.map((failure) =>
+      `${result.check ?? (result.mobile ? 'mobile' : 'desktop')}: ${failure}`,
+    ),
   );
   const summary = {
     ok: failures.length === 0,
