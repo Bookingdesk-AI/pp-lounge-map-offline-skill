@@ -45,6 +45,59 @@ Cloudflare source-run evidence: `public/data/cloudflare-source-run-evidence.json
 - D1 schema tables present
 - Source intake runtime: `cloudflare`
 
+## Current Blocker
+
+Latest local gate:
+
+```text
+Catalog: 2644 records, 1795 approved, 849 review
+Non-PP: 890 records, candidates 890
+Approved ratio: 67.89%
+Source proof: 3/16
+Cloudflare preflight: intake token missing, API token present, local scrawl blocked
+Terminal goal: blocked
+```
+
+`npx wrangler whoami` is the first Cloudflare gate. If it fails, do not deploy, push D1 data, or promote intake evidence.
+
+Current failure:
+
+```text
+Invalid access token [code: 9109]
+```
+
+Fix order:
+
+1. Replace the invalid `CLOUDFLARE_API_TOKEN` with a token that can read the account, deploy Pages, and access the D1 database.
+2. Confirm auth:
+
+```bash
+npx wrangler whoami
+```
+
+3. Set the Worker intake secret for local report export:
+
+```bash
+export LOUNGE_GURU_INTAKE_TOKEN=<secret>
+```
+
+4. Run Cloudflare-only source evidence export:
+
+```bash
+npm run intake:cloudflare:report:export
+npm run intake:cloudflare:promote
+npm run intake:evidence
+```
+
+5. Review every non-PP candidate before approval. Do not approve a record unless airport identity, terminal/location, hours or opening state, access program, and source provenance match the cited public or licensed source.
+6. Publish only after the review queue is empty:
+
+```bash
+npm run db:catalog:push
+npm run validate:coverage
+npm run goal:coverage
+```
+
 ## Required Source Families
 
 - Licensed global baseline: LoungeReview API, Holiday Extras API

@@ -112,6 +112,7 @@ interface SearchCommandSuggestion {
   detail: string;
   query: string;
   source: 'city' | 'airport' | 'brand' | 'lounge';
+  asset?: LoungeBrandAsset;
 }
 
 interface FilterSummaryChip {
@@ -431,6 +432,62 @@ function getFeatureBrandName(feature: LoungeFeature) {
     feature.properties.provider ??
     'Priority Pass'
   ).trim();
+}
+
+function normalizeBrandLookup(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function findBrandAssetForText(value: string, brands: LoungeBrandAsset[]) {
+  const normalizedValue = normalizeBrandLookup(value);
+  if (!normalizedValue) {
+    return undefined;
+  }
+
+  const matchesBrand = (brand: LoungeBrandAsset) => {
+    const names = [brand.name, brand.id, ...(brand.aliases ?? [])].map(normalizeBrandLookup).filter(Boolean);
+    return names.some(
+      (name) =>
+        normalizedValue === name ||
+        normalizedValue.includes(name) ||
+        name.includes(normalizedValue),
+    );
+  };
+
+  return brands.find(matchesBrand);
+}
+
+function ProgramBrandMarks({
+  programs,
+  brands,
+  fallback = 'Not listed',
+}: {
+  programs: string[];
+  brands: LoungeBrandAsset[];
+  fallback?: string;
+}) {
+  const visiblePrograms = Array.from(new Set(programs.map((program) => program.trim()).filter(Boolean))).slice(0, 6);
+
+  if (visiblePrograms.length === 0) {
+    return <>{fallback}</>;
+  }
+
+  return (
+    <span className="program-brand-list">
+      {visiblePrograms.map((program) => (
+        <BrandMark
+          key={program}
+          asset={findBrandAssetForText(program, brands)}
+          label={program}
+          compact
+        />
+      ))}
+    </span>
+  );
 }
 
 function BrandMark({
@@ -826,12 +883,14 @@ function SearchCommandCombobox({
   search,
   features,
   brandOptions,
+  brands,
   onSearchChange,
   onSearchFocus,
 }: {
   search: string;
   features: LoungeFeature[];
   brandOptions: BrandFilterOption[];
+  brands: LoungeBrandAsset[];
   onSearchChange: (search: string) => void;
   onSearchFocus?: () => void;
 }) {
@@ -942,6 +1001,7 @@ function SearchCommandCombobox({
         detail: `${brand.count} records`,
         query: brand.label,
         source: 'brand' as const,
+        asset: findBrandAssetForText(brand.label, brands),
       }));
 
     const seenLounges = new Set<string>();
@@ -981,7 +1041,7 @@ function SearchCommandCombobox({
           first.label.localeCompare(second.label),
       )
       .slice(0, 10);
-  }, [airportQuery, airports, brandOptions, draft, features]);
+  }, [airportQuery, airports, brandOptions, brands, draft, features]);
 
   useEffect(() => {
     setActiveIndex(0);
@@ -1069,7 +1129,11 @@ function SearchCommandCombobox({
               }}
               onMouseEnter={() => setActiveIndex(index)}
             >
-              <span className="suggestion-category">{suggestion.source}</span>
+              {suggestion.source === 'brand' ? (
+                <BrandMark asset={suggestion.asset} label={suggestion.label} compact />
+              ) : (
+                <span className="suggestion-category">{suggestion.source}</span>
+              )}
               <span className="suggestion-copy">
                 <span>{suggestion.label}</span>
                 <small>{suggestion.detail}</small>
@@ -1100,6 +1164,7 @@ function FilterControls({
   countries,
   cityOptions,
   brandOptions,
+  brands,
   selectedFacilities,
   facilityOptions,
   onSearchChange,
@@ -1121,6 +1186,7 @@ function FilterControls({
   countries: string[];
   cityOptions: string[];
   brandOptions: BrandFilterOption[];
+  brands: LoungeBrandAsset[];
   selectedFacilities: string[];
   facilityOptions: string[];
   onSearchChange?: (search: string) => void;
@@ -1224,6 +1290,7 @@ function FilterControls({
           search={search}
           features={features}
           brandOptions={brandOptions}
+          brands={brands}
           onSearchChange={onSearchChange ?? (() => undefined)}
         />
         <button
@@ -1619,6 +1686,7 @@ function DetailPanel({
   sameSpotFeatures,
   comparedIds,
   compareLimitReached,
+  brands,
   onSelect,
   onToggleCompare,
   onClose,
@@ -1627,6 +1695,7 @@ function DetailPanel({
   sameSpotFeatures: LoungeFeature[];
   comparedIds: Set<string>;
   compareLimitReached: boolean;
+  brands: LoungeBrandAsset[];
   onSelect: (id: string) => void;
   onToggleCompare: (id: string) => void;
   onClose: () => void;
@@ -1694,7 +1763,12 @@ function DetailPanel({
           </div>
           <div>
             <dt>Programs</dt>
-            <dd>{joinOrFallback(selectedFeature.properties.canonical?.lounge.programs ?? selectedFeature.properties.programs ?? [], 'Not listed')}</dd>
+            <dd>
+              <ProgramBrandMarks
+                programs={selectedFeature.properties.canonical?.lounge.programs ?? selectedFeature.properties.programs ?? []}
+                brands={brands}
+              />
+            </dd>
           </div>
           <div>
             <dt>Source</dt>
@@ -1716,6 +1790,7 @@ function MobileQuickFilters({
   search,
   features,
   brandOptions,
+  brands,
   types,
   selectedTypes,
   visibleCount,
@@ -1731,6 +1806,7 @@ function MobileQuickFilters({
   search: string;
   features: LoungeFeature[];
   brandOptions: BrandFilterOption[];
+  brands: LoungeBrandAsset[];
   types: string[];
   selectedTypes: string[];
   visibleCount: number;
@@ -1756,6 +1832,7 @@ function MobileQuickFilters({
         search={search}
         features={features}
         brandOptions={brandOptions}
+        brands={brands}
         onSearchChange={onSearchChange}
         onSearchFocus={onSearchFocus}
       />
@@ -1818,6 +1895,7 @@ function MobileDetailsView({
   sameSpotFeatures,
   comparedIds,
   compareLimitReached,
+  brands,
   onSelect,
   onToggleCompare,
 }: {
@@ -1825,6 +1903,7 @@ function MobileDetailsView({
   sameSpotFeatures: LoungeFeature[];
   comparedIds: Set<string>;
   compareLimitReached: boolean;
+  brands: LoungeBrandAsset[];
   onSelect: (id: string) => void;
   onToggleCompare: (id: string) => void;
 }) {
@@ -1893,6 +1972,16 @@ function MobileDetailsView({
       <details className="mobile-detail-accordion">
         <summary>Conditions</summary>
         <p>{compactList(selectedFeature.properties.conditions, 'Not listed', 3, 110)}</p>
+      </details>
+
+      <details className="mobile-detail-accordion">
+        <summary>Programs</summary>
+        <p>
+          <ProgramBrandMarks
+            programs={selectedFeature.properties.canonical?.lounge.programs ?? selectedFeature.properties.programs ?? []}
+            brands={brands}
+          />
+        </p>
       </details>
 
       <details className="mobile-detail-accordion">
@@ -2033,9 +2122,6 @@ function MobileReviewView({
   const readyEvidence = cloudflareEvidence
     ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks}`
     : 'n/a';
-  const sourceProof = cloudflareEvidence
-    ? `${cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence}/${cloudflareEvidence.stats.readyMemberGaps}`
-    : 'n/a';
   const cloudflareSources = cloudflareEvidence?.sources ?? [];
   const sourceGapEvidence = new Map(
     (cloudflareEvidence?.readyMemberGapEvidence ?? []).map((evidence) => [
@@ -2136,10 +2222,6 @@ function MobileReviewView({
           <strong>{intakePlan?.summary.memberGaps ?? 'n/a'}</strong>
         </div>
         <div>
-          <span>Proof</span>
-          <strong>{sourceProof}</strong>
-        </div>
-        <div>
           <span>Non-PP</span>
           <strong>{nonPriorityPassReviewTotal}</strong>
         </div>
@@ -2189,7 +2271,7 @@ function MobileReviewView({
           <span className="compare-count">{cloudflareSources.length}</span>
         </div>
         {cloudflareSources.length === 0 ? (
-          <div className="compare-empty">No source proof</div>
+          <div className="compare-empty">No evidence</div>
         ) : (
           <div className="review-list">
             {cloudflareSources.map((source) => (
@@ -3457,9 +3539,6 @@ function App() {
     (selectedCity !== 'ALL' ? 1 : 0) +
     (selectedBrand !== 'ALL' ? 1 : 0) +
     (search.trim() ? 1 : 0);
-  const cloudflareReadyStatus = cloudflareEvidence
-    ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks} CF`
-    : null;
   const mobileReviewCount = coverageGap?.current.reviewRecords ?? meta?.quality?.reviewQueue ?? 0;
   const mobileSheetStatus = [
     MOBILE_MODE_LABELS[mobileUI.sheetMode],
@@ -3474,14 +3553,6 @@ function App() {
         <div className="brand-wrap">
           <h1>Lounge Guru</h1>
           <ViewTabs activeView={activeView} onChange={setActiveView} />
-          <div className="system-stats" aria-label="Catalog status">
-            <span>{meta?.stats.totalCatalogRecords ?? meta?.stats.totalFeatures ?? 0} records</span>
-            <span>{meta?.stats.uniqueAirports ?? 0} airports</span>
-            <span>{meta?.stats.uniqueCountries ?? 0} countries</span>
-            <span>{meta?.quality?.reviewQueue ?? 0} review</span>
-            {cloudflareReadyStatus ? <span>{cloudflareReadyStatus}</span> : null}
-            <span>{meta ? new Date(meta.generatedAt).toISOString().slice(0, 10) : 'No date'}</span>
-          </div>
         </div>
 
         <label className="search-wrap">
@@ -3542,6 +3613,7 @@ function App() {
               countries={countries}
               cityOptions={cityOptions}
               brandOptions={brandOptions}
+              brands={brands}
               selectedFacilities={selectedFacilities}
               facilityOptions={facilityOptions}
               onSearchChange={setSearch}
@@ -3599,6 +3671,7 @@ function App() {
               sameSpotFeatures={sameSpotFeatures}
               comparedIds={comparedIdSet}
               compareLimitReached={compareLimitReached}
+              brands={brands}
               onSelect={(id) => selectFeature(id)}
               onToggleCompare={toggleCompare}
               onClose={() => setSelectedId(null)}
@@ -3685,6 +3758,7 @@ function App() {
                   search={search}
                   features={features}
                   brandOptions={brandOptions}
+                  brands={brands}
                   types={types}
                       selectedTypes={selectedTypes}
                       visibleCount={filteredFeatures.length}
@@ -3764,6 +3838,7 @@ function App() {
                       countries={countries}
                       cityOptions={draftCityOptions}
                       brandOptions={brandOptions}
+                      brands={brands}
                       selectedFacilities={mobileFilterDraft.facilities}
                       facilityOptions={facilityOptions}
                       toggleType={toggleDraftType}
@@ -3797,6 +3872,7 @@ function App() {
                       sameSpotFeatures={sameSpotFeatures}
                       comparedIds={comparedIdSet}
                       compareLimitReached={compareLimitReached}
+                      brands={brands}
                       onSelect={(id) => selectFeature(id)}
                       onToggleCompare={toggleCompare}
                     />

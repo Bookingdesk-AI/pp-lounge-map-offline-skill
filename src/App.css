@@ -47,14 +47,6 @@
   white-space: nowrap;
 }
 
-.system-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  min-width: 0;
-}
-
-.system-stats span,
 .code,
 .badge,
 .control-label,
@@ -65,18 +57,6 @@
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0;
-}
-
-.system-stats span {
-  min-height: 28px;
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid var(--line-soft);
-  border-radius: 6px;
-  background: var(--surface-2);
-  color: var(--text-soft);
-  padding: 0.22rem 0.48rem;
-  font-size: 0.68rem;
 }
 
 .view-tabs {
@@ -481,10 +461,18 @@
 
 .search-command-menu .search-command-option {
   display: grid;
-  grid-template-columns: 3.9rem minmax(0, 1fr);
+  grid-template-columns: 8.2rem minmax(0, 1fr);
   align-items: center;
   gap: 0.48rem;
   border-left: 3px solid var(--suggestion-accent, transparent);
+}
+
+.search-command-option .brand-mark {
+  min-width: 0;
+}
+
+.search-command-option .brand-mark-name {
+  max-width: 5.6rem;
 }
 
 .search-command-option.is-city {
@@ -695,6 +683,21 @@
 .brand-mark.is-compact .brand-mark-name {
   max-width: 132px;
   font-size: 0.7rem;
+}
+
+.program-brand-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.36rem 0.5rem;
+  align-items: center;
+}
+
+.program-brand-list .brand-mark {
+  max-width: 100%;
+}
+
+.program-brand-list .brand-mark-name {
+  color: var(--text-main);
 }
 
 .rail-controls .type-pill,
@@ -1583,28 +1586,6 @@
 
   .topbar h1 {
     font-size: 1.08rem;
-  }
-
-  .app-shell.is-mobile .system-stats {
-    width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 0.04rem;
-    scrollbar-width: none;
-  }
-
-  .app-shell.is-mobile .system-stats::-webkit-scrollbar {
-    display: none;
-  }
-
-  .system-stats span {
-    flex: 0 0 auto;
-    min-height: 26px;
-    font-size: 0.62rem;
-  }
-
-  .app-shell.is-mobile .system-stats span:nth-child(n + 5) {
-    display: none;
   }
 
   .view-tabs {

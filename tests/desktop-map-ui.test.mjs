@@ -16,8 +16,12 @@ test('desktop rail uses command search with structured filters in one panel', ()
   assert.match(appSource, /function AutocompleteFilter/);
   assert.match(appSource, /<section className="filter-primary-row">/);
   assert.match(appSource, /className="rail-command-search"/);
+  assert.doesNotMatch(appSource, /system-stats/);
+  assert.doesNotMatch(appSource, /Catalog status/);
+  assert.doesNotMatch(appCss, /system-stats/);
   assert.match(appSource, /Search city, airport, lounge, brand/);
   assert.match(appSource, /function SearchCommandCombobox/);
+  assert.match(appSource, /asset: findBrandAssetForText\(brand\.label, brands\)/);
   assert.match(appSource, /ALL_ROUTES_AIRPORTS_ENDPOINT = '\/api\/all-routes\/airports'/);
   assert.match(appSource, /fetch\(`\$\{ALL_ROUTES_AIRPORTS_ENDPOINT\}\?\$\{params\.toString\(\)\}`/);
   assert.match(appSource, /formatAirportSuggestionLabel/);
@@ -32,6 +36,9 @@ test('desktop rail uses command search with structured filters in one panel', ()
   assert.match(appSource, /className=\{`search-command-option is-\$\{suggestion\.source\}/);
   assert.match(appSource, /className="suggestion-category"/);
   assert.match(appSource, /className="suggestion-copy"/);
+  assert.match(appSource, /function ProgramBrandMarks/);
+  assert.match(appSource, /<ProgramBrandMarks/);
+  assert.doesNotMatch(appSource, />Proof</);
   assert.doesNotMatch(appSource, /<datalist/);
   assert.match(appSource, /className="filter-panel-trigger"/);
   assert.match(appSource, /aria-haspopup="dialog"/);
@@ -59,6 +66,7 @@ test('desktop rail uses command search with structured filters in one panel', ()
   assert.match(appCss, /\.search-command-option\.is-brand\s*{/);
   assert.match(appCss, /\.suggestion-category\s*{/);
   assert.match(appCss, /\.suggestion-copy\s*{/);
+  assert.match(appCss, /\.program-brand-list\s*{/);
   assert.match(appCss, /\.filter-panel-fields\s*{/);
   assert.match(appCss, /\.pill-grid\.is-panel\s*{/);
   assert.doesNotMatch(appCss, /source-evidence-strip/);
