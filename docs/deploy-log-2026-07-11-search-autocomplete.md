@@ -4,6 +4,8 @@
 
 - Added all-routes airport autocomplete to the main search command.
 - Added same-origin `/api/all-routes/airports` proxy for local Vite and Cloudflare Pages.
+- Ranked search suggestions by city, airport, lounge, then brand.
+- Added compact category badges and color accents to autocomplete rows.
 - Replaced native country, city, and brand selects with compact combobox controls.
 - Scoped city suggestions after country selection.
 - Moved type and facility filters into the filter panel.
@@ -23,6 +25,8 @@
 - Production-copy audit for forbidden UI strings
 - all-routes source smoke: `HGH` returns `Hangzhou Xiaoshan International Airport` with `x-data-source: upstream`
 - local proxy smoke: `/api/all-routes/airports?query=HGH&limit=5`
+- Desktop rendered autocomplete check: `city, city, city, airport, airport, airport, airport, lounge`
+- Mobile rendered autocomplete check: full-sheet search input `44px`, same category order, no horizontal overflow
 
 ## Deploy
 
@@ -30,6 +34,6 @@
 - Deploy command: `npm run deploy:web`
 - Production URL: `https://loungeguru.desk.travel`
 - Deploy status: blocked
-- Blocker: `npx wrangler whoami` failed with `Invalid access token [code: 9109]`
+- Blocker: `npx wrangler whoami` failed again with `Invalid access token [code: 9109]`
 
 Refresh Wrangler auth or set a valid `CLOUDFLARE_API_TOKEN`, then rerun `npm run deploy:web`.

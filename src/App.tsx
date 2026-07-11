@@ -111,7 +111,7 @@ interface SearchCommandSuggestion {
   label: string;
   detail: string;
   query: string;
-  source: 'airport' | 'brand' | 'lounge';
+  source: 'city' | 'airport' | 'brand' | 'lounge';
 }
 
 interface FilterSummaryChip {
@@ -810,12 +810,16 @@ const ALL_ROUTES_AIRPORTS_ENDPOINT = '/api/all-routes/airports';
 
 function formatAirportSuggestionLabel(airport: AllRoutesAirportItem) {
   const code = airport.iata ?? airport.id;
-  return `${airport.city} (${code})`;
+  return `${airport.name} (${code})`;
 }
 
 function formatAirportSuggestionDetail(airport: AllRoutesAirportItem) {
-  const codes = [airport.name, airport.icao].filter(Boolean).join(' · ');
-  return `${codes} · ${airport.country}`;
+  const codes = [airport.icao, airport.country].filter(Boolean).join(' · ');
+  return `${airport.city} · ${codes}`;
+}
+
+function formatAirportCount(count: number) {
+  return count === 1 ? '1 airport' : `${count} airports`;
 }
 
 function SearchCommandCombobox({
@@ -887,16 +891,45 @@ function SearchCommandCombobox({
       return [];
     }
 
-    const airportSuggestions =
-      airportQuery === draft.trim()
-        ? airports.map((airport) => ({
-            id: `airport-${airport.id}`,
-            label: formatAirportSuggestionLabel(airport),
-            detail: formatAirportSuggestionDetail(airport),
-            query: airport.iata ?? airport.id,
-            source: 'airport' as const,
-          }))
-        : [];
+    const airportSuggestions: SearchCommandSuggestion[] = [];
+    const citySuggestionsByKey = new Map<string, SearchCommandSuggestion & { airportCount: number }>();
+
+    if (airportQuery === draft.trim()) {
+      for (const airport of airports) {
+        const cityKey = `${airport.city.toLowerCase()}-${airport.country.toLowerCase()}`;
+        const existingCity = citySuggestionsByKey.get(cityKey);
+
+        if (existingCity) {
+          existingCity.airportCount += 1;
+          existingCity.detail = `${airport.country} · ${formatAirportCount(existingCity.airportCount)}`;
+        } else if (airport.city.toLowerCase().includes(query)) {
+          citySuggestionsByKey.set(cityKey, {
+            id: `city-${cityKey}`,
+            label: airport.city,
+            detail: `${airport.country} · ${formatAirportCount(1)}`,
+            query: airport.city,
+            source: 'city',
+            airportCount: 1,
+          });
+        }
+
+        airportSuggestions.push({
+          id: `airport-${airport.id}`,
+          label: formatAirportSuggestionLabel(airport),
+          detail: formatAirportSuggestionDetail(airport),
+          query: airport.iata ?? airport.id,
+          source: 'airport',
+        });
+      }
+    }
+
+    const citySuggestions: SearchCommandSuggestion[] = Array.from(citySuggestionsByKey.values(), (city) => ({
+      id: city.id,
+      label: city.label,
+      detail: city.detail,
+      query: city.query,
+      source: city.source,
+    }));
 
     const brandSuggestions = brandOptions
       .filter((brand) => brand.label.toLowerCase().includes(query))
@@ -931,12 +964,13 @@ function SearchCommandCombobox({
     }
 
     const sourceRank: Record<SearchCommandSuggestion['source'], number> = {
-      airport: 0,
-      brand: 1,
+      city: 0,
+      airport: 1,
       lounge: 2,
+      brand: 3,
     };
 
-    return [...airportSuggestions, ...brandSuggestions, ...loungeSuggestions]
+    return [...citySuggestions, ...airportSuggestions, ...loungeSuggestions, ...brandSuggestions]
       .sort(
         (first, second) =>
           sourceRank[first.source] - sourceRank[second.source] ||
@@ -965,7 +999,7 @@ function SearchCommandCombobox({
 
   return (
     <div className="rail-command-search">
-      <label htmlFor={inputId}>Search airport, city, brand</label>
+      <label htmlFor={inputId}>Search city, airport, lounge, brand</label>
       <input
         id={inputId}
         type="search"
@@ -1023,15 +1057,18 @@ function SearchCommandCombobox({
               type="button"
               role="option"
               aria-selected={index === activeIndex}
-              className={index === activeIndex ? 'is-active' : ''}
+              className={`search-command-option is-${suggestion.source} ${index === activeIndex ? 'is-active' : ''}`}
               onMouseDown={(event) => {
                 event.preventDefault();
                 selectSuggestion(suggestion);
               }}
               onMouseEnter={() => setActiveIndex(index)}
             >
-              <span>{suggestion.label}</span>
-              <small>{suggestion.detail}</small>
+              <span className="suggestion-category">{suggestion.source}</span>
+              <span className="suggestion-copy">
+                <span>{suggestion.label}</span>
+                <small>{suggestion.detail}</small>
+              </span>
             </button>
           ))}
         </div>
