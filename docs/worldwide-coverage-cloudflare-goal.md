@@ -194,6 +194,8 @@ npm run intake:cloudflare:promote
 
 Promotion fails unless the exported report proves Cloudflare runtime, blocked local scrawl, no raw page bodies, at least 30 sources, at least 15 fetched sources, at least 100 discovered airport codes, and `terminalImpact.fullCatalogIntakeReport: true`.
 
+`public/data/non-priority-validation-report.json` is the line-review artifact. Use `stats.bySourceDecision`, `stats.byReviewQueue`, `stats.byConflict`, and each row's `reviewAction` before approving non-PP records.
+
 Export public evidence from remote D1 without fetching source pages locally:
 
 ```bash

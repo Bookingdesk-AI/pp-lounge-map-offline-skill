@@ -290,6 +290,51 @@ function validateCloudflareSourceRunEvidence(evidence, intakePlan) {
   }
 }
 
+function validateNonPriorityValidationReport(report, candidates) {
+  issue(report?.policy?.lineReviewRule?.includes('reviewAction'), 'non-priority-validation-report.json: line review rule missing');
+  issue(
+    report?.stats?.total === report?.rows?.length,
+    'non-priority-validation-report.json: stats.total row mismatch',
+  );
+  issue(
+    report?.stats?.total === candidates?.length,
+    'non-priority-validation-report.json: candidate count mismatch',
+  );
+  issue(
+    typeof report?.stats?.byReviewQueue?.publishable === 'number',
+    'non-priority-validation-report.json: publishable queue missing',
+  );
+  issue(
+    typeof report?.stats?.byConflict?.manual_review_required === 'number',
+    'non-priority-validation-report.json: conflict summary missing',
+  );
+  issue(
+    Array.isArray(report?.stats?.bySourceDecision) && report.stats.bySourceDecision.length > 0,
+    'non-priority-validation-report.json: source decision summary missing',
+  );
+
+  const candidateIds = new Set((candidates ?? []).map((candidate) => candidate?.lounge?.id));
+  for (const [index, row] of (report?.rows ?? []).entries()) {
+    const prefix = `non-priority-validation-report.json.rows[${index}]`;
+    issue(candidateIds.has(row.recordId), `${prefix}: recordId not present in candidates`);
+    issue(Boolean(row.sourceId), `${prefix}: sourceId missing`);
+    issue(Boolean(row.publisher), `${prefix}: publisher missing`);
+    issue(Boolean(row.name), `${prefix}: name missing`);
+    issue(/^[A-Z0-9]{3}$/.test(row.airportCode ?? ''), `${prefix}: airportCode invalid`);
+    issue(Boolean(row.airportName), `${prefix}: airportName missing`);
+    issue(Boolean(row.city), `${prefix}: city missing`);
+    issue(Object.hasOwn(row, 'country'), `${prefix}: country field missing`);
+    issue(/^https:\/\//.test(row.sourceUrl ?? ''), `${prefix}: sourceUrl must be https`);
+    issue(['approved', 'review'].includes(row.reviewStatus), `${prefix}: reviewStatus invalid`);
+    issue(typeof row.confidence === 'number', `${prefix}: confidence missing`);
+    issue(Array.isArray(row.conflicts), `${prefix}: conflicts missing`);
+    issue(Boolean(row.checks) && typeof row.checks === 'object', `${prefix}: checks missing`);
+    issue(['publish', 'manual_review'].includes(row.reviewAction?.action), `${prefix}: reviewAction invalid`);
+    issue(Boolean(row.reviewAction?.queue), `${prefix}: reviewAction.queue missing`);
+    issue(Boolean(row.reviewAction?.reason), `${prefix}: reviewAction.reason missing`);
+  }
+}
+
 function validateArrays() {
   const brandRegistry = readJson('public/data/brand-registry.json');
   const sourceRegistry = readJson('public/data/source-registry.json');
@@ -331,6 +376,8 @@ const gap = readJson('public/data/coverage-gap-report.json');
 const intakePlan = readJson('public/data/cloudflare-source-intake-plan.json');
 const sourceIntake = readJson('public/data/source-intake-report.json');
 const cloudflareEvidence = readJson('public/data/cloudflare-source-run-evidence.json');
+const nonPriorityValidation = readJson('public/data/non-priority-validation-report.json');
+const nonPriorityCandidates = readJson('public/data/non-priority-lounge-candidates.json');
 
 validateCatalog(catalog);
 validateGeoJson(geoJson);
@@ -338,6 +385,7 @@ validateCoverage(goal, gap);
 validateIntakePlan(intakePlan, gap);
 validateSourceIntake(sourceIntake);
 validateCloudflareSourceRunEvidence(cloudflareEvidence, intakePlan);
+validateNonPriorityValidationReport(nonPriorityValidation, nonPriorityCandidates);
 validateArrays();
 
 if (issues.length > 0) {

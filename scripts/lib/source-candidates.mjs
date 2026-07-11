@@ -507,6 +507,95 @@ function makeSourceEvidenceLookup(report) {
   return lookup;
 }
 
+function increment(summary, key, count = 1) {
+  const normalizedKey = clean(key) || 'unknown';
+  summary[normalizedKey] = (summary[normalizedKey] ?? 0) + count;
+  return summary;
+}
+
+function buildReviewAction({ row, checks }) {
+  if (row.reviewStatus === 'approved') {
+    return {
+      queue: 'publishable',
+      action: 'publish',
+      reason: 'official_structured_payload_complete',
+    };
+  }
+
+  const missing = [];
+  if (!checks.structuredPayloadMatch) {
+    missing.push('structured_payload');
+  }
+  if (!checks.hasHours) {
+    missing.push('hours');
+  }
+  if (!checks.hasTerminal) {
+    missing.push('terminal');
+  }
+  if (!checks.hasSourceUrl) {
+    missing.push('source_url');
+  }
+  if (!checks.airportEvidenceMatch) {
+    missing.push('airport_evidence');
+  }
+  if (!checks.hasCountry) {
+    missing.push('country');
+  }
+
+  return {
+    queue: row.validationStatus === 'airport_code_evidence_only' ? 'official_airport_code_review' : 'source_evidence_review',
+    action: 'manual_review',
+    reason: missing.length > 0 ? `missing_${missing.join('_')}` : 'manual_review_required',
+  };
+}
+
+function summarizeValidationRows(rows) {
+  const byStatus = {};
+  const byDecision = {};
+  const bySourceDecision = {};
+  const byReviewQueue = {};
+  const byConflict = {};
+
+  for (const row of rows) {
+    increment(byStatus, row.validationStatus);
+    increment(byDecision, row.reviewStatus);
+    increment(byReviewQueue, row.reviewAction.queue);
+
+    const sourceSummary = bySourceDecision[row.sourceId] ?? {
+      sourceId: row.sourceId,
+      publisher: row.publisher,
+      total: 0,
+      approved: 0,
+      review: 0,
+      publishable: 0,
+      manualReview: 0,
+    };
+    sourceSummary.total += 1;
+    sourceSummary[row.reviewStatus] = (sourceSummary[row.reviewStatus] ?? 0) + 1;
+    if (row.reviewAction.action === 'publish') {
+      sourceSummary.publishable += 1;
+    }
+    if (row.reviewAction.action === 'manual_review') {
+      sourceSummary.manualReview += 1;
+    }
+    bySourceDecision[row.sourceId] = sourceSummary;
+
+    for (const conflict of row.conflicts) {
+      increment(byConflict, conflict);
+    }
+  }
+
+  return {
+    byStatus,
+    byDecision,
+    byReviewQueue,
+    byConflict,
+    bySourceDecision: Object.values(bySourceDecision).sort((first, second) =>
+      first.sourceId.localeCompare(second.sourceId),
+    ),
+  };
+}
+
 export function createNonPriorityValidationReport({ records, report, generatedAt }) {
   const nonPriorityRecords = records.filter((record) => record.sources[0]?.sourceId !== 'priority-pass');
   const structuredLookup = makeStructuredLookup(report);
@@ -529,6 +618,7 @@ export function createNonPriorityValidationReport({ records, report, generatedAt
       hasCoordinates:
         Number.isFinite(Number(record.airport.coordinates?.lat)) &&
         Number.isFinite(Number(record.airport.coordinates?.lon)),
+      hasCountry: hasValue(record.airport.country),
       hasSourceUrl: primarySource.url.startsWith('https://'),
     };
     const validationStatus = checks.structuredPayloadMatch
@@ -537,11 +627,16 @@ export function createNonPriorityValidationReport({ records, report, generatedAt
         ? 'airport_code_evidence_only'
         : 'unmatched_source_evidence';
 
-    return {
+    const row = {
       recordId: record.lounge.id,
       sourceId,
+      publisher: primarySource.publisher,
       name: record.lounge.name,
       airportCode,
+      airportName: record.airport.name,
+      city: record.airport.city,
+      country: record.airport.country,
+      terminal: record.location.terminal,
       sourceUrl: primarySource.url,
       validationStatus,
       reviewStatus: record.quality.reviewStatus,
@@ -549,15 +644,12 @@ export function createNonPriorityValidationReport({ records, report, generatedAt
       conflicts: record.quality.conflicts,
       checks,
     };
+    return {
+      ...row,
+      reviewAction: buildReviewAction({ row, checks }),
+    };
   });
-  const byStatus = rows.reduce((summary, row) => {
-    summary[row.validationStatus] = (summary[row.validationStatus] ?? 0) + 1;
-    return summary;
-  }, {});
-  const byDecision = rows.reduce((summary, row) => {
-    summary[row.reviewStatus] = (summary[row.reviewStatus] ?? 0) + 1;
-    return summary;
-  }, {});
+  const summary = summarizeValidationRows(rows);
 
   return {
     generatedAt,
@@ -565,11 +657,16 @@ export function createNonPriorityValidationReport({ records, report, generatedAt
       approvalRule:
         'Only exact official structured payload matches with hours, terminal, coordinates, and source URL can be approved.',
       reviewRule: 'Airport-code-only, link-only, missing-hour, missing-terminal, or unmatched records remain review-only.',
+      lineReviewRule:
+        'Every non-Priority Pass candidate must have a reviewAction before catalog promotion.',
     },
     stats: {
       total: rows.length,
-      byStatus,
-      byDecision,
+      byStatus: summary.byStatus,
+      byDecision: summary.byDecision,
+      byReviewQueue: summary.byReviewQueue,
+      byConflict: summary.byConflict,
+      bySourceDecision: summary.bySourceDecision,
       unmatched: rows.filter((row) => row.validationStatus === 'unmatched_source_evidence').length,
     },
     rows,

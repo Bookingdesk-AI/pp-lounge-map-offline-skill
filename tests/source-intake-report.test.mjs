@@ -120,14 +120,34 @@ test('non-Priority Pass intake validates every candidate before approval', () =>
   assert.ok(validationReport.stats.byStatus.airport_code_evidence_only > 0);
   assert.ok(validationReport.stats.byDecision.approved > 0);
   assert.ok(validationReport.stats.byDecision.review > 0);
+  assert.equal(validationReport.policy.lineReviewRule.includes('reviewAction'), true);
+  assert.ok(validationReport.stats.byReviewQueue.publishable > 0);
+  assert.ok(validationReport.stats.byReviewQueue.official_airport_code_review > 0);
+  assert.ok(validationReport.stats.byConflict.manual_review_required > 0);
+  assert.ok(Array.isArray(validationReport.stats.bySourceDecision));
+  assert.ok(validationReport.stats.bySourceDecision.length >= sourceIds.size);
 
   for (const record of candidates) {
+    const row = validationReport.rows.find((candidateRow) => candidateRow.recordId === record.lounge.id);
+    assert.ok(row);
+    assert.equal(row.publisher, record.sources[0].publisher);
+    assert.equal(row.airportName, record.airport.name);
+    assert.equal(row.city, record.airport.city);
+    assert.equal(row.country, record.airport.country);
+    assert.equal(row.terminal, record.location.terminal);
+    assert.ok(['publish', 'manual_review'].includes(row.reviewAction.action));
+    assert.ok(row.reviewAction.queue);
+    assert.ok(row.reviewAction.reason);
+
     if (record.quality.reviewStatus === 'approved') {
       assert.equal(record.sources[0].sourceId, 'oneworld');
       assert.equal(record.quality.conflicts.length, 0);
       assert.ok(record.sources[0].confidence >= 0.8);
+      assert.equal(row.reviewAction.action, 'publish');
+      assert.equal(row.reviewAction.queue, 'publishable');
     } else {
       assert.ok(record.quality.conflicts.includes('manual_review_required'));
+      assert.equal(row.reviewAction.action, 'manual_review');
     }
     assert.ok(record.sources[0].url.startsWith('https://'));
     assert.match(record.lounge.id, /^candidate-/);
