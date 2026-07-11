@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-28T12:54:41.882Z",
+  "generatedAt": "2026-07-11T22:05:11.955Z",
   "policy": {
     "source": "cloudflare-d1-source_runs",
     "database": "lounge-guru-catalog",
@@ -10,8 +10,8 @@
     "guardrail": "official/public source-run evidence only; no local page fetch"
   },
   "stats": {
-    "sourceRunsRead": 4,
-    "cloudflareSourceRuns": 4,
+    "sourceRunsRead": 7,
+    "cloudflareSourceRuns": 7,
     "uniqueSources": 3,
     "fetched": 3,
     "cloudflareSnapshots": 3,
@@ -185,7 +185,7 @@
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
       "bytes": 1162352,
-      "sha256": "6184f3ca611022c48a6ab9dc7a821fa733b2d7689fab0f176bf6336d03f90eaf",
+      "sha256": "5feff3a90d633b30c37788e497e6ffdebca807293cd53e101a006ae7938c80c7",
       "reason": null,
       "fetchAttempts": [
         {
@@ -195,7 +195,7 @@
           "finalUrl": "https://www.dragonpass.com/",
           "contentType": "text/html; charset=utf-8",
           "bytes": 1162352,
-          "sha256": "6184f3ca611022c48a6ab9dc7a821fa733b2d7689fab0f176bf6336d03f90eaf",
+          "sha256": "5feff3a90d633b30c37788e497e6ffdebca807293cd53e101a006ae7938c80c7",
           "robots": {
             "checked": true,
             "url": "https://en.dragonpass.com.cn/robots.txt",
@@ -205,8 +205,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-06-19T15-31-07-682Z-dragonpass",
-      "generatedAt": "2026-06-19T15:31:07.682Z",
+      "runId": "cloudflare-probe-2026-07-11T22-04-38-649Z-dragonpass",
+      "generatedAt": "2026-07-11T22:04:38.649Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -223,7 +223,7 @@
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 9722,
-      "sha256": "b1bcc8d8d6012ff6f846605a17bbcb9ec33593e15cda330444db141fc8448cd4",
+      "sha256": "445a12900f19bdc848ff2394f6e75fcfbd45f2a173a527f010099b4f2ce402e1",
       "reason": null,
       "fetchAttempts": [
         {
@@ -233,7 +233,7 @@
           "finalUrl": "https://mastercardtravelpass.dragonpass.com/",
           "contentType": "text/html",
           "bytes": 9722,
-          "sha256": "b1bcc8d8d6012ff6f846605a17bbcb9ec33593e15cda330444db141fc8448cd4",
+          "sha256": "445a12900f19bdc848ff2394f6e75fcfbd45f2a173a527f010099b4f2ce402e1",
           "robots": {
             "checked": true,
             "url": "https://mastercardtravelpass.dragonpass.com/robots.txt",
@@ -243,8 +243,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-06-19T15-31-04-649Z-mastercard-travel-pass",
-      "generatedAt": "2026-06-19T15:31:04.649Z",
+      "runId": "cloudflare-probe-2026-07-11T22-04-37-602Z-mastercard-travel-pass",
+      "generatedAt": "2026-07-11T22:04:37.602Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {
@@ -260,8 +260,8 @@
       "finalUrl": "https://visaairportcompanion.ca/",
       "httpStatus": 200,
       "contentType": "text/html",
-      "bytes": 58617,
-      "sha256": "8297af07b9b5f2dcdc3432104e568c34e30b483191a83796a8d733b0abbd9770",
+      "bytes": 59310,
+      "sha256": "4e777e8e20f422882083d28844ee5c0a8f268953a944818e0233721c9d6d1231",
       "reason": null,
       "fetchAttempts": [
         {
@@ -270,8 +270,8 @@
           "httpStatus": 200,
           "finalUrl": "https://visaairportcompanion.ca/",
           "contentType": "text/html",
-          "bytes": 58617,
-          "sha256": "8297af07b9b5f2dcdc3432104e568c34e30b483191a83796a8d733b0abbd9770",
+          "bytes": 59310,
+          "sha256": "4e777e8e20f422882083d28844ee5c0a8f268953a944818e0233721c9d6d1231",
           "robots": {
             "checked": true,
             "url": "https://www.visaairportcompanion.com/robots.txt",
@@ -281,8 +281,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-06-19T15-31-02-908Z-visa-airport-companion",
-      "generatedAt": "2026-06-19T15:31:02.908Z",
+      "runId": "cloudflare-probe-2026-07-11T22-04-34-763Z-visa-airport-companion",
+      "generatedAt": "2026-07-11T22:04:34.763Z",
       "fetchMode": "cloudflare_single_source_probe"
     }
   ],

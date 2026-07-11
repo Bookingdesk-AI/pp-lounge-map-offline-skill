@@ -1,0 +1,150 @@
+{
+  "ok": true,
+  "generatedAt": "2026-07-11T22:04:44.089Z",
+  "runId": "cloudflare-report-2026-07-11T22-04-44-089Z",
+  "policy": {
+    "fetchMode": "cloudflare_d1_source_runs_report",
+    "rawSnapshotsCommitted": false,
+    "rawPageContentCommitted": false,
+    "guardrail": "official/public source-run evidence only; no local page fetch",
+    "execution": {
+      "requiredRuntime": "cloudflare",
+      "runtime": "cloudflare",
+      "localScrawl": "blocked",
+      "proofEnv": "LOUNGE_GURU_INTAKE_TOKEN"
+    }
+  },
+  "stats": {
+    "totalSources": 3,
+    "fetched": 3,
+    "skipped": 0,
+    "httpErrors": 0,
+    "fetchErrors": 0,
+    "childPagesFetched": 0,
+    "discoveredAirportCodes": 0,
+    "discoveredLoungeLinks": 0,
+    "cloudflareSourceRuns": 7,
+    "readyTasks": 3,
+    "readyTasksWithCloudflareEvidence": 3
+  },
+  "terminalImpact": {
+    "fullCatalogIntakeReport": false,
+    "coverageGateStillRequiresFullCloudflareReport": true
+  },
+  "sources": [
+    {
+      "sourceId": "dragonpass",
+      "publisher": "DragonPass",
+      "url": "https://en.dragonpass.com.cn/",
+      "adapter": "official_page",
+      "status": "fetched",
+      "reason": null,
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://www.dragonpass.com/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 1162352,
+      "sha256": "5feff3a90d633b30c37788e497e6ffdebca807293cd53e101a006ae7938c80c7",
+      "fetchAttempts": [
+        {
+          "url": "https://en.dragonpass.com.cn/",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://www.dragonpass.com/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 1162352,
+          "sha256": "5feff3a90d633b30c37788e497e6ffdebca807293cd53e101a006ae7938c80c7",
+          "robots": {
+            "checked": true,
+            "url": "https://en.dragonpass.com.cn/robots.txt",
+            "status": 404,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-04-38-649Z-dragonpass",
+      "retrievedAt": "2026-07-11T22:04:38.649Z"
+    },
+    {
+      "sourceId": "mastercard-travel-pass",
+      "publisher": "Mastercard Travel Pass",
+      "url": "https://mastercardtravelpass.dragonpass.com/",
+      "adapter": "official_page",
+      "status": "fetched",
+      "reason": null,
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://mastercardtravelpass.dragonpass.com/",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 9722,
+      "sha256": "445a12900f19bdc848ff2394f6e75fcfbd45f2a173a527f010099b4f2ce402e1",
+      "fetchAttempts": [
+        {
+          "url": "https://mastercardtravelpass.dragonpass.com/",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://mastercardtravelpass.dragonpass.com/",
+          "contentType": "text/html",
+          "bytes": 9722,
+          "sha256": "445a12900f19bdc848ff2394f6e75fcfbd45f2a173a527f010099b4f2ce402e1",
+          "robots": {
+            "checked": true,
+            "url": "https://mastercardtravelpass.dragonpass.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-04-37-602Z-mastercard-travel-pass",
+      "retrievedAt": "2026-07-11T22:04:37.602Z"
+    },
+    {
+      "sourceId": "visa-airport-companion",
+      "publisher": "Visa Airport Companion",
+      "url": "https://www.visaairportcompanion.com/",
+      "adapter": "official_page",
+      "status": "fetched",
+      "reason": null,
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://visaairportcompanion.ca/",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 59310,
+      "sha256": "4e777e8e20f422882083d28844ee5c0a8f268953a944818e0233721c9d6d1231",
+      "fetchAttempts": [
+        {
+          "url": "https://www.visaairportcompanion.com/",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://visaairportcompanion.ca/",
+          "contentType": "text/html",
+          "bytes": 59310,
+          "sha256": "4e777e8e20f422882083d28844ee5c0a8f268953a944818e0233721c9d6d1231",
+          "robots": {
+            "checked": true,
+            "url": "https://www.visaairportcompanion.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-04-34-763Z-visa-airport-companion",
+      "retrievedAt": "2026-07-11T22:04:34.763Z"
+    }
+  ]
+}
