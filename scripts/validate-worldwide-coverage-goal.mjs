@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { credentialPreflight } from './lib/cloudflare-auth-preflight.mjs';
 import { createCoverageGapReport } from './lib/coverage-gap-report.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -16,6 +17,7 @@ const migrationPath = path.resolve(projectRoot, 'migrations', '0001_lounge_guru_
 
 const strict = process.argv.includes('--strict');
 const jsonOutput = process.argv.includes('--json');
+const checkCloudflareAuth = process.argv.includes('--check-cloudflare-auth');
 const env = process.env;
 
 function readJson(filePath) {
@@ -43,18 +45,6 @@ function validateRequiredTables(goal, migrationSql) {
     table,
     present: new RegExp(`CREATE TABLE IF NOT EXISTS ${table}\\b`, 'i').test(migrationSql),
   }));
-}
-
-function credentialPreflight(nextCloudflareIntake) {
-  const requiredIntakeTokenEnv = nextCloudflareIntake?.requiredTokenEnv ?? 'LOUNGE_GURU_INTAKE_TOKEN';
-
-  return {
-    intakeTokenEnv: requiredIntakeTokenEnv,
-    intakeTokenPresent: Boolean(env[requiredIntakeTokenEnv]),
-    cloudflareApiTokenPresent: Boolean(env.CLOUDFLARE_API_TOKEN),
-    baseUrlEnvPresent: Boolean(env.LOUNGE_GURU_INTAKE_BASE_URL),
-    localScrawl: 'blocked',
-  };
 }
 
 function buildSummary({ goal, catalog, sourceRegistry, migrationSql, sourceIntakeReport, sourceRunEvidence }) {
@@ -89,7 +79,10 @@ function buildSummary({ goal, catalog, sourceRegistry, migrationSql, sourceIntak
   const missingRegisteredMembers = goal.sourceFamilies
     .flatMap((family) => family.members ?? [family.id])
     .filter((sourceId) => !sourceRegistryIds.has(sourceId));
-  const preflight = credentialPreflight(gapReport.nextCloudflareIntake);
+  const preflight = credentialPreflight(gapReport.nextCloudflareIntake, {
+    env,
+    checkAuth: checkCloudflareAuth,
+  });
 
   const blockers = [];
   if (approvedRecords < goal.terminalGoal.minApprovedRecords) {
@@ -182,6 +175,13 @@ if (jsonOutput) {
       `Cloudflare preflight: intake token ${summary.credentialPreflight.intakeTokenPresent ? 'present' : 'missing'}, ` +
         `API token ${summary.credentialPreflight.cloudflareApiTokenPresent ? 'present' : 'missing'}, local scrawl blocked`,
     );
+    if (checkCloudflareAuth) {
+      console.log(
+        `Cloudflare auth: ${summary.credentialPreflight.cloudflareAuthStatus}, ` +
+          `current env ${summary.credentialPreflight.cloudflareAuthCurrentEnv}, ` +
+          `OAuth fallback ${summary.credentialPreflight.cloudflareAuthOauthFallback}`,
+      );
+    }
     console.log(
       `Cloudflare lanes: ready ${intake.readySourceIds.length}, ` +
         `cred ${intake.credentialSourceIds.length}, rights ${intake.rightsReviewSourceIds.length}`,

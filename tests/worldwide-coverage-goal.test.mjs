@@ -106,6 +106,10 @@ test('coverage validator reports current progress without pretending terminal co
   assert.deepEqual(Object.keys(summary.credentialPreflight).sort(), [
     'baseUrlEnvPresent',
     'cloudflareApiTokenPresent',
+    'cloudflareAuthCurrentEnv',
+    'cloudflareAuthFailure',
+    'cloudflareAuthOauthFallback',
+    'cloudflareAuthStatus',
     'intakeTokenEnv',
     'intakeTokenPresent',
     'localScrawl',
@@ -113,6 +117,7 @@ test('coverage validator reports current progress without pretending terminal co
   assert.equal(summary.credentialPreflight.intakeTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
   assert.equal(typeof summary.credentialPreflight.intakeTokenPresent, 'boolean');
   assert.equal(typeof summary.credentialPreflight.cloudflareApiTokenPresent, 'boolean');
+  assert.equal(summary.credentialPreflight.cloudflareAuthStatus, 'unchecked');
   assert.equal(summary.credentialPreflight.localScrawl, 'blocked');
   assert.ok(summary.gapReport.nextCloudflareIntake.commands.report.includes('intake:cloudflare:report:export'));
   assert.equal(

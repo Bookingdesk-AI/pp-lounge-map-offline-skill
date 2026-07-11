@@ -23,11 +23,12 @@ Progress check:
 
 ```bash
 npm run validate:coverage
+npm run validate:cloudflare-auth
 npm run validate:json
 npm run intake:evidence
 ```
 
-`npm run validate:coverage` prints a redacted Cloudflare preflight line. It reports only whether the intake token and Cloudflare API token are present, and keeps local scrawl blocked.
+`npm run validate:coverage` prints a redacted Cloudflare preflight line. It reports only whether the intake token and Cloudflare API token are present, and keeps local scrawl blocked. `npm run validate:cloudflare-auth` adds an explicit Wrangler auth probe without printing token values.
 
 Gap report: `public/data/coverage-gap-report.json`.
 Cloudflare intake plan: `public/data/cloudflare-source-intake-plan.json`.
@@ -66,13 +67,20 @@ Current failure:
 Invalid access token [code: 9109]
 ```
 
+Current workaround:
+
+```bash
+unset CLOUDFLARE_API_TOKEN
+npx wrangler whoami
+```
+
 Fix order:
 
 1. Replace the invalid `CLOUDFLARE_API_TOKEN` with a token that can read the account, deploy Pages, and access the D1 database.
 2. Confirm auth:
 
 ```bash
-npx wrangler whoami
+npm run validate:cloudflare-auth
 ```
 
 3. Set the Worker intake secret for local report export:

@@ -20,6 +20,7 @@
     "validate:publish": "node scripts/validate-publish-ready.mjs",
     "validate:publish:offline": "node scripts/validate-publish-ready-offline.mjs",
     "validate:coverage": "node scripts/validate-worldwide-coverage-goal.mjs",
+    "validate:cloudflare-auth": "node scripts/validate-worldwide-coverage-goal.mjs --check-cloudflare-auth",
     "validate:json": "node scripts/validate-public-json.mjs",
     "goal:coverage": "node scripts/validate-worldwide-coverage-goal.mjs --strict",
     "intake:cloudflare": "node scripts/run-cloudflare-source-intake.mjs && npm run intake:evidence",
