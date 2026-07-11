@@ -35,6 +35,8 @@ const evidence = {
   secretOrPathFindingsRedacted: 0,
   secretPatternFindingsByLabel: {},
   unsafeUrlBoundaryChecks: 0,
+  schemeRelativeUrlBoundaryChecks: 0,
+  schemeRelativeUrlBoundaryFindings: 0,
   unsafeUrlBoundaryFindings: 0,
 };
 
@@ -52,6 +54,16 @@ const secretPatterns = [
 evidence.secretPatternsChecked = secretPatterns.length;
 const textExtensions = new Set(['.md', '.yaml', '.yml', '.json', '.mjs']);
 
+
+function inspectSchemeRelativeBoundary(filePath, line, index) {
+  const schemeRelativePattern = /(^|[^:])\/\/[^\s,;)"'<>`]+/giu;
+  for (const match of line.matchAll(schemeRelativePattern)) {
+    const rawCandidate = match[0].startsWith('//') ? match[0] : match[0].slice(1);
+    if (!rawCandidate.startsWith('//')) continue;
+    evidence.schemeRelativeUrlBoundaryFindings += 1;
+    issues.push(`${path.relative(bundleRoot, filePath)}:${index + 1} contains a scheme-relative URL-like boundary; use an explicit loopback URL or document an operator trust-boundary override.`);
+  }
+}
 
 function inspectUrlBoundary(filePath, line, index) {
   const urlPattern = /https?:\/\/[^\s,;)"'<>`]+/giu;
@@ -199,6 +211,8 @@ for (const filePath of checkedFileSet) {
   if (relativePath === 'assets/catalog.json') continue;
   text.split('\n').forEach((line, index) => {
     evidence.unsafeUrlBoundaryChecks += 1;
+    evidence.schemeRelativeUrlBoundaryChecks += 1;
+    inspectSchemeRelativeBoundary(filePath, line, index);
     inspectUrlBoundary(filePath, line, index);
     const matchedLabels = secretPatterns
       .filter(({ pattern }) => pattern.test(line))
@@ -224,6 +238,9 @@ if (issues.length) {
   );
   console.log(
     `offline-skill-security: unsafe URL boundary checks ${evidence.unsafeUrlBoundaryChecks}; unsafe URL findings ${evidence.unsafeUrlBoundaryFindings}; redacted secret/path findings ${evidence.secretOrPathFindingsRedacted}`,
+  );
+  console.log(
+    `offline-skill-security: scheme-relative URL boundary checks ${evidence.schemeRelativeUrlBoundaryChecks}; scheme-relative URL findings ${evidence.schemeRelativeUrlBoundaryFindings}`,
   );
   console.log(`offline-skill-security: evidence ${JSON.stringify(evidence)}`);
 }
