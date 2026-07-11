@@ -107,7 +107,8 @@ export function createCloudflareSourceRunEvidence({ d1Result, sourceIntakePlan, 
     status: latestBySource.get(gap.sourceId)?.status ?? 'missing',
     cloudflareSnapshot: Boolean(latestBySource.get(gap.sourceId)?.cloudflareSnapshot),
   }));
-  const sources = [...latestBySource.values()].sort((left, right) => left.sourceId.localeCompare(right.sourceId));
+  const latestSources = [...latestBySource.values()].sort((left, right) => left.sourceId.localeCompare(right.sourceId));
+  const sources = latestSources.filter((source) => source.cloudflareSnapshot);
   const fetched = sources.filter((source) => source.status === 'fetched').length;
   const cloudflareSnapshots = sources.filter((source) => source.cloudflareSnapshot).length;
 
@@ -126,6 +127,7 @@ export function createCloudflareSourceRunEvidence({ d1Result, sourceIntakePlan, 
       sourceRunsRead: rows.length,
       cloudflareSourceRuns: cloudflareRows.length,
       uniqueSources: sources.length,
+      attemptedSources: latestSources.length,
       fetched,
       cloudflareSnapshots,
       readyTasks: readyTaskIds.length,

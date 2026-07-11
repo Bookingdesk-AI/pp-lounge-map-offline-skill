@@ -128,7 +128,38 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
   assert.ok(!Object.hasOwn(sources[0], 'html'));
 });
 
-test('Cloudflare source intake batch probes ready official-page tasks only', async () => {
+test('Cloudflare source intake probe supports ready airline HTML lanes', async () => {
+  const d1 = createD1Mock();
+  const response = await createSourceIntakeProbeResponse(
+    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=delta', {
+      method: 'POST',
+      headers: {
+        'x-lounge-guru-intake-token': 'secret',
+      },
+    }),
+    {
+      LOUNGE_GURU_INTAKE_TOKEN: 'secret',
+      LOUNGE_GURU_DB: d1,
+    },
+    {
+      fetchImpl: async (url) => {
+        if (String(url).endsWith('/robots.txt')) {
+          return textResponse('User-agent: *\n');
+        }
+        return textResponse('<html><title>Delta Sky Club</title></html>');
+      },
+    },
+  );
+
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.ok, true);
+  assert.equal(body.sourceId, 'delta');
+  assert.equal(body.cloudflareSnapshot, true);
+  assert.equal(d1.calls.length, 1);
+});
+
+test('Cloudflare source intake batch probes ready public lanes only', async () => {
   const d1 = createD1Mock();
   const response = await createSourceIntakeBatchResponse(
     new Request('https://loungeguru.desk.travel/admin/source-intake/probe-batch', {
@@ -155,13 +186,32 @@ test('Cloudflare source intake batch probes ready official-page tasks only', asy
   const body = await response.json();
   assert.equal(body.ok, true);
   assert.equal(body.mode, 'batch');
-  assert.equal(body.totalTasks, 3);
-  assert.equal(body.fetched, 3);
-  assert.equal(d1.calls.length, 3);
+  assert.equal(body.totalTasks, 16);
+  assert.equal(body.fetched, 16);
+  assert.equal(d1.calls.length, 16);
   assert.deepEqual(
     body.results.map((result) => result.sourceId).sort(),
-    ['dragonpass', 'mastercard-travel-pass', 'visa-airport-companion'],
+    [
+      'american',
+      'aspire-lounges',
+      'be-relax',
+      'citi-travel',
+      'collinson-international',
+      'delta',
+      'dragonpass',
+      'marhaba',
+      'mastercard-travel-pass',
+      'no1-lounges',
+      'openstreetmap',
+      'primeclass',
+      'skyteam',
+      'star-alliance',
+      'united',
+      'visa-airport-companion',
+    ],
   );
+  assert.equal(body.results.some((result) => result.sourceId === 'loungereview-api'), false);
+  assert.equal(body.results.some((result) => result.sourceId === 'plaza-premium'), false);
 });
 
 test('Cloudflare source intake status returns compact D1 evidence', async () => {
@@ -203,7 +253,7 @@ test('Cloudflare source intake status returns compact D1 evidence', async () => 
   assert.equal(body.ok, true);
   assert.equal(body.policy.localScrawl, 'blocked');
   assert.equal(body.policy.rawPageContentCommitted, false);
-  assert.equal(body.stats.readyTasks, 3);
+  assert.equal(body.stats.readyTasks, 16);
   assert.equal(body.stats.readyTasksWithCloudflareEvidence, 1);
   assert.deepEqual(body.sources.map((source) => source.sourceId), ['visa-airport-companion']);
   assert.ok(body.sources[0].sha256);
@@ -253,15 +303,32 @@ test('Cloudflare source intake report returns D1-derived source report without r
   assert.equal(body.policy.execution.runtime, 'cloudflare');
   assert.equal(body.policy.execution.localScrawl, 'blocked');
   assert.equal(body.policy.rawPageContentCommitted, false);
-  assert.equal(body.stats.totalSources, 3);
-  assert.equal(body.stats.fetched, 3);
-  assert.equal(body.stats.readyTasks, 3);
-  assert.equal(body.stats.readyTasksWithCloudflareEvidence, 3);
+  assert.equal(body.stats.totalSources, 16);
+  assert.equal(body.stats.fetched, 16);
+  assert.equal(body.stats.readyTasks, 16);
+  assert.equal(body.stats.readyTasksWithCloudflareEvidence, 16);
   assert.equal(body.terminalImpact.fullCatalogIntakeReport, false);
   assert.equal(body.terminalImpact.coverageGateStillRequiresFullCloudflareReport, true);
   assert.deepEqual(
     body.sources.map((source) => source.sourceId).sort(),
-    ['dragonpass', 'mastercard-travel-pass', 'visa-airport-companion'],
+    [
+      'american',
+      'aspire-lounges',
+      'be-relax',
+      'citi-travel',
+      'collinson-international',
+      'delta',
+      'dragonpass',
+      'marhaba',
+      'mastercard-travel-pass',
+      'no1-lounges',
+      'openstreetmap',
+      'primeclass',
+      'skyteam',
+      'star-alliance',
+      'united',
+      'visa-airport-companion',
+    ],
   );
 
   for (const source of body.sources) {

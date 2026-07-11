@@ -81,7 +81,7 @@ test('coverage validator reports current progress without pretending terminal co
   );
   const summary = JSON.parse(output);
 
-  assert.match(textOutput, /Source proof: 3\/16/);
+  assert.match(textOutput, /Source proof: 11\/16/);
   assert.match(textOutput, /Cloudflare token: LOUNGE_GURU_INTAKE_TOKEN/);
   assert.match(textOutput, /Cloudflare preflight: intake token (present|missing), API token (present|missing), local scrawl blocked/);
   assert.match(textOutput, /Cloudflare lanes: ready 16, cred 3, rights 3/);
@@ -147,7 +147,7 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
     coverageGap.current.cloudflareSourceEvidence.readyMemberGapsWithCloudflareEvidence,
     cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence,
   );
-  assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGapCoverageRatio, 0.1875);
+  assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGapCoverageRatio, 0.6875);
   assert.equal(coverageGap.current.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
   assert.equal(coverageGap.deltas.sourceIntakeRuntimeRequired, 'cloudflare');
   assert.equal(coverageGap.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');

@@ -3,7 +3,8 @@ import intakePlan from '../public/data/cloudflare-source-intake-plan.json' with 
 const USER_AGENT = 'lounge-guru-source-intake/1.0 (+https://loungeguru.desk.travel)';
 const DEFAULT_TIMEOUT_MS = 12000;
 const MAX_FETCH_URLS = 3;
-const MAX_BATCH_TASKS = 10;
+const MAX_BATCH_TASKS = 20;
+const CLOUDFLARE_FETCH_ADAPTERS = new Set(['official_page', 'official_html', 'open_data']);
 
 function jsonResponse(body, init = {}) {
   return new Response(JSON.stringify(body, null, 2), {
@@ -140,8 +141,24 @@ async function fetchRobots(targetUrl, fetchImpl, timeoutMs) {
   }
 }
 
+function readyCloudflareFetchTasks() {
+  const candidates = intakePlan.memberGaps?.length > 0 ? intakePlan.memberGaps : intakePlan.tasks;
+  const readyTasks = [];
+  const seen = new Set();
+
+  for (const task of candidates) {
+    if (task.status !== 'ready' || !CLOUDFLARE_FETCH_ADAPTERS.has(task.adapter) || seen.has(task.sourceId)) {
+      continue;
+    }
+    seen.add(task.sourceId);
+    readyTasks.push(task);
+  }
+
+  return readyTasks;
+}
+
 function selectTask(sourceId) {
-  const readyTasks = intakePlan.tasks.filter((task) => task.status === 'ready' && task.adapter === 'official_page');
+  const readyTasks = readyCloudflareFetchTasks();
   if (sourceId) {
     return readyTasks.find((task) => task.sourceId === sourceId) ?? null;
   }
@@ -149,7 +166,7 @@ function selectTask(sourceId) {
 }
 
 function readyOfficialPageTasks() {
-  return intakePlan.tasks.filter((task) => task.status === 'ready' && task.adapter === 'official_page');
+  return readyCloudflareFetchTasks();
 }
 
 function sourceFetchUrls(task) {

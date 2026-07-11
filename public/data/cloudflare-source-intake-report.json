@@ -1,7 +1,7 @@
 {
   "ok": true,
-  "generatedAt": "2026-07-11T22:04:44.089Z",
-  "runId": "cloudflare-report-2026-07-11T22-04-44-089Z",
+  "generatedAt": "2026-07-11T22:18:47.825Z",
+  "runId": "cloudflare-report-2026-07-11T22-18-47-825Z",
   "policy": {
     "fetchMode": "cloudflare_d1_source_runs_report",
     "rawSnapshotsCommitted": false,
@@ -15,23 +15,251 @@
     }
   },
   "stats": {
-    "totalSources": 3,
-    "fetched": 3,
+    "totalSources": 16,
+    "fetched": 11,
     "skipped": 0,
-    "httpErrors": 0,
+    "httpErrors": 5,
     "fetchErrors": 0,
     "childPagesFetched": 0,
     "discoveredAirportCodes": 0,
     "discoveredLoungeLinks": 0,
-    "cloudflareSourceRuns": 7,
-    "readyTasks": 3,
-    "readyTasksWithCloudflareEvidence": 3
+    "cloudflareSourceRuns": 23,
+    "readyTasks": 16,
+    "readyTasksWithCloudflareEvidence": 11
   },
   "terminalImpact": {
     "fullCatalogIntakeReport": false,
     "coverageGateStillRequiresFullCloudflareReport": true
   },
   "sources": [
+    {
+      "sourceId": "american",
+      "publisher": "American Airlines Admirals Club",
+      "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+      "adapter": "official_html",
+      "status": "http_error",
+      "reason": "fetch failed",
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": false,
+      "finalUrl": null,
+      "httpStatus": null,
+      "contentType": "",
+      "bytes": 0,
+      "sha256": null,
+      "fetchAttempts": [
+        {
+          "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "contentType": "text/html",
+          "bytes": 442,
+          "sha256": "4d3fb37e6dfe15a6d3cb98abd678da7fda51af652a8f2bd62bb27c179b685bb8",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-31-423Z-american",
+      "retrievedAt": "2026-07-11T22:18:31.423Z"
+    },
+    {
+      "sourceId": "aspire-lounges",
+      "publisher": "Aspire Lounges",
+      "url": "https://www.executivelounges.com/airport-lounges",
+      "adapter": "official_page",
+      "status": "http_error",
+      "reason": "fetch failed",
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": false,
+      "finalUrl": null,
+      "httpStatus": null,
+      "contentType": "",
+      "bytes": 0,
+      "sha256": null,
+      "fetchAttempts": [
+        {
+          "url": "https://www.executivelounges.com/airport-lounges",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.aspirelounges.com/airport-lounges/",
+          "contentType": "text/html; charset=UTF-8",
+          "bytes": 4558,
+          "sha256": "bf8698ff8cba9e65c07c0fb1a79e631e8146e15d4dca246c9e6342fdb4e3cf87",
+          "robots": {
+            "checked": true,
+            "url": "https://www.executivelounges.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-31-612Z-aspire-lounges",
+      "retrievedAt": "2026-07-11T22:18:31.612Z"
+    },
+    {
+      "sourceId": "be-relax",
+      "publisher": "Be Relax",
+      "url": "https://www.berelax.com/locations/",
+      "adapter": "official_page",
+      "status": "fetched",
+      "reason": null,
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://berelax.com/locations/",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 1040555,
+      "sha256": "d17d2272dca6b3eeaf015056e4947168bdeadce9d492db8b3ddff66d2d84d73e",
+      "fetchAttempts": [
+        {
+          "url": "https://www.berelax.com/locations/",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://berelax.com/locations/",
+          "contentType": "text/html",
+          "bytes": 1040555,
+          "sha256": "d17d2272dca6b3eeaf015056e4947168bdeadce9d492db8b3ddff66d2d84d73e",
+          "robots": {
+            "checked": true,
+            "url": "https://www.berelax.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-41-902Z-be-relax",
+      "retrievedAt": "2026-07-11T22:18:41.902Z"
+    },
+    {
+      "sourceId": "citi-travel",
+      "publisher": "Citi Travel",
+      "url": "https://www.cititravel.com/",
+      "adapter": "official_page",
+      "status": "fetched",
+      "reason": null,
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://www.citi.com/citi-partner/cititravel/login",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 162738,
+      "sha256": "13014c2c22e71d4ea393d958c2e53943fb546fd9ecf54b7a0f9c5211705f993d",
+      "fetchAttempts": [
+        {
+          "url": "https://www.cititravel.com/",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://www.citi.com/citi-partner/cititravel/login",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 162738,
+          "sha256": "13014c2c22e71d4ea393d958c2e53943fb546fd9ecf54b7a0f9c5211705f993d",
+          "robots": {
+            "checked": true,
+            "url": "https://www.cititravel.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-21-893Z-citi-travel",
+      "retrievedAt": "2026-07-11T22:18:21.893Z"
+    },
+    {
+      "sourceId": "collinson-international",
+      "publisher": "Collinson International",
+      "url": "https://www.collinsongroup.com/",
+      "adapter": "official_page",
+      "status": "fetched",
+      "reason": null,
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://www.collinsongroup.com/en-GB",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 474255,
+      "sha256": "959129e01eb3794aa3f14edb4b9cb4ee5114df6033233c1e8ae59abbcf1ae159",
+      "fetchAttempts": [
+        {
+          "url": "https://www.collinsongroup.com/",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://www.collinsongroup.com/en-GB",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 474255,
+          "sha256": "959129e01eb3794aa3f14edb4b9cb4ee5114df6033233c1e8ae59abbcf1ae159",
+          "robots": {
+            "checked": true,
+            "url": "https://www.collinsongroup.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 8
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-20-484Z-collinson-international",
+      "retrievedAt": "2026-07-11T22:18:20.484Z"
+    },
+    {
+      "sourceId": "delta",
+      "publisher": "Delta Sky Club",
+      "url": "https://www.delta.com/us/en/delta-sky-club/locations",
+      "adapter": "official_html",
+      "status": "fetched",
+      "reason": null,
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 62077,
+      "sha256": "b609db0d88657b3f89e1c4b75e8eb0a4a96f9138b3e4fdbc854a377a142dc842",
+      "fetchAttempts": [
+        {
+          "url": "https://www.delta.com/us/en/delta-sky-club/locations",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
+          "contentType": "text/html",
+          "bytes": 62077,
+          "sha256": "b609db0d88657b3f89e1c4b75e8eb0a4a96f9138b3e4fdbc854a377a142dc842",
+          "robots": {
+            "checked": true,
+            "url": "https://www.delta.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 154
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-31-002Z-delta",
+      "retrievedAt": "2026-07-11T22:18:31.002Z"
+    },
     {
       "sourceId": "dragonpass",
       "publisher": "DragonPass",
@@ -67,8 +295,46 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-04-38-649Z-dragonpass",
-      "retrievedAt": "2026-07-11T22:04:38.649Z"
+      "runId": "cloudflare-probe-2026-07-11T22-18-25-028Z-dragonpass",
+      "retrievedAt": "2026-07-11T22:18:25.028Z"
+    },
+    {
+      "sourceId": "marhaba",
+      "publisher": "Marhaba Airport Lounges",
+      "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
+      "adapter": "official_page",
+      "status": "fetched",
+      "reason": null,
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://www.marhabaservices.com/ae/english/airport-lounges",
+      "httpStatus": 200,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 240161,
+      "sha256": "2271c35d5d3a9298182b9f884173506eab263deca2c3994c4d2f0e0df6ba8bfa",
+      "fetchAttempts": [
+        {
+          "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://www.marhabaservices.com/ae/english/airport-lounges",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 240161,
+          "sha256": "2271c35d5d3a9298182b9f884173506eab263deca2c3994c4d2f0e0df6ba8bfa",
+          "robots": {
+            "checked": true,
+            "url": "https://www.marhabaservices.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 11
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-31-772Z-marhaba",
+      "retrievedAt": "2026-07-11T22:18:31.772Z"
     },
     {
       "sourceId": "mastercard-travel-pass",
@@ -105,8 +371,236 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-04-37-602Z-mastercard-travel-pass",
-      "retrievedAt": "2026-07-11T22:04:37.602Z"
+      "runId": "cloudflare-probe-2026-07-11T22-18-24-407Z-mastercard-travel-pass",
+      "retrievedAt": "2026-07-11T22:18:24.407Z"
+    },
+    {
+      "sourceId": "no1-lounges",
+      "publisher": "No1 Lounges",
+      "url": "https://no1lounges.com/airport-lounges/",
+      "adapter": "official_page",
+      "status": "fetched",
+      "reason": null,
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://no1lounges.com/our-lounges/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 214058,
+      "sha256": "1531bcddb1b69e80b1a14f521439c01ec628f238c49a2d8c34b25389f073a46e",
+      "fetchAttempts": [
+        {
+          "url": "https://no1lounges.com/airport-lounges/",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://no1lounges.com/our-lounges/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 214058,
+          "sha256": "1531bcddb1b69e80b1a14f521439c01ec628f238c49a2d8c34b25389f073a46e",
+          "robots": {
+            "checked": true,
+            "url": "https://no1lounges.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 1
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-36-732Z-no1-lounges",
+      "retrievedAt": "2026-07-11T22:18:36.732Z"
+    },
+    {
+      "sourceId": "openstreetmap",
+      "publisher": "OpenStreetMap",
+      "url": "https://www.openstreetmap.org/",
+      "adapter": "open_data",
+      "status": "fetched",
+      "reason": null,
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://www.openstreetmap.org/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 31183,
+      "sha256": "c87812b80cc1d301aba6374ab62c2c66fd8e97a70184eded12e638044892e1af",
+      "fetchAttempts": [
+        {
+          "url": "https://www.openstreetmap.org/",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://www.openstreetmap.org/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 31183,
+          "sha256": "c87812b80cc1d301aba6374ab62c2c66fd8e97a70184eded12e638044892e1af",
+          "robots": {
+            "checked": true,
+            "url": "https://www.openstreetmap.org/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 21
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-43-512Z-openstreetmap",
+      "retrievedAt": "2026-07-11T22:18:43.512Z"
+    },
+    {
+      "sourceId": "primeclass",
+      "publisher": "Primeclass Lounge",
+      "url": "https://www.primeclass.com.tr/en/lounge",
+      "adapter": "official_page",
+      "status": "fetched",
+      "reason": null,
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://tavoperationservices.com/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 68202,
+      "sha256": "5a65f6f1671c7696cca00b159d49b502067f1838607d7cd1491fadd444748ea9",
+      "fetchAttempts": [
+        {
+          "url": "https://www.primeclass.com.tr/en/lounge",
+          "status": "fetched",
+          "reason": null,
+          "httpStatus": 200,
+          "finalUrl": "https://tavoperationservices.com/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 68202,
+          "sha256": "5a65f6f1671c7696cca00b159d49b502067f1838607d7cd1491fadd444748ea9",
+          "robots": {
+            "checked": true,
+            "url": "https://www.primeclass.com.tr/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-33-823Z-primeclass",
+      "retrievedAt": "2026-07-11T22:18:33.823Z"
+    },
+    {
+      "sourceId": "skyteam",
+      "publisher": "SkyTeam Lounges",
+      "url": "https://www.skyteam.com/en/about/lounges/",
+      "adapter": "official_page",
+      "status": "http_error",
+      "reason": "fetch failed",
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": false,
+      "finalUrl": null,
+      "httpStatus": null,
+      "contentType": "",
+      "bytes": 0,
+      "sha256": null,
+      "fetchAttempts": [
+        {
+          "url": "https://www.skyteam.com/en/about/lounges/",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/about/lounges/",
+          "contentType": "text/html",
+          "bytes": 118,
+          "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-29-265Z-skyteam",
+      "retrievedAt": "2026-07-11T22:18:29.265Z"
+    },
+    {
+      "sourceId": "star-alliance",
+      "publisher": "Star Alliance Lounge Finder",
+      "url": "https://www.staralliance.com/en/lounge-finder",
+      "adapter": "official_page",
+      "status": "http_error",
+      "reason": "fetch failed",
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": false,
+      "finalUrl": null,
+      "httpStatus": null,
+      "contentType": "",
+      "bytes": 0,
+      "sha256": null,
+      "fetchAttempts": [
+        {
+          "url": "https://www.staralliance.com/en/lounge-finder",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 403,
+          "finalUrl": "https://www.staralliance.com/en/lounge-finder",
+          "contentType": "text/html",
+          "bytes": 118,
+          "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+          "robots": {
+            "checked": true,
+            "url": "https://www.staralliance.com/robots.txt",
+            "status": 403,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-27-725Z-star-alliance",
+      "retrievedAt": "2026-07-11T22:18:27.725Z"
+    },
+    {
+      "sourceId": "united",
+      "publisher": "United Club and Polaris Lounges",
+      "url": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+      "adapter": "official_html",
+      "status": "http_error",
+      "reason": "fetch failed",
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": false,
+      "finalUrl": null,
+      "httpStatus": null,
+      "contentType": "",
+      "bytes": 0,
+      "sha256": null,
+      "fetchAttempts": [
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+          "status": "http_error",
+          "reason": null,
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-11T22-18-30-784Z-united",
+      "retrievedAt": "2026-07-11T22:18:30.784Z"
     },
     {
       "sourceId": "visa-airport-companion",
@@ -123,7 +617,7 @@
       "httpStatus": 200,
       "contentType": "text/html",
       "bytes": 59310,
-      "sha256": "4e777e8e20f422882083d28844ee5c0a8f268953a944818e0233721c9d6d1231",
+      "sha256": "df58a2b074a262cef256926201bffb3e88bd136909b76c45c424b058157facfe",
       "fetchAttempts": [
         {
           "url": "https://www.visaairportcompanion.com/",
@@ -133,7 +627,7 @@
           "finalUrl": "https://visaairportcompanion.ca/",
           "contentType": "text/html",
           "bytes": 59310,
-          "sha256": "4e777e8e20f422882083d28844ee5c0a8f268953a944818e0233721c9d6d1231",
+          "sha256": "df58a2b074a262cef256926201bffb3e88bd136909b76c45c424b058157facfe",
           "robots": {
             "checked": true,
             "url": "https://www.visaairportcompanion.com/robots.txt",
@@ -143,8 +637,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-11T22-04-34-763Z-visa-airport-companion",
-      "retrievedAt": "2026-07-11T22:04:34.763Z"
+      "runId": "cloudflare-probe-2026-07-11T22-18-22-456Z-visa-airport-companion",
+      "retrievedAt": "2026-07-11T22:18:22.456Z"
     }
   ]
 }
