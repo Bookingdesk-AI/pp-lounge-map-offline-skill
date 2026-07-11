@@ -827,11 +827,13 @@ function SearchCommandCombobox({
   features,
   brandOptions,
   onSearchChange,
+  onSearchFocus,
 }: {
   search: string;
   features: LoungeFeature[];
   brandOptions: BrandFilterOption[];
   onSearchChange: (search: string) => void;
+  onSearchFocus?: () => void;
 }) {
   const inputId = useId();
   const listboxId = useId();
@@ -1011,7 +1013,10 @@ function SearchCommandCombobox({
         aria-controls={listboxId}
         aria-activedescendant={activeOptionId}
         value={draft}
-        onFocus={() => setOpen(true)}
+        onFocus={() => {
+          onSearchFocus?.();
+          setOpen(true);
+        }}
         onChange={(event) => {
           const nextSearch = event.target.value;
           setDraft(nextSearch);
@@ -1718,6 +1723,7 @@ function MobileQuickFilters({
   activeFilterChips,
   quickFilterState,
   onSearchChange,
+  onSearchFocus,
   onQuickTypeToggle,
   onOpenFilters,
   onClearFilters,
@@ -1732,6 +1738,7 @@ function MobileQuickFilters({
   activeFilterChips: FilterSummaryChip[];
   quickFilterState: QuickFilterPreset;
   onSearchChange: (search: string) => void;
+  onSearchFocus: () => void;
   onQuickTypeToggle: (type: string) => void;
   onOpenFilters: () => void;
   onClearFilters: () => void;
@@ -1750,6 +1757,7 @@ function MobileQuickFilters({
         features={features}
         brandOptions={brandOptions}
         onSearchChange={onSearchChange}
+        onSearchFocus={onSearchFocus}
       />
 
       <div className="mobile-type-strip">
@@ -3276,6 +3284,12 @@ function App() {
     setMobileUI((current) => ({ ...current, sheetMode: 'filters', sheetSnap: 'full' }));
   }, [search, selectedTypes, selectedCountry, selectedCity, selectedBrand, selectedFacilities, sort]);
 
+  const expandMobileSearch = useCallback(() => {
+    setMobileUI((current) =>
+      current.sheetMode === 'results' && current.sheetSnap !== 'full' ? { ...current, sheetSnap: 'full' } : current,
+    );
+  }, []);
+
   const applyMobileFilters = useCallback(() => {
     setSearch(mobileFilterDraft.search);
     setSelectedTypes([...mobileFilterDraft.types]);
@@ -3678,6 +3692,7 @@ function App() {
                       activeFilterChips={activeFilterChips}
                       quickFilterState={mobileUI.quickFilterState}
                       onSearchChange={setSearch}
+                      onSearchFocus={expandMobileSearch}
                       onQuickTypeToggle={toggleQuickType}
                       onOpenFilters={openMobileFilters}
                       onClearFilters={clearAppliedFilters}

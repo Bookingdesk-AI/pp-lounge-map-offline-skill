@@ -13,3 +13,12 @@ test('search inputs expose mobile keyboard hints', () => {
   assert.equal(inputModeCount, searchInputCount);
   assert.equal(enterKeyHintCount, searchInputCount);
 });
+
+test('mobile result search expands the sheet before showing suggestions', () => {
+  assert.match(appSource, /onSearchFocus\?: \(\) => void/);
+  assert.match(appSource, /function MobileQuickFilters/);
+  assert.match(appSource, /onSearchFocus: \(\) => void/);
+  assert.match(appSource, /const expandMobileSearch = useCallback/);
+  assert.match(appSource, /current\.sheetMode === 'results' && current\.sheetSnap !== 'full'/);
+  assert.match(appSource, /onSearchFocus=\{expandMobileSearch\}/);
+});

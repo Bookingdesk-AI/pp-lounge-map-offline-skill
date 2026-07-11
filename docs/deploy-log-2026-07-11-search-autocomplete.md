@@ -6,6 +6,7 @@
 - Added same-origin `/api/all-routes/airports` proxy for local Vite and Cloudflare Pages.
 - Ranked search suggestions by city, airport, lounge, then brand.
 - Added compact category badges and color accents to autocomplete rows.
+- Expanded the mobile results sheet on search focus so autocomplete is reachable from mid sheet.
 - Replaced native country, city, and brand selects with compact combobox controls.
 - Scoped city suggestions after country selection.
 - Moved type and facility filters into the filter panel.
@@ -27,6 +28,7 @@
 - local proxy smoke: `/api/all-routes/airports?query=HGH&limit=5`
 - Desktop rendered autocomplete check: `city, city, city, airport, airport, airport, airport, lounge`
 - Mobile rendered autocomplete check: full-sheet search input `44px`, same category order, no horizontal overflow
+- Mobile mid-sheet focus check: search focus changes `sheet=mid` to `sheet=full` and renders categorized suggestions
 
 ## Deploy
 
