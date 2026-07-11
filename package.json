@@ -38,6 +38,7 @@
     "mcp:deploy": "wrangler deploy --config wrangler.mcp.toml",
     "preview": "vite preview",
     "smoke:deploy": "node scripts/smoke-deploy.mjs",
+    "smoke:ui": "node scripts/smoke-ui.mjs",
     "deploy:web": "wrangler pages deploy dist --project-name uscf-pps-worker --branch main --commit-dirty=true",
     "deploy:mcp": "wrangler deploy --config wrangler.mcp.toml",
     "deploy": "npm run release:prepare && npm run deploy:mcp && npm run deploy:web"

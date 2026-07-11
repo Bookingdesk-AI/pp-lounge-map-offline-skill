@@ -7,7 +7,7 @@ This update turns the lounge map into a compact internal operations console for 
 - Replaced the traveler-facing visual tone with a light, data-dense enterprise interface.
 - Removed hero, subtitle, intro, marketing, and helper copy from the app surface.
 - Kept the first screen as the working app: search, filters, results, compare, map, and details.
-- Added concise catalog status in the header: records, airports, countries, and data date.
+- Kept production header compact: product name, production search, and dev-only view tabs only in local dev.
 - Bounded schedule and condition text so source workbook notes do not dominate result or detail views.
 - Kept the source link available for full external record review.
 - Preserved desktop workflow: left rail for results, filters, compare; map and detail overlay on the right.
@@ -23,7 +23,7 @@ This update turns the lounge map into a compact internal operations console for 
 
 Kept copy is limited to functional text:
 
-- App title and catalog status.
+- App title.
 - Control labels and filter values.
 - Sort options.
 - Buttons and links.
@@ -45,6 +45,7 @@ Removed or suppressed copy:
 - `npx tsc -b`
 - `npx vite build`
 - `npm run test`
+- `npm run smoke:ui`
 - Browser verification at desktop width.
 - Browser verification at mobile width.
 - Runtime copy scan for landing/helper copy.
