@@ -139,9 +139,12 @@ export async function exportCloudflareSourceRunEvidence({
   });
 
   const changed = await writeEvidenceIfChanged(output, evidence);
+  const readyCoverage =
+    evidence.stats.readyMemberGaps > 0
+      ? `${evidence.stats.readyMemberGapsWithCloudflareEvidence}/${evidence.stats.readyMemberGaps} ready member gaps`
+      : `${evidence.stats.readyTasksWithCloudflareEvidence}/${evidence.stats.readyTasks} ready tasks`;
   log(
-    `cloudflare-source-run-evidence: ${evidence.stats.uniqueSources} sources, ` +
-      `${evidence.stats.readyTasksWithCloudflareEvidence}/${evidence.stats.readyTasks} ready tasks, ` +
+    `cloudflare-source-run-evidence: ${evidence.stats.uniqueSources} sources, ${readyCoverage}, ` +
       `${changed ? 'updated' : 'unchanged'}`,
   );
   return { evidence, changed, outputPath: output };
