@@ -83,6 +83,7 @@ test('coverage validator reports current progress without pretending terminal co
 
   assert.match(textOutput, /Source proof: 3\/16/);
   assert.match(textOutput, /Cloudflare token: LOUNGE_GURU_INTAKE_TOKEN/);
+  assert.match(textOutput, /Cloudflare preflight: intake token (present|missing), API token (present|missing), local scrawl blocked/);
   assert.match(textOutput, /Cloudflare lanes: ready 16, cred 3, rights 3/);
   assert.match(textOutput, /Cloudflare report: npm run intake:cloudflare:report:export/);
   assert.equal(summary.goalId, goal.id);
@@ -102,6 +103,17 @@ test('coverage validator reports current progress without pretending terminal co
   assert.equal(summary.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
   assert.equal(summary.gapReport.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
   assert.equal(summary.gapReport.nextCloudflareIntake.localScrawl, 'blocked');
+  assert.deepEqual(Object.keys(summary.credentialPreflight).sort(), [
+    'baseUrlEnvPresent',
+    'cloudflareApiTokenPresent',
+    'intakeTokenEnv',
+    'intakeTokenPresent',
+    'localScrawl',
+  ]);
+  assert.equal(summary.credentialPreflight.intakeTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
+  assert.equal(typeof summary.credentialPreflight.intakeTokenPresent, 'boolean');
+  assert.equal(typeof summary.credentialPreflight.cloudflareApiTokenPresent, 'boolean');
+  assert.equal(summary.credentialPreflight.localScrawl, 'blocked');
   assert.ok(summary.gapReport.nextCloudflareIntake.commands.report.includes('intake:cloudflare:report:export'));
   assert.equal(
     summary.cloudflareSourceEvidence.readyMemberGapsWithCloudflareEvidence,

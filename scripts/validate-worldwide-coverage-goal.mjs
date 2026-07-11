@@ -16,6 +16,7 @@ const migrationPath = path.resolve(projectRoot, 'migrations', '0001_lounge_guru_
 
 const strict = process.argv.includes('--strict');
 const jsonOutput = process.argv.includes('--json');
+const env = process.env;
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -42,6 +43,18 @@ function validateRequiredTables(goal, migrationSql) {
     table,
     present: new RegExp(`CREATE TABLE IF NOT EXISTS ${table}\\b`, 'i').test(migrationSql),
   }));
+}
+
+function credentialPreflight(nextCloudflareIntake) {
+  const requiredIntakeTokenEnv = nextCloudflareIntake?.requiredTokenEnv ?? 'LOUNGE_GURU_INTAKE_TOKEN';
+
+  return {
+    intakeTokenEnv: requiredIntakeTokenEnv,
+    intakeTokenPresent: Boolean(env[requiredIntakeTokenEnv]),
+    cloudflareApiTokenPresent: Boolean(env.CLOUDFLARE_API_TOKEN),
+    baseUrlEnvPresent: Boolean(env.LOUNGE_GURU_INTAKE_BASE_URL),
+    localScrawl: 'blocked',
+  };
 }
 
 function buildSummary({ goal, catalog, sourceRegistry, migrationSql, sourceIntakeReport, sourceRunEvidence }) {
@@ -76,6 +89,7 @@ function buildSummary({ goal, catalog, sourceRegistry, migrationSql, sourceIntak
   const missingRegisteredMembers = goal.sourceFamilies
     .flatMap((family) => family.members ?? [family.id])
     .filter((sourceId) => !sourceRegistryIds.has(sourceId));
+  const preflight = credentialPreflight(gapReport.nextCloudflareIntake);
 
   const blockers = [];
   if (approvedRecords < goal.terminalGoal.minApprovedRecords) {
@@ -131,6 +145,7 @@ function buildSummary({ goal, catalog, sourceRegistry, migrationSql, sourceIntak
     sourceFamilyStatuses,
     missingSourceFamilies: gapReport.deltas.missingSourceFamilies,
     gapReport,
+    credentialPreflight: preflight,
     tableStatuses,
     missingRegisteredMembers,
     terminalPassed: blockers.length === 0,
@@ -163,6 +178,10 @@ if (jsonOutput) {
   if (summary.gapReport.nextCloudflareIntake) {
     const intake = summary.gapReport.nextCloudflareIntake;
     console.log(`Cloudflare token: ${intake.requiredTokenEnv}`);
+    console.log(
+      `Cloudflare preflight: intake token ${summary.credentialPreflight.intakeTokenPresent ? 'present' : 'missing'}, ` +
+        `API token ${summary.credentialPreflight.cloudflareApiTokenPresent ? 'present' : 'missing'}, local scrawl blocked`,
+    );
     console.log(
       `Cloudflare lanes: ready ${intake.readySourceIds.length}, ` +
         `cred ${intake.credentialSourceIds.length}, rights ${intake.rightsReviewSourceIds.length}`,

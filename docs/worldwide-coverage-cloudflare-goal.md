@@ -27,6 +27,8 @@ npm run validate:json
 npm run intake:evidence
 ```
 
+`npm run validate:coverage` prints a redacted Cloudflare preflight line. It reports only whether the intake token and Cloudflare API token are present, and keeps local scrawl blocked.
+
 Gap report: `public/data/coverage-gap-report.json`.
 Cloudflare intake plan: `public/data/cloudflare-source-intake-plan.json`.
 Cloudflare source-run evidence: `public/data/cloudflare-source-run-evidence.json`.
