@@ -2142,6 +2142,11 @@
     margin-top: 0.5rem;
   }
 
+  .review-lane-grid.is-mobile-queue {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: 0.5rem;
+  }
+
   .review-lane-grid > span {
     min-width: 0;
     display: grid;
@@ -2175,6 +2180,10 @@
     display: grid;
     gap: 0.44rem;
     margin-top: 0.5rem;
+  }
+
+  .review-list.is-compact {
+    gap: 0.34rem;
   }
 
   .review-row {

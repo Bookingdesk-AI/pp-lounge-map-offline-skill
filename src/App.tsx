@@ -2100,6 +2100,7 @@ function MobileReviewView({
   coverageGap,
   cloudflareEvidence,
   intakePlan,
+  nonPriorityValidation,
   onSelect,
 }: {
   records: CanonicalLoungeRecord[];
@@ -2107,6 +2108,7 @@ function MobileReviewView({
   coverageGap: CoverageGapReport | null;
   cloudflareEvidence: CloudflareSourceRunEvidence | null;
   intakePlan: CloudflareSourceIntakePlan | null;
+  nonPriorityValidation: NonPriorityValidationReport | null;
   onSelect: (id: string) => void;
 }) {
   const reviewRecordCandidates = records.filter(
@@ -2115,6 +2117,16 @@ function MobileReviewView({
   const nonPriorityPassReviewTotal = reviewRecordCandidates.filter((record) => !isPriorityPassRecord(record)).length;
   const reviewRecords = [...reviewRecordCandidates].sort(reviewQueueSort).slice(0, 12);
   const reviewRecordTotal = coverageGap?.current.reviewRecords ?? meta?.quality?.reviewQueue ?? reviewRecords.length;
+  const mobileValidationRows = (nonPriorityValidation?.rows ?? [])
+    .filter((row) => row.reviewAction.action === 'manual_review')
+    .slice(0, 12);
+  const mobileReviewQueues = Object.entries(nonPriorityValidation?.stats.byReviewQueue ?? {}).sort(
+    ([first], [second]) => first.localeCompare(second),
+  );
+  const mobileSourceDecisions = (nonPriorityValidation?.stats.bySourceDecision ?? [])
+    .filter((source) => source.manualReview > 0 || source.publishable > 0)
+    .slice(0, 8);
+  const queueTotal = nonPriorityValidation?.stats.byDecision.review ?? reviewRecordTotal;
   const missingFamilies = coverageGap?.sourceFamilies.filter((family) => !family.present) ?? [];
   const blockerLabels = coverageGap?.blockers.map(formatBlockerLabel) ?? [];
   const sourceRuntime = coverageGap?.current.sourceIntakeRuntime ?? 'unknown';
@@ -2188,7 +2200,7 @@ function MobileReviewView({
     sources: intakePlan?.summary.memberGaps ?? 0,
     cf: cloudflareSources.length,
     families: missingFamilies.length,
-    queue: reviewRecordTotal,
+    queue: queueTotal,
   };
 
   return (
@@ -2224,7 +2236,11 @@ function MobileReviewView({
         </div>
         <div>
           <span>Non-PP</span>
-          <strong>{nonPriorityPassReviewTotal}</strong>
+          <strong>{nonPriorityValidation?.stats.total ?? nonPriorityPassReviewTotal}</strong>
+        </div>
+        <div>
+          <span>Manual</span>
+          <strong>{nonPriorityValidation?.stats.byDecision.review ?? nonPriorityPassReviewTotal}</strong>
         </div>
       </section>
 
@@ -2392,9 +2408,60 @@ function MobileReviewView({
         <section className="mobile-review-panel">
         <div className="section-title-row">
           <h2>Queue</h2>
-          <span className="compare-count">{reviewRecords.length} / {reviewRecordTotal}</span>
+          <span className="compare-count">{mobileValidationRows.length || reviewRecords.length} / {queueTotal}</span>
         </div>
-        {reviewRecords.length === 0 ? (
+        {mobileReviewQueues.length > 0 ? (
+          <div className="review-lane-grid is-mobile-queue" aria-label="Non-PP queues">
+            {mobileReviewQueues.map(([queue, count]) => (
+              <span key={queue}>
+                <strong>{count}</strong>
+                <span>{formatBlockerLabel(queue)}</span>
+              </span>
+            ))}
+          </div>
+        ) : null}
+        {mobileSourceDecisions.length > 0 ? (
+          <div className="review-list is-compact">
+            {mobileSourceDecisions.map((source) => (
+              <div key={source.sourceId} className="review-row">
+                <span className="review-row-head">
+                  <strong>{source.publisher}</strong>
+                  <span className="code">{source.total}</span>
+                </span>
+                <span className="review-row-badges">
+                  <span className="code">Publish {source.publishable}</span>
+                  <span className="code">Manual {source.manualReview}</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : null}
+        {mobileValidationRows.length > 0 ? (
+          <div className="review-list">
+            {mobileValidationRows.map((row) => (
+              <button
+                key={row.recordId}
+                type="button"
+                className="review-row is-action"
+                aria-label={`${row.name} ${row.airportCode} ${formatBlockerLabel(row.reviewAction.queue)} ${formatSourceConfidence(row.confidence)}`}
+                onClick={() => onSelect(row.recordId)}
+              >
+                <span className="review-row-head">
+                  <strong>{row.name}</strong>
+                  <span className="code">{row.airportCode}</span>
+                </span>
+                <span className="review-row-head">
+                  <span>{row.publisher}</span>
+                  <span className="review-row-badges">
+                    <span className="code">{row.sourceId}</span>
+                    <span className="code">{formatSourceConfidence(row.confidence)}</span>
+                  </span>
+                </span>
+                <span>{formatBlockerLabel(row.reviewAction.reason)}</span>
+              </button>
+            ))}
+          </div>
+        ) : reviewRecords.length === 0 ? (
           <div className="compare-empty">No review records</div>
         ) : (
           <div className="review-list">
@@ -4011,6 +4078,7 @@ function App() {
                       coverageGap={coverageGap}
                       cloudflareEvidence={cloudflareEvidence}
                       intakePlan={intakePlan}
+                      nonPriorityValidation={nonPriorityValidation}
                       onSelect={(id) => selectFeature(id)}
                     />
                   </div>

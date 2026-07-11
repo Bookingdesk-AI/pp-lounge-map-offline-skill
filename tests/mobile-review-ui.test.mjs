@@ -51,7 +51,8 @@ test('mobile review exposes compact section tabs with source evidence workflow',
   assert.match(appSource, /{gap\.sourceId}/);
   assert.doesNotMatch(appSource, /sourceGapRows\.slice/);
   assert.match(appSource, /reviewRecordTotal/);
-  assert.match(appSource, /reviewRecords\.length} \/ {reviewRecordTotal}/);
+  assert.match(appSource, /mobileValidationRows\.length \|\| reviewRecords\.length/);
+  assert.match(appSource, /queueTotal/);
   assert.match(appSource, /nonPriorityValidation/);
   assert.match(appSource, /non-priority-validation-report\.json/);
   assert.match(appSource, /Non-PP review/);
@@ -61,6 +62,14 @@ test('mobile review exposes compact section tabs with source evidence workflow',
   assert.match(appSource, /bySourceDecision/);
   assert.match(appSource, /reviewAction\.action === 'manual_review'/);
   assert.match(appSource, /review-lane-grid is-intake/);
+  assert.match(appSource, /mobileValidationRows/);
+  assert.match(appSource, /mobileReviewQueues/);
+  assert.match(appSource, /mobileSourceDecisions/);
+  assert.match(appSource, /aria-label="Non-PP queues"/);
+  assert.match(appSource, /className="review-lane-grid is-mobile-queue"/);
+  assert.match(appSource, /Publish \{source\.publishable\}/);
+  assert.match(appSource, /Manual \{source\.manualReview\}/);
+  assert.match(appSource, /formatBlockerLabel\(row\.reviewAction\.reason\)/);
 });
 
 test('mobile review tabs keep production touch targets', () => {
@@ -75,6 +84,8 @@ test('mobile review tabs keep production touch targets', () => {
   assert.match(appCss, /\.review-row\s*{[^}]*text-decoration:\s*none;/s);
   assert.match(appCss, /\.intake-review-grid\s*{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/s);
   assert.match(appCss, /\.review-lane-grid\.is-intake\s*{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/s);
+  assert.match(appCss, /\.review-lane-grid\.is-mobile-queue\s*{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/s);
+  assert.match(appCss, /\.review-list\.is-compact\s*{/);
   assert.match(appCss, /\.mobile-intake-wrap \.intake-review-grid\s*{[^}]*grid-template-columns:\s*1fr;/s);
   assert.match(appCss, /\.mobile-intake-wrap \.review-lane-grid\.is-intake\s*{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/s);
 });
