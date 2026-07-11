@@ -352,6 +352,53 @@ export interface CloudflareSourceRunEvidence {
   }>;
 }
 
+export interface NonPriorityValidationReport {
+  generatedAt: string;
+  policy: {
+    approvalRule: string;
+    reviewRule: string;
+    lineReviewRule: string;
+  };
+  stats: {
+    total: number;
+    byStatus: Record<string, number>;
+    byDecision: Record<string, number>;
+    byReviewQueue: Record<string, number>;
+    byConflict: Record<string, number>;
+    bySourceDecision: Array<{
+      sourceId: string;
+      publisher: string;
+      total: number;
+      approved: number;
+      review: number;
+      publishable: number;
+      manualReview: number;
+    }>;
+    unmatched: number;
+  };
+  rows: Array<{
+    recordId: string;
+    sourceId: string;
+    publisher: string;
+    name: string;
+    airportCode: string;
+    airportName: string;
+    city: string;
+    country: string;
+    terminal: string;
+    sourceUrl: string;
+    validationStatus: string;
+    reviewStatus: 'approved' | 'review';
+    confidence: number;
+    conflicts: string[];
+    reviewAction: {
+      queue: string;
+      action: 'publish' | 'manual_review';
+      reason: string;
+    };
+  }>;
+}
+
 export type SheetSnap = 'peek' | 'mid' | 'full';
 
 export type MobileSheetMode = 'results' | 'filters' | 'details' | 'compare' | 'review' | 'intake';

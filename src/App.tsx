@@ -16,6 +16,7 @@ import type {
   LoungeSourceRegistryEntry,
   MobileSheetMode,
   MobileUIState,
+  NonPriorityValidationReport,
   QuickFilterPreset,
   SheetSnap,
   SortOption,
@@ -2491,12 +2492,14 @@ function IntakeView({
   meta,
   coverageGap,
   intakePlan,
+  nonPriorityValidation,
 }: {
   records: CanonicalLoungeRecord[];
   sources: LoungeSourceRegistryEntry[];
   meta: LoungeMeta | null;
   coverageGap: CoverageGapReport | null;
   intakePlan: CloudflareSourceIntakePlan | null;
+  nonPriorityValidation: NonPriorityValidationReport | null;
 }) {
   const reviewRecords = records
     .filter((record) => record.quality.reviewStatus !== 'approved' || record.quality.conflicts.length > 0)
@@ -2504,6 +2507,16 @@ function IntakeView({
   const activeSources = sources.filter((source) => source.status === 'active').length;
   const manualSources = sources.filter((source) => source.status === 'manual_review').length;
   const missingFamilies = coverageGap?.sourceFamilies.filter((family) => !family.present) ?? [];
+  const reviewQueues = Object.entries(nonPriorityValidation?.stats.byReviewQueue ?? {}).sort(([first], [second]) =>
+    first.localeCompare(second),
+  );
+  const conflictQueues = Object.entries(nonPriorityValidation?.stats.byConflict ?? {})
+    .sort(([, first], [, second]) => second - first)
+    .slice(0, 6);
+  const sourceDecisionRows = nonPriorityValidation?.stats.bySourceDecision ?? [];
+  const sampleReviewRows = (nonPriorityValidation?.rows ?? [])
+    .filter((row) => row.reviewAction.action === 'manual_review')
+    .slice(0, 12);
 
   return (
     <main className="console-view">
@@ -2540,7 +2553,81 @@ function IntakeView({
           <span>Plan</span>
           <strong>{intakePlan ? `${intakePlan.summary.readyTasks}/${intakePlan.summary.tasks}` : 'n/a'}</strong>
         </div>
+        <div>
+          <span>Non-PP</span>
+          <strong>{nonPriorityValidation?.stats.total ?? 0}</strong>
+        </div>
+        <div>
+          <span>Manual rows</span>
+          <strong>{nonPriorityValidation?.stats.byDecision.review ?? 0}</strong>
+        </div>
       </section>
+
+      {nonPriorityValidation ? (
+        <section className="console-panel">
+          <div className="panel-head">
+            <h2>Non-PP review</h2>
+            <span className="compare-count">{nonPriorityValidation.stats.total}</span>
+          </div>
+          <div className="intake-review-grid">
+            <div className="intake-review-block">
+              <h3>Queues</h3>
+              <div className="review-lane-grid is-intake">
+                {reviewQueues.map(([queue, count]) => (
+                  <span key={queue}>
+                    <strong>{count}</strong>
+                    <span>{formatBlockerLabel(queue)}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="intake-review-block">
+              <h3>Conflicts</h3>
+              <div className="review-lane-grid is-intake">
+                {conflictQueues.map(([conflict, count]) => (
+                  <span key={conflict}>
+                    <strong>{count}</strong>
+                    <span>{formatBlockerLabel(conflict)}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {sourceDecisionRows.length > 0 ? (
+        <section className="console-panel">
+          <div className="panel-head">
+            <h2>Source decisions</h2>
+            <span className="compare-count">{sourceDecisionRows.length}</span>
+          </div>
+          <div className="data-table-wrap">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Source</th>
+                  <th>Total</th>
+                  <th>Publish</th>
+                  <th>Review</th>
+                  <th>Manual</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sourceDecisionRows.map((source) => (
+                  <tr key={source.sourceId}>
+                    <td>{source.publisher}</td>
+                    <td>{source.total}</td>
+                    <td>{source.publishable}</td>
+                    <td>{source.review}</td>
+                    <td>{source.manualReview}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
 
       {intakePlan ? (
         <section className="console-panel">
@@ -2614,8 +2701,8 @@ function IntakeView({
 
       <section className="console-panel">
         <div className="panel-head">
-          <h2>Review queue</h2>
-          <span className="compare-count">{reviewRecords.length}</span>
+          <h2>Manual rows</h2>
+          <span className="compare-count">{sampleReviewRows.length || reviewRecords.length}</span>
         </div>
         <div className="data-table-wrap">
           <table className="data-table">
@@ -2624,12 +2711,22 @@ function IntakeView({
                 <th>Lounge</th>
                 <th>Airport</th>
                 <th>Source</th>
-                <th>Quality</th>
+                <th>Queue</th>
                 <th>Issues</th>
               </tr>
             </thead>
             <tbody>
-              {reviewRecords.length === 0 ? (
+              {sampleReviewRows.length > 0 ? (
+                sampleReviewRows.map((row) => (
+                  <tr key={row.recordId}>
+                    <td>{row.name}</td>
+                    <td>{row.airportCode}</td>
+                    <td>{row.publisher}</td>
+                    <td>{formatBlockerLabel(row.reviewAction.queue)}</td>
+                    <td>{formatBlockerLabel(row.reviewAction.reason)}</td>
+                  </tr>
+                ))
+              ) : reviewRecords.length === 0 ? (
                 <tr>
                   <td colSpan={5}>No issues</td>
                 </tr>
@@ -2639,9 +2736,7 @@ function IntakeView({
                     <td>{record.lounge.name}</td>
                     <td>{record.airport.iata}</td>
                     <td>{record.sources[0]?.publisher ?? 'Unknown'}</td>
-                    <td>
-                      <QualityBadge label="C" score={record.quality.completeness} />
-                    </td>
+                    <td>{formatBlockerLabel(record.quality.reviewStatus)}</td>
                     <td>{record.quality.conflicts.join(', ') || record.quality.reviewStatus}</td>
                   </tr>
                 ))
@@ -2790,6 +2885,7 @@ function App() {
   const [coverageGap, setCoverageGap] = useState<CoverageGapReport | null>(null);
   const [intakePlan, setIntakePlan] = useState<CloudflareSourceIntakePlan | null>(null);
   const [cloudflareEvidence, setCloudflareEvidence] = useState<CloudflareSourceRunEvidence | null>(null);
+  const [nonPriorityValidation, setNonPriorityValidation] = useState<NonPriorityValidationReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<AppView>(initialUrlState.view);
@@ -2859,6 +2955,7 @@ function App() {
           coverageGapResponse,
           intakePlanResponse,
           cloudflareEvidenceResponse,
+          nonPriorityValidationResponse,
         ] = await Promise.all([
           fetch('/data/lounges.geojson'),
           fetch('/data/meta.json'),
@@ -2868,6 +2965,7 @@ function App() {
           fetch('/data/coverage-gap-report.json'),
           fetch('/data/cloudflare-source-intake-plan.json'),
           fetch('/data/cloudflare-source-run-evidence.json'),
+          fetch('/data/non-priority-validation-report.json'),
         ]);
 
         if (!geoJsonResponse.ok || !metaResponse.ok) {
@@ -2902,6 +3000,9 @@ function App() {
           : null;
         const nextCloudflareEvidence = cloudflareEvidenceResponse.ok
           ? ((await cloudflareEvidenceResponse.json()) as CloudflareSourceRunEvidence)
+          : null;
+        const nextNonPriorityValidation = nonPriorityValidationResponse.ok
+          ? ((await nonPriorityValidationResponse.json()) as NonPriorityValidationReport)
           : null;
         const canonicalRecords = canonical?.records ?? [];
         const canonicalById = new Map(canonicalRecords.map((record) => [record.lounge.id, record]));
@@ -2991,6 +3092,7 @@ function App() {
         setCoverageGap(nextCoverageGap);
         setIntakePlan(nextIntakePlan);
         setCloudflareEvidence(nextCloudflareEvidence);
+        setNonPriorityValidation(nextNonPriorityValidation);
         setLoading(false);
       } catch (loadError) {
         if (!alive) {
@@ -3575,6 +3677,7 @@ function App() {
           meta={meta}
           coverageGap={coverageGap}
           intakePlan={intakePlan}
+          nonPriorityValidation={nonPriorityValidation}
         />
       ) : null}
 
@@ -3921,6 +4024,7 @@ function App() {
                       meta={meta}
                       coverageGap={coverageGap}
                       intakePlan={intakePlan}
+                      nonPriorityValidation={nonPriorityValidation}
                     />
                   </div>
                 ) : null}

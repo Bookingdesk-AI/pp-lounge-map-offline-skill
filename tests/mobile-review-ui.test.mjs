@@ -52,6 +52,15 @@ test('mobile review exposes compact section tabs with source evidence workflow',
   assert.doesNotMatch(appSource, /sourceGapRows\.slice/);
   assert.match(appSource, /reviewRecordTotal/);
   assert.match(appSource, /reviewRecords\.length} \/ {reviewRecordTotal}/);
+  assert.match(appSource, /nonPriorityValidation/);
+  assert.match(appSource, /non-priority-validation-report\.json/);
+  assert.match(appSource, /Non-PP review/);
+  assert.match(appSource, /Source decisions/);
+  assert.match(appSource, /Manual rows/);
+  assert.match(appSource, /byReviewQueue/);
+  assert.match(appSource, /bySourceDecision/);
+  assert.match(appSource, /reviewAction\.action === 'manual_review'/);
+  assert.match(appSource, /review-lane-grid is-intake/);
 });
 
 test('mobile review tabs keep production touch targets', () => {
@@ -64,4 +73,8 @@ test('mobile review tabs keep production touch targets', () => {
   assert.match(appCss, /\.review-command-row\s*{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/s);
   assert.match(appCss, /\.review-command-row \.ghost-link\s*{[^}]*min-height:\s*44px;/s);
   assert.match(appCss, /\.review-row\s*{[^}]*text-decoration:\s*none;/s);
+  assert.match(appCss, /\.intake-review-grid\s*{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/s);
+  assert.match(appCss, /\.review-lane-grid\.is-intake\s*{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/s);
+  assert.match(appCss, /\.mobile-intake-wrap \.intake-review-grid\s*{[^}]*grid-template-columns:\s*1fr;/s);
+  assert.match(appCss, /\.mobile-intake-wrap \.review-lane-grid\.is-intake\s*{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/s);
 });
