@@ -289,8 +289,19 @@ async function runWithChrome(options) {
     }
     return results;
   } finally {
-    chrome.kill('SIGTERM');
-    fs.rmSync(userDataDir, { recursive: true, force: true });
+    if (!chrome.killed) {
+      chrome.kill('SIGTERM');
+    }
+    await Promise.race([
+      new Promise((resolve) => chrome.once('exit', resolve)),
+      wait(1500).then(() => {
+        if (chrome.exitCode === null) {
+          chrome.kill('SIGKILL');
+        }
+      }),
+    ]);
+    await wait(100);
+    fs.rmSync(userDataDir, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
     if (chrome.exitCode && chrome.exitCode !== 0 && chromeStderr.trim()) {
       process.stderr.write(chromeStderr.slice(-2000));
     }
