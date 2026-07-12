@@ -23,6 +23,7 @@
     "minApprovedRecords": 2600,
     "minApprovedRatio": 0.98,
     "minSourceFamilyCoverageRatio": 1,
+    "minReadyMemberGapCoverageRatio": 1,
     "maxUnknownAirportRecords": 0,
     "maxRecordsWithoutSources": 0,
     "maxRecordsWithoutQuality": 0,

@@ -26,6 +26,7 @@ test('worldwide coverage goal defines the Cloudflare D1 target', () => {
   assert.equal(goal.terminalGoal.requiresCloudflareSchema, true);
   assert.equal(goal.terminalGoal.requiresCloudflareSourceRuntime, false);
   assert.equal(goal.terminalGoal.requiresPlaywrightSourceRuntime, true);
+  assert.equal(goal.terminalGoal.minReadyMemberGapCoverageRatio, 1);
 });
 
 test('worldwide coverage goal requires official public source lanes', () => {
@@ -89,13 +90,14 @@ test('coverage validator reports current progress without pretending terminal co
   assert.match(textOutput, /Intake preflight: Playwright runtime (present|missing), API token (present|missing), local scrawl playwright_only/);
   assert.match(textOutput, /Playwright lanes: ready 15, access 2, cred 0, rights 1/);
   assert.match(textOutput, /Intake report: public\/data\/source-intake-report\.json/);
+  assert.match(textOutput, /Terminal goal: blocked \(cloudflare_source_proof_incomplete\)/);
   assert.equal(summary.goalId, goal.id);
   assert.equal(summary.database.databaseName, 'lounge-guru-catalog');
   assert.ok(summary.totalRecords > 0);
   assert.equal(summary.recordsWithoutSources, 0);
   assert.equal(summary.recordsWithoutQuality, 0);
-  assert.equal(summary.terminalPassed, true);
-  assert.deepEqual(summary.blockers, []);
+  assert.equal(summary.terminalPassed, false);
+  assert.deepEqual(summary.blockers, ['cloudflare_source_proof_incomplete']);
   assert.equal(summary.sourceIntakeRuntime, coverageGap.current.sourceIntakeRuntime);
   assert.equal(summary.cloudflareSourceRuntimePassed, true);
   assert.equal(
@@ -139,8 +141,8 @@ test('coverage validator reports current progress without pretending terminal co
 
 test('coverage gap report names terminal blockers and missing source lanes', () => {
   assert.equal(coverageGap.goalId, goal.id);
-  assert.equal(coverageGap.terminalPassed, true);
-  assert.deepEqual(coverageGap.blockers, []);
+  assert.equal(coverageGap.terminalPassed, false);
+  assert.deepEqual(coverageGap.blockers, ['cloudflare_source_proof_incomplete']);
   assert.equal(coverageGap.blockers.includes('source_family_gaps_present'), false);
   assert.equal(coverageGap.blockers.includes('source_intake_runtime_not_cloudflare'), false);
   assert.equal(coverageGap.blockers.includes('source_intake_runtime_not_playwright'), false);
@@ -158,6 +160,7 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
   );
   assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGapCoverageRatio, 0.875);
   assert.equal(coverageGap.current.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
+  assert.equal(coverageGap.targets.minReadyMemberGapCoverageRatio, 1);
   assert.equal(coverageGap.deltas.sourceIntakeRuntimeRequired, 'playwright');
   assert.equal(coverageGap.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME');
   assert.equal(coverageGap.nextCloudflareIntake.localScrawl, 'playwright_only');

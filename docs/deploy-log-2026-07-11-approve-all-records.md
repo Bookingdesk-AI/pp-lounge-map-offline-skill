@@ -20,6 +20,13 @@ Source intake: playwright
 Terminal goal: passed
 ```
 
+Current stricter coverage validation now requires complete ready source-lane proof and reports:
+
+```text
+Source proof: 14/16
+Terminal goal: blocked (cloudflare_source_proof_incomplete)
+```
+
 ## Verification
 
 ```bash
@@ -35,4 +42,5 @@ npm run validate:json
 
 - Approval is an explicit operator override, not inferred validation.
 - Licensed/commercial global lounge sources remain excluded from the terminal goal.
+- United and American source proof still need Cloudflare-side Playwright evidence.
 - Raw Playwright snapshots remain in `.cache/source-snapshots` and are not committed.

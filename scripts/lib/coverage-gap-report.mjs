@@ -76,6 +76,11 @@ function cloudflareSourceEvidence(sourceRunEvidence) {
   };
 }
 
+function requiredReadyMemberGapCoverageRatio(goal) {
+  const value = Number(goal?.terminalGoal?.minReadyMemberGapCoverageRatio ?? 0);
+  return Number.isFinite(value) ? value : 0;
+}
+
 function intakeSourceRunById(sourceIntakeReport) {
   return new Map((sourceIntakeReport?.sources ?? []).map((source) => [source.sourceId, source]));
 }
@@ -201,6 +206,7 @@ export function createCoverageGapReport({
   const tableStatuses = validateRequiredTables(goal, migrationSql);
   const sourceRuntime = sourceIntakeRuntime(sourceIntakeReport);
   const cloudflareEvidence = cloudflareSourceEvidence(sourceRunEvidence);
+  const minReadyMemberGapCoverageRatio = requiredReadyMemberGapCoverageRatio(goal);
   const cloudflareSourceRuntimePassed = hasRequiredSourceRuntime(goal, sourceIntakeReport, sourceRunEvidence);
   const runtimeRequired = requiredSourceRuntime(goal);
   const requiredFamilies = goal.sourceFamilies.filter((family) => family.requiredForTerminal);
@@ -258,6 +264,12 @@ export function createCoverageGapReport({
   if (!cloudflareSourceRuntimePassed) {
     blockers.push(runtimeRequired === 'playwright' ? 'source_intake_runtime_not_playwright' : 'source_intake_runtime_not_cloudflare');
   }
+  if (
+    cloudflareEvidence.readyMemberGaps > 0 &&
+    cloudflareEvidence.readyMemberGapCoverageRatio < minReadyMemberGapCoverageRatio
+  ) {
+    blockers.push('cloudflare_source_proof_incomplete');
+  }
 
   return {
     generatedAt: catalog.generatedAt,
@@ -270,6 +282,7 @@ export function createCoverageGapReport({
       minApprovedRecords: goal.terminalGoal.minApprovedRecords,
       minApprovedRatio: goal.terminalGoal.minApprovedRatio,
       minSourceFamilyCoverageRatio: goal.terminalGoal.minSourceFamilyCoverageRatio,
+      minReadyMemberGapCoverageRatio,
       maxReviewRecords: goal.terminalGoal.maxReviewRecords,
       maxUnknownAirportRecords: goal.terminalGoal.maxUnknownAirportRecords,
     },

@@ -129,6 +129,9 @@ function buildSummary({
         : 'source_intake_runtime_not_cloudflare',
     );
   }
+  if (gapReport.blockers.includes('cloudflare_source_proof_incomplete')) {
+    blockers.push('cloudflare_source_proof_incomplete');
+  }
 
   return {
     goalId: goal.id,

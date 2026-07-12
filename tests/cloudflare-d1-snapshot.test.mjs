@@ -16,8 +16,8 @@ test('D1 snapshot exporter writes a catalog import SQL file', () => {
   const sql = fs.readFileSync(sqlPath, 'utf8');
 
   assert.equal(summary.totalRecords, catalog.records.length);
-  assert.equal(summary.terminalPassed, true);
-  assert.deepEqual(summary.blockers, []);
+  assert.equal(summary.terminalPassed, false);
+  assert.deepEqual(summary.blockers, ['cloudflare_source_proof_incomplete']);
   assert.equal(summary.blockers.includes('source_intake_runtime_not_cloudflare'), false);
   assert.equal(summary.blockers.includes('source_intake_runtime_not_playwright'), false);
   assert.match(sql, /INSERT OR REPLACE INTO coverage_goals/);
@@ -28,6 +28,7 @@ test('D1 snapshot exporter writes a catalog import SQL file', () => {
   assert.match(sql, /INSERT INTO lounge_records/);
   assert.match(sql, /INSERT INTO lounge_sources/);
   assert.match(sql, /INSERT INTO coverage_validation_runs/);
+  assert.match(sql, /cloudflare_source_proof_incomplete/);
   assert.doesNotMatch(sql, /DELETE FROM source_runs/);
   assert.doesNotMatch(sql, /INSERT INTO source_runs/);
   assert.doesNotMatch(sql, /BEGIN TRANSACTION/);

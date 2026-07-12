@@ -42,6 +42,7 @@ Terminal criteria:
 - Records without quality state: `0`
 - D1 schema tables present
 - Source intake runtime: `playwright`
+- Ready source-lane proof: `100%`
 
 ## Current Gate
 
@@ -51,13 +52,16 @@ Non-PP: 886 records, candidates 886
 Approved ratio: 100.00%
 Source families: 100.00%
 Source intake: playwright
-Terminal goal: passed
+Source proof: 14/16
+Terminal goal: blocked (cloudflare_source_proof_incomplete)
 ```
 
 Current source proof:
 
 ```text
 Playwright intake: 20/32 sources fetched
+Ready source-lane proof: 14/16
+Blocked source lanes: united, american
 Airport-code candidates: 517
 Lounge-link candidates: 310
 Licensed/commercial sources: skipped

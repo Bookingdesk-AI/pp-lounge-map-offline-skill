@@ -104,6 +104,10 @@ function validateCoverage(goal, gap) {
   issue(goal?.cloudflareDatabase?.product === 'd1', 'worldwide-coverage-goal.json: database product mismatch');
   issue(goal?.cloudflareDatabase?.databaseName === 'lounge-guru-catalog', 'worldwide-coverage-goal.json: D1 name mismatch');
   issue(goal?.terminalGoal?.requiresPlaywrightSourceRuntime === true, 'worldwide-coverage-goal.json: Playwright source runtime not required');
+  issue(
+    goal?.terminalGoal?.minReadyMemberGapCoverageRatio === 1,
+    'worldwide-coverage-goal.json: source proof coverage target missing',
+  );
   issue(gap?.goalId === goal?.id, 'coverage-gap-report.json: goal id mismatch');
   issue(typeof gap?.terminalPassed === 'boolean', 'coverage-gap-report.json: terminalPassed missing');
   issue(
@@ -123,6 +127,16 @@ function validateCoverage(goal, gap) {
   issue(
     typeof gap?.current?.cloudflareSourceEvidence?.readyTaskCoverageRatio === 'number',
     'coverage-gap-report.json: Cloudflare ready task ratio missing',
+  );
+  issue(
+    typeof gap?.current?.cloudflareSourceEvidence?.readyMemberGapCoverageRatio === 'number',
+    'coverage-gap-report.json: Cloudflare ready member gap ratio missing',
+  );
+  issue(
+    gap?.current?.cloudflareSourceEvidence?.readyMemberGapCoverageRatio >=
+      goal?.terminalGoal?.minReadyMemberGapCoverageRatio ||
+      gap?.blockers?.includes('cloudflare_source_proof_incomplete'),
+    'coverage-gap-report.json: incomplete source proof not blocked',
   );
   issue(
     gap?.current?.sourceIntakeRuntime === 'playwright' ||

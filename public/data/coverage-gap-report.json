@@ -3,12 +3,15 @@
   "goalId": "lounge-guru-worldwide-coverage",
   "goalVersion": "2026-07-11",
   "catalogHash": "12b93615d5c2443e49710414f82fd2270d5468d3cedbeff2edbf62efac1fa2ea",
-  "terminalPassed": true,
-  "blockers": [],
+  "terminalPassed": false,
+  "blockers": [
+    "cloudflare_source_proof_incomplete"
+  ],
   "targets": {
     "minApprovedRecords": 2600,
     "minApprovedRatio": 0.98,
     "minSourceFamilyCoverageRatio": 1,
+    "minReadyMemberGapCoverageRatio": 1,
     "maxReviewRecords": 0,
     "maxUnknownAirportRecords": 0
   },

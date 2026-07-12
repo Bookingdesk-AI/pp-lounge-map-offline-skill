@@ -114,6 +114,9 @@ function summarize(catalog, goal, migrationSql, sourceReport, sourceRunEvidence)
         : 'source_intake_runtime_not_cloudflare',
     );
   }
+  if (gapReport.blockers.includes('cloudflare_source_proof_incomplete')) {
+    blockers.push('cloudflare_source_proof_incomplete');
+  }
 
   return {
     totalRecords: records.length,
@@ -156,6 +159,7 @@ function upsertCoverageGoal(goal) {
     sourceFamilies: goal.sourceFamilies,
     guardrails: goal.guardrails,
     benchmark: goal.benchmark,
+    minReadyMemberGapCoverageRatio: goal.terminalGoal.minReadyMemberGapCoverageRatio,
   }))},
   CURRENT_TIMESTAMP
 );`;
