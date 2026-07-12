@@ -9,7 +9,7 @@ test('UI smoke parses default live target and selected record', () => {
   const options = parseUiSmokeArgs([], {});
 
   assert.equal(options.baseUrl, 'https://loungeguru.desk.travel');
-  assert.equal(options.selectedId, 'candidate-chase-sapphire-bos-chase-sapphire-lounge-by-the-club');
+  assert.equal(options.selectedId, 'BOS-bos19-chase-sapphire-lounge-by-the-club-357');
   assert.equal(options.expectedLogo, 'chase-sapphire.svg');
   assert.equal(options.expectedLogoExplicit, false);
   assert.equal(options.timeoutMs, 20_000);
