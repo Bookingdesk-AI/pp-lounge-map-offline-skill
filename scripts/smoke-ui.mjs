@@ -452,8 +452,12 @@ export async function runUiSmoke({ args = process.argv.slice(2), env = process.e
 }
 
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
-  runUiSmoke().catch((error) => {
-    console.error(error instanceof Error ? error.message : String(error));
-    process.exitCode = 1;
-  });
+  runUiSmoke()
+    .then(() => {
+      process.exit(0);
+    })
+    .catch((error) => {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    });
 }
