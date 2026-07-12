@@ -15,8 +15,8 @@ test('mobile review exposes compact section tabs with source evidence workflow',
   assert.match(appSource, /role="tab"/);
   assert.match(appSource, /aria-selected=/);
   assert.match(appSource, />Source evidence</);
-  assert.match(appSource, />Proof tasks</);
-  assert.match(appSource, />Proof gaps</);
+  assert.doesNotMatch(appSource, />Proof/);
+  assert.doesNotMatch(appSource, /No proof/);
   assert.match(appSource, /readyMemberGapsWithCloudflareEvidence/);
   assert.match(appSource, /No evidence/);
   assert.match(appSource, /readyMemberGapEvidence/);

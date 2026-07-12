@@ -2141,12 +2141,6 @@ function MobileReviewView({
   const sourceRuntime = coverageGap?.current.sourceIntakeRuntime ?? 'unknown';
   const runtimePassed = coverageGap?.current.cloudflareSourceRuntimePassed === true;
   const runtimeLabel = formatSourceRuntime(sourceRuntime, runtimePassed);
-  const readyTaskEvidence = cloudflareEvidence
-    ? `${cloudflareEvidence.stats.readyTasksWithCloudflareEvidence}/${cloudflareEvidence.stats.readyTasks}`
-    : 'n/a';
-  const readyGapEvidence = cloudflareEvidence
-    ? `${cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence}/${cloudflareEvidence.stats.readyMemberGaps}`
-    : 'n/a';
   const cloudflareSources = cloudflareEvidence?.sources ?? [];
   const cloudflareSignalStats = cloudflareSources.reduce(
     (totals, source) => ({
@@ -2185,9 +2179,8 @@ function MobileReviewView({
   const sourceGaps = sourceGapRows;
   const sourceLaneStats = [
     { label: 'Ready', value: sourceGapRows.filter((row) => row.gap.status === 'ready').length },
-    { label: 'No proof', value: sourceGapRows.filter((row) => !row.evidence?.cloudflareSnapshot).length },
+    { label: 'Missing', value: sourceGapRows.filter((row) => !row.evidence?.cloudflareSnapshot).length },
     { label: 'Blocked', value: sourceGapRows.filter((row) => row.gap.status === 'blocked').length },
-    { label: 'Proof', value: sourceGapRows.filter((row) => row.evidence?.cloudflareSnapshot).length },
   ];
   const intakePreflight = coverageGap?.nextCloudflareIntake;
   const preflightStats = intakePreflight
@@ -2248,14 +2241,6 @@ function MobileReviewView({
         <div>
           <span>Runtime</span>
           <strong title={sourceRuntime}>{runtimeLabel}</strong>
-        </div>
-        <div>
-          <span>Proof tasks</span>
-          <strong>{readyTaskEvidence}</strong>
-        </div>
-        <div>
-          <span>Proof gaps</span>
-          <strong>{readyGapEvidence}</strong>
         </div>
         <div>
           <span>Signals</span>
