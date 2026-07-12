@@ -22,6 +22,12 @@ const childCrawlSourceIds = new Set(
     .map((value) => value.trim())
     .filter(Boolean),
 );
+const requestedSourceIds = new Set(
+  String(process.env.SOURCE_SOURCE_IDS || '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean),
+);
 const ourAirportsCsvUrl =
   process.env.OUR_AIRPORTS_CSV_URL ||
   'https://raw.githubusercontent.com/davidmegginson/ourairports-data/main/airports.csv';
@@ -30,8 +36,18 @@ const oneworldAirportsUrl =
 const oneworldLoungeUrl =
   'https://api.oneworld.com/lounge/v1/lounges/airport';
 const oneworldLoungeQuery = 'app_id=2&app_key=A3676D53BD00428BA198937061A835DD';
-const requiredIntakeRuntime = 'cloudflare';
+const requiredIntakeRuntime = 'playwright';
 const intakeRuntime = process.env.LOUNGE_GURU_SOURCE_INTAKE_RUNTIME || '';
+const sourceFetchDriver = process.env.SOURCE_FETCH_DRIVER || 'playwright';
+const chromeExecutableCandidates = [
+  process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE,
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  '/Applications/Chromium.app/Contents/MacOS/Chromium',
+  '/usr/bin/google-chrome',
+  '/usr/bin/chromium',
+  '/usr/bin/chromium-browser',
+].filter(Boolean);
+let playwrightBrowserPromise = null;
 
 const LOUNGE_TERMS = [
   'lounge',
@@ -124,14 +140,14 @@ function nowRunId() {
   return new Date().toISOString().replace(/[:.]/g, '-');
 }
 
-function requireCloudflareSourceIntakeRuntime() {
+function requireSourceIntakeRuntime() {
   if (intakeRuntime === requiredIntakeRuntime) {
     return;
   }
 
   throw new Error(
-    'Source intake must run from the Cloudflare-approved runner. ' +
-      'Set LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare only inside that runner; local scrawl is blocked.',
+    'Source intake must run through the Playwright-approved runner. ' +
+      'Set LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright and keep raw snapshots in .cache/source-snapshots.',
   );
 }
 
@@ -258,7 +274,7 @@ async function loadKnownAirportCodes() {
   }
 
   try {
-    const response = await fetchText(ourAirportsCsvUrl);
+    const response = await fetchHttpText(ourAirportsCsvUrl);
     if (response.ok) {
       const parsed = Papa.parse(response.text, {
         header: true,
@@ -325,6 +341,14 @@ function sourceFetchUrls(source) {
 }
 
 async function fetchText(url) {
+  if (sourceFetchDriver === 'playwright') {
+    return fetchTextWithPlaywright(url);
+  }
+
+  return fetchHttpText(url);
+}
+
+async function fetchHttpText(url) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -348,6 +372,81 @@ async function fetchText(url) {
     };
   } finally {
     clearTimeout(timeout);
+  }
+}
+
+async function firstExistingExecutable() {
+  for (const candidate of chromeExecutableCandidates) {
+    try {
+      await fs.access(candidate);
+      return candidate;
+    } catch {
+      // Try the next installed browser.
+    }
+  }
+
+  return null;
+}
+
+async function getPlaywrightBrowser() {
+  if (!playwrightBrowserPromise) {
+    playwrightBrowserPromise = (async () => {
+      const { chromium } = await import('playwright');
+      const executablePath = await firstExistingExecutable();
+      return chromium.launch({
+        headless: true,
+        executablePath: executablePath ?? undefined,
+      });
+    })();
+  }
+
+  return playwrightBrowserPromise;
+}
+
+async function closePlaywrightBrowser() {
+  if (!playwrightBrowserPromise) {
+    return;
+  }
+
+  const browser = await playwrightBrowserPromise;
+  playwrightBrowserPromise = null;
+  await browser.close();
+}
+
+async function fetchTextWithPlaywright(url) {
+  const browser = await getPlaywrightBrowser();
+  const context = await browser.newContext({
+    userAgent: 'lounge-guru-source-intake/1.0 (+https://loungeguru.desk.travel)',
+  });
+  const page = await context.newPage();
+
+  try {
+    const response = await page.goto(url, {
+      waitUntil: 'domcontentloaded',
+      timeout: timeoutMs,
+    });
+
+    if (!response) {
+      throw new Error('no response');
+    }
+
+    await page.waitForLoadState('networkidle', { timeout: Math.min(timeoutMs, 5000) }).catch(() => {});
+
+    const headers = response.headers();
+    const contentType = headers['content-type'] ?? '';
+    const text = contentType.includes('text/html') ? await page.content() : await response.text();
+    const status = response.status();
+
+    return {
+      ok: status >= 200 && status < 400,
+      status,
+      statusText: response.statusText(),
+      finalUrl: page.url(),
+      contentType,
+      text,
+    };
+  } finally {
+    await context.close();
   }
 }
 
@@ -408,7 +507,7 @@ async function fetchSourceSeed(source) {
 }
 
 async function fetchJson(url) {
-  const response = await fetchText(url);
+  const response = await fetchHttpText(url);
   if (!response.ok) {
     throw new Error(`HTTP ${response.status} ${response.statusText}`);
   }
@@ -534,7 +633,7 @@ async function fetchOneworldStructuredRecords(runDir) {
 async function fetchRobots(url) {
   try {
     const origin = new URL(url).origin;
-    const response = await fetchText(`${origin}/robots.txt`);
+    const response = await fetchHttpText(`${origin}/robots.txt`);
     if (!response.ok) {
       return { checked: true, url: `${origin}/robots.txt`, disallowRules: [], status: response.status };
     }
@@ -710,18 +809,20 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
 }
 
 async function main() {
-  requireCloudflareSourceIntakeRuntime();
+  requireSourceIntakeRuntime();
 
   const runId = nowRunId();
   const runDir = path.join(cacheRoot, runId);
   await fs.mkdir(runDir, { recursive: true });
 
-  const sources = cloneSourceRegistry();
+  const sources = cloneSourceRegistry().filter((source) => requestedSourceIds.size === 0 || requestedSourceIds.has(source.id));
   const knownAirportCodes = await loadKnownAirportCodes();
   const results = [];
 
-  for (const source of sources) {
+  for (const [index, source] of sources.entries()) {
+    console.error(`[${index + 1}/${sources.length}] ${source.id}`);
     const result = await scrapeSource(source, runDir, knownAirportCodes);
+    console.error(`[${index + 1}/${sources.length}] ${source.id}: ${result.status}`);
     results.push(result);
     await sleep(delayMs);
   }
@@ -741,8 +842,9 @@ async function main() {
       execution: {
         requiredRuntime: requiredIntakeRuntime,
         runtime: intakeRuntime,
-        localScrawl: 'blocked',
-        proofEnv: 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare',
+        localScrawl: 'playwright_only',
+        proofEnv: 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright',
+        fetchDriver: sourceFetchDriver,
       },
       timeoutMs,
       delayMs,
@@ -780,4 +882,6 @@ async function main() {
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
+}).finally(async () => {
+  await closePlaywrightBrowser().catch(() => {});
 });

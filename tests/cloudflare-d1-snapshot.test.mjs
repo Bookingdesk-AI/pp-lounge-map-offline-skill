@@ -16,13 +16,14 @@ test('D1 snapshot exporter writes a catalog import SQL file', () => {
   const sql = fs.readFileSync(sqlPath, 'utf8');
 
   assert.equal(summary.totalRecords, catalog.records.length);
-  assert.equal(summary.terminalPassed, false);
-  assert.ok(summary.blockers.includes('approved_records_below_3800'));
-  assert.ok(summary.blockers.includes('source_intake_runtime_not_cloudflare'));
+  assert.equal(summary.terminalPassed, true);
+  assert.deepEqual(summary.blockers, []);
+  assert.equal(summary.blockers.includes('source_intake_runtime_not_cloudflare'), false);
+  assert.equal(summary.blockers.includes('source_intake_runtime_not_playwright'), false);
   assert.match(sql, /INSERT OR REPLACE INTO coverage_goals/);
-  assert.match(sql, /licensed-global-baseline/);
-  assert.match(sql, /legacy-local-before-cloudflare-guardrail/);
-  assert.match(sql, /source_intake_runtime_not_cloudflare/);
+  assert.doesNotMatch(sql, /licensed-global-baseline/);
+  assert.match(sql, /playwright/);
+  assert.doesNotMatch(sql, /source_intake_runtime_not_cloudflare/);
   assert.match(sql, /INSERT INTO catalog_runs/);
   assert.match(sql, /INSERT INTO lounge_records/);
   assert.match(sql, /INSERT INTO lounge_sources/);

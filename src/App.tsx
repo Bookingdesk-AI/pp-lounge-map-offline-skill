@@ -2013,6 +2013,8 @@ function formatBlockerLabel(blocker: string) {
       return 'Source families';
     case 'review_records_present':
       return 'Review records';
+    case 'source_intake_runtime_not_playwright':
+      return 'Playwright runtime';
     case 'source_intake_runtime_not_cloudflare':
       return 'Cloudflare runtime';
     default:
@@ -2022,7 +2024,7 @@ function formatBlockerLabel(blocker: string) {
 
 function formatSourceRuntime(runtime: string, runtimePassed: boolean) {
   if (runtimePassed) {
-    return 'Cloudflare';
+    return runtime === 'playwright' ? 'Playwright' : 'Cloudflare';
   }
 
   if (runtime === 'legacy-local-before-cloudflare-guardrail') {
@@ -2183,9 +2185,9 @@ function MobileReviewView({
   const sourceGaps = sourceGapRows;
   const sourceLaneStats = [
     { label: 'Ready', value: sourceGapRows.filter((row) => row.gap.status === 'ready').length },
-    { label: 'No CF', value: sourceGapRows.filter((row) => !row.evidence?.cloudflareSnapshot).length },
+    { label: 'No proof', value: sourceGapRows.filter((row) => !row.evidence?.cloudflareSnapshot).length },
     { label: 'Blocked', value: sourceGapRows.filter((row) => row.gap.status === 'blocked').length },
-    { label: 'CF', value: sourceGapRows.filter((row) => row.evidence?.cloudflareSnapshot).length },
+    { label: 'Proof', value: sourceGapRows.filter((row) => row.evidence?.cloudflareSnapshot).length },
   ];
   const intakePreflight = coverageGap?.nextCloudflareIntake;
   const preflightStats = intakePreflight
@@ -2248,11 +2250,11 @@ function MobileReviewView({
           <strong title={sourceRuntime}>{runtimeLabel}</strong>
         </div>
         <div>
-          <span>CF tasks</span>
+          <span>Proof tasks</span>
           <strong>{readyTaskEvidence}</strong>
         </div>
         <div>
-          <span>CF gaps</span>
+          <span>Proof gaps</span>
           <strong>{readyGapEvidence}</strong>
         </div>
         <div>
@@ -2313,7 +2315,7 @@ function MobileReviewView({
       {activeTab === 'cf' ? (
         <section className="mobile-review-panel">
         <div className="section-title-row">
-          <h2>CF evidence</h2>
+          <h2>Source evidence</h2>
           <span className="compare-count">{cloudflareSources.length}</span>
         </div>
         {cloudflareSources.length === 0 ? (
@@ -2392,9 +2394,9 @@ function MobileReviewView({
                   ))}
                 </span>
                 <span className="code" title={intakePreflight.commands.report}>
-                  report:export
+                  report
                 </span>
-                <span className="review-command-row" aria-label="Cloudflare commands">
+                <span className="review-command-row" aria-label="Source commands">
                   {[
                     ['Probe', intakePreflight.commands.probe],
                     ['Report', intakePreflight.commands.report],
@@ -2807,7 +2809,7 @@ function IntakeView({
       {cloudflareSources.length > 0 ? (
         <section className="console-panel">
           <div className="panel-head">
-            <h2>CF evidence</h2>
+            <h2>Source evidence</h2>
             <span className="compare-count">{cloudflareSignalStats.records}</span>
           </div>
           <div className="data-table-wrap">

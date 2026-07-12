@@ -1,39 +1,36 @@
 {
-  "generatedAt": "2026-06-18T20:08:20.197Z",
-  "runId": "2026-06-18T20-03-44-183Z",
+  "generatedAt": "2026-07-12T02:33:19.252Z",
+  "runId": "2026-07-12T02-28-25-729Z",
   "policy": {
     "fetchMode": "single_public_source_url_per_registry_entry",
     "childFetchMode": "bounded_lounge_link_crawl",
-    "childPageLimit": 20,
+    "childPageLimit": 10,
     "childCrawlSources": [
-      "aspire-lounges",
-      "be-relax",
-      "escape-lounges",
-      "no1-lounges",
-      "plaza-premium"
+      "escape-lounges"
     ],
     "rawSnapshots": ".cache/source-snapshots",
     "rawSnapshotsCommitted": false,
     "guardrail": "official/public sources only; no login, private API, captcha, or broad crawling",
     "execution": {
-      "requiredRuntime": "cloudflare",
-      "runtime": "legacy-local-before-cloudflare-guardrail",
-      "localScrawl": "blocked",
-      "proofEnv": "LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare"
+      "requiredRuntime": "playwright",
+      "runtime": "playwright",
+      "localScrawl": "playwright_only",
+      "proofEnv": "LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright",
+      "fetchDriver": "playwright"
     },
-    "timeoutMs": 30000,
-    "delayMs": 150
+    "timeoutMs": 6000,
+    "delayMs": 50
   },
   "stats": {
     "totalSources": 32,
-    "fetched": 17,
-    "skipped": 8,
-    "httpErrors": 4,
-    "fetchErrors": 3,
-    "childPagesFetched": 34,
-    "discoveredAirportCodes": 491,
-    "discoveredLoungeLinks": 323,
-    "knownAirportCodes": 9056
+    "fetched": 20,
+    "skipped": 5,
+    "httpErrors": 3,
+    "fetchErrors": 4,
+    "childPagesFetched": 10,
+    "discoveredAirportCodes": 517,
+    "discoveredLoungeLinks": 310,
+    "knownAirportCodes": 9057
   },
   "sources": [
     {
@@ -52,14 +49,21 @@
       "publisher": "Priority Pass",
       "url": "https://www.prioritypass.com/en-GB/airport-lounges",
       "adapter": "csv_file",
-      "status": "skipped",
+      "status": "fetch_error",
       "reason": "robots_disallow",
-      "robots": {
-        "checked": true,
-        "url": "https://www.prioritypass.com/robots.txt",
-        "status": 200,
-        "disallowRuleCount": 1
-      },
+      "fetchAttempts": [
+        {
+          "url": "https://www.prioritypass.com/en-GB/airport-lounges",
+          "robots": {
+            "checked": true,
+            "url": "https://www.prioritypass.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 1
+          },
+          "status": "skipped",
+          "reason": "robots_disallow"
+        }
+      ],
       "records": 0,
       "airportCodes": [],
       "loungeLinks": []
@@ -68,18 +72,20 @@
       "sourceId": "chase-sapphire",
       "publisher": "Chase Sapphire Lounge by The Club",
       "url": "https://account.chase.com/sapphire-airport-lounge",
+      "sourceUrl": "https://account.chase.com/sapphire-airport-lounge",
       "finalUrl": "https://www.chase.com/sapphire-cards/lounges",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
-      "bytes": 387731,
-      "sha256": "0144c04e3c6eef2e0b72e407a7221a18da3b698773fb3c1aaa017513e16cad6c",
+      "bytes": 364066,
+      "sha256": "1b836423f17ed27539b93d9bf87eedb0cd5b5c650ce3f813723a244c972c1b61",
       "title": "Chase Sapphire Airport Lounge Network",
       "jsonLdBlocks": 0,
-      "records": 20,
+      "records": 22,
       "airportCodes": [
         "DFW",
+        "FAB",
         "FRA",
         "IAD",
         "JFK",
@@ -102,7 +108,9 @@
       ],
       "loungeLinks": [
         "https://www.chase.com/sapphire-cards/personal/lounges",
+        "https://www.chase.com/sapphire-cards/lounges#",
         "https://www.chase.com/sapphire-cards/lounges#main",
+        "https://www.chase.com/content/dam/ccbcontent-fragments/en/disclosures/sapphire-cards/personal/lounges/award-winning-lounges",
         "https://creditcards.chase.com/a1/26Q2b/sapphire/goreserve?CELL=68JX",
         "https://www.chase.com/personal/credit-cards/offerdetails/chasesapphire#reserve",
         "https://www.chase.com/sapphire-cards/personal/reserve",
@@ -124,7 +132,23 @@
       ],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/chase-sapphire.html",
+      "fetchAttempts": [
+        {
+          "url": "https://account.chase.com/sapphire-airport-lounge",
+          "robots": {
+            "checked": true,
+            "url": "https://account.chase.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 34
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.chase.com/sapphire-cards/lounges",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 364066
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/chase-sapphire.html",
       "robots": {
         "checked": true,
         "url": "https://account.chase.com/robots.txt",
@@ -136,20 +160,23 @@
       "sourceId": "amex-global-lounge-collection",
       "publisher": "American Express Global Lounge Collection",
       "url": "https://global.americanexpress.com/lounge-access/the-platinum-card",
-      "finalUrl": "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card",
+      "sourceUrl": "https://global.americanexpress.com/lounge-access/the-platinum-card",
+      "finalUrl": "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
-      "bytes": 1040044,
-      "sha256": "a24b8847f9e803d174eddd87d67fdc24068f9e62e560e6324888c49bf6073a74",
+      "bytes": 730793,
+      "sha256": "9ee31bb7ef543c4f1501e1868af2591c85644f56703cb88064a0f177ebf0044e",
       "title": "Explore Amex Global Lounge Collection® | Amex US",
       "jsonLdBlocks": 0,
-      "records": 54,
+      "records": 55,
       "airportCodes": [
         "ATL",
         "JFK",
-        "MIA"
+        "LHR",
+        "MIA",
+        "SFO"
       ],
       "loungeLinks": [
         "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card",
@@ -176,7 +203,8 @@
         "https://www.americanexpress.com/zh-tw/travel/lounges/the-platinum-card",
         "https://www.americanexpress.com/en-th/travel/lounges/the-platinum-card",
         "https://www.americanexpress.com/en-gb/travel/lounges/the-platinum-card",
-        "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card#mainContent",
+        "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/#mainContent",
+        "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/?inav=en_us_menu_travel_travel_services_airport_lounge_access_by_card",
         "https://www.americanexpress.com/en-us/account/login?DestPage=https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card&amp;inav=en_us_menu_login",
         "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/",
         "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/JFK/",
@@ -186,7 +214,7 @@
         "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/MIA/",
         "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/ATL/",
         "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/all-airports/",
-        "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card#",
+        "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/#",
         "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/BOS/",
         "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/CLT/",
         "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/DFW/",
@@ -209,7 +237,23 @@
       ],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/amex-global-lounge-collection.html",
+      "fetchAttempts": [
+        {
+          "url": "https://global.americanexpress.com/lounge-access/the-platinum-card",
+          "robots": {
+            "checked": true,
+            "url": "https://global.americanexpress.com/robots.txt",
+            "status": 404,
+            "disallowRuleCount": 0
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 730793
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/amex-global-lounge-collection.html",
       "robots": {
         "checked": true,
         "url": "https://global.americanexpress.com/robots.txt",
@@ -221,15 +265,16 @@
       "sourceId": "capital-one",
       "publisher": "Capital One Lounges",
       "url": "https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/",
+      "sourceUrl": "https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/",
       "finalUrl": "https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html",
-      "bytes": 449890,
-      "sha256": "709fccb28d6b4e44df2813dddf6e410f1618c6c163e5ea4a0048cb673a729193",
+      "bytes": 743913,
+      "sha256": "325c4757fffb7ecd5de938f871703ecb05338580cc5c0b6d27506def4cc78314",
       "title": "Capital One Lounge Guide | Capital One",
-      "jsonLdBlocks": 1,
+      "jsonLdBlocks": 3,
       "records": 12,
       "airportCodes": [
         "CLT",
@@ -257,50 +302,127 @@
       ],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/capital-one.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.capitalone.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 3
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/",
+          "contentType": "text/html",
+          "bytes": 743913
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/capital-one.html",
       "robots": {
         "checked": true,
         "url": "https://www.capitalone.com/robots.txt",
         "status": 200,
-        "disallowRuleCount": 4
+        "disallowRuleCount": 3
       }
     },
     {
       "sourceId": "visa-airport-companion",
       "publisher": "Visa Airport Companion",
       "url": "https://www.visaairportcompanion.com/",
+      "sourceUrl": "https://visaairportcompanion.ca/",
+      "finalUrl": "https://visaairportcompanion.ca/home?lang=en",
       "adapter": "official_page",
-      "status": "fetch_error",
-      "reason": "fetch failed",
-      "records": 0,
-      "airportCodes": [],
+      "status": "fetched",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 324936,
+      "sha256": "d2e8dad1c27ae67e99629497adc36d950dbcd0655002e98b27c6eb9e50417c3a",
+      "title": "Home",
+      "jsonLdBlocks": 0,
+      "records": 4,
+      "airportCodes": [
+        "COV",
+        "EVN",
+        "KLM",
+        "ZRH"
+      ],
       "loungeLinks": [],
+      "structuredRecords": [],
+      "childPages": [],
+      "fetchAttempts": [
+        {
+          "url": "https://www.visaairportcompanion.com/",
+          "robots": {
+            "checked": false,
+            "url": null,
+            "disallowRuleCount": 0,
+            "error": "fetch failed"
+          },
+          "status": "fetch_error",
+          "reason": "page.goto: net::ERR_CONNECTION_RESET at https://www.visaairportcompanion.com/\nCall log:\n\u001b[2m  - navigating to \"https://www.visaairportcompanion.com/\", waiting until \"domcontentloaded\"\u001b[22m\n"
+        },
+        {
+          "url": "https://visaairportcompanion.ca/",
+          "robots": {
+            "checked": true,
+            "url": "https://visaairportcompanion.ca/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 0
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://visaairportcompanion.ca/home?lang=en",
+          "contentType": "text/html",
+          "bytes": 324936
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/visa-airport-companion.html",
       "robots": {
-        "checked": false,
-        "url": null,
-        "disallowRuleCount": 0,
-        "error": "fetch failed"
+        "checked": true,
+        "url": "https://visaairportcompanion.ca/robots.txt",
+        "status": 200,
+        "disallowRuleCount": 0
       }
     },
     {
       "sourceId": "mastercard-travel-pass",
       "publisher": "Mastercard Travel Pass",
       "url": "https://mastercardtravelpass.dragonpass.com/",
+      "sourceUrl": "https://mastercardtravelpass.dragonpass.com/",
       "finalUrl": "https://mastercardtravelpass.dragonpass.com/",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html",
-      "bytes": 9722,
-      "sha256": "b1bcc8d8d6012ff6f846605a17bbcb9ec33593e15cda330444db141fc8448cd4",
+      "bytes": 23941,
+      "sha256": "5fb588809a006fe17ee40fcc3f797031241e57c80e3bf0e42564a5bdcd4c9e73",
       "title": "Mastercard Travel Pass",
       "jsonLdBlocks": 0,
-      "records": 0,
+      "records": 1,
       "airportCodes": [],
-      "loungeLinks": [],
+      "loungeLinks": [
+        "https://apps.apple.com/us/app/mastercard-travel-pass/id1493489553"
+      ],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/mastercard-travel-pass.html",
+      "fetchAttempts": [
+        {
+          "url": "https://mastercardtravelpass.dragonpass.com/",
+          "robots": {
+            "checked": true,
+            "url": "https://mastercardtravelpass.dragonpass.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 0
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://mastercardtravelpass.dragonpass.com/",
+          "contentType": "text/html",
+          "bytes": 23941
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/mastercard-travel-pass.html",
       "robots": {
         "checked": true,
         "url": "https://mastercardtravelpass.dragonpass.com/robots.txt",
@@ -312,21 +434,38 @@
       "sourceId": "citi-travel",
       "publisher": "Citi Travel",
       "url": "https://www.cititravel.com/",
+      "sourceUrl": "https://www.cititravel.com/",
       "finalUrl": "https://www.citi.com/citi-partner/cititravel/login",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
-      "bytes": 162721,
-      "sha256": "0830a0612e58395c2fa5cf093e0d51b5d9a890318d6122d7ff0c32552f377b65",
-      "title": "Credit Cards, Banking, Mortgage, Personal Loans | Citi.com",
-      "jsonLdBlocks": 5,
+      "bytes": 468529,
+      "sha256": "335868eb338c130464c7b6c4e4eb9cf9bde8e879daeea5fe9c9cec0ae67482b8",
+      "title": "Citi Travel® - Book Travel and Earn ThankYou® Points | Citi.com",
+      "jsonLdBlocks": 8,
       "records": 0,
       "airportCodes": [],
       "loungeLinks": [],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/citi-travel.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.cititravel.com/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.cititravel.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 0
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.citi.com/citi-partner/cititravel/login",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 468529
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/citi-travel.html",
       "robots": {
         "checked": true,
         "url": "https://www.cititravel.com/robots.txt",
@@ -338,13 +477,14 @@
       "sourceId": "dragonpass",
       "publisher": "DragonPass",
       "url": "https://en.dragonpass.com.cn/",
+      "sourceUrl": "https://en.dragonpass.com.cn/",
       "finalUrl": "https://www.dragonpass.com/",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
-      "bytes": 1162091,
-      "sha256": "c1db62bd0bbaa1b9fd8d77d8e074450668faf1ad0f7c0ecc5099f0ab56195809",
+      "bytes": 1279200,
+      "sha256": "1a1bd4a827e4c358c3d0847613e64200d2e9429afd7449563dfeee9872182400",
       "title": "Leading Travel & Lifestyle Rewards Platform — Dragonpass",
       "jsonLdBlocks": 1,
       "records": 0,
@@ -352,7 +492,23 @@
       "loungeLinks": [],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/dragonpass.html",
+      "fetchAttempts": [
+        {
+          "url": "https://en.dragonpass.com.cn/",
+          "robots": {
+            "checked": true,
+            "url": "https://en.dragonpass.com.cn/robots.txt",
+            "status": 404,
+            "disallowRuleCount": 0
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.dragonpass.com/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 1279200
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/dragonpass.html",
       "robots": {
         "checked": true,
         "url": "https://en.dragonpass.com.cn/robots.txt",
@@ -376,14 +532,21 @@
       "publisher": "LoungeKey",
       "url": "https://www.loungekey.com/",
       "adapter": "official_page",
-      "status": "skipped",
+      "status": "fetch_error",
       "reason": "robots_disallow",
-      "robots": {
-        "checked": true,
-        "url": "https://www.loungekey.com/robots.txt",
-        "status": 200,
-        "disallowRuleCount": 1
-      },
+      "fetchAttempts": [
+        {
+          "url": "https://www.loungekey.com/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.loungekey.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 1
+          },
+          "status": "skipped",
+          "reason": "robots_disallow"
+        }
+      ],
       "records": 0,
       "airportCodes": [],
       "loungeLinks": []
@@ -392,21 +555,40 @@
       "sourceId": "collinson-international",
       "publisher": "Collinson International",
       "url": "https://www.collinsongroup.com/",
+      "sourceUrl": "https://www.collinsongroup.com/",
       "finalUrl": "https://www.collinsongroup.com/en-GB",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
-      "bytes": 475693,
-      "sha256": "b61042bd9d5f2433bda07de7ebc3e6397833c9bb15ad862a3ece20be50590f2a",
+      "bytes": 432013,
+      "sha256": "a897aed2fd3e5d0908de5523f2bb4c780462d822a1fe4a5e4937155ca182689c",
       "title": "Travel, Loyalty & Customer Engagement | Collinson Group",
-      "jsonLdBlocks": 10,
-      "records": 0,
+      "jsonLdBlocks": 5,
+      "records": 1,
       "airportCodes": [],
-      "loungeLinks": [],
+      "loungeLinks": [
+        "https://www.collinsongroup.com/en-GB/newsroom/vienna-lounge-wins-europe-lounge-of-the-year"
+      ],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/collinson-international.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.collinsongroup.com/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.collinsongroup.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 8
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.collinsongroup.com/en-GB",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 432013
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/collinson-international.html",
       "robots": {
         "checked": true,
         "url": "https://www.collinsongroup.com/robots.txt",
@@ -442,32 +624,283 @@
       "url": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
       "adapter": "official_html",
       "status": "fetch_error",
-      "reason": "This operation was aborted",
+      "reason": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.united.com/en/us/fly/travel/airport/lounge-access.html\nCall log:\n\u001b[2m  - navigating to \"https://www.united.com/en/us/fly/travel/airport/lounge-access.html\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "fetchAttempts": [
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+          "robots": {
+            "checked": false,
+            "url": null,
+            "disallowRuleCount": 0,
+            "error": "This operation was aborted"
+          },
+          "status": "fetch_error",
+          "reason": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html\nCall log:\n\u001b[2m  - navigating to \"https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html\", waiting until \"domcontentloaded\"\u001b[22m\n"
+        },
+        {
+          "url": "https://business.united.com/en/us/blog/How-to-access-and-enjoy-the-United-Club",
+          "robots": {
+            "checked": false,
+            "url": null,
+            "disallowRuleCount": 0,
+            "error": "This operation was aborted"
+          },
+          "status": "fetch_error",
+          "reason": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://business.united.com/en/us/blog/How-to-access-and-enjoy-the-United-Club\nCall log:\n\u001b[2m  - navigating to \"https://business.united.com/en/us/blog/How-to-access-and-enjoy-the-United-Club\", waiting until \"domcontentloaded\"\u001b[22m\n"
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/sfo-map.html",
+          "robots": {
+            "checked": false,
+            "url": null,
+            "disallowRuleCount": 0,
+            "error": "This operation was aborted"
+          },
+          "status": "fetch_error",
+          "reason": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.united.com/en/us/fly/travel/airport/sfo-map.html\nCall log:\n\u001b[2m  - navigating to \"https://www.united.com/en/us/fly/travel/airport/sfo-map.html\", waiting until \"domcontentloaded\"\u001b[22m\n"
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/lax-map.html",
+          "robots": {
+            "checked": false,
+            "url": null,
+            "disallowRuleCount": 0,
+            "error": "This operation was aborted"
+          },
+          "status": "fetch_error",
+          "reason": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.united.com/en/us/fly/travel/airport/lax-map.html\nCall log:\n\u001b[2m  - navigating to \"https://www.united.com/en/us/fly/travel/airport/lax-map.html\", waiting until \"domcontentloaded\"\u001b[22m\n"
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/ewr-map.html",
+          "robots": {
+            "checked": false,
+            "url": null,
+            "disallowRuleCount": 0,
+            "error": "This operation was aborted"
+          },
+          "status": "fetch_error",
+          "reason": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.united.com/en/us/fly/travel/airport/ewr-map.html\nCall log:\n\u001b[2m  - navigating to \"https://www.united.com/en/us/fly/travel/airport/ewr-map.html\", waiting until \"domcontentloaded\"\u001b[22m\n"
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/iad-map.html",
+          "robots": {
+            "checked": false,
+            "url": null,
+            "disallowRuleCount": 0,
+            "error": "This operation was aborted"
+          },
+          "status": "fetch_error",
+          "reason": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.united.com/en/us/fly/travel/airport/iad-map.html\nCall log:\n\u001b[2m  - navigating to \"https://www.united.com/en/us/fly/travel/airport/iad-map.html\", waiting until \"domcontentloaded\"\u001b[22m\n"
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/ord-map.html",
+          "robots": {
+            "checked": false,
+            "url": null,
+            "disallowRuleCount": 0,
+            "error": "This operation was aborted"
+          },
+          "status": "fetch_error",
+          "reason": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.united.com/en/us/fly/travel/airport/ord-map.html\nCall log:\n\u001b[2m  - navigating to \"https://www.united.com/en/us/fly/travel/airport/ord-map.html\", waiting until \"domcontentloaded\"\u001b[22m\n"
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/united-club.html",
+          "robots": {
+            "checked": false,
+            "url": null,
+            "disallowRuleCount": 0,
+            "error": "This operation was aborted"
+          },
+          "status": "fetch_error",
+          "reason": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.united.com/en/us/fly/travel/airport/united-club.html\nCall log:\n\u001b[2m  - navigating to \"https://www.united.com/en/us/fly/travel/airport/united-club.html\", waiting until \"domcontentloaded\"\u001b[22m\n"
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/lounge-access.html",
+          "robots": {
+            "checked": false,
+            "url": null,
+            "disallowRuleCount": 0,
+            "error": "This operation was aborted"
+          },
+          "status": "fetch_error",
+          "reason": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.united.com/en/us/fly/travel/airport/lounge-access.html\nCall log:\n\u001b[2m  - navigating to \"https://www.united.com/en/us/fly/travel/airport/lounge-access.html\", waiting until \"domcontentloaded\"\u001b[22m\n"
+        }
+      ],
       "records": 0,
       "airportCodes": [],
-      "loungeLinks": [],
-      "robots": {
-        "checked": false,
-        "url": null,
-        "disallowRuleCount": 0,
-        "error": "This operation was aborted"
-      }
+      "loungeLinks": []
     },
     {
       "sourceId": "delta",
       "publisher": "Delta Sky Club",
       "url": "https://www.delta.com/us/en/delta-sky-club/locations",
+      "sourceUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
       "finalUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
       "adapter": "official_html",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html",
-      "bytes": 62105,
-      "sha256": "8a8653f051108aae4e335360e8443f8e3a5daa43c05f287d02b201039f51df12",
+      "bytes": 837931,
+      "sha256": "0accfc2b181c02040b80712884f060fb662ae8ddeafd622b6315a76e135d0c89",
       "title": "Delta Sky Club Locations | Delta Air Lines",
       "jsonLdBlocks": 1,
-      "records": 23,
-      "airportCodes": [],
+      "records": 154,
+      "airportCodes": [
+        "ACC",
+        "ADL",
+        "AKL",
+        "AMS",
+        "ANA",
+        "ARN",
+        "ATH",
+        "ATL",
+        "AUS",
+        "BCN",
+        "BDL",
+        "BER",
+        "BKK",
+        "BNA",
+        "BNE",
+        "BOD",
+        "BOG",
+        "BOS",
+        "BRU",
+        "BUD",
+        "CAY",
+        "CBR",
+        "CCS",
+        "CDG",
+        "CIQ",
+        "CJU",
+        "CLT",
+        "CMH",
+        "CPH",
+        "CPT",
+        "CTA",
+        "CVG",
+        "CXR",
+        "DAD",
+        "DCA",
+        "DEN",
+        "DFW",
+        "DLA",
+        "DSS",
+        "DTW",
+        "DUB",
+        "DXB",
+        "EDI",
+        "EWR",
+        "EZE",
+        "FCO",
+        "FDF",
+        "FLL",
+        "FRA",
+        "FUK",
+        "GDL",
+        "GIG",
+        "GLA",
+        "GMP",
+        "GOT",
+        "GRU",
+        "GSP",
+        "GVA",
+        "GYE",
+        "HAN",
+        "HKG",
+        "HND",
+        "HNL",
+        "IAD",
+        "IAH",
+        "ICN",
+        "IND",
+        "JAX",
+        "JFK",
+        "JNB",
+        "KAL",
+        "KHH",
+        "KLM",
+        "KUL",
+        "KWJ",
+        "LAS",
+        "LAX",
+        "LGA",
+        "LGW",
+        "LHR",
+        "LIM",
+        "LIS",
+        "LOS",
+        "MAD",
+        "MAN",
+        "MCI",
+        "MCO",
+        "MEL",
+        "MEM",
+        "MEX",
+        "MIA",
+        "MID",
+        "MKE",
+        "MLA",
+        "MSP",
+        "MSY",
+        "MTY",
+        "MUC",
+        "MXP",
+        "NAP",
+        "NBO",
+        "NCE",
+        "NGO",
+        "NOU",
+        "OAK",
+        "OKA",
+        "OLB",
+        "OPO",
+        "ORD",
+        "ORY",
+        "OSL",
+        "PBI",
+        "PDX",
+        "PEK",
+        "PER",
+        "PHL",
+        "PHX",
+        "PKX",
+        "PRG",
+        "PTP",
+        "PUS",
+        "PVD",
+        "PVG",
+        "RAK",
+        "RDU",
+        "RNO",
+        "RUN",
+        "SAS",
+        "SCL",
+        "SEA",
+        "SFO",
+        "SGN",
+        "SIN",
+        "SJU",
+        "SLC",
+        "SMF",
+        "SNN",
+        "SVO",
+        "SYD",
+        "SYR",
+        "TAO",
+        "TLV",
+        "TPA",
+        "TPE",
+        "TSA",
+        "TUL",
+        "UIO",
+        "VCE",
+        "XNA",
+        "YUL",
+        "YVR",
+        "YYC",
+        "YYZ",
+        "ZRH"
+      ],
       "loungeLinks": [
         "https://www.delta.com/us/en/delta-sky-club/locations",
         "https://it.delta.com/eu/it/delta-sky-club/locations",
@@ -481,6 +914,7 @@
         "https://ja.delta.com/jp/ja/delta-sky-club/locations",
         "https://www.delta.com/gb/en/delta-sky-club/locations",
         "https://fr.delta.com/ca/fr/delta-sky-club/locations",
+        "https://www.delta.com/us/en/delta-sky-club/%7B%7BloyaltyPromoLink%7D%7D",
         "https://www.delta.com/us/en/delta-sky-club/locations#maincontent",
         "https://www.delta.com/us/en/delta-sky-club/overview",
         "https://www.delta.com/us/en/delta-sky-club/locations#collapseTwo",
@@ -491,11 +925,103 @@
         "https://www.delta.com/us/en/delta-sky-club/perks-amenities",
         "https://www.delta.com/us/en/delta-sky-club/news-updates",
         "https://www.delta.com/us/en/delta-sky-club/delta-one-lounge",
-        "https://global.americanexpress.com/lounge-access/the-platinum-card"
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-0",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-1",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-2",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-3",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-4",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-5",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-6",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-7",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-8",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-9",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-10",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-11",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-12",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-13",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-14",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-15",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-16",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-17",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-18",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-19",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-20",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-21",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-22",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-23",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-24",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-25",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-26",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-27",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-28",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-29",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-30",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-31",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-32",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-33",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-34",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-35",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-36",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-37",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-38",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-39",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-40",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-41",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-42",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-43",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-44",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-45",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-46",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-47",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-48",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-49",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-50",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-51",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-52",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-53",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-54",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-55",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-56",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-57",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-58",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-59",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-60",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-61",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-62",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-63",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-64",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-65",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-66",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-67",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-68",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-69",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-70",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-71",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-72",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-73",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-74",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-75",
+        "https://www.delta.com/us/en/delta-sky-club/locations#expander-news-panel-76"
       ],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/delta.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.delta.com/us/en/delta-sky-club/locations",
+          "robots": {
+            "checked": true,
+            "url": "https://www.delta.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 154
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
+          "contentType": "text/html",
+          "bytes": 837931
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/delta.html",
       "robots": {
         "checked": true,
         "url": "https://www.delta.com/robots.txt",
@@ -507,13 +1033,14 @@
       "sourceId": "american",
       "publisher": "American Airlines Admirals Club",
       "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+      "sourceUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
       "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
       "adapter": "official_html",
       "status": "http_error",
       "httpStatus": 403,
       "contentType": "text/html",
-      "bytes": 442,
-      "sha256": "902e45451d1cf85f289645efe120f2d0f792ad6f6c21faf56a4203e64338396c",
+      "bytes": 338,
+      "sha256": "e296143f256ffc133505ec25f00e5efb1ed46890cd20f4624a2578bb3d24f0d2",
       "title": "Access Denied",
       "jsonLdBlocks": 0,
       "records": 0,
@@ -521,7 +1048,149 @@
       "loungeLinks": [],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/american.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 18
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "contentType": "text/html",
+          "bytes": 338
+        },
+        {
+          "url": "https://www.aa.com/i18n/travel-info/clubs/flagship-lounge.jsp",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 18
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/flagship-lounge.jsp",
+          "contentType": "text/html",
+          "bytes": 330
+        },
+        {
+          "url": "https://www.american-airlines.co.kr/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "robots": {
+            "checked": true,
+            "url": "https://www.american-airlines.co.kr/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 18
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.american-airlines.co.kr/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "contentType": "text/html",
+          "bytes": 355
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 18
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp",
+          "contentType": "text/html",
+          "bytes": 340
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/lax-club.jsp",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 18
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/lax-club.jsp",
+          "contentType": "text/html",
+          "bytes": 340
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/jfk-club.jsp",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 18
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/jfk-club.jsp",
+          "contentType": "text/html",
+          "bytes": 340
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 18
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp",
+          "contentType": "text/html",
+          "bytes": 340
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 18
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
+          "contentType": "text/html",
+          "bytes": 340
+        },
+        {
+          "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club.jsp",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 18
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club.jsp",
+          "contentType": "text/html",
+          "bytes": 328
+        },
+        {
+          "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-access.jsp",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 18
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-access.jsp",
+          "contentType": "text/html",
+          "bytes": 335
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/american.html",
       "robots": {
         "checked": true,
         "url": "https://www.aa.com/robots.txt",
@@ -533,16 +1202,17 @@
       "sourceId": "air-canada",
       "publisher": "Air Canada Maple Leaf Lounges",
       "url": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-      "finalUrl": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
+      "sourceUrl": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
+      "finalUrl": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html#/",
       "adapter": "official_html",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html; charset=UTF-8",
-      "bytes": 519001,
-      "sha256": "d83487ce38c6d6afeb1a61650cdefbaf1d8733e65f87d94840c83b7a894faf42",
+      "bytes": 696199,
+      "sha256": "a54a6c5f0095250071a689db0c88ca376fb963f55b2a9d3d8365fb1485a2100c",
       "title": "Air Canada Maple Leaf Lounges",
       "jsonLdBlocks": 0,
-      "records": 53,
+      "records": 17,
       "airportCodes": [
         "DXB",
         "FRA",
@@ -564,62 +1234,29 @@
       ],
       "loungeLinks": [
         "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/kr/ko/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/es/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/ar/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/us/fr/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/jp/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/ca/fr/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/fr/fr/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/dk/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/co/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/ch/fr/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/fr/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/ve/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/tw/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/se/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/uk/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/pe/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/cl/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/kr/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/hk/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/ie/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/no/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/us/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/ch/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/pa/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/mx/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/au/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/it/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/in/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/il/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/cn/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/de/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/nl/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/ch/de/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/ve/es/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/jp/ja/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/ar/es/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/co/es/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/it/it/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/pe/es/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/de/de/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/tw/zh/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/cn/zh/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/hk/zh/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/us/zh/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/pa/es/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/cl/es/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/us/es/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/es/es/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/mx/es/aco/home/fly/premium-services/maple-leaf-lounges.html",
-        "https://www.aircanada.com/ca/zh/aco/home/fly/premium-services/maple-leaf-lounges.html",
+        "https://www.aircanada.com/aco/home/fly/premium-services/maple-leaf-lounges.html",
         "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html#",
         "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html#/"
       ],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/air-canada.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aircanada.com/robots.txt",
+            "status": 404,
+            "disallowRuleCount": 0
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html#/",
+          "contentType": "text/html; charset=UTF-8",
+          "bytes": 696199
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/air-canada.html",
       "robots": {
         "checked": true,
         "url": "https://www.aircanada.com/robots.txt",
@@ -631,13 +1268,14 @@
       "sourceId": "star-alliance",
       "publisher": "Star Alliance Lounge Finder",
       "url": "https://www.staralliance.com/en/lounge-finder",
+      "sourceUrl": "https://www.staralliance.com/en/lounge-finder",
       "finalUrl": "https://www.staralliance.com/en/lounge-finder",
       "adapter": "official_page",
       "status": "http_error",
       "httpStatus": 403,
       "contentType": "text/html",
-      "bytes": 118,
-      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "bytes": 111,
+      "sha256": "296bee496e601959ecdf00dc497394844632d769dc9437ac9021be2ad882ab73",
       "title": "403 Forbidden",
       "jsonLdBlocks": 0,
       "records": 0,
@@ -645,7 +1283,51 @@
       "loungeLinks": [],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/star-alliance.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.staralliance.com/en/lounge-finder",
+          "robots": {
+            "checked": true,
+            "url": "https://www.staralliance.com/robots.txt",
+            "status": 403,
+            "disallowRuleCount": 0
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.staralliance.com/en/lounge-finder",
+          "contentType": "text/html",
+          "bytes": 111
+        },
+        {
+          "url": "https://www.staralliance.com/en/paid-lounge-entry",
+          "robots": {
+            "checked": true,
+            "url": "https://www.staralliance.com/robots.txt",
+            "status": 403,
+            "disallowRuleCount": 0
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.staralliance.com/en/paid-lounge-entry",
+          "contentType": "text/html",
+          "bytes": 111
+        },
+        {
+          "url": "https://www.staralliance.com/en/lounge-access-policy",
+          "robots": {
+            "checked": true,
+            "url": "https://www.staralliance.com/robots.txt",
+            "status": 403,
+            "disallowRuleCount": 0
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.staralliance.com/en/lounge-access-policy",
+          "contentType": "text/html",
+          "bytes": 111
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/star-alliance.html",
       "robots": {
         "checked": true,
         "url": "https://www.staralliance.com/robots.txt",
@@ -657,13 +1339,14 @@
       "sourceId": "oneworld",
       "publisher": "oneworld Airport Lounges",
       "url": "https://www.oneworld.com/airport-lounges",
+      "sourceUrl": "https://www.oneworld.com/airport-lounges",
       "finalUrl": "https://www.oneworld.com/airport-lounges",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
-      "bytes": 72697,
-      "sha256": "73771f344d40a3d8aa5c4e84549153229b9a4112176c0e1ba01991420038c23e",
+      "bytes": 108537,
+      "sha256": "65024e5dc5a8772629d8c2dc40c5404a9c72a88b8679110bf7fb6c90d01f1b7e",
       "title": "Airport Lounges: oneworld Lounges & Airport Lounge Access | oneworld",
       "jsonLdBlocks": 0,
       "records": 778,
@@ -1123,6 +1806,9 @@
       ],
       "loungeLinks": [
         "https://www.oneworld.com/airport-lounges",
+        "https://www.oneworld.com/airport-lounges#a",
+        "https://www.oneworld.com/airport-lounges#b",
+        "https://www.oneworld.com/airport-lounges#c",
         "https://www.oneworld.com/airport-lounges#menu",
         "https://www.oneworld.com/airport-lounges#close",
         "https://www.oneworld.com/airport-lounges#",
@@ -1147,7 +1833,7 @@
         "loungeUrlTemplate": "https://api.oneworld.com/lounge/v1/lounges/airport/{airportCode}",
         "airportCount": 1220,
         "errorCount": 1,
-        "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/oneworld-structured-records.json"
+        "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/oneworld-structured-records.json"
       },
       "structuredRecords": [
         {
@@ -4162,10 +4848,6 @@
             }
           ],
           "airlines": [
-            {
-              "code": "AA",
-              "name": "American Airlines"
-            },
             {
               "code": "MH",
               "name": "Malaysia Airlines"
@@ -35116,143 +35798,6 @@
           }
         },
         {
-          "sourceRecordId": "1863",
-          "name": "PLAZA PREMIUM FIRST ",
-          "airportCode": "FCO",
-          "airportName": "Rome Fiumicino Airport (FCO)",
-          "airportCity": "Rome (IT)",
-          "airportRegion": "Europe",
-          "airportCoordinates": {
-            "lat": 41.804475,
-            "lon": 12.250797
-          },
-          "terminal": "Terminal 1 Schengen",
-          "concourse": "Mezzanine",
-          "near": "Gates A31-52",
-          "securitySide": "AfterSecurity",
-          "operator": "Plaza Premium Group",
-          "accessClass": "NA",
-          "accessTier": "Emerald",
-          "accessConditions": "Access for eligible customers traveling on these oneworld member airlines only.",
-          "accessNotes": "",
-          "openHours": [
-            {
-              "Day": 0,
-              "OpeningHour": "04:30",
-              "ClosingHour": "21:30",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 1,
-              "OpeningHour": "04:30",
-              "ClosingHour": "21:30",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 2,
-              "OpeningHour": "04:30",
-              "ClosingHour": "21:30",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 3,
-              "OpeningHour": "04:30",
-              "ClosingHour": "21:30",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 4,
-              "OpeningHour": "04:30",
-              "ClosingHour": "21:30",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 5,
-              "OpeningHour": "04:30",
-              "ClosingHour": "21:30",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 6,
-              "OpeningHour": "04:30",
-              "ClosingHour": "21:30",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            }
-          ],
-          "airlines": [
-            {
-              "code": "IB",
-              "name": "Iberia"
-            }
-          ],
-          "amenities": {
-            "BusinessCenter": false,
-            "TV": true,
-            "FoodBeverageSnackBuffet": true,
-            "Phone": false,
-            "PreFlightDinner": false,
-            "RelaxationRoom": true,
-            "Shower": true,
-            "SPA": false,
-            "WheelchairAccess": true,
-            "WiFi": true,
-            "FoodBeverageHotBuffet": true,
-            "AirConditioning": true,
-            "Restroom": true,
-            "RunwayViews": false,
-            "FlighInformationScreen": true
-          }
-        },
-        {
           "sourceRecordId": "1722",
           "name": "Plaza Premium Lounge (A Gates)",
           "airportCode": "FCO",
@@ -45413,6 +45958,143 @@
             "Restroom": true,
             "RunwayViews": false,
             "FlighInformationScreen": true
+          }
+        },
+        {
+          "sourceRecordId": "1907",
+          "name": "The Coral First Class Lounge",
+          "airportCode": "HKT",
+          "airportName": "Phuket International Airport (HKT)",
+          "airportCity": "Phuket",
+          "airportRegion": "Southeast Asia",
+          "airportCoordinates": {
+            "lat": 8.1132,
+            "lon": 98.316872
+          },
+          "terminal": "International Departure",
+          "concourse": "",
+          "near": "4/F, Opposite gate 11",
+          "securitySide": "AfterSecurity",
+          "operator": "Coral",
+          "accessClass": "First",
+          "accessTier": "Emerald",
+          "accessConditions": "Access for eligible customers traveling on these oneworld member airlines only.",
+          "accessNotes": "Lounge admittance for Cathay Pacific passengers are limited to First Class passengers +1 guest, Cathay Diamond members +2 guests, and oneworld Emerald members +1 guest. Other eligible passengers are kindly invited to visit The Coral Executive lounge",
+          "openHours": [
+            {
+              "Day": 0,
+              "OpeningHour": "06:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 1,
+              "OpeningHour": "06:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 2,
+              "OpeningHour": "06:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 3,
+              "OpeningHour": "06:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 4,
+              "OpeningHour": "06:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 5,
+              "OpeningHour": "06:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 6,
+              "OpeningHour": "06:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            }
+          ],
+          "airlines": [
+            {
+              "code": "CX",
+              "name": "Cathay Pacific"
+            }
+          ],
+          "amenities": {
+            "BusinessCenter": true,
+            "TV": false,
+            "FoodBeverageSnackBuffet": true,
+            "Phone": false,
+            "PreFlightDinner": false,
+            "RelaxationRoom": false,
+            "Shower": true,
+            "SPA": false,
+            "WheelchairAccess": true,
+            "WiFi": true,
+            "FoodBeverageHotBuffet": false,
+            "AirConditioning": false,
+            "Restroom": true,
+            "RunwayViews": false,
+            "FlighInformationScreen": false
           }
         },
         {
@@ -58292,6 +58974,10 @@
           ],
           "airlines": [
             {
+              "code": "IB",
+              "name": "Iberia"
+            },
+            {
               "code": "QF",
               "name": "Qantas"
             },
@@ -61197,7 +61883,7 @@
             },
             {
               "Day": 6,
-              "OpeningHour": "05:00",
+              "OpeningHour": "04:30",
               "ClosingHour": "22:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
@@ -65898,10 +66584,6 @@
           ],
           "airlines": [
             {
-              "code": "CX",
-              "name": "Cathay Pacific"
-            },
-            {
               "code": "QR",
               "name": "Qatar Airways"
             }
@@ -66478,6 +67160,143 @@
             "Restroom": false,
             "RunwayViews": false,
             "FlighInformationScreen": true
+          }
+        },
+        {
+          "sourceRecordId": "1906",
+          "name": "The Executive by Escape Lounges",
+          "airportCode": "MAN",
+          "airportName": "Manchester Airport (MAN)",
+          "airportCity": "Manchester (GB)",
+          "airportRegion": "Europe",
+          "airportCoordinates": {
+            "lat": 53.353744,
+            "lon": -2.27495
+          },
+          "terminal": "Terminal 2",
+          "concourse": "Upper departure lounge Level",
+          "near": "Turn right at the top of the escalators; entrance located immediately before the Escape Lounge",
+          "securitySide": "AfterSecurity",
+          "operator": "Escape",
+          "accessClass": "BusinessAndHigher",
+          "accessTier": "SapphireAndHigher",
+          "accessConditions": "Access for eligible customers traveling on these oneworld member airlines only.",
+          "accessNotes": "Alcoholic drinks are only available to passengers aged 18 years and over.",
+          "openHours": [
+            {
+              "Day": 0,
+              "OpeningHour": "03:00",
+              "ClosingHour": "20:45",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 1,
+              "OpeningHour": "03:00",
+              "ClosingHour": "20:45",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 2,
+              "OpeningHour": "03:00",
+              "ClosingHour": "20:45",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 3,
+              "OpeningHour": "03:00",
+              "ClosingHour": "20:45",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 4,
+              "OpeningHour": "03:00",
+              "ClosingHour": "20:45",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 5,
+              "OpeningHour": "03:00",
+              "ClosingHour": "20:45",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 6,
+              "OpeningHour": "03:00",
+              "ClosingHour": "20:45",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            }
+          ],
+          "airlines": [
+            {
+              "code": "CX",
+              "name": "Cathay Pacific"
+            }
+          ],
+          "amenities": {
+            "BusinessCenter": false,
+            "TV": false,
+            "FoodBeverageSnackBuffet": true,
+            "Phone": false,
+            "PreFlightDinner": false,
+            "RelaxationRoom": false,
+            "Shower": false,
+            "SPA": false,
+            "WheelchairAccess": true,
+            "WiFi": true,
+            "FoodBeverageHotBuffet": false,
+            "AirConditioning": false,
+            "Restroom": true,
+            "RunwayViews": false,
+            "FlighInformationScreen": false
           }
         },
         {
@@ -83508,7 +84327,7 @@
             {
               "Day": 0,
               "OpeningHour": "05:30",
-              "ClosingHour": "21:00",
+              "ClosingHour": "00:0m",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83521,7 +84340,7 @@
             {
               "Day": 1,
               "OpeningHour": "05:30",
-              "ClosingHour": "21:00",
+              "ClosingHour": "00:0m",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83534,7 +84353,7 @@
             {
               "Day": 2,
               "OpeningHour": "05:30",
-              "ClosingHour": "21:00",
+              "ClosingHour": "00:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83547,7 +84366,7 @@
             {
               "Day": 3,
               "OpeningHour": "05:30",
-              "ClosingHour": "21:00",
+              "ClosingHour": "00:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83560,7 +84379,7 @@
             {
               "Day": 4,
               "OpeningHour": "05:30",
-              "ClosingHour": "21:00",
+              "ClosingHour": "00:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83573,7 +84392,7 @@
             {
               "Day": 5,
               "OpeningHour": "05:30",
-              "ClosingHour": "21:00",
+              "ClosingHour": "00:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83586,7 +84405,7 @@
             {
               "Day": 6,
               "OpeningHour": "05:30",
-              "ClosingHour": "21:00",
+              "ClosingHour": "00:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83782,7 +84601,7 @@
             {
               "Day": 0,
               "OpeningHour": "05:30",
-              "ClosingHour": "00:00",
+              "ClosingHour": "21:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83795,7 +84614,7 @@
             {
               "Day": 1,
               "OpeningHour": "05:30",
-              "ClosingHour": "00:00",
+              "ClosingHour": "21:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83808,7 +84627,7 @@
             {
               "Day": 2,
               "OpeningHour": "05:30",
-              "ClosingHour": "00:00",
+              "ClosingHour": "21:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83821,7 +84640,7 @@
             {
               "Day": 3,
               "OpeningHour": "05:30",
-              "ClosingHour": "00:00",
+              "ClosingHour": "21:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83834,7 +84653,7 @@
             {
               "Day": 4,
               "OpeningHour": "05:30",
-              "ClosingHour": "00:00",
+              "ClosingHour": "21:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83847,7 +84666,7 @@
             {
               "Day": 5,
               "OpeningHour": "05:30",
-              "ClosingHour": "00:00",
+              "ClosingHour": "21:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -83860,7 +84679,7 @@
             {
               "Day": 6,
               "OpeningHour": "05:30",
-              "ClosingHour": "00:00",
+              "ClosingHour": "21:00",
               "OpeningHour2": null,
               "ClosingHour2": null,
               "OpeningHour3": null,
@@ -108271,298 +109090,8 @@
           }
         },
         {
-          "sourceRecordId": "1904",
-          "name": "Plaza Premium Lounge",
-          "airportCode": "YYZ",
-          "airportName": "Toronto Lester B. Pearson Intl Airport (YYZ)",
-          "airportCity": "Toronto",
-          "airportRegion": "North America",
-          "airportCoordinates": {
-            "lat": 43.677223,
-            "lon": -79.630556
-          },
-          "terminal": "T3",
-          "concourse": "",
-          "near": "Boarding gate B22 & B24",
-          "securitySide": "AfterSecurity",
-          "operator": "Plaza Premium Group",
-          "accessClass": "BusinessAndHigher",
-          "accessTier": "SapphireAndHigher",
-          "accessConditions": "Access for eligible customers traveling on these oneworld member airlines only.",
-          "accessNotes": "",
-          "openHours": [
-            {
-              "Day": 0,
-              "OpeningHour": "05:30",
-              "ClosingHour": "22:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 1,
-              "OpeningHour": "05:30",
-              "ClosingHour": "22:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 2,
-              "OpeningHour": "05:30",
-              "ClosingHour": "22:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 3,
-              "OpeningHour": "05:30",
-              "ClosingHour": "22:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 4,
-              "OpeningHour": "05:30",
-              "ClosingHour": "22:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 5,
-              "OpeningHour": "05:30",
-              "ClosingHour": "22:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 6,
-              "OpeningHour": "05:30",
-              "ClosingHour": "22:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            }
-          ],
-          "airlines": [
-            {
-              "code": "IB",
-              "name": "Iberia"
-            }
-          ],
-          "amenities": {
-            "BusinessCenter": true,
-            "TV": true,
-            "FoodBeverageSnackBuffet": true,
-            "Phone": false,
-            "PreFlightDinner": false,
-            "RelaxationRoom": false,
-            "Shower": false,
-            "SPA": false,
-            "WheelchairAccess": false,
-            "WiFi": true,
-            "FoodBeverageHotBuffet": true,
-            "AirConditioning": true,
-            "Restroom": true,
-            "RunwayViews": false,
-            "FlighInformationScreen": true
-          }
-        },
-        {
-          "sourceRecordId": "943",
-          "name": "Plaza Premium Lounge - International Terminal 3 ",
-          "airportCode": "YYZ",
-          "airportName": "Toronto Lester B. Pearson Intl Airport (YYZ)",
-          "airportCity": "Toronto",
-          "airportRegion": "North America",
-          "airportCoordinates": {
-            "lat": 43.677223,
-            "lon": -79.630556
-          },
-          "terminal": "International Terminal 3",
-          "concourse": "",
-          "near": "International Departures, Terminal 3, AT Level, via Gate C32, Toronto Pearson International Airport (YYZ)",
-          "securitySide": "BeforeSecurity",
-          "operator": "Plaza Premium",
-          "accessClass": "BusinessAndHigher",
-          "accessTier": "SapphireAndHigher",
-          "accessConditions": "Access for eligible customers traveling on these oneworld member airlines only.",
-          "accessNotes": "",
-          "openHours": [
-            {
-              "Day": 0,
-              "OpeningHour": "05:00",
-              "ClosingHour": "00:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 1,
-              "OpeningHour": "05:00",
-              "ClosingHour": "00:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 2,
-              "OpeningHour": "05:00",
-              "ClosingHour": "00:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 3,
-              "OpeningHour": "05:00",
-              "ClosingHour": "00:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 4,
-              "OpeningHour": "05:00",
-              "ClosingHour": "00:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 5,
-              "OpeningHour": "05:00",
-              "ClosingHour": "00:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            },
-            {
-              "Day": 6,
-              "OpeningHour": "05:00",
-              "ClosingHour": "00:00",
-              "OpeningHour2": null,
-              "ClosingHour2": null,
-              "OpeningHour3": null,
-              "ClosingHour3": null,
-              "OpeningHour4": null,
-              "ClosingHour4": null,
-              "OpenAllDay": false,
-              "CloseAllDay": false
-            }
-          ],
-          "airlines": [
-            {
-              "code": "BA",
-              "name": "British Airways"
-            },
-            {
-              "code": "CX",
-              "name": "Cathay Pacific"
-            },
-            {
-              "code": "AY",
-              "name": "Finnair"
-            },
-            {
-              "code": "IB",
-              "name": "Iberia"
-            },
-            {
-              "code": "QR",
-              "name": "Qatar Airways"
-            }
-          ],
-          "amenities": {
-            "BusinessCenter": true,
-            "TV": true,
-            "FoodBeverageSnackBuffet": true,
-            "Phone": false,
-            "PreFlightDinner": false,
-            "RelaxationRoom": false,
-            "Shower": false,
-            "SPA": false,
-            "WheelchairAccess": false,
-            "WiFi": true,
-            "FoodBeverageHotBuffet": true,
-            "AirConditioning": true,
-            "Restroom": true,
-            "RunwayViews": false,
-            "FlighInformationScreen": true
-          }
-        },
-        {
           "sourceRecordId": "1802",
-          "name": "Plazza Premium Lounge",
+          "name": "Plaza Premium Lounge",
           "airportCode": "YYZ",
           "airportName": "Toronto Lester B. Pearson Intl Airport (YYZ)",
           "airportCity": "Toronto",
@@ -108695,6 +109224,159 @@
             "Restroom": false,
             "RunwayViews": false,
             "FlighInformationScreen": false
+          }
+        },
+        {
+          "sourceRecordId": "943",
+          "name": "Plaza Premium Lounge - International Terminal 3 ",
+          "airportCode": "YYZ",
+          "airportName": "Toronto Lester B. Pearson Intl Airport (YYZ)",
+          "airportCity": "Toronto",
+          "airportRegion": "North America",
+          "airportCoordinates": {
+            "lat": 43.677223,
+            "lon": -79.630556
+          },
+          "terminal": "International Terminal 3",
+          "concourse": "",
+          "near": "International Departures, Terminal 3, AT Level, via Gate C32, Toronto Pearson International Airport (YYZ)",
+          "securitySide": "AfterSecurity",
+          "operator": "Plaza Premium",
+          "accessClass": "BusinessAndHigher",
+          "accessTier": "SapphireAndHigher",
+          "accessConditions": "",
+          "accessNotes": "The Business Class section is available exclusively to customers travelling in Business Class.",
+          "openHours": [
+            {
+              "Day": 0,
+              "OpeningHour": "05:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 1,
+              "OpeningHour": "05:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 2,
+              "OpeningHour": "05:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 3,
+              "OpeningHour": "05:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 4,
+              "OpeningHour": "05:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 5,
+              "OpeningHour": "05:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            },
+            {
+              "Day": 6,
+              "OpeningHour": "05:00",
+              "ClosingHour": "00:00",
+              "OpeningHour2": null,
+              "ClosingHour2": null,
+              "OpeningHour3": null,
+              "ClosingHour3": null,
+              "OpeningHour4": null,
+              "ClosingHour4": null,
+              "OpenAllDay": false,
+              "CloseAllDay": false
+            }
+          ],
+          "airlines": [
+            {
+              "code": "BA",
+              "name": "British Airways"
+            },
+            {
+              "code": "CX",
+              "name": "Cathay Pacific"
+            },
+            {
+              "code": "AY",
+              "name": "Finnair"
+            },
+            {
+              "code": "IB",
+              "name": "Iberia"
+            },
+            {
+              "code": "QR",
+              "name": "Qatar Airways"
+            }
+          ],
+          "amenities": {
+            "BusinessCenter": true,
+            "TV": true,
+            "FoodBeverageSnackBuffet": true,
+            "Phone": false,
+            "PreFlightDinner": false,
+            "RelaxationRoom": false,
+            "Shower": false,
+            "SPA": false,
+            "WheelchairAccess": false,
+            "WiFi": true,
+            "FoodBeverageHotBuffet": true,
+            "AirConditioning": true,
+            "Restroom": true,
+            "RunwayViews": false,
+            "FlighInformationScreen": true
           }
         },
         {
@@ -109685,7 +110367,23 @@
         }
       ],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/oneworld.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.oneworld.com/airport-lounges",
+          "robots": {
+            "checked": true,
+            "url": "https://www.oneworld.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 2
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.oneworld.com/airport-lounges",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 108537
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/oneworld.html",
       "robots": {
         "checked": true,
         "url": "https://www.oneworld.com/robots.txt",
@@ -109697,13 +110395,14 @@
       "sourceId": "skyteam",
       "publisher": "SkyTeam Lounges",
       "url": "https://www.skyteam.com/en/about/lounges/",
+      "sourceUrl": "https://www.skyteam.com/en/about/lounges/",
       "finalUrl": "https://www.skyteam.com/en/about/lounges/",
       "adapter": "official_page",
       "status": "http_error",
       "httpStatus": 403,
       "contentType": "text/html",
-      "bytes": 118,
-      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "bytes": 111,
+      "sha256": "296bee496e601959ecdf00dc497394844632d769dc9437ac9021be2ad882ab73",
       "title": "403 Forbidden",
       "jsonLdBlocks": 0,
       "records": 0,
@@ -109711,7 +110410,107 @@
       "loungeLinks": [],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/skyteam.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.skyteam.com/en/about/lounges/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowRuleCount": 0
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/about/lounges/",
+          "contentType": "text/html",
+          "bytes": 111
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/vancouver/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowRuleCount": 0
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/vancouver/",
+          "contentType": "text/html",
+          "bytes": 111
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/dubai/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowRuleCount": 0
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/dubai/",
+          "contentType": "text/html",
+          "bytes": 111
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/sydney/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowRuleCount": 0
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/sydney/",
+          "contentType": "text/html",
+          "bytes": 111
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/frankfurt/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowRuleCount": 0
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/frankfurt/",
+          "contentType": "text/html",
+          "bytes": 111
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowRuleCount": 0
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/",
+          "contentType": "text/html",
+          "bytes": 111
+        },
+        {
+          "url": "https://www.skyteam.com/en/lounges/lounge-finder/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.skyteam.com/robots.txt",
+            "status": 403,
+            "disallowRuleCount": 0
+          },
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.skyteam.com/en/lounges/lounge-finder/",
+          "contentType": "text/html",
+          "bytes": 111
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/skyteam.html",
       "robots": {
         "checked": true,
         "url": "https://www.skyteam.com/robots.txt",
@@ -109724,14 +110523,21 @@
       "publisher": "Plaza Premium Lounge",
       "url": "https://www.plazapremiumlounge.com/en-uk",
       "adapter": "official_page",
-      "status": "skipped",
+      "status": "fetch_error",
       "reason": "robots_disallow",
-      "robots": {
-        "checked": true,
-        "url": "https://www.plazapremiumlounge.com/robots.txt",
-        "status": 200,
-        "disallowRuleCount": 2
-      },
+      "fetchAttempts": [
+        {
+          "url": "https://www.plazapremiumlounge.com/en-uk",
+          "robots": {
+            "checked": true,
+            "url": "https://www.plazapremiumlounge.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 1
+          },
+          "status": "skipped",
+          "reason": "robots_disallow"
+        }
+      ],
       "records": 0,
       "airportCodes": [],
       "loungeLinks": []
@@ -109740,16 +110546,17 @@
       "sourceId": "escape-lounges",
       "publisher": "Escape Lounges",
       "url": "https://escapelounges.com/",
+      "sourceUrl": "https://escapelounges.com/",
       "finalUrl": "https://escapelounges.com/",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
-      "bytes": 1240449,
-      "sha256": "f1cb2ac939dbaa7cb83360bf066eed56951aec82f9ce282473c0e2a66759a229",
+      "bytes": 1395263,
+      "sha256": "8c5200b74df6d99149c321cb80d8157caf8623fada96e484e52f83e9addf5fcf",
       "title": "Airport Lounges in the UK, US & Australia | Escape Lounges",
       "jsonLdBlocks": 1,
-      "records": 42,
+      "records": 40,
       "airportCodes": [
         "BDL",
         "CMH",
@@ -109760,12 +110567,6 @@
         "MCI",
         "MSP",
         "OAK",
-        "PBI",
-        "PDX",
-        "PHX",
-        "PVD",
-        "RNO",
-        "SMF",
         "TSA",
         "XNA"
       ],
@@ -109796,22 +110597,20 @@
         "https://escapelounges.com/us/airport-lounges/",
         "https://escapelounges.com/uk/airport-lounges/london-stansted/essence/#airlines",
         "https://escapelounges.com/uk/airport-lounges/london-stansted/essence/",
-        "https://escapelounges.com/uk/airport-lounges/edinburgh/",
+        "https://escapelounges.com/uk/airport-lounges/manchester/terminal-3/",
         "https://escapelounges.com/uk/airport-lounges/manchester/terminal-2/executive/",
         "https://escapelounges.com/au/airport-lounges/brisbane/",
         "https://escapelounges.com/uk/airport-lounges/east-midlands/",
-        "https://escapelounges.com/au/airport-lounges/cairns/",
         "https://escapelounges.com/uk/airport-lounges/bristol/escape/",
         "https://escapelounges.com/uk/airport-lounges/bristol/essence/",
+        "https://escapelounges.com/au/airport-lounges/cairns/",
+        "https://escapelounges.com/uk/airport-lounges/edinburgh/",
         "https://escapelounges.com/uk/airport-lounges/manchester/terminal-2/escape/",
-        "https://escapelounges.com/uk/airport-lounges/manchester/terminal-3/",
         "https://escapelounges.com/airport-lounges/",
         "https://escapelounges.com/au/airport-lounges/",
         "https://escapelounges.com/uk/airport-lounges/",
         "https://escapelounges.com/uk/airport-lounge-discounts/",
-        "https://www.instagram.com/escape_lounges/",
-        "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/#find-us",
-        "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/#find-us"
+        "https://www.instagram.com/escape_lounges/"
       ],
       "structuredRecords": [],
       "childPages": [
@@ -109821,8 +110620,8 @@
           "status": "fetched",
           "httpStatus": 200,
           "contentType": "text/html;charset=utf-8",
-          "bytes": 1166751,
-          "sha256": "f28ba580c9ccc433167e52ea9e9cdf185f3365a8c8ff9ee5a4ad5627d8957e7c",
+          "bytes": 1320547,
+          "sha256": "c0ddac36315dafe7b1e1647ff0b1360f23b5d2ffbe19a0f73e4e3a3926481e50",
           "title": "Cincinnati-Northern Kentucky Airport Lounge (CVG) | Escape Lounges",
           "airportCodes": [
             "CVG"
@@ -109854,7 +110653,7 @@
             "https://escapelounges.com/us/airport-lounges/",
             "https://escapelounges.com/airport-lounges/"
           ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-01.html",
+          "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/escape-lounges-01.html",
           "robots": {
             "checked": true,
             "url": "https://escapelounges.com/robots.txt",
@@ -109868,8 +110667,8 @@
           "status": "fetched",
           "httpStatus": 200,
           "contentType": "text/html;charset=utf-8",
-          "bytes": 1162044,
-          "sha256": "3e8a5627d2335c50bdab33952a632f40d3b694823938352dd43891861122b5d4",
+          "bytes": 1315886,
+          "sha256": "de2309c9ef483d6a686329c26846d6bf61c33adad38f2769c1dc82971ec36bf1",
           "title": "John Glenn Columbus Intl Airport (CMH) Lounge | Escape Lounges",
           "airportCodes": [
             "CMH"
@@ -109901,7 +110700,7 @@
             "https://escapelounges.com/us/airport-lounges/",
             "https://escapelounges.com/airport-lounges/"
           ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-02.html",
+          "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/escape-lounges-02.html",
           "robots": {
             "checked": true,
             "url": "https://escapelounges.com/robots.txt",
@@ -109915,8 +110714,8 @@
           "status": "fetched",
           "httpStatus": 200,
           "contentType": "text/html;charset=utf-8",
-          "bytes": 1163815,
-          "sha256": "fd659277bc92705b543e65f357e9494f838c7b69bb4363645fc12214f12b1a88",
+          "bytes": 1317588,
+          "sha256": "3caa394f962132936bf020c1e831c6638d217ba2394cf8440bcb759e254e6830",
           "title": "Fort Lauderdale-Hollywood Airport (FLL) Lounge | Escape Lounges",
           "airportCodes": [
             "FLL"
@@ -109948,7 +110747,7 @@
             "https://escapelounges.com/us/airport-lounges/",
             "https://escapelounges.com/airport-lounges/"
           ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-03.html",
+          "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/escape-lounges-03.html",
           "robots": {
             "checked": true,
             "url": "https://escapelounges.com/robots.txt",
@@ -109962,8 +110761,8 @@
           "status": "fetched",
           "httpStatus": 200,
           "contentType": "text/html;charset=utf-8",
-          "bytes": 1162608,
-          "sha256": "d45d7393d66135956da8f8860c9ea3a99d37da89d59e0a8405389317fb574c20",
+          "bytes": 1316437,
+          "sha256": "8af78ff0f2a4e87b8f247771810f797f93a471a0c31d2e8f009d0551d3c341bd",
           "title": "Greenville-Spartanburg Intl Airport (GSP) Lounge | Escape Lounges",
           "airportCodes": [
             "GSP",
@@ -109996,7 +110795,7 @@
             "https://escapelounges.com/us/airport-lounges/",
             "https://escapelounges.com/airport-lounges/"
           ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-04.html",
+          "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/escape-lounges-04.html",
           "robots": {
             "checked": true,
             "url": "https://escapelounges.com/robots.txt",
@@ -110010,8 +110809,8 @@
           "status": "fetched",
           "httpStatus": 200,
           "contentType": "text/html;charset=utf-8",
-          "bytes": 1163271,
-          "sha256": "30586f6ec4361f5fa1e559bff84f5cd773ae8b1c2bb2eeb68ccccef02a253fe5",
+          "bytes": 1317595,
+          "sha256": "8f761d88a88fcb1f2c7be3e1f20c1a29c5c75e47cb95275ef0cdf8e7087aeafb",
           "title": "Bradley Intl Airport (BDL) Lounge | Escape Lounges",
           "airportCodes": [
             "BDL"
@@ -110043,7 +110842,7 @@
             "https://escapelounges.com/us/airport-lounges/",
             "https://escapelounges.com/airport-lounges/"
           ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-05.html",
+          "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/escape-lounges-05.html",
           "robots": {
             "checked": true,
             "url": "https://escapelounges.com/robots.txt",
@@ -110057,8 +110856,8 @@
           "status": "fetched",
           "httpStatus": 200,
           "contentType": "text/html;charset=utf-8",
-          "bytes": 1170470,
-          "sha256": "12663e29981f6fb8a5eefbfbb708bb2639e67d955c1e70e17b4b21ca29c0c4e6",
+          "bytes": 1325233,
+          "sha256": "939aca598afe7dab228501f56b84c982b1b92ad8011154aebb29d87270c9e3d7",
           "title": "Kansas City Intl Airport (MCI) Lounge | Escape Lounges",
           "airportCodes": [
             "FAB",
@@ -110091,7 +110890,7 @@
             "https://escapelounges.com/us/airport-lounges/",
             "https://escapelounges.com/airport-lounges/"
           ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-06.html",
+          "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/escape-lounges-06.html",
           "robots": {
             "checked": true,
             "url": "https://escapelounges.com/robots.txt",
@@ -110105,8 +110904,8 @@
           "status": "fetched",
           "httpStatus": 200,
           "contentType": "text/html;charset=utf-8",
-          "bytes": 1162932,
-          "sha256": "04531e337b2854da659df578c27fcb74add9d18c94687fa469150278db6b48a1",
+          "bytes": 1316698,
+          "sha256": "28afb56d01a19f36e5c62f05745124a0b8480157d542891e128ce619fd941214",
           "title": "Minneapolis-St. Paul Intl Airport (MSP) Lounge | Escape Lounges",
           "airportCodes": [
             "MSP"
@@ -110138,7 +110937,7 @@
             "https://escapelounges.com/us/airport-lounges/",
             "https://escapelounges.com/airport-lounges/"
           ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-07.html",
+          "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/escape-lounges-07.html",
           "robots": {
             "checked": true,
             "url": "https://escapelounges.com/robots.txt",
@@ -110152,8 +110951,8 @@
           "status": "fetched",
           "httpStatus": 200,
           "contentType": "text/html;charset=utf-8",
-          "bytes": 1163354,
-          "sha256": "c71f3e8f0caef28280fc8edab021baa276996444e4d35b15fd0e83a692680226",
+          "bytes": 1317236,
+          "sha256": "dfa284cf9c38b3c82496d371b652f69128ad5ef9b87c1ca264db7f053c9c1ae0",
           "title": "Northwest Arkansas Airport (XNA) Lounge | Escape Lounges",
           "airportCodes": [
             "TSA",
@@ -110186,7 +110985,7 @@
             "https://escapelounges.com/us/airport-lounges/",
             "https://escapelounges.com/airport-lounges/"
           ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-08.html",
+          "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/escape-lounges-08.html",
           "robots": {
             "checked": true,
             "url": "https://escapelounges.com/robots.txt",
@@ -110200,8 +110999,8 @@
           "status": "fetched",
           "httpStatus": 200,
           "contentType": "text/html;charset=utf-8",
-          "bytes": 1162351,
-          "sha256": "2af30afddd9247d2f6195032233b54a2650a4994cc6db3132031ce1f68dec754",
+          "bytes": 1316161,
+          "sha256": "e4ea45ea014960252399e7ad231c0cd03e37a65d741898e969822cba1ae03eb0",
           "title": "Oakland Intl Airport (OAK) Lounge | Escape Lounges",
           "airportCodes": [
             "OAK"
@@ -110233,7 +111032,7 @@
             "https://escapelounges.com/us/airport-lounges/",
             "https://escapelounges.com/airport-lounges/"
           ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-09.html",
+          "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/escape-lounges-09.html",
           "robots": {
             "checked": true,
             "url": "https://escapelounges.com/robots.txt",
@@ -110247,8 +111046,8 @@
           "status": "fetched",
           "httpStatus": 200,
           "contentType": "text/html;charset=utf-8",
-          "bytes": 1047134,
-          "sha256": "56261751193fff25e8e2d18b7773ea2cb717af4204066f36b5796d612efe3675",
+          "bytes": 1200036,
+          "sha256": "2752e8484887b85843832376895f9deefbd2c4fdf6d74a5840a81cc66cc8958b",
           "title": "Omaha Eppley Airfield | Escape Lounges",
           "airportCodes": [],
           "loungeLinks": [
@@ -110278,477 +111077,7 @@
             "https://escapelounges.com/us/airport-lounges/",
             "https://escapelounges.com/airport-lounges/"
           ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-10.html",
-          "robots": {
-            "checked": true,
-            "url": "https://escapelounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 0
-          }
-        },
-        {
-          "url": "https://escapelounges.com/us/airport-lounges/palm-beach/",
-          "finalUrl": "https://escapelounges.com/us/airport-lounges/palm-beach/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html;charset=utf-8",
-          "bytes": 1159073,
-          "sha256": "2dec63a7ec4a046be2e55e05732f51a6a9ef2216da50801cadf80eed8bb3dc0a",
-          "title": "Palm Beach Intl Airport (PBI) Lounge | Escape Lounges",
-          "airportCodes": [
-            "PBI"
-          ],
-          "loungeLinks": [
-            "https://escapelounges.com/us/airport-lounges/palm-beach/",
-            "https://escapelounges.com/us/airport-lounges/cincinnati-northern-kentucky/",
-            "https://escapelounges.com/us/airport-lounges/columbus/",
-            "https://escapelounges.com/us/airport-lounges/fort-lauderdale/",
-            "https://escapelounges.com/us/airport-lounges/greenville-spartanburg/",
-            "https://escapelounges.com/us/airport-lounges/bradley/",
-            "https://escapelounges.com/us/airport-lounges/kansas-city/",
-            "https://escapelounges.com/us/airport-lounges/minneapolis-saint-paul/",
-            "https://escapelounges.com/us/airport-lounges/northwest-arkansas/",
-            "https://escapelounges.com/us/airport-lounges/oakland/",
-            "https://escapelounges.com/us/airport-lounges/omaha/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-            "https://escapelounges.com/us/airport-lounges/portland/",
-            "https://escapelounges.com/us/airport-lounges/rhode-island/",
-            "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-            "https://escapelounges.com/us/airport-lounges/luis-munoz-marin/",
-            "https://escapelounges.com/us/airport-lounges/syracuse/",
-            "https://escapelounges.com/us/airport-lounges/tulsa/",
-            "https://escapelounges.com/us/airport-lounges/",
-            "https://escapelounges.com/airport-lounges/"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-11.html",
-          "robots": {
-            "checked": true,
-            "url": "https://escapelounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 0
-          }
-        },
-        {
-          "url": "https://escapelounges.com/us/airport-lounges/phoenix/",
-          "finalUrl": "https://escapelounges.com/us/airport-lounges/phoenix/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html;charset=utf-8",
-          "bytes": 1067844,
-          "sha256": "566ca2e14638a6a1b6be64e89f91585114fb88584aac1372ca22724aa01efbb4",
-          "title": "Phoenix Sky Harbor Intl Airport (PHX) Lounges | Escape Lounges",
-          "airportCodes": [
-            "PHX"
-          ],
-          "loungeLinks": [
-            "https://escapelounges.com/us/airport-lounges/phoenix/",
-            "https://escapelounges.com/us/airport-lounges/cincinnati-northern-kentucky/",
-            "https://escapelounges.com/us/airport-lounges/columbus/",
-            "https://escapelounges.com/us/airport-lounges/fort-lauderdale/",
-            "https://escapelounges.com/us/airport-lounges/greenville-spartanburg/",
-            "https://escapelounges.com/us/airport-lounges/bradley/",
-            "https://escapelounges.com/us/airport-lounges/kansas-city/",
-            "https://escapelounges.com/us/airport-lounges/minneapolis-saint-paul/",
-            "https://escapelounges.com/us/airport-lounges/northwest-arkansas/",
-            "https://escapelounges.com/us/airport-lounges/oakland/",
-            "https://escapelounges.com/us/airport-lounges/omaha/",
-            "https://escapelounges.com/us/airport-lounges/palm-beach/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-            "https://escapelounges.com/us/airport-lounges/portland/",
-            "https://escapelounges.com/us/airport-lounges/rhode-island/",
-            "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-            "https://escapelounges.com/us/airport-lounges/luis-munoz-marin/",
-            "https://escapelounges.com/us/airport-lounges/syracuse/",
-            "https://escapelounges.com/us/airport-lounges/tulsa/",
-            "https://escapelounges.com/us/airport-lounges/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/#find-us"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-12.html",
-          "robots": {
-            "checked": true,
-            "url": "https://escapelounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 0
-          }
-        },
-        {
-          "url": "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-          "finalUrl": "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html;charset=utf-8",
-          "bytes": 1168935,
-          "sha256": "fb5ddd5d812ebb70ae278b73b01e980ec34652d837d7e03f4d3928849afe6932",
-          "title": "Phoenix Sky Harbor Intl Airport (PHX) T3 Lounge | Escape Lounges",
-          "airportCodes": [
-            "PHX"
-          ],
-          "loungeLinks": [
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-            "https://escapelounges.com/us/airport-lounges/cincinnati-northern-kentucky/",
-            "https://escapelounges.com/us/airport-lounges/columbus/",
-            "https://escapelounges.com/us/airport-lounges/fort-lauderdale/",
-            "https://escapelounges.com/us/airport-lounges/greenville-spartanburg/",
-            "https://escapelounges.com/us/airport-lounges/bradley/",
-            "https://escapelounges.com/us/airport-lounges/kansas-city/",
-            "https://escapelounges.com/us/airport-lounges/minneapolis-saint-paul/",
-            "https://escapelounges.com/us/airport-lounges/northwest-arkansas/",
-            "https://escapelounges.com/us/airport-lounges/oakland/",
-            "https://escapelounges.com/us/airport-lounges/omaha/",
-            "https://escapelounges.com/us/airport-lounges/palm-beach/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-            "https://escapelounges.com/us/airport-lounges/portland/",
-            "https://escapelounges.com/us/airport-lounges/rhode-island/",
-            "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-            "https://escapelounges.com/us/airport-lounges/luis-munoz-marin/",
-            "https://escapelounges.com/us/airport-lounges/syracuse/",
-            "https://escapelounges.com/us/airport-lounges/tulsa/",
-            "https://escapelounges.com/us/airport-lounges/",
-            "https://escapelounges.com/airport-lounges/"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-13.html",
-          "robots": {
-            "checked": true,
-            "url": "https://escapelounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 0
-          }
-        },
-        {
-          "url": "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-          "finalUrl": "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html;charset=utf-8",
-          "bytes": 1158497,
-          "sha256": "973d5930ae3fe430ade241be76c438c77bce41285275a24902f8187386e9e6a3",
-          "title": "Phoenix Sky Harbor Intl Airport (PHX) T4 Lounge | Escape Lounges",
-          "airportCodes": [
-            "PHX"
-          ],
-          "loungeLinks": [
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-            "https://escapelounges.com/us/airport-lounges/cincinnati-northern-kentucky/",
-            "https://escapelounges.com/us/airport-lounges/columbus/",
-            "https://escapelounges.com/us/airport-lounges/fort-lauderdale/",
-            "https://escapelounges.com/us/airport-lounges/greenville-spartanburg/",
-            "https://escapelounges.com/us/airport-lounges/bradley/",
-            "https://escapelounges.com/us/airport-lounges/kansas-city/",
-            "https://escapelounges.com/us/airport-lounges/minneapolis-saint-paul/",
-            "https://escapelounges.com/us/airport-lounges/northwest-arkansas/",
-            "https://escapelounges.com/us/airport-lounges/oakland/",
-            "https://escapelounges.com/us/airport-lounges/omaha/",
-            "https://escapelounges.com/us/airport-lounges/palm-beach/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-            "https://escapelounges.com/us/airport-lounges/portland/",
-            "https://escapelounges.com/us/airport-lounges/rhode-island/",
-            "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-            "https://escapelounges.com/us/airport-lounges/luis-munoz-marin/",
-            "https://escapelounges.com/us/airport-lounges/syracuse/",
-            "https://escapelounges.com/us/airport-lounges/tulsa/",
-            "https://escapelounges.com/us/airport-lounges/",
-            "https://escapelounges.com/airport-lounges/"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-14.html",
-          "robots": {
-            "checked": true,
-            "url": "https://escapelounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 0
-          }
-        },
-        {
-          "url": "https://escapelounges.com/us/airport-lounges/portland/",
-          "finalUrl": "https://escapelounges.com/us/airport-lounges/portland/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html;charset=utf-8",
-          "bytes": 1166639,
-          "sha256": "763dc99811bcc5289741ce749db811e22efa323c6f5fb4d9598d45fbd17a0184",
-          "title": "Portland Intl Airport (PDX) Lounge | Escape Lounges",
-          "airportCodes": [
-            "PDX"
-          ],
-          "loungeLinks": [
-            "https://escapelounges.com/us/airport-lounges/portland/",
-            "https://escapelounges.com/us/airport-lounges/cincinnati-northern-kentucky/",
-            "https://escapelounges.com/us/airport-lounges/columbus/",
-            "https://escapelounges.com/us/airport-lounges/fort-lauderdale/",
-            "https://escapelounges.com/us/airport-lounges/greenville-spartanburg/",
-            "https://escapelounges.com/us/airport-lounges/bradley/",
-            "https://escapelounges.com/us/airport-lounges/kansas-city/",
-            "https://escapelounges.com/us/airport-lounges/minneapolis-saint-paul/",
-            "https://escapelounges.com/us/airport-lounges/northwest-arkansas/",
-            "https://escapelounges.com/us/airport-lounges/oakland/",
-            "https://escapelounges.com/us/airport-lounges/omaha/",
-            "https://escapelounges.com/us/airport-lounges/palm-beach/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-            "https://escapelounges.com/us/airport-lounges/rhode-island/",
-            "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-            "https://escapelounges.com/us/airport-lounges/luis-munoz-marin/",
-            "https://escapelounges.com/us/airport-lounges/syracuse/",
-            "https://escapelounges.com/us/airport-lounges/tulsa/",
-            "https://escapelounges.com/us/airport-lounges/",
-            "https://escapelounges.com/airport-lounges/"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-15.html",
-          "robots": {
-            "checked": true,
-            "url": "https://escapelounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 0
-          }
-        },
-        {
-          "url": "https://escapelounges.com/us/airport-lounges/rhode-island/",
-          "finalUrl": "https://escapelounges.com/us/airport-lounges/rhode-island/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html;charset=utf-8",
-          "bytes": 1162131,
-          "sha256": "14fddd1c8554d6519aeb195491bb4c3b03364d450471b89fcdd5f95a08179117",
-          "title": "Rhode Island T. F. Green Airport (PVD) Lounge | Escape Lounges",
-          "airportCodes": [
-            "PVD"
-          ],
-          "loungeLinks": [
-            "https://escapelounges.com/us/airport-lounges/rhode-island/",
-            "https://escapelounges.com/us/airport-lounges/cincinnati-northern-kentucky/",
-            "https://escapelounges.com/us/airport-lounges/columbus/",
-            "https://escapelounges.com/us/airport-lounges/fort-lauderdale/",
-            "https://escapelounges.com/us/airport-lounges/greenville-spartanburg/",
-            "https://escapelounges.com/us/airport-lounges/bradley/",
-            "https://escapelounges.com/us/airport-lounges/kansas-city/",
-            "https://escapelounges.com/us/airport-lounges/minneapolis-saint-paul/",
-            "https://escapelounges.com/us/airport-lounges/northwest-arkansas/",
-            "https://escapelounges.com/us/airport-lounges/oakland/",
-            "https://escapelounges.com/us/airport-lounges/omaha/",
-            "https://escapelounges.com/us/airport-lounges/palm-beach/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-            "https://escapelounges.com/us/airport-lounges/portland/",
-            "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-            "https://escapelounges.com/us/airport-lounges/luis-munoz-marin/",
-            "https://escapelounges.com/us/airport-lounges/syracuse/",
-            "https://escapelounges.com/us/airport-lounges/tulsa/",
-            "https://escapelounges.com/us/airport-lounges/",
-            "https://escapelounges.com/airport-lounges/"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-16.html",
-          "robots": {
-            "checked": true,
-            "url": "https://escapelounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 0
-          }
-        },
-        {
-          "url": "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-          "finalUrl": "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html;charset=utf-8",
-          "bytes": 1159055,
-          "sha256": "0b974d4f6a924e5a3b03f85359f37aafd297a89760687fc299b63b4970b366e1",
-          "title": "Reno-Tahoe Intl Airport (RNO) Lounge | Escape Lounges",
-          "airportCodes": [
-            "RNO"
-          ],
-          "loungeLinks": [
-            "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-            "https://escapelounges.com/us/airport-lounges/cincinnati-northern-kentucky/",
-            "https://escapelounges.com/us/airport-lounges/columbus/",
-            "https://escapelounges.com/us/airport-lounges/fort-lauderdale/",
-            "https://escapelounges.com/us/airport-lounges/greenville-spartanburg/",
-            "https://escapelounges.com/us/airport-lounges/bradley/",
-            "https://escapelounges.com/us/airport-lounges/kansas-city/",
-            "https://escapelounges.com/us/airport-lounges/minneapolis-saint-paul/",
-            "https://escapelounges.com/us/airport-lounges/northwest-arkansas/",
-            "https://escapelounges.com/us/airport-lounges/oakland/",
-            "https://escapelounges.com/us/airport-lounges/omaha/",
-            "https://escapelounges.com/us/airport-lounges/palm-beach/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-            "https://escapelounges.com/us/airport-lounges/portland/",
-            "https://escapelounges.com/us/airport-lounges/rhode-island/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-            "https://escapelounges.com/us/airport-lounges/luis-munoz-marin/",
-            "https://escapelounges.com/us/airport-lounges/syracuse/",
-            "https://escapelounges.com/us/airport-lounges/tulsa/",
-            "https://escapelounges.com/us/airport-lounges/",
-            "https://escapelounges.com/airport-lounges/"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-17.html",
-          "robots": {
-            "checked": true,
-            "url": "https://escapelounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 0
-          }
-        },
-        {
-          "url": "https://escapelounges.com/us/airport-lounges/sacramento/",
-          "finalUrl": "https://escapelounges.com/us/airport-lounges/sacramento/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html;charset=utf-8",
-          "bytes": 1070216,
-          "sha256": "0bbcc0b5987e4f2f7a8a3830b758800c9765d659185f8fbf6618bad040cde327",
-          "title": "Sacramento Intl Airport (SMF) Lounges | Escape Lounges",
-          "airportCodes": [
-            "SMF"
-          ],
-          "loungeLinks": [
-            "https://escapelounges.com/us/airport-lounges/sacramento/",
-            "https://escapelounges.com/us/airport-lounges/cincinnati-northern-kentucky/",
-            "https://escapelounges.com/us/airport-lounges/columbus/",
-            "https://escapelounges.com/us/airport-lounges/fort-lauderdale/",
-            "https://escapelounges.com/us/airport-lounges/greenville-spartanburg/",
-            "https://escapelounges.com/us/airport-lounges/bradley/",
-            "https://escapelounges.com/us/airport-lounges/kansas-city/",
-            "https://escapelounges.com/us/airport-lounges/minneapolis-saint-paul/",
-            "https://escapelounges.com/us/airport-lounges/northwest-arkansas/",
-            "https://escapelounges.com/us/airport-lounges/oakland/",
-            "https://escapelounges.com/us/airport-lounges/omaha/",
-            "https://escapelounges.com/us/airport-lounges/palm-beach/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-            "https://escapelounges.com/us/airport-lounges/portland/",
-            "https://escapelounges.com/us/airport-lounges/rhode-island/",
-            "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-            "https://escapelounges.com/us/airport-lounges/luis-munoz-marin/",
-            "https://escapelounges.com/us/airport-lounges/syracuse/",
-            "https://escapelounges.com/us/airport-lounges/tulsa/",
-            "https://escapelounges.com/us/airport-lounges/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/#find-us"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-18.html",
-          "robots": {
-            "checked": true,
-            "url": "https://escapelounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 0
-          }
-        },
-        {
-          "url": "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-          "finalUrl": "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html;charset=utf-8",
-          "bytes": 1163047,
-          "sha256": "db552961eeb6e76416bebc68f1f0af46a633382f3e4953ea6f3a834cfe2aa451",
-          "title": "Sacramento Intl Airport (SMF) Terminal A Lounge | Escape Lounges",
-          "airportCodes": [
-            "SMF"
-          ],
-          "loungeLinks": [
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-            "https://escapelounges.com/us/airport-lounges/cincinnati-northern-kentucky/",
-            "https://escapelounges.com/us/airport-lounges/columbus/",
-            "https://escapelounges.com/us/airport-lounges/fort-lauderdale/",
-            "https://escapelounges.com/us/airport-lounges/greenville-spartanburg/",
-            "https://escapelounges.com/us/airport-lounges/bradley/",
-            "https://escapelounges.com/us/airport-lounges/kansas-city/",
-            "https://escapelounges.com/us/airport-lounges/minneapolis-saint-paul/",
-            "https://escapelounges.com/us/airport-lounges/northwest-arkansas/",
-            "https://escapelounges.com/us/airport-lounges/oakland/",
-            "https://escapelounges.com/us/airport-lounges/omaha/",
-            "https://escapelounges.com/us/airport-lounges/palm-beach/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-            "https://escapelounges.com/us/airport-lounges/portland/",
-            "https://escapelounges.com/us/airport-lounges/rhode-island/",
-            "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-            "https://escapelounges.com/us/airport-lounges/luis-munoz-marin/",
-            "https://escapelounges.com/us/airport-lounges/syracuse/",
-            "https://escapelounges.com/us/airport-lounges/tulsa/",
-            "https://escapelounges.com/us/airport-lounges/",
-            "https://escapelounges.com/airport-lounges/"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-19.html",
-          "robots": {
-            "checked": true,
-            "url": "https://escapelounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 0
-          }
-        },
-        {
-          "url": "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-          "finalUrl": "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html;charset=utf-8",
-          "bytes": 1162907,
-          "sha256": "d790f2fe964d51910d89c25aef70be6697c75c502eafb454ffaa1cbbbb7eb1f3",
-          "title": "Sacramento Intl Airport (SMF) Terminal B Lounge | Escape Lounges",
-          "airportCodes": [
-            "SMF"
-          ],
-          "loungeLinks": [
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-b/",
-            "https://escapelounges.com/us/airport-lounges/cincinnati-northern-kentucky/",
-            "https://escapelounges.com/us/airport-lounges/columbus/",
-            "https://escapelounges.com/us/airport-lounges/fort-lauderdale/",
-            "https://escapelounges.com/us/airport-lounges/greenville-spartanburg/",
-            "https://escapelounges.com/us/airport-lounges/bradley/",
-            "https://escapelounges.com/us/airport-lounges/kansas-city/",
-            "https://escapelounges.com/us/airport-lounges/minneapolis-saint-paul/",
-            "https://escapelounges.com/us/airport-lounges/northwest-arkansas/",
-            "https://escapelounges.com/us/airport-lounges/oakland/",
-            "https://escapelounges.com/us/airport-lounges/omaha/",
-            "https://escapelounges.com/us/airport-lounges/palm-beach/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-3/",
-            "https://escapelounges.com/us/airport-lounges/phoenix/terminal-4/",
-            "https://escapelounges.com/us/airport-lounges/portland/",
-            "https://escapelounges.com/us/airport-lounges/rhode-island/",
-            "https://escapelounges.com/us/airport-lounges/reno-tahoe/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/",
-            "https://escapelounges.com/us/airport-lounges/sacramento/terminal-a/",
-            "https://escapelounges.com/us/airport-lounges/luis-munoz-marin/",
-            "https://escapelounges.com/us/airport-lounges/syracuse/",
-            "https://escapelounges.com/us/airport-lounges/tulsa/",
-            "https://escapelounges.com/us/airport-lounges/",
-            "https://escapelounges.com/airport-lounges/"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges-20.html",
+          "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/escape-lounges-10.html",
           "robots": {
             "checked": true,
             "url": "https://escapelounges.com/robots.txt",
@@ -110757,7 +111086,23 @@
           }
         }
       ],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/escape-lounges.html",
+      "fetchAttempts": [
+        {
+          "url": "https://escapelounges.com/",
+          "robots": {
+            "checked": true,
+            "url": "https://escapelounges.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 0
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://escapelounges.com/",
+          "contentType": "text/html;charset=utf-8",
+          "bytes": 1395263
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/escape-lounges.html",
       "robots": {
         "checked": true,
         "url": "https://escapelounges.com/robots.txt",
@@ -110769,13 +111114,14 @@
       "sourceId": "airport-dimensions",
       "publisher": "Airport Dimensions / The Club",
       "url": "https://www.airportdimensions.com/locations",
+      "sourceUrl": "https://www.airportdimensions.com/locations",
       "finalUrl": "https://www.airportdimensions.com/locations",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
-      "bytes": 264609,
-      "sha256": "4d91828c618708e8f9af1f67b647ab14522365e86611b7476c87922839f8a718",
+      "bytes": 308481,
+      "sha256": "9591025f864c5dd36a01bd048be92c4c7cdb66354e77d7199c7b34a4d540f7d9",
       "title": "Your Global Partner in Airport Experiences | Airport Dimensions",
       "jsonLdBlocks": 0,
       "records": 48,
@@ -110832,7 +111178,23 @@
       "loungeLinks": [],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/airport-dimensions.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.airportdimensions.com/locations",
+          "robots": {
+            "checked": true,
+            "url": "https://www.airportdimensions.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 8
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.airportdimensions.com/locations",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 308481
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/airport-dimensions.html",
       "robots": {
         "checked": true,
         "url": "https://www.airportdimensions.com/robots.txt",
@@ -110844,21 +111206,50 @@
       "sourceId": "aspire-lounges",
       "publisher": "Aspire Lounges",
       "url": "https://www.executivelounges.com/airport-lounges",
+      "sourceUrl": "https://www.executivelounges.com/airport-lounges",
       "finalUrl": "https://www.aspirelounges.com/airport-lounges/",
       "adapter": "official_page",
-      "status": "http_error",
-      "httpStatus": 403,
-      "contentType": "text/html; charset=UTF-8",
-      "bytes": 5472,
-      "sha256": "a3eb8b85245949114af78c0f97c45634da0a188f72048b4b4e588f8d0d309302",
-      "title": "Attention Required! | Cloudflare",
-      "jsonLdBlocks": 0,
-      "records": 0,
-      "airportCodes": [],
-      "loungeLinks": [],
+      "status": "fetched",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 299081,
+      "sha256": "1a29298b397acca61de3aa12cac0ebc717fe75fe73640a912751e6c7344c55e0",
+      "title": "Airport Lounges",
+      "jsonLdBlocks": 1,
+      "records": 6,
+      "airportCodes": [
+        "AUD",
+        "CHF",
+        "DKK",
+        "JPY"
+      ],
+      "loungeLinks": [
+        "https://www.aspirelounges.com/airport-lounges/",
+        "https://www.aspirelounges.com/de/flughafen-lounges/",
+        "https://www.aspirelounges.com/airport-lounges/#",
+        "https://www.aspirelounges.com/airport-lounges/%60$%7BselectedLanguage.toLowerCase()%20===",
+        "https://www.aspirelounges.com/lounge-amenities-and-upgrades/",
+        "https://www.instagram.com/aspirelounges/"
+      ],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/aspire-lounges.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.executivelounges.com/airport-lounges",
+          "robots": {
+            "checked": true,
+            "url": "https://www.executivelounges.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 0
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.aspirelounges.com/airport-lounges/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 299081
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/aspire-lounges.html",
       "robots": {
         "checked": true,
         "url": "https://www.executivelounges.com/robots.txt",
@@ -110870,19 +111261,19 @@
       "sourceId": "marhaba",
       "publisher": "Marhaba Airport Lounges",
       "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
+      "sourceUrl": "https://www.marhabaservices.com/ae/english/airport-lounges/",
       "finalUrl": "https://www.marhabaservices.com/ae/english/airport-lounges",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html;charset=UTF-8",
-      "bytes": 233161,
-      "sha256": "f76c879ac4089ad0e9eae2f58d9c36c97ec4f574445e0c15951324f262dcb8d9",
+      "bytes": 460911,
+      "sha256": "3dce921f18676ff058162046ace6dcdf895a8b338a6a599c7472927d28e1a424",
       "title": "Dubai Airport Lounge Prices & Access",
       "jsonLdBlocks": 0,
-      "records": 27,
+      "records": 29,
       "airportCodes": [
-        "MEL",
-        "PHP"
+        "MEL"
       ],
       "loungeLinks": [
         "https://www.marhabaservices.com/ae/english/airport-lounges",
@@ -110897,6 +111288,8 @@
         "https://www.marhabaservices.com/ae/english/global-lounges/sharjah-international-airport-lounge.html",
         "https://www.marhabaservices.com/ae/english/airport-lounges/al-maktoum-airport-lounge.html",
         "https://www.marhabaservices.com/ae/english/global-lounges/clark-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/singapore-international-airport-lounge.html",
+        "https://www.marhabaservices.com/ae/english/global-lounges/karachi-terminal-M-lounge.html",
         "https://www.marhabaservices.com/ae/english/global-lounges/london-heathrow-airport-lounge.html",
         "https://www.marhabaservices.com/ae/english/global-lounges/hong-kong-airport-lounge.html",
         "https://www.marhabaservices.com/ae/english/global-lounges/riogaleao-tom-jobim-international-airport-lounge.html",
@@ -110915,7 +111308,23 @@
       ],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/marhaba.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.marhabaservices.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 11
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.marhabaservices.com/ae/english/airport-lounges",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 460911
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/marhaba.html",
       "robots": {
         "checked": true,
         "url": "https://www.marhabaservices.com/robots.txt",
@@ -110927,12 +111336,41 @@
       "sourceId": "primeclass",
       "publisher": "Primeclass Lounge",
       "url": "https://www.primeclass.com.tr/en/lounge",
+      "sourceUrl": "https://www.primeclass.com.tr/en/lounge",
+      "finalUrl": "https://tavoperationservices.com/",
       "adapter": "official_page",
-      "status": "fetch_error",
-      "reason": "fetch failed",
-      "records": 0,
+      "status": "fetched",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 76128,
+      "sha256": "82fe3926a0d449ee527d1f705dc379e3c2fd27ae834d4e9fd5f61d6c60423b6f",
+      "title": "TAV Operation Services | Future of Airport Lounge and Hospitality",
+      "jsonLdBlocks": 0,
+      "records": 2,
       "airportCodes": [],
-      "loungeLinks": [],
+      "loungeLinks": [
+        "https://tavoperationservices.com/en-EN/services/lounges",
+        "https://tavoperationservices.com/en-EN/press-room/tav-os-and-kepler-club-announce-strategic-collaboration-to-expand-airport-hospitality-experiences"
+      ],
+      "structuredRecords": [],
+      "childPages": [],
+      "fetchAttempts": [
+        {
+          "url": "https://www.primeclass.com.tr/en/lounge",
+          "robots": {
+            "checked": false,
+            "url": null,
+            "disallowRuleCount": 0,
+            "error": "fetch failed"
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://tavoperationservices.com/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 76128
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/primeclass.html",
       "robots": {
         "checked": false,
         "url": null,
@@ -110944,25 +111382,23 @@
       "sourceId": "no1-lounges",
       "publisher": "No1 Lounges",
       "url": "https://no1lounges.com/airport-lounges/",
+      "sourceUrl": "https://no1lounges.com/airport-lounges/",
       "finalUrl": "https://no1lounges.com/our-lounges/",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
-      "bytes": 211207,
-      "sha256": "08d5312cd464879c0927db56a5623dab1380f88cc911eb30b380b0910240f97f",
+      "bytes": 298431,
+      "sha256": "d0f0363adc11615ced53fdb7de4a177216d04c1f75ac1bff7fe045f4ed71a2ac",
       "title": "Airport Lounges | No1 Lounges",
       "jsonLdBlocks": 2,
-      "records": 73,
+      "records": 16,
       "airportCodes": [
-        "ATL",
-        "LAS",
-        "LIT",
-        "MCO",
-        "MSY"
+        "DNS"
       ],
       "loungeLinks": [
         "https://no1lounges.com/our-lounges/",
+        "https://no1lounges.com/our-lounges/#",
         "https://no1lounges.com/partner-lounges/",
         "https://no1lounges.com/partner-lounges/aspire-lounges/",
         "https://no1lounges.com/partner-lounges/the-club/",
@@ -110975,587 +111411,28 @@
         "https://no1lounges.com/news/no1-lounge-at-jersey-airport-announcement/",
         "https://no1lounges.com/news/clubrooms-at-heathrow-t3-official-launch/",
         "https://no1lounges.com/news/club-aspire-at-heathrow-t3-wins-award-for-dining-excellence/",
-        "https://no1lounges.com/our-lounges/#",
         "https://www.instagram.com/no1lounges/",
-        "https://uk.linkedin.com/company/no-1-lounges?",
-        "https://no1lounges.com/lounges-by-location/aspire-at-newcastle/",
-        "https://no1lounges.com/lounges-by-location/aspire-at-manchester-terminal-1/",
-        "https://no1lounges.com/lounges-by-location/aspire-at-manchester-terminal-2/",
-        "https://no1lounges.com/lounges-by-location/aspire-at-edinburgh/",
-        "https://no1lounges.com/lounges-by-location/aspire-at-belfast/",
-        "https://no1lounges.com/lounges-by-location/aspire-at-liverpool/",
-        "https://no1lounges.com/lounges-by-location/the-club-at-new-orleans/",
-        "https://no1lounges.com/lounges-by-location/the-club-at-las-vegas/",
-        "https://no1lounges.com/lounges-by-location/the-club-at-atlanta/",
-        "https://no1lounges.com/lounges-by-location/the-club-at-orlando/",
-        "https://no1lounges.com/partner-lounges/#",
-        "https://no1lounges.com/news/six-of-our-airport-lounges-have-been-recognised-with-tripadvisor-travellers-choice-award-2025/",
-        "https://no1lounges.com/news/the-no1-lounge-at-heathrow-terminal-2-wins-europes-leading-airport-lounge-2025/",
-        "https://no1lounges.com/partner-lounges/aspire-lounges/#",
-        "https://no1lounges.com/partner-lounges/the-club/#",
-        "https://no1lounges.com/london-gatwick-north-terminal-no1-lounge-sample-menu/",
-        "https://no1lounges.com/london-gatwick-north-terminal-clubrooms-sample-menu/",
-        "https://no1lounges.com/london-gatwick-south-terminal-my-lounge-sample-menu/",
-        "https://no1lounges.com/london-gatwick-south-club-aspire-lounge-sample-menu/",
-        "https://no1lounges.com/discover-no1-lounges/#",
-        "https://no1lounges.com/news/the-uk-and-europes-most-celebrated-lounge-brand-in-2025-is-no1-lounges/",
-        "https://no1lounges.com/lounge-access-cards/#",
-        "https://no1lounges.com/lounges-by-location/no1-lounge-at-heathrow-t2/",
-        "https://no1lounges.com/lounges-by-location/no1-lounge-at-heathrow-t3/",
-        "https://no1lounges.com/lounges-by-location/no1-lounges-at-gatwick-north/",
-        "https://no1lounges.com/lounges-by-location/no1-lounges-at-gatwick-south/",
-        "https://no1lounges.com/lounges-by-location/no1-lounge-at-birmingham/",
-        "https://no1lounges.com/lounges-by-location/no1-lounge-at-luton-airport/",
-        "https://no1lounges.com/lounges-by-location/no1-lounge-at-jersey-airport/",
-        "https://no1lounges.com/news/no1-lounge-at-heathrow-t2-wins-worlds-leading-airport-lounge-2025/",
-        "https://no1lounges.com/news/the-no1-lounge-at-heathrow-terminal-2-wins-lit-lighting-design-award-2025/",
-        "https://no1lounges.com/our-lounges/no1-lounges/#",
-        "https://no1lounges.com/london-heathrow-terminal-3-clubrooms-sample-menu/#",
-        "https://no1lounges.com/lounges-by-location/clubrooms-at-gatwick-north/",
-        "https://no1lounges.com/lounges-by-location/clubrooms-at-gatwick-south/",
-        "https://no1lounges.com/lounges-by-location/clubrooms-at-birmingham/",
-        "https://no1lounges.com/lounges-by-location/clubrooms-at-heathrow-t3/",
-        "https://no1lounges.com/news/clubrooms-at-gatwick-south-terminal-wins-best-vip-lounge-lounge-2025/",
-        "https://no1lounges.com/news/clubrooms-at-gatwick-north-terminal-wins-worlds-best-airport-lounge-for-dining-2025/",
-        "https://no1lounges.com/our-lounges/clubrooms/#",
-        "https://no1lounges.com/london-gatwick-south-terminal-my-lounge-sample-menu/#",
-        "https://no1lounges.com/lounges-by-location/my-lounge-at-gatwick-south/",
-        "https://no1lounges.com/lounges-by-location/my-lounge-at-gatwick-north/",
-        "https://no1lounges.com/lounges-by-location/my-lounge-at-luton-airport/",
-        "https://no1lounges.com/lounges-by-location/my-lounge-at-heathrow-t3/",
-        "https://no1lounges.com/terms-conditions/terms-of-entry-lounge-etiquette/",
-        "https://no1lounges.com/our-lounges/my-lounge/#",
-        "https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/",
-        "https://no1lounges.com/lounges-by-location/club-aspire-at-gatwick-south/",
-        "https://no1lounges.com/news/club-aspire-wins-europes-leading-airport-lounge-2024/",
-        "https://no1lounges.com/our-lounges/club-aspire/#",
-        "https://no1lounges.com/news/no1-lounge-at-jersey-airport-announcement/#",
-        "https://no1lounges.com/news/clubrooms-at-heathrow-t3-opening-offer/",
-        "https://no1lounges.com/news/clubrooms-at-heathrow-t3-official-launch/#",
-        "https://no1lounges.com/news/worlds-leading-airport-lounge-at-the-world-travel-awards-2024/",
-        "https://no1lounges.com/news/no1-lounges-uk-europe-s-most-celebrated-lounge-brand-2024/",
-        "https://no1lounges.com/news/club-aspire-at-heathrow-t3-wins-award-for-dining-excellence/#"
+        "https://uk.linkedin.com/company/no-1-lounges?"
       ],
       "structuredRecords": [],
-      "childPages": [
+      "childPages": [],
+      "fetchAttempts": [
         {
-          "url": "https://no1lounges.com/our-lounges/",
+          "url": "https://no1lounges.com/airport-lounges/",
+          "robots": {
+            "checked": true,
+            "url": "https://no1lounges.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 1
+          },
+          "status": "fetched",
+          "httpStatus": 200,
           "finalUrl": "https://no1lounges.com/our-lounges/",
-          "status": "fetched",
-          "httpStatus": 200,
           "contentType": "text/html; charset=utf-8",
-          "bytes": 211207,
-          "sha256": "08d5312cd464879c0927db56a5623dab1380f88cc911eb30b380b0910240f97f",
-          "title": "Airport Lounges | No1 Lounges",
-          "airportCodes": [],
-          "loungeLinks": [
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/our-lounges/no1-lounges/",
-            "https://no1lounges.com/our-lounges/clubrooms/",
-            "https://no1lounges.com/our-lounges/my-lounge/",
-            "https://no1lounges.com/our-lounges/club-aspire/",
-            "https://no1lounges.com/news/no1-lounge-at-jersey-airport-announcement/",
-            "https://no1lounges.com/news/clubrooms-at-heathrow-t3-official-launch/",
-            "https://no1lounges.com/news/club-aspire-at-heathrow-t3-wins-award-for-dining-excellence/",
-            "https://no1lounges.com/our-lounges/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-01.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/partner-lounges/",
-          "finalUrl": "https://no1lounges.com/partner-lounges/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 317925,
-          "sha256": "99445c816a7a6b3591cae9436af705a703a1a0dedc33edf4a9b29ce9c677c7f9",
-          "title": "Browse Our Collection Of Partner Lounges | No1 Lounges",
-          "airportCodes": [
-            "ATL",
-            "LAS",
-            "MCO",
-            "MSY"
-          ],
-          "loungeLinks": [
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-newcastle/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-manchester-terminal-1/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-manchester-terminal-2/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-edinburgh/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-belfast/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-liverpool/",
-            "https://no1lounges.com/lounges-by-location/the-club-at-new-orleans/",
-            "https://no1lounges.com/lounges-by-location/the-club-at-las-vegas/",
-            "https://no1lounges.com/lounges-by-location/the-club-at-atlanta/",
-            "https://no1lounges.com/lounges-by-location/the-club-at-orlando/",
-            "https://no1lounges.com/partner-lounges/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-02.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/partner-lounges/aspire-lounges/",
-          "finalUrl": "https://no1lounges.com/partner-lounges/aspire-lounges/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 271695,
-          "sha256": "2e94a96deeb306a539ca5e403673206b6d33b89cbbcb6505bcdad27f51b617f8",
-          "title": "Aspire Airport Lounges | No Booking Fees",
-          "airportCodes": [],
-          "loungeLinks": [
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-newcastle/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-manchester-terminal-2/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-manchester-terminal-1/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-edinburgh/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-belfast/",
-            "https://no1lounges.com/lounges-by-location/aspire-at-liverpool/",
-            "https://no1lounges.com/news/six-of-our-airport-lounges-have-been-recognised-with-tripadvisor-travellers-choice-award-2025/",
-            "https://no1lounges.com/news/the-no1-lounge-at-heathrow-terminal-2-wins-europes-leading-airport-lounge-2025/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-03.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/partner-lounges/the-club/",
-          "finalUrl": "https://no1lounges.com/partner-lounges/the-club/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 256967,
-          "sha256": "c8178b03f16355f5418e4910fc3ea4573115a6892650be2de4baf90c00cd0e7c",
-          "title": "The Club Airport Lounges | Book with No1 Lounges",
-          "airportCodes": [
-            "ATL",
-            "LAS",
-            "MCO",
-            "MSY"
-          ],
-          "loungeLinks": [
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/lounges-by-location/the-club-at-new-orleans/",
-            "https://no1lounges.com/lounges-by-location/the-club-at-las-vegas/",
-            "https://no1lounges.com/lounges-by-location/the-club-at-atlanta/",
-            "https://no1lounges.com/lounges-by-location/the-club-at-orlando/",
-            "https://no1lounges.com/news/six-of-our-airport-lounges-have-been-recognised-with-tripadvisor-travellers-choice-award-2025/",
-            "https://no1lounges.com/news/the-no1-lounge-at-heathrow-terminal-2-wins-europes-leading-airport-lounge-2025/",
-            "https://no1lounges.com/partner-lounges/the-club/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-04.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/discover-no1-lounges/",
-          "finalUrl": "https://no1lounges.com/discover-no1-lounges/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 250976,
-          "sha256": "26be8a233730e35c416460e589722a39219fe7fc3963af45caa12b6da24c253b",
-          "title": "Discover Airport Lounges | No1 Lounges",
-          "airportCodes": [],
-          "loungeLinks": [
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/london-gatwick-north-terminal-no1-lounge-sample-menu/",
-            "https://no1lounges.com/london-gatwick-north-terminal-clubrooms-sample-menu/",
-            "https://no1lounges.com/london-gatwick-south-terminal-my-lounge-sample-menu/",
-            "https://no1lounges.com/london-gatwick-south-club-aspire-lounge-sample-menu/",
-            "https://no1lounges.com/our-lounges/no1-lounges/",
-            "https://no1lounges.com/our-lounges/clubrooms/",
-            "https://no1lounges.com/our-lounges/my-lounge/",
-            "https://no1lounges.com/our-lounges/club-aspire/",
-            "https://no1lounges.com/discover-no1-lounges/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-05.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/lounge-access-cards/",
-          "finalUrl": "https://no1lounges.com/lounge-access-cards/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 168634,
-          "sha256": "ec9d41afaa93c6ae67f277a1727f6cd166164ac8e16d8b997890c461ee01e46a",
-          "title": "Airport Lounge Reservations | UK Lounges",
-          "airportCodes": [],
-          "loungeLinks": [
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/news/six-of-our-airport-lounges-have-been-recognised-with-tripadvisor-travellers-choice-award-2025/",
-            "https://no1lounges.com/news/the-uk-and-europes-most-celebrated-lounge-brand-in-2025-is-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-06.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/our-lounges/no1-lounges/",
-          "finalUrl": "https://no1lounges.com/our-lounges/no1-lounges/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 325749,
-          "sha256": "c2e45e0ed2542d3356dadf22abc3e2d4f45f54d834ab545b471865b1825c096d",
-          "title": "No1 Lounges | Travel Stylishly",
-          "airportCodes": [
-            "LIT"
-          ],
-          "loungeLinks": [
-            "https://no1lounges.com/our-lounges/no1-lounges/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/london-gatwick-north-terminal-no1-lounge-sample-menu/",
-            "https://no1lounges.com/lounges-by-location/no1-lounge-at-heathrow-t2/",
-            "https://no1lounges.com/lounges-by-location/no1-lounge-at-heathrow-t3/",
-            "https://no1lounges.com/lounges-by-location/no1-lounges-at-gatwick-north/",
-            "https://no1lounges.com/lounges-by-location/no1-lounges-at-gatwick-south/",
-            "https://no1lounges.com/lounges-by-location/no1-lounge-at-birmingham/",
-            "https://no1lounges.com/lounges-by-location/no1-lounge-at-luton-airport/",
-            "https://no1lounges.com/lounges-by-location/no1-lounge-at-jersey-airport/",
-            "https://no1lounges.com/our-lounges/clubrooms/",
-            "https://no1lounges.com/our-lounges/my-lounge/",
-            "https://no1lounges.com/news/no1-lounge-at-heathrow-t2-wins-worlds-leading-airport-lounge-2025/",
-            "https://no1lounges.com/news/the-no1-lounge-at-heathrow-terminal-2-wins-lit-lighting-design-award-2025/",
-            "https://no1lounges.com/our-lounges/no1-lounges/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-07.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/our-lounges/clubrooms/",
-          "finalUrl": "https://no1lounges.com/our-lounges/clubrooms/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 305357,
-          "sha256": "a4bc607deb61622d91dee4196f82e7ca1791c4d2b3d5404cbad769bfa2638747",
-          "title": "Clubrooms By No1 Lounges | Luxury Travel",
-          "airportCodes": [],
-          "loungeLinks": [
-            "https://no1lounges.com/our-lounges/clubrooms/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/london-heathrow-terminal-3-clubrooms-sample-menu/#",
-            "https://no1lounges.com/lounges-by-location/clubrooms-at-gatwick-north/",
-            "https://no1lounges.com/lounges-by-location/clubrooms-at-gatwick-south/",
-            "https://no1lounges.com/lounges-by-location/clubrooms-at-birmingham/",
-            "https://no1lounges.com/lounges-by-location/clubrooms-at-heathrow-t3/",
-            "https://no1lounges.com/our-lounges/no1-lounges/",
-            "https://no1lounges.com/our-lounges/my-lounge/",
-            "https://no1lounges.com/news/clubrooms-at-gatwick-south-terminal-wins-best-vip-lounge-lounge-2025/",
-            "https://no1lounges.com/news/clubrooms-at-gatwick-north-terminal-wins-worlds-best-airport-lounge-for-dining-2025/",
-            "https://no1lounges.com/our-lounges/clubrooms/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-08.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/our-lounges/my-lounge/",
-          "finalUrl": "https://no1lounges.com/our-lounges/my-lounge/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 314611,
-          "sha256": "b383b3cc02e23535ad30741c6490b3c864d5c0067821086e1784c64fed390810",
-          "title": "My Lounge by No1 Lounges | Laid Back Lounging",
-          "airportCodes": [],
-          "loungeLinks": [
-            "https://no1lounges.com/our-lounges/my-lounge/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/london-gatwick-south-terminal-my-lounge-sample-menu/#",
-            "https://no1lounges.com/lounges-by-location/my-lounge-at-gatwick-south/",
-            "https://no1lounges.com/lounges-by-location/my-lounge-at-gatwick-north/",
-            "https://no1lounges.com/lounges-by-location/my-lounge-at-luton-airport/",
-            "https://no1lounges.com/lounges-by-location/my-lounge-at-heathrow-t3/",
-            "https://no1lounges.com/terms-conditions/terms-of-entry-lounge-etiquette/",
-            "https://no1lounges.com/our-lounges/no1-lounges/",
-            "https://no1lounges.com/our-lounges/clubrooms/",
-            "https://no1lounges.com/news/the-uk-and-europes-most-celebrated-lounge-brand-in-2025-is-no1-lounges/",
-            "https://no1lounges.com/news/six-of-our-airport-lounges-have-been-recognised-with-tripadvisor-travellers-choice-award-2025/",
-            "https://no1lounges.com/our-lounges/my-lounge/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-09.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/our-lounges/club-aspire/",
-          "finalUrl": "https://no1lounges.com/our-lounges/club-aspire/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 295260,
-          "sha256": "6bc34119ff8df0d3b270ec3529703d79688322a90ae25fc103c57d8e8f939d48",
-          "title": "Club Aspire Airport Lounges | Travel Comfortably",
-          "airportCodes": [],
-          "loungeLinks": [
-            "https://no1lounges.com/our-lounges/club-aspire/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/london-gatwick-south-club-aspire-lounge-sample-menu/",
-            "https://no1lounges.com/lounges-by-location/club-aspire-at-heathrow-t5/",
-            "https://no1lounges.com/lounges-by-location/club-aspire-at-gatwick-south/",
-            "https://no1lounges.com/our-lounges/no1-lounges/",
-            "https://no1lounges.com/our-lounges/clubrooms/",
-            "https://no1lounges.com/news/club-aspire-at-heathrow-t3-wins-award-for-dining-excellence/",
-            "https://no1lounges.com/news/club-aspire-wins-europes-leading-airport-lounge-2024/",
-            "https://no1lounges.com/news/six-of-our-airport-lounges-have-been-recognised-with-tripadvisor-travellers-choice-award-2025/",
-            "https://no1lounges.com/our-lounges/club-aspire/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-10.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/news/no1-lounge-at-jersey-airport-announcement/",
-          "finalUrl": "https://no1lounges.com/news/no1-lounge-at-jersey-airport-announcement/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 137643,
-          "sha256": "1bd127169e792cd349371ff22ea390ed076e9ec7659d04c1da76a8fa0dd7958f",
-          "title": "No1 Lounge to open an Airport Lounge at Jersey Airport | No1 Lounges",
-          "airportCodes": [],
-          "loungeLinks": [
-            "https://no1lounges.com/news/no1-lounge-at-jersey-airport-announcement/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/news/no1-lounge-at-jersey-airport-announcement/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-11.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/news/clubrooms-at-heathrow-t3-official-launch/",
-          "finalUrl": "https://no1lounges.com/news/clubrooms-at-heathrow-t3-official-launch/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 222327,
-          "sha256": "3c22732bcd4b8231e9afa2a1ac783b449c91f6674f35f3c68f74a184c8787c42",
-          "title": "Clubrooms Now Open at Heathrow T3 | Exclusive Launch Event",
-          "airportCodes": [],
-          "loungeLinks": [
-            "https://no1lounges.com/news/clubrooms-at-heathrow-t3-official-launch/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/lounges-by-location/clubrooms-at-heathrow-t3/",
-            "https://no1lounges.com/news/clubrooms-at-heathrow-t3-opening-offer/",
-            "https://no1lounges.com/news/clubrooms-at-heathrow-t3-official-launch/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-12.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/news/club-aspire-at-heathrow-t3-wins-award-for-dining-excellence/",
-          "finalUrl": "https://no1lounges.com/news/club-aspire-at-heathrow-t3-wins-award-for-dining-excellence/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 131158,
-          "sha256": "079fc50f9d01cabd9dc8d4aebfdf31d6ae2bf0d8afe7f1fe0b7136830880754b",
-          "title": "Club Aspire at Heathrow T3 Wins Prestigious Award for Dining Excellence",
-          "airportCodes": [],
-          "loungeLinks": [
-            "https://no1lounges.com/news/club-aspire-at-heathrow-t3-wins-award-for-dining-excellence/",
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/news/worlds-leading-airport-lounge-at-the-world-travel-awards-2024/",
-            "https://no1lounges.com/news/no1-lounges-uk-europe-s-most-celebrated-lounge-brand-2024/",
-            "https://no1lounges.com/news/club-aspire-at-heathrow-t3-wins-award-for-dining-excellence/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-13.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
-        },
-        {
-          "url": "https://no1lounges.com/our-lounges/#",
-          "finalUrl": "https://no1lounges.com/our-lounges/",
-          "status": "fetched",
-          "httpStatus": 200,
-          "contentType": "text/html; charset=utf-8",
-          "bytes": 211207,
-          "sha256": "08d5312cd464879c0927db56a5623dab1380f88cc911eb30b380b0910240f97f",
-          "title": "Airport Lounges | No1 Lounges",
-          "airportCodes": [],
-          "loungeLinks": [
-            "https://no1lounges.com/our-lounges/",
-            "https://no1lounges.com/partner-lounges/",
-            "https://no1lounges.com/partner-lounges/aspire-lounges/",
-            "https://no1lounges.com/partner-lounges/the-club/",
-            "https://no1lounges.com/discover-no1-lounges/",
-            "https://no1lounges.com/lounge-access-cards/",
-            "https://no1lounges.com/our-lounges/no1-lounges/",
-            "https://no1lounges.com/our-lounges/clubrooms/",
-            "https://no1lounges.com/our-lounges/my-lounge/",
-            "https://no1lounges.com/our-lounges/club-aspire/",
-            "https://no1lounges.com/news/no1-lounge-at-jersey-airport-announcement/",
-            "https://no1lounges.com/news/clubrooms-at-heathrow-t3-official-launch/",
-            "https://no1lounges.com/news/club-aspire-at-heathrow-t3-wins-award-for-dining-excellence/",
-            "https://no1lounges.com/our-lounges/#",
-            "https://www.instagram.com/no1lounges/",
-            "https://uk.linkedin.com/company/no-1-lounges?"
-          ],
-          "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges-14.html",
-          "robots": {
-            "checked": true,
-            "url": "https://no1lounges.com/robots.txt",
-            "status": 200,
-            "disallowRuleCount": 1
-          }
+          "bytes": 298431
         }
       ],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/no1-lounges.html",
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/no1-lounges.html",
       "robots": {
         "checked": true,
         "url": "https://no1lounges.com/robots.txt",
@@ -111567,13 +111444,14 @@
       "sourceId": "be-relax",
       "publisher": "Be Relax",
       "url": "https://www.berelax.com/locations/",
+      "sourceUrl": "https://www.berelax.com/locations/",
       "finalUrl": "https://berelax.com/locations/",
       "adapter": "official_page",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html",
-      "bytes": 1033833,
-      "sha256": "43688a40ebae00d8647063fb714ac7d6e8f1686f7d60c1a3bf903bad91b4ef5b",
+      "bytes": 1099166,
+      "sha256": "a395ff0a1f4004fbc00c1d320b65e49d2954c56b162593bc21f6c13c9db1eadf",
       "title": "",
       "jsonLdBlocks": 0,
       "records": 0,
@@ -111581,7 +111459,23 @@
       "loungeLinks": [],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/be-relax.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.berelax.com/locations/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.berelax.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 0
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://berelax.com/locations/",
+          "contentType": "text/html",
+          "bytes": 1099166
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/be-relax.html",
       "robots": {
         "checked": true,
         "url": "https://www.berelax.com/robots.txt",
@@ -111593,13 +111487,14 @@
       "sourceId": "ourairports",
       "publisher": "OurAirports",
       "url": "https://ourairports.com/data/",
+      "sourceUrl": "https://ourairports.com/data/",
       "finalUrl": "https://ourairports.com/data/",
       "adapter": "csv_file",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html; charset=UTF-8",
-      "bytes": 13278,
-      "sha256": "8db4bbcd1448dfb17106aa2f4c41e3ac669fe37817e9323831ac06c857531fcf",
+      "bytes": 12946,
+      "sha256": "cbeec974b62385a7c78030b422d0e98996d487029442f62d8b507ec656080ecf",
       "title": "Open data @ OurAirports",
       "jsonLdBlocks": 0,
       "records": 0,
@@ -111607,7 +111502,23 @@
       "loungeLinks": [],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/ourairports.html",
+      "fetchAttempts": [
+        {
+          "url": "https://ourairports.com/data/",
+          "robots": {
+            "checked": true,
+            "url": "https://ourairports.com/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 8
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://ourairports.com/data/",
+          "contentType": "text/html; charset=UTF-8",
+          "bytes": 12946
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/ourairports.html",
       "robots": {
         "checked": true,
         "url": "https://ourairports.com/robots.txt",
@@ -111619,13 +111530,14 @@
       "sourceId": "openstreetmap",
       "publisher": "OpenStreetMap",
       "url": "https://www.openstreetmap.org/",
-      "finalUrl": "https://www.openstreetmap.org/",
+      "sourceUrl": "https://www.openstreetmap.org/",
+      "finalUrl": "https://www.openstreetmap.org/#map=4/38.01/-95.84",
       "adapter": "open_data",
       "status": "fetched",
       "httpStatus": 200,
       "contentType": "text/html; charset=utf-8",
-      "bytes": 31724,
-      "sha256": "e360dcd68ca74794c88e4d8bc6ccaa3952386a3661a7a7ec67ead820be90bf03",
+      "bytes": 48675,
+      "sha256": "cc72d3ae90ff1cd1e2bbc8af824b214e34d3ebf7a2a88c2b89c234e03764ccb2",
       "title": "OpenStreetMap",
       "jsonLdBlocks": 0,
       "records": 0,
@@ -111633,7 +111545,23 @@
       "loungeLinks": [],
       "structuredRecords": [],
       "childPages": [],
-      "snapshotFile": ".cache/source-snapshots/2026-06-18T20-03-44-183Z/openstreetmap.html",
+      "fetchAttempts": [
+        {
+          "url": "https://www.openstreetmap.org/",
+          "robots": {
+            "checked": true,
+            "url": "https://www.openstreetmap.org/robots.txt",
+            "status": 200,
+            "disallowRuleCount": 21
+          },
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.openstreetmap.org/#map=4/38.01/-95.84",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 48675
+        }
+      ],
+      "snapshotFile": ".cache/source-snapshots/2026-07-12T02-28-25-729Z/openstreetmap.html",
       "robots": {
         "checked": true,
         "url": "https://www.openstreetmap.org/robots.txt",

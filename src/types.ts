@@ -232,7 +232,7 @@ export interface CoverageGapReport {
   };
   nextCloudflareIntake?: {
     requiredTokenEnv: string;
-    localScrawl: 'blocked';
+    localScrawl: 'blocked' | 'playwright_only';
     missingRuntime: boolean;
     fullReportRequired: boolean;
     readySourceIds: string[];
@@ -264,8 +264,8 @@ export interface CloudflareSourceIntakePlan {
   coverageGoalId: string;
   sourceRunId: string | null;
   policy: {
-    requiredRuntime: 'cloudflare';
-    localScrawl: 'blocked';
+    requiredRuntime: 'cloudflare' | 'playwright';
+    localScrawl: 'blocked' | 'playwright_only';
     rawSnapshotsCommitted: false;
     proofEnv: string;
   };

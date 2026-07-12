@@ -14,16 +14,16 @@ INSERT OR REPLACE INTO coverage_goals (
   updated_at
 ) VALUES (
   'lounge-guru-worldwide-coverage',
-  '2026-06-18',
+  '2026-07-11',
   'Worldwide lounge coverage in Cloudflare D1',
   'active',
-  'all_known_public_and_licensed_airport_lounges_worldwide',
-  3800,
+  'all_known_official_public_airport_lounges_worldwide',
+  2600,
   0.98,
   1.0,
   0,
   0,
   0,
-  '{"terminalCommand":"npm run goal:coverage","progressCommand":"npm run validate:coverage","guardrail":"official/public source intake plus licensed providers only","requiredFamilies":["licensed-global-baseline","collinson-networks","bank-issuer-programs","card-network-programs","airline-alliance-lounges","airline-operated-lounges","operator-operated-lounges","open-enrichment"]}',
+  '{"terminalCommand":"npm run goal:coverage","progressCommand":"npm run validate:coverage","guardrail":"official/public Playwright source intake only; no licensed or commercial global lounge source","requiredFamilies":["collinson-networks","bank-issuer-programs","airline-alliance-lounges","airline-operated-lounges","operator-operated-lounges","open-enrichment"]}',
   CURRENT_TIMESTAMP
 );

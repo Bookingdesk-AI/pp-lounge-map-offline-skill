@@ -82,7 +82,7 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
   const fetchedUrls = [];
   const fetchedHeaders = [];
   const response = await createSourceIntakeProbeResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=mastercard-travel-pass', {
+    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=loungekey', {
       method: 'POST',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -100,7 +100,7 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
           return textResponse('User-agent: *\n');
         }
         return textResponse(
-          '<html><title>Mastercard Travel Pass</title><body>John F Kennedy International Airport (JFK)<a href="/airport-lounges/jfk">JFK lounge</a><a href="/news/jfk-lounge-award">News</a></body></html>',
+          '<html><title>LoungeKey</title><body>John F Kennedy International Airport (JFK)<a href="/airport-lounges/jfk">JFK lounge</a><a href="/news/jfk-lounge-award">News</a></body></html>',
         );
       },
     },
@@ -109,12 +109,12 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
   assert.equal(response.status, 200);
   const body = await response.json();
   assert.equal(body.ok, true);
-  assert.equal(body.sourceId, 'mastercard-travel-pass');
+  assert.equal(body.sourceId, 'loungekey');
   assert.equal(body.cloudflareRuntime, true);
   assert.equal(body.cloudflareSnapshot, true);
   assert.equal(body.stats.fetched, 1);
-  assert.ok(fetchedUrls.includes('https://mastercardtravelpass.dragonpass.com/robots.txt'));
-  assert.ok(fetchedUrls.includes('https://mastercardtravelpass.dragonpass.com/'));
+  assert.ok(fetchedUrls.includes('https://www.loungekey.com/robots.txt'));
+  assert.ok(fetchedUrls.includes('https://www.loungekey.com/'));
   assert.ok(fetchedHeaders.some((headers) => /Mozilla\/5\.0/.test(headers?.['user-agent'] ?? '')));
   assert.ok(fetchedHeaders.every((headers) => headers?.['accept-language'] === 'en-US,en;q=0.9'));
   assert.ok(fetchedHeaders.every((headers) => headers?.['cache-control'] === 'no-cache'));
@@ -128,11 +128,11 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
   assert.equal(policy.execution.runtime, 'cloudflare');
   assert.equal(policy.execution.localScrawl, 'blocked');
   assert.equal(stats.totalSources, 1);
-  assert.equal(sources[0].sourceId, 'mastercard-travel-pass');
+  assert.equal(sources[0].sourceId, 'loungekey');
   assert.equal(sources[0].cloudflareSnapshot, true);
   assert.equal(sources[0].records, 1);
   assert.deepEqual(sources[0].airportCodes, ['JFK']);
-  assert.deepEqual(sources[0].loungeLinks, ['https://mastercardtravelpass.dragonpass.com/airport-lounges/jfk']);
+  assert.deepEqual(sources[0].loungeLinks, ['https://www.loungekey.com/airport-lounges/jfk']);
   assert.ok(sources[0].sha256);
   assert.ok(!Object.hasOwn(sources[0], 'text'));
   assert.ok(!Object.hasOwn(sources[0], 'html'));
@@ -247,9 +247,9 @@ test('Cloudflare source intake batch probes ready public lanes only', async () =
   const body = await response.json();
   assert.equal(body.ok, true);
   assert.equal(body.mode, 'batch');
-  assert.equal(body.totalTasks, 16);
-  assert.equal(body.fetched, 16);
-  assert.equal(d1.calls.length, 16);
+  assert.equal(body.totalTasks, 15);
+  assert.equal(body.fetched, 15);
+  assert.equal(d1.calls.length, 15);
   assert.deepEqual(
     body.results.map((result) => result.sourceId).sort(),
     [
@@ -259,20 +259,19 @@ test('Cloudflare source intake batch probes ready public lanes only', async () =
       'citi-travel',
       'collinson-international',
       'delta',
-      'dragonpass',
+      'loungekey',
       'marhaba',
-      'mastercard-travel-pass',
       'no1-lounges',
       'openstreetmap',
+      'plaza-premium',
       'primeclass',
       'skyteam',
       'star-alliance',
       'united',
-      'visa-airport-companion',
     ],
   );
   assert.equal(body.results.some((result) => result.sourceId === 'loungereview-api'), false);
-  assert.equal(body.results.some((result) => result.sourceId === 'plaza-premium'), false);
+  assert.equal(body.results.some((result) => result.sourceId === 'visa-airport-companion'), false);
 });
 
 test('Cloudflare source intake status returns compact D1 evidence', async () => {
@@ -282,7 +281,7 @@ test('Cloudflare source intake status returns compact D1 evidence', async () => 
     LOUNGE_GURU_DB: d1,
   };
   await createSourceIntakeBatchResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe-batch?sourceIds=visa-airport-companion', {
+    new Request('https://loungeguru.desk.travel/admin/source-intake/probe-batch?sourceIds=loungekey', {
       method: 'POST',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -294,7 +293,7 @@ test('Cloudflare source intake status returns compact D1 evidence', async () => 
         if (String(url).endsWith('/robots.txt')) {
           return textResponse('User-agent: *\n');
         }
-        return textResponse('<html><title>Visa Airport Companion</title></html>');
+        return textResponse('<html><title>LoungeKey</title></html>');
       },
     },
   );
@@ -314,9 +313,9 @@ test('Cloudflare source intake status returns compact D1 evidence', async () => 
   assert.equal(body.ok, true);
   assert.equal(body.policy.localScrawl, 'blocked');
   assert.equal(body.policy.rawPageContentCommitted, false);
-  assert.equal(body.stats.readyTasks, 16);
+  assert.equal(body.stats.readyTasks, 15);
   assert.equal(body.stats.readyTasksWithCloudflareEvidence, 1);
-  assert.deepEqual(body.sources.map((source) => source.sourceId), ['visa-airport-companion']);
+  assert.deepEqual(body.sources.map((source) => source.sourceId), ['loungekey']);
   assert.ok(body.sources[0].sha256);
   assert.ok(!Object.hasOwn(body.sources[0], 'text'));
   assert.ok(!Object.hasOwn(body.sources[0], 'html'));
@@ -366,12 +365,12 @@ test('Cloudflare source intake report returns D1-derived source report without r
   assert.equal(body.policy.execution.runtime, 'cloudflare');
   assert.equal(body.policy.execution.localScrawl, 'blocked');
   assert.equal(body.policy.rawPageContentCommitted, false);
-  assert.equal(body.stats.totalSources, 16);
-  assert.equal(body.stats.fetched, 16);
-  assert.equal(body.stats.readyTasks, 16);
-  assert.equal(body.stats.readyTasksWithCloudflareEvidence, 16);
-  assert.equal(body.stats.discoveredAirportCodes, 16);
-  assert.ok(body.stats.discoveredLoungeLinks >= 16);
+  assert.equal(body.stats.totalSources, 15);
+  assert.equal(body.stats.fetched, 15);
+  assert.equal(body.stats.readyTasks, 15);
+  assert.equal(body.stats.readyTasksWithCloudflareEvidence, 15);
+  assert.equal(body.stats.discoveredAirportCodes, 15);
+  assert.ok(body.stats.discoveredLoungeLinks >= 15);
   assert.equal(body.terminalImpact.fullCatalogIntakeReport, false);
   assert.equal(body.terminalImpact.coverageGateStillRequiresFullCloudflareReport, true);
   assert.deepEqual(
@@ -383,16 +382,15 @@ test('Cloudflare source intake report returns D1-derived source report without r
       'citi-travel',
       'collinson-international',
       'delta',
-      'dragonpass',
+      'loungekey',
       'marhaba',
-      'mastercard-travel-pass',
       'no1-lounges',
       'openstreetmap',
+      'plaza-premium',
       'primeclass',
       'skyteam',
       'star-alliance',
       'united',
-      'visa-airport-companion',
     ],
   );
 

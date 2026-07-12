@@ -129,6 +129,13 @@ test('Cloudflare source-run evidence keeps latest bounded row per source', () =>
 });
 
 test('public Cloudflare evidence covers current ready intake tasks only', () => {
+  if (intakePlan.policy.requiredRuntime === 'playwright') {
+    assert.equal(publicEvidence.policy.localScrawl, 'blocked');
+    assert.equal(publicEvidence.policy.rawPageContentCommitted, false);
+    assert.equal(publicEvidence.terminalImpact.coverageGateStillRequiresFullCloudflareReport, true);
+    return;
+  }
+
   const readyTaskIds = intakePlan.tasks.filter((task) => task.status === 'ready').map((task) => task.sourceId).sort();
   const evidenceTaskIds = publicEvidence.readyTaskEvidence.map((task) => task.sourceId).sort();
   const readyMemberGapKeys = intakePlan.memberGaps

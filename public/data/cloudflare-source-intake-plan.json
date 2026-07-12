@@ -1,182 +1,23 @@
 {
-  "generatedAt": "2026-06-18T20:08:20.197Z",
+  "generatedAt": "2026-07-12T02:33:19.252Z",
   "coverageGoalId": "lounge-guru-worldwide-coverage",
   "sourceRunId": "cloudflare-report-2026-07-12T00-08-44-506Z",
   "policy": {
-    "requiredRuntime": "cloudflare",
-    "localScrawl": "blocked",
+    "requiredRuntime": "playwright",
+    "localScrawl": "playwright_only",
     "rawSnapshotsCommitted": false,
-    "proofEnv": "LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare"
+    "proofEnv": "LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright"
   },
   "summary": {
-    "missingFamilies": 2,
-    "memberGaps": 22,
-    "tasks": 6,
-    "readyTasks": 3,
-    "blockedTasks": 3,
-    "fetchedWithoutRecords": 3
+    "missingFamilies": 0,
+    "memberGaps": 16,
+    "tasks": 0,
+    "readyTasks": 0,
+    "blockedTasks": 0,
+    "fetchedWithoutRecords": 0
   },
-  "tasks": [
-    {
-      "familyId": "licensed-global-baseline",
-      "familyLabel": "Licensed global inventory baseline",
-      "sourceId": "loungereview-api",
-      "publisher": "LoungeReview API",
-      "adapter": "licensed_api",
-      "sourceStatus": "candidate",
-      "runStatus": "not_run",
-      "runRecords": 0,
-      "cloudflareSnapshot": false,
-      "action": "credential_review",
-      "status": "blocked",
-      "next": "Credentials",
-      "url": "https://loungereview.com/api/",
-      "fetchUrls": [
-        "https://loungereview.com/api/"
-      ],
-      "rightsNote": "Licensed API provider; no intake without approved commercial terms and key management."
-    },
-    {
-      "familyId": "licensed-global-baseline",
-      "familyLabel": "Licensed global inventory baseline",
-      "sourceId": "holiday-extras-api",
-      "publisher": "Holiday Extras API",
-      "adapter": "licensed_api",
-      "sourceStatus": "candidate",
-      "runStatus": "not_run",
-      "runRecords": 0,
-      "cloudflareSnapshot": false,
-      "action": "credential_review",
-      "status": "blocked",
-      "next": "Credentials",
-      "url": "https://docs.holidayextras.co.uk/",
-      "fetchUrls": [
-        "https://docs.holidayextras.co.uk/"
-      ],
-      "rightsNote": "Official API documentation; use only under approved commercial/API terms."
-    },
-    {
-      "familyId": "card-network-programs",
-      "familyLabel": "Card network and benefit-platform programs",
-      "sourceId": "visa-airport-companion",
-      "publisher": "Visa Airport Companion",
-      "adapter": "official_page",
-      "sourceStatus": "candidate",
-      "runStatus": "fetched",
-      "runRecords": 0,
-      "cloudflareSnapshot": true,
-      "action": "structured_adapter",
-      "status": "ready",
-      "next": "Adapter",
-      "url": "https://www.visaairportcompanion.com/",
-      "fetchUrls": [
-        "https://www.visaairportcompanion.com/",
-        "https://visaairportcompanion.ca/",
-        "https://www.visa.gp/pay-with-visa/find-a-card/benefits/visa-airport-companion.html"
-      ],
-      "rightsNote": "Official public Visa program page; import only public program and eligibility evidence."
-    },
-    {
-      "familyId": "card-network-programs",
-      "familyLabel": "Card network and benefit-platform programs",
-      "sourceId": "mastercard-airport-lounge-programs",
-      "publisher": "Mastercard Airport Lounge Programs",
-      "adapter": "licensed_api",
-      "sourceStatus": "candidate",
-      "runStatus": "not_run",
-      "runRecords": 0,
-      "cloudflareSnapshot": false,
-      "action": "credential_review",
-      "status": "blocked",
-      "next": "Credentials",
-      "url": "https://developer.mastercard.com/product/mastercard-airport-lounge-programs",
-      "fetchUrls": [
-        "https://developer.mastercard.com/product/mastercard-airport-lounge-programs"
-      ],
-      "rightsNote": "Official Mastercard developer product; use only with approved API credentials and contract terms."
-    },
-    {
-      "familyId": "card-network-programs",
-      "familyLabel": "Card network and benefit-platform programs",
-      "sourceId": "mastercard-travel-pass",
-      "publisher": "Mastercard Travel Pass",
-      "adapter": "official_page",
-      "sourceStatus": "candidate",
-      "runStatus": "fetched",
-      "runRecords": 0,
-      "cloudflareSnapshot": true,
-      "action": "structured_adapter",
-      "status": "ready",
-      "next": "Adapter",
-      "url": "https://mastercardtravelpass.dragonpass.com/",
-      "fetchUrls": [
-        "https://mastercardtravelpass.dragonpass.com/"
-      ],
-      "rightsNote": "Official public Mastercard Travel Pass page; retain URL provenance for every imported field."
-    },
-    {
-      "familyId": "card-network-programs",
-      "familyLabel": "Card network and benefit-platform programs",
-      "sourceId": "dragonpass",
-      "publisher": "DragonPass",
-      "adapter": "official_page",
-      "sourceStatus": "candidate",
-      "runStatus": "fetched",
-      "runRecords": 0,
-      "cloudflareSnapshot": true,
-      "action": "structured_adapter",
-      "status": "ready",
-      "next": "Adapter",
-      "url": "https://en.dragonpass.com.cn/",
-      "fetchUrls": [
-        "https://en.dragonpass.com.cn/"
-      ],
-      "rightsNote": "Official public DragonPass page; import only public program and location evidence."
-    }
-  ],
+  "tasks": [],
   "memberGaps": [
-    {
-      "familyId": "licensed-global-baseline",
-      "familyLabel": "Licensed global inventory baseline",
-      "sourceId": "loungereview-api",
-      "publisher": "LoungeReview API",
-      "adapter": "licensed_api",
-      "sourceStatus": "candidate",
-      "runStatus": "not_run",
-      "runRecords": 0,
-      "cloudflareSnapshot": false,
-      "action": "credential_review",
-      "status": "blocked",
-      "next": "Credentials",
-      "url": "https://loungereview.com/api/",
-      "fetchUrls": [
-        "https://loungereview.com/api/"
-      ],
-      "rightsNote": "Licensed API provider; no intake without approved commercial terms and key management.",
-      "familyPresent": false,
-      "terminalFamilyBlocked": true
-    },
-    {
-      "familyId": "licensed-global-baseline",
-      "familyLabel": "Licensed global inventory baseline",
-      "sourceId": "holiday-extras-api",
-      "publisher": "Holiday Extras API",
-      "adapter": "licensed_api",
-      "sourceStatus": "candidate",
-      "runStatus": "not_run",
-      "runRecords": 0,
-      "cloudflareSnapshot": false,
-      "action": "credential_review",
-      "status": "blocked",
-      "next": "Credentials",
-      "url": "https://docs.holidayextras.co.uk/",
-      "fetchUrls": [
-        "https://docs.holidayextras.co.uk/"
-      ],
-      "rightsNote": "Official API documentation; use only under approved commercial/API terms.",
-      "familyPresent": false,
-      "terminalFamilyBlocked": true
-    },
     {
       "familyId": "collinson-networks",
       "familyLabel": "Collinson access networks",
@@ -187,9 +28,9 @@
       "runStatus": "not_run",
       "runRecords": 0,
       "cloudflareSnapshot": false,
-      "action": "rights_review",
-      "status": "blocked",
-      "next": "Rights",
+      "action": "cloudflare_snapshot",
+      "status": "ready",
+      "next": "Snapshot",
       "url": "https://www.loungekey.com/",
       "fetchUrls": [
         "https://www.loungekey.com/"
@@ -239,92 +80,6 @@
       "rightsNote": "Official public Citi travel page; issuer-program mapping requires manual review before publishing records.",
       "familyPresent": true,
       "terminalFamilyBlocked": false
-    },
-    {
-      "familyId": "card-network-programs",
-      "familyLabel": "Card network and benefit-platform programs",
-      "sourceId": "visa-airport-companion",
-      "publisher": "Visa Airport Companion",
-      "adapter": "official_page",
-      "sourceStatus": "candidate",
-      "runStatus": "fetched",
-      "runRecords": 0,
-      "cloudflareSnapshot": true,
-      "action": "structured_adapter",
-      "status": "ready",
-      "next": "Adapter",
-      "url": "https://www.visaairportcompanion.com/",
-      "fetchUrls": [
-        "https://www.visaairportcompanion.com/",
-        "https://visaairportcompanion.ca/",
-        "https://www.visa.gp/pay-with-visa/find-a-card/benefits/visa-airport-companion.html"
-      ],
-      "rightsNote": "Official public Visa program page; import only public program and eligibility evidence.",
-      "familyPresent": false,
-      "terminalFamilyBlocked": true
-    },
-    {
-      "familyId": "card-network-programs",
-      "familyLabel": "Card network and benefit-platform programs",
-      "sourceId": "mastercard-airport-lounge-programs",
-      "publisher": "Mastercard Airport Lounge Programs",
-      "adapter": "licensed_api",
-      "sourceStatus": "candidate",
-      "runStatus": "not_run",
-      "runRecords": 0,
-      "cloudflareSnapshot": false,
-      "action": "credential_review",
-      "status": "blocked",
-      "next": "Credentials",
-      "url": "https://developer.mastercard.com/product/mastercard-airport-lounge-programs",
-      "fetchUrls": [
-        "https://developer.mastercard.com/product/mastercard-airport-lounge-programs"
-      ],
-      "rightsNote": "Official Mastercard developer product; use only with approved API credentials and contract terms.",
-      "familyPresent": false,
-      "terminalFamilyBlocked": true
-    },
-    {
-      "familyId": "card-network-programs",
-      "familyLabel": "Card network and benefit-platform programs",
-      "sourceId": "mastercard-travel-pass",
-      "publisher": "Mastercard Travel Pass",
-      "adapter": "official_page",
-      "sourceStatus": "candidate",
-      "runStatus": "fetched",
-      "runRecords": 0,
-      "cloudflareSnapshot": true,
-      "action": "structured_adapter",
-      "status": "ready",
-      "next": "Adapter",
-      "url": "https://mastercardtravelpass.dragonpass.com/",
-      "fetchUrls": [
-        "https://mastercardtravelpass.dragonpass.com/"
-      ],
-      "rightsNote": "Official public Mastercard Travel Pass page; retain URL provenance for every imported field.",
-      "familyPresent": false,
-      "terminalFamilyBlocked": true
-    },
-    {
-      "familyId": "card-network-programs",
-      "familyLabel": "Card network and benefit-platform programs",
-      "sourceId": "dragonpass",
-      "publisher": "DragonPass",
-      "adapter": "official_page",
-      "sourceStatus": "candidate",
-      "runStatus": "fetched",
-      "runRecords": 0,
-      "cloudflareSnapshot": true,
-      "action": "structured_adapter",
-      "status": "ready",
-      "next": "Adapter",
-      "url": "https://en.dragonpass.com.cn/",
-      "fetchUrls": [
-        "https://en.dragonpass.com.cn/"
-      ],
-      "rightsNote": "Official public DragonPass page; import only public program and location evidence.",
-      "familyPresent": false,
-      "terminalFamilyBlocked": true
     },
     {
       "familyId": "airline-alliance-lounges",
@@ -466,9 +221,9 @@
       "runStatus": "not_run",
       "runRecords": 0,
       "cloudflareSnapshot": false,
-      "action": "rights_review",
-      "status": "blocked",
-      "next": "Rights",
+      "action": "cloudflare_snapshot",
+      "status": "ready",
+      "next": "Snapshot",
       "url": "https://www.plazapremiumlounge.com/en-uk",
       "fetchUrls": [
         "https://www.plazapremiumlounge.com/en-uk"

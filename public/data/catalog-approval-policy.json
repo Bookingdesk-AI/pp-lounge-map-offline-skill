@@ -1,0 +1,6 @@
+{
+  "mode": "approve_all_current_records",
+  "approvedAt": "2026-07-11T00:00:00.000-07:00",
+  "approvedBy": "operator_override",
+  "reason": "User requested approval of all current Lounge Guru records before commit and push."
+}

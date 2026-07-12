@@ -5,7 +5,11 @@ import { fileURLToPath } from 'node:url';
 import { createBrandLogoSvg } from './lib/brand-registry.mjs';
 import { createCloudflareSourceIntakePlan } from './lib/cloudflare-source-intake-plan.mjs';
 import { createCoverageGapReport } from './lib/coverage-gap-report.mjs';
-import { createCanonicalCatalog } from './lib/lounge-canonical.mjs';
+import {
+  createCanonicalCatalog,
+  createSourceRegistryForCatalog,
+  summarizeQuality,
+} from './lib/lounge-canonical.mjs';
 import {
   createNonPriorityCandidateRecords,
   createNonPriorityValidationReport,
@@ -30,6 +34,7 @@ const outputCandidatePath = path.resolve(projectRoot, 'public', 'data', 'non-pri
 const outputValidationPath = path.resolve(projectRoot, 'public', 'data', 'non-priority-validation-report.json');
 const outputBrandLogoDir = path.resolve(projectRoot, 'public', 'data', 'brand-logos');
 const worldwideCoverageGoalPath = path.resolve(projectRoot, 'public', 'data', 'worldwide-coverage-goal.json');
+const approvalPolicyPath = path.resolve(projectRoot, 'public', 'data', 'catalog-approval-policy.json');
 const migrationPath = path.resolve(projectRoot, 'migrations', '0001_lounge_guru_catalog.sql');
 
 async function readSourceIntakeReport() {
@@ -56,29 +61,87 @@ async function readSourceRunEvidence() {
   }
 }
 
+async function readApprovalPolicy() {
+  try {
+    return JSON.parse(await fs.readFile(approvalPolicyPath, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function applyApprovalPolicy({ catalog, features, meta, policy }) {
+  if (policy?.mode !== 'approve_all_current_records') {
+    return catalog;
+  }
+
+  const approvedRecords = catalog.records.map((record) => ({
+    ...record,
+    quality: {
+      ...record.quality,
+      conflicts: [],
+      reviewStatus: 'approved',
+    },
+  }));
+  const quality = summarizeQuality(approvedRecords);
+  const sources = createSourceRegistryForCatalog(features, catalog.generatedAt, approvedRecords, {
+    priorityPassGeneratedAt: meta.generatedAt ?? catalog.generatedAt,
+  });
+
+  return {
+    ...catalog,
+    records: approvedRecords,
+    sources,
+    stats: {
+      ...catalog.stats,
+      reviewQueue: quality.reviewQueue,
+      approvedRecords: approvedRecords.length - quality.reviewQueue,
+    },
+    filters: {
+      ...catalog.filters,
+      reviewStatuses: [...new Set(approvedRecords.map((record) => record.quality.reviewStatus))].sort(),
+    },
+    quality: {
+      ...quality,
+      approvalPolicy: {
+        mode: policy.mode,
+        approvedAt: policy.approvedAt,
+        approvedBy: policy.approvedBy,
+        reason: policy.reason,
+      },
+    },
+  };
+}
+
 async function main() {
   const geoJson = JSON.parse(await fs.readFile(geoJsonPath, 'utf8'));
   const meta = JSON.parse(await fs.readFile(metaPath, 'utf8'));
-  const [intakeReport, cloudflareSourceIntakeReport, sourceRunEvidence] = await Promise.all([
+  const [intakeReport, cloudflareSourceIntakeReport, sourceRunEvidence, approvalPolicy] = await Promise.all([
     readSourceIntakeReport(),
     readCloudflareSourceIntakeReport(),
     readSourceRunEvidence(),
+    readApprovalPolicy(),
   ]);
   const candidateRecords = createNonPriorityCandidateRecords({
     report: intakeReport,
     features: geoJson.features ?? [],
     generatedAt: meta.generatedAt,
   });
-  const catalog = createCanonicalCatalog({
+  const catalog = applyApprovalPolicy({
+    catalog: createCanonicalCatalog({
+      features: geoJson.features ?? [],
+      meta,
+      additionalRecords: candidateRecords,
+    }),
     features: geoJson.features ?? [],
     meta,
-    additionalRecords: candidateRecords,
+    policy: approvalPolicy,
   });
   const validationReport = createNonPriorityValidationReport({
     records: catalog.records,
     report: intakeReport,
     generatedAt: catalog.generatedAt,
   });
+  const outputCandidateRecords = catalog.records.filter((record) => record.sources[0]?.sourceId !== 'priority-pass');
   const [worldwideCoverageGoal, migrationSql] = await Promise.all([
     fs.readFile(worldwideCoverageGoalPath, 'utf8').then(JSON.parse),
     fs.readFile(migrationPath, 'utf8'),
@@ -111,7 +174,7 @@ async function main() {
   await fs.writeFile(outputCatalogPath, `${JSON.stringify(catalog, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputCoverageGapPath, `${JSON.stringify(coverageGapReport, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputIntakePlanPath, `${JSON.stringify(intakePlan, null, 2)}\n`, 'utf8');
-  await fs.writeFile(outputCandidatePath, `${JSON.stringify(candidateRecords, null, 2)}\n`, 'utf8');
+  await fs.writeFile(outputCandidatePath, `${JSON.stringify(outputCandidateRecords, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputValidationPath, `${JSON.stringify(validationReport, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputSourcesPath, `${JSON.stringify(catalog.sources, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputBrandsPath, `${JSON.stringify(catalog.brands, null, 2)}\n`, 'utf8');
@@ -140,7 +203,7 @@ async function main() {
 
   console.log(
     `Wrote ${catalog.records.length} canonical Lounge Guru records ` +
-      `(${candidateRecords.length} non-Priority Pass candidates).`,
+      `(${outputCandidateRecords.length} non-Priority Pass candidates).`,
   );
 }
 

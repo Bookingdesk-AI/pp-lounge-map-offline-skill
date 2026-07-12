@@ -8,7 +8,7 @@
     "freshnessDays": 7,
     "url": "https://desk.travel/",
     "rightsNote": "Internal Desk.Travel brand asset registry; use only approved logo assets and source mappings.",
-    "lastRunAt": "2026-06-18T20:08:20.197Z",
+    "lastRunAt": "2026-07-12T02:33:19.252Z",
     "records": 20,
     "issues": 0,
     "brandIds": [
@@ -63,9 +63,9 @@
     "freshnessDays": 14,
     "url": "https://account.chase.com/sapphire-airport-lounge",
     "rightsNote": "Official public Chase page; parse only public location and policy text.",
-    "lastRunAt": "2026-06-18T20:08:20.197Z",
+    "lastRunAt": "2026-07-12T02:33:19.252Z",
     "records": 8,
-    "issues": 8,
+    "issues": 0,
     "brandIds": [
       "chase-sapphire"
     ]
@@ -79,9 +79,9 @@
     "freshnessDays": 14,
     "url": "https://global.americanexpress.com/lounge-access/the-platinum-card",
     "rightsNote": "Official public Amex page; treat partner eligibility as source evidence, not canonical operator data.",
-    "lastRunAt": "2026-06-18T20:08:20.197Z",
+    "lastRunAt": "2026-07-12T02:33:19.252Z",
     "records": 24,
-    "issues": 24,
+    "issues": 0,
     "brandIds": [
       "american-express"
     ]
@@ -95,9 +95,9 @@
     "freshnessDays": 14,
     "url": "https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/",
     "rightsNote": "Official public Capital One page; retain URL provenance for every imported location.",
-    "lastRunAt": "2026-06-18T20:08:20.197Z",
+    "lastRunAt": "2026-07-12T02:33:19.252Z",
     "records": 6,
-    "issues": 6,
+    "issues": 0,
     "brandIds": [
       "capital-one"
     ]
@@ -321,9 +321,9 @@
     "freshnessDays": 14,
     "url": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
     "rightsNote": "Official public airline location page.",
-    "lastRunAt": "2026-06-18T20:08:20.197Z",
+    "lastRunAt": "2026-07-12T02:33:19.252Z",
     "records": 14,
-    "issues": 14,
+    "issues": 0,
     "brandIds": [
       "air-canada"
     ]
@@ -356,9 +356,9 @@
     "freshnessDays": 14,
     "url": "https://www.oneworld.com/airport-lounges",
     "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review.",
-    "lastRunAt": "2026-06-18T20:08:20.197Z",
+    "lastRunAt": "2026-07-12T02:33:19.252Z",
     "records": 778,
-    "issues": 80,
+    "issues": 0,
     "brandIds": []
   },
   {
@@ -409,9 +409,9 @@
     "freshnessDays": 14,
     "url": "https://escapelounges.com/",
     "rightsNote": "Official public operator page.",
-    "lastRunAt": "2026-06-18T20:08:20.197Z",
-    "records": 13,
-    "issues": 13,
+    "lastRunAt": "2026-07-12T02:33:19.252Z",
+    "records": 9,
+    "issues": 0,
     "brandIds": [
       "escape-lounges"
     ]
@@ -425,9 +425,9 @@
     "freshnessDays": 14,
     "url": "https://www.airportdimensions.com/locations",
     "rightsNote": "Official public operator page.",
-    "lastRunAt": "2026-06-18T20:08:20.197Z",
+    "lastRunAt": "2026-07-12T02:33:19.252Z",
     "records": 47,
-    "issues": 47,
+    "issues": 0,
     "brandIds": [
       "airport-dimensions"
     ]

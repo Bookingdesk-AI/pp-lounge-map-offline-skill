@@ -14,10 +14,9 @@ test('mobile review exposes compact section tabs with source evidence workflow',
   assert.match(appSource, /aria-label="Review sections"/);
   assert.match(appSource, /role="tab"/);
   assert.match(appSource, /aria-selected=/);
-  assert.doesNotMatch(appSource, /Proof/);
-  assert.match(appSource, />CF evidence</);
-  assert.match(appSource, />CF tasks</);
-  assert.match(appSource, />CF gaps</);
+  assert.match(appSource, />Source evidence</);
+  assert.match(appSource, />Proof tasks</);
+  assert.match(appSource, />Proof gaps</);
   assert.match(appSource, /readyMemberGapsWithCloudflareEvidence/);
   assert.match(appSource, /No evidence/);
   assert.match(appSource, /readyMemberGapEvidence/);
@@ -31,9 +30,9 @@ test('mobile review exposes compact section tabs with source evidence workflow',
   assert.match(appSource, /nextCloudflareIntake/);
   assert.match(appSource, /preflightStats/);
   assert.match(appSource, /copyPreflightCommand/);
-  assert.match(appSource, /LOUNGE_GURU_INTAKE_TOKEN|intakePreflight\.requiredTokenEnv/);
-  assert.match(appSource, /report:export/);
-  assert.match(appSource, /aria-label="Cloudflare commands"/);
+  assert.match(appSource, /LOUNGE_GURU_SOURCE_INTAKE_RUNTIME|intakePreflight\.requiredTokenEnv/);
+  assert.match(appSource, />\s*report\s*</);
+  assert.match(appSource, /aria-label="Source commands"/);
   assert.match(appSource, /intakePreflight\.commands\.probe/);
   assert.match(appSource, /intakePreflight\.commands\.promote/);
   assert.match(appSource, /blockerRows/);

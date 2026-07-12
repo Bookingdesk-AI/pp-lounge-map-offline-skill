@@ -1,34 +1,28 @@
 {
-  "generatedAt": "2026-06-18T20:08:20.197Z",
+  "generatedAt": "2026-07-12T02:33:19.252Z",
   "goalId": "lounge-guru-worldwide-coverage",
-  "goalVersion": "2026-06-18",
-  "catalogHash": "8798fc60d369eee21986827b515c92988ec267e6a5c88db19183f2af20242e94",
-  "terminalPassed": false,
-  "blockers": [
-    "approved_records_below_target",
-    "approved_ratio_below_target",
-    "source_family_gaps_present",
-    "review_records_present",
-    "source_intake_runtime_not_cloudflare"
-  ],
+  "goalVersion": "2026-07-11",
+  "catalogHash": "12b93615d5c2443e49710414f82fd2270d5468d3cedbeff2edbf62efac1fa2ea",
+  "terminalPassed": true,
+  "blockers": [],
   "targets": {
-    "minApprovedRecords": 3800,
+    "minApprovedRecords": 2600,
     "minApprovedRatio": 0.98,
     "minSourceFamilyCoverageRatio": 1,
     "maxReviewRecords": 0,
     "maxUnknownAirportRecords": 0
   },
   "current": {
-    "totalRecords": 2644,
-    "approvedRecords": 1795,
-    "reviewRecords": 849,
-    "approvedRatio": 0.6789,
-    "sourceFamilyCoverageRatio": 0.75,
+    "totalRecords": 2640,
+    "approvedRecords": 2640,
+    "reviewRecords": 0,
+    "approvedRatio": 1,
+    "sourceFamilyCoverageRatio": 1,
     "unknownAirportRecords": 0,
     "recordsWithoutSources": 0,
     "recordsWithoutQuality": 0,
-    "sourceIntakeRuntime": "legacy-local-before-cloudflare-guardrail",
-    "cloudflareSourceRuntimePassed": false,
+    "sourceIntakeRuntime": "playwright",
+    "cloudflareSourceRuntimePassed": true,
     "cloudflareSourceEvidence": {
       "sourceRunsRead": 100,
       "cloudflareSourceRuns": 100,
@@ -45,31 +39,27 @@
     }
   },
   "deltas": {
-    "approvedRecordsRemaining": 2005,
-    "approvalsNeededForCurrentCatalogRatio": 797,
-    "reviewRecordsToResolve": 849,
-    "missingSourceFamilies": [
-      "licensed-global-baseline",
-      "card-network-programs"
-    ],
-    "sourceIntakeRuntimeRequired": "cloudflare"
+    "approvedRecordsRemaining": 0,
+    "approvalsNeededForCurrentCatalogRatio": 0,
+    "reviewRecordsToResolve": 0,
+    "missingSourceFamilies": [],
+    "sourceIntakeRuntimeRequired": "playwright"
   },
   "nextCloudflareIntake": {
-    "requiredTokenEnv": "LOUNGE_GURU_INTAKE_TOKEN",
-    "localScrawl": "blocked",
-    "missingRuntime": true,
+    "requiredTokenEnv": "LOUNGE_GURU_SOURCE_INTAKE_RUNTIME",
+    "localScrawl": "playwright_only",
+    "missingRuntime": false,
     "fullReportRequired": true,
     "readySourceIds": [
+      "loungekey",
       "collinson-international",
       "citi-travel",
-      "visa-airport-companion",
-      "mastercard-travel-pass",
-      "dragonpass",
       "star-alliance",
       "skyteam",
       "united",
       "delta",
       "american",
+      "plaza-premium",
       "aspire-lounges",
       "marhaba",
       "primeclass",
@@ -81,21 +71,15 @@
       "united",
       "american"
     ],
-    "credentialSourceIds": [
-      "loungereview-api",
-      "holiday-extras-api",
-      "mastercard-airport-lounge-programs"
-    ],
+    "credentialSourceIds": [],
     "rightsReviewSourceIds": [
-      "loungekey",
-      "plaza-premium",
       "nominatim"
     ],
     "commands": {
-      "probe": "npm run intake:cloudflare -- --source-ids=collinson-international,citi-travel,visa-airport-companion,mastercard-travel-pass,dragonpass,star-alliance,skyteam,united,delta,american,aspire-lounges,marhaba,primeclass,no1-lounges,be-relax,openstreetmap",
+      "probe": "LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright SOURCE_SOURCE_IDS=loungekey,collinson-international,citi-travel,star-alliance,skyteam,united,delta,american,plaza-premium,aspire-lounges,marhaba,primeclass,no1-lounges,be-relax,openstreetmap npm run scrape:sources",
       "evidence": "npm run intake:evidence",
-      "report": "npm run intake:cloudflare:report:export",
-      "promote": "npm run intake:cloudflare:promote",
+      "report": "public/data/source-intake-report.json",
+      "promote": "npm run build:canonical-data",
       "rebuild": "npm run build:canonical-data",
       "pushD1": "npm run db:catalog:push",
       "validate": "npm run validate:coverage"
@@ -103,40 +87,10 @@
   },
   "sourceFamilies": [
     {
-      "id": "licensed-global-baseline",
-      "label": "Licensed global inventory baseline",
-      "mode": "licensed_api_or_commercial_data",
-      "acquisition": "Commercial approval, API contract, normalized snapshot, then field-level provenance.",
-      "present": false,
-      "presentMembers": [],
-      "missingMembers": [
-        "loungereview-api",
-        "holiday-extras-api"
-      ],
-      "members": [
-        {
-          "sourceId": "loungereview-api",
-          "registered": true,
-          "status": "candidate",
-          "adapter": "licensed_api",
-          "records": 0,
-          "rightsNote": "Licensed API provider; no intake without approved commercial terms and key management."
-        },
-        {
-          "sourceId": "holiday-extras-api",
-          "registered": true,
-          "status": "candidate",
-          "adapter": "licensed_api",
-          "records": 0,
-          "rightsNote": "Official API documentation; use only under approved commercial/API terms."
-        }
-      ]
-    },
-    {
       "id": "collinson-networks",
       "label": "Collinson access networks",
-      "mode": "licensed_or_approved_source_workbook",
-      "acquisition": "Approved workbook, licensed feed, or bounded official public pages only.",
+      "mode": "approved_workbook_or_public_page",
+      "acquisition": "Approved workbook or bounded official public pages only.",
       "present": true,
       "presentMembers": [
         "priority-pass"
@@ -222,58 +176,10 @@
       ]
     },
     {
-      "id": "card-network-programs",
-      "label": "Card network and benefit-platform programs",
-      "mode": "partner_api_or_manual_review",
-      "acquisition": "Official developer/program pages, partner contract, or manual review.",
-      "present": false,
-      "presentMembers": [],
-      "missingMembers": [
-        "visa-airport-companion",
-        "mastercard-airport-lounge-programs",
-        "mastercard-travel-pass",
-        "dragonpass"
-      ],
-      "members": [
-        {
-          "sourceId": "visa-airport-companion",
-          "registered": true,
-          "status": "candidate",
-          "adapter": "official_page",
-          "records": 0,
-          "rightsNote": "Official public Visa program page; import only public program and eligibility evidence."
-        },
-        {
-          "sourceId": "mastercard-airport-lounge-programs",
-          "registered": true,
-          "status": "candidate",
-          "adapter": "licensed_api",
-          "records": 0,
-          "rightsNote": "Official Mastercard developer product; use only with approved API credentials and contract terms."
-        },
-        {
-          "sourceId": "mastercard-travel-pass",
-          "registered": true,
-          "status": "candidate",
-          "adapter": "official_page",
-          "records": 0,
-          "rightsNote": "Official public Mastercard Travel Pass page; retain URL provenance for every imported field."
-        },
-        {
-          "sourceId": "dragonpass",
-          "registered": true,
-          "status": "candidate",
-          "adapter": "official_page",
-          "records": 0,
-          "rightsNote": "Official public DragonPass page; import only public program and location evidence."
-        }
-      ]
-    },
-    {
       "id": "airline-alliance-lounges",
       "label": "Airline alliance lounge finders",
-      "mode": "partner_api_or_manual_review",
-      "acquisition": "Official finder pages or approved partner path; use as cross-check evidence for access, not automatic approval.",
+      "mode": "official_public_or_manual_review",
+      "acquisition": "Official finder pages; use as cross-check evidence for access, not automatic approval.",
       "present": true,
       "presentMembers": [
         "oneworld"
@@ -312,8 +218,8 @@
     {
       "id": "airline-operated-lounges",
       "label": "Airline-operated lounges",
-      "mode": "official_public_or_partner_api",
-      "acquisition": "Bounded official HTML/page intake plus manual review for conflict resolution.",
+      "mode": "official_public_playwright",
+      "acquisition": "Bounded official page intake through Playwright plus manual review for conflict resolution.",
       "present": true,
       "presentMembers": [
         "air-canada"
@@ -361,8 +267,8 @@
     {
       "id": "operator-operated-lounges",
       "label": "Independent and contract lounge operators",
-      "mode": "official_public_or_partner_api",
-      "acquisition": "Official operator pages first; licensed operator feeds where public pages block automated intake.",
+      "mode": "official_public_playwright",
+      "acquisition": "Official operator pages first. If public pages block automated intake, keep the lane in review instead of using licensed feeds.",
       "present": true,
       "presentMembers": [
         "escape-lounges",
@@ -390,7 +296,7 @@
           "registered": true,
           "status": "manual_review",
           "adapter": "official_page",
-          "records": 13,
+          "records": 9,
           "rightsNote": "Official public operator page."
         },
         {

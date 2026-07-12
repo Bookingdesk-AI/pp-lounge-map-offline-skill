@@ -40,6 +40,18 @@ function sourceIntakeRuntime(sourceIntakeReport) {
   return sourceIntakeReport?.policy?.execution?.runtime ?? 'missing';
 }
 
+function requiredSourceRuntime(goal) {
+  if (goal.terminalGoal.requiresPlaywrightSourceRuntime) {
+    return 'playwright';
+  }
+
+  if (goal.terminalGoal.requiresCloudflareSourceRuntime) {
+    return 'cloudflare';
+  }
+
+  return null;
+}
+
 function cloudflareSourceEvidence(sourceRunEvidence) {
   const stats = sourceRunEvidence?.stats ?? {};
   const readyTasks = Number(stats.readyTasks ?? 0);
@@ -120,19 +132,21 @@ function createNextCloudflareIntake({
   const sourceIdArg = uniqueReadySourceIds.join(',');
 
   return {
-    requiredTokenEnv: 'LOUNGE_GURU_INTAKE_TOKEN',
-    localScrawl: 'blocked',
-    missingRuntime: sourceRuntime !== 'cloudflare',
+    requiredTokenEnv: 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME',
+    localScrawl: 'playwright_only',
+    missingRuntime: sourceRuntime !== 'playwright',
     fullReportRequired: cloudflareEvidence.fullSourceIntakeReportRequired,
     readySourceIds: uniqueReadySourceIds,
     accessBlockedSourceIds: [...new Set(accessBlockedSourceIds)],
     credentialSourceIds: [...new Set(credentialSourceIds)],
     rightsReviewSourceIds: [...new Set(rightsReviewSourceIds)],
     commands: {
-      probe: sourceIdArg ? `npm run intake:cloudflare -- --source-ids=${sourceIdArg}` : '',
+      probe: sourceIdArg
+        ? `LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright SOURCE_SOURCE_IDS=${sourceIdArg} npm run scrape:sources`
+        : 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright npm run scrape:sources',
       evidence: 'npm run intake:evidence',
-      report: 'npm run intake:cloudflare:report:export',
-      promote: 'npm run intake:cloudflare:promote',
+      report: 'public/data/source-intake-report.json',
+      promote: 'npm run build:canonical-data',
       rebuild: 'npm run build:canonical-data',
       pushD1: 'npm run db:catalog:push',
       validate: 'npm run validate:coverage',
@@ -140,13 +154,20 @@ function createNextCloudflareIntake({
   };
 }
 
-function hasRequiredCloudflareSourceRuntime(goal, sourceIntakeReport, sourceRunEvidence = null) {
-  if (!goal.terminalGoal.requiresCloudflareSourceRuntime) {
+function hasRequiredSourceRuntime(goal, sourceIntakeReport, sourceRunEvidence = null) {
+  const requiredRuntime = requiredSourceRuntime(goal);
+
+  if (!requiredRuntime) {
     return true;
   }
 
-  if (sourceIntakeRuntime(sourceIntakeReport) !== 'cloudflare') {
+  if (sourceIntakeRuntime(sourceIntakeReport) !== requiredRuntime) {
     return false;
+  }
+
+  if (requiredRuntime === 'playwright') {
+    return sourceIntakeReport?.policy?.rawSnapshotsCommitted === false &&
+      sourceIntakeReport?.policy?.execution?.localScrawl === 'playwright_only';
   }
 
   if (!sourceRunEvidence) {
@@ -180,7 +201,8 @@ export function createCoverageGapReport({
   const tableStatuses = validateRequiredTables(goal, migrationSql);
   const sourceRuntime = sourceIntakeRuntime(sourceIntakeReport);
   const cloudflareEvidence = cloudflareSourceEvidence(sourceRunEvidence);
-  const cloudflareSourceRuntimePassed = hasRequiredCloudflareSourceRuntime(goal, sourceIntakeReport, sourceRunEvidence);
+  const cloudflareSourceRuntimePassed = hasRequiredSourceRuntime(goal, sourceIntakeReport, sourceRunEvidence);
+  const runtimeRequired = requiredSourceRuntime(goal);
   const requiredFamilies = goal.sourceFamilies.filter((family) => family.requiredForTerminal);
   const sourceFamilies = requiredFamilies.map((family) => {
     const members = family.members ?? [family.id];
@@ -234,7 +256,7 @@ export function createCoverageGapReport({
     blockers.push('cloudflare_d1_schema_missing_tables');
   }
   if (!cloudflareSourceRuntimePassed) {
-    blockers.push('source_intake_runtime_not_cloudflare');
+    blockers.push(runtimeRequired === 'playwright' ? 'source_intake_runtime_not_playwright' : 'source_intake_runtime_not_cloudflare');
   }
 
   return {
@@ -271,7 +293,7 @@ export function createCoverageGapReport({
       approvalsNeededForCurrentCatalogRatio: approvalRatioRemaining,
       reviewRecordsToResolve: Math.max(0, reviewRecords - goal.terminalGoal.maxReviewRecords),
       missingSourceFamilies: sourceFamilies.filter((family) => !family.present).map((family) => family.id),
-      sourceIntakeRuntimeRequired: goal.terminalGoal.requiresCloudflareSourceRuntime ? 'cloudflare' : null,
+      sourceIntakeRuntimeRequired: runtimeRequired,
     },
     nextCloudflareIntake,
     sourceFamilies,

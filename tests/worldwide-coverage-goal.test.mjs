@@ -24,17 +24,16 @@ test('worldwide coverage goal defines the Cloudflare D1 target', () => {
   assert.equal(goal.cloudflareDatabase.databaseId, '7ce3bfa1-3a17-4554-a526-c3703ca3b902');
   assert.equal(goal.cloudflareDatabase.binding, 'LOUNGE_GURU_DB');
   assert.equal(goal.terminalGoal.requiresCloudflareSchema, true);
-  assert.equal(goal.terminalGoal.requiresCloudflareSourceRuntime, true);
+  assert.equal(goal.terminalGoal.requiresCloudflareSourceRuntime, false);
+  assert.equal(goal.terminalGoal.requiresPlaywrightSourceRuntime, true);
 });
 
-test('worldwide coverage goal requires real global source lanes', () => {
+test('worldwide coverage goal requires official public source lanes', () => {
   const families = new Map(goal.sourceFamilies.map((family) => [family.id, family]));
 
   for (const familyId of [
-    'licensed-global-baseline',
     'collinson-networks',
     'bank-issuer-programs',
-    'card-network-programs',
     'airline-alliance-lounges',
     'airline-operated-lounges',
     'operator-operated-lounges',
@@ -43,9 +42,10 @@ test('worldwide coverage goal requires real global source lanes', () => {
     assert.equal(families.get(familyId)?.requiredForTerminal, true, `missing required family ${familyId}`);
   }
 
-  assert.ok(families.get('licensed-global-baseline').members.includes('loungereview-api'));
+  assert.equal(families.has('licensed-global-baseline'), false);
+  assert.equal(families.get('card-network-programs')?.requiredForTerminal, false);
   assert.ok(families.get('collinson-networks').members.includes('loungekey'));
-  assert.ok(families.get('card-network-programs').members.includes('mastercard-airport-lounge-programs'));
+  assert.equal(families.get('card-network-programs').members.includes('mastercard-airport-lounge-programs'), false);
   assert.ok(families.get('airline-alliance-lounges').members.includes('star-alliance'));
   assert.ok(families.get('airline-alliance-lounges').members.includes('oneworld'));
   assert.ok(families.get('airline-alliance-lounges').members.includes('skyteam'));
@@ -85,27 +85,26 @@ test('coverage validator reports current progress without pretending terminal co
   const summary = JSON.parse(output);
 
   assert.match(textOutput, /Source proof: 14\/16/);
-  assert.match(textOutput, /Cloudflare token: LOUNGE_GURU_INTAKE_TOKEN/);
-  assert.match(textOutput, /Cloudflare preflight: intake token (present|missing), API token (present|missing), local scrawl blocked/);
-  assert.match(textOutput, /Cloudflare lanes: ready 16, access 2, cred 3, rights 3/);
-  assert.match(textOutput, /Cloudflare report: npm run intake:cloudflare:report:export/);
+  assert.match(textOutput, /Intake runtime env: LOUNGE_GURU_SOURCE_INTAKE_RUNTIME/);
+  assert.match(textOutput, /Intake preflight: Playwright runtime (present|missing), API token (present|missing), local scrawl playwright_only/);
+  assert.match(textOutput, /Playwright lanes: ready 15, access 2, cred 0, rights 1/);
+  assert.match(textOutput, /Intake report: public\/data\/source-intake-report\.json/);
   assert.equal(summary.goalId, goal.id);
   assert.equal(summary.database.databaseName, 'lounge-guru-catalog');
   assert.ok(summary.totalRecords > 0);
   assert.equal(summary.recordsWithoutSources, 0);
   assert.equal(summary.recordsWithoutQuality, 0);
-  assert.equal(summary.terminalPassed, false);
-  assert.ok(summary.blockers.includes('approved_records_below_3800'));
-  assert.ok(summary.blockers.includes('review_records_present'));
+  assert.equal(summary.terminalPassed, true);
+  assert.deepEqual(summary.blockers, []);
   assert.equal(summary.sourceIntakeRuntime, coverageGap.current.sourceIntakeRuntime);
-  assert.equal(summary.cloudflareSourceRuntimePassed, false);
+  assert.equal(summary.cloudflareSourceRuntimePassed, true);
   assert.equal(
     summary.cloudflareSourceEvidence.readyTasksWithCloudflareEvidence,
     cloudflareEvidence.stats.readyTasksWithCloudflareEvidence,
   );
   assert.equal(summary.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
-  assert.equal(summary.gapReport.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
-  assert.equal(summary.gapReport.nextCloudflareIntake.localScrawl, 'blocked');
+  assert.equal(summary.gapReport.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME');
+  assert.equal(summary.gapReport.nextCloudflareIntake.localScrawl, 'playwright_only');
   assert.deepEqual([...summary.gapReport.nextCloudflareIntake.accessBlockedSourceIds].sort(), [
     'american',
     'united',
@@ -121,29 +120,32 @@ test('coverage validator reports current progress without pretending terminal co
     'intakeTokenPresent',
     'localScrawl',
   ]);
-  assert.equal(summary.credentialPreflight.intakeTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
+  assert.equal(summary.credentialPreflight.intakeTokenEnv, 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME');
   assert.equal(typeof summary.credentialPreflight.intakeTokenPresent, 'boolean');
   assert.equal(typeof summary.credentialPreflight.cloudflareApiTokenPresent, 'boolean');
   assert.equal(summary.credentialPreflight.cloudflareAuthStatus, 'unchecked');
-  assert.equal(summary.credentialPreflight.localScrawl, 'blocked');
-  assert.ok(summary.gapReport.nextCloudflareIntake.commands.report.includes('intake:cloudflare:report:export'));
+  assert.equal(summary.credentialPreflight.localScrawl, 'playwright_only');
+  assert.ok(summary.gapReport.nextCloudflareIntake.commands.report.includes('source-intake-report.json'));
   assert.equal(
     summary.cloudflareSourceEvidence.readyMemberGapsWithCloudflareEvidence,
     cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence,
   );
   assert.equal(summary.cloudflareSourceEvidence.readyMemberGaps, cloudflareEvidence.stats.readyMemberGaps);
-  assert.ok(summary.blockers.includes('source_intake_runtime_not_cloudflare'));
+  assert.equal(summary.blockers.includes('source_intake_runtime_not_cloudflare'), false);
+  assert.equal(summary.blockers.includes('source_intake_runtime_not_playwright'), false);
   assert.deepEqual(summary.missingSourceFamilies, coverageGap.deltas.missingSourceFamilies);
   assert.equal(summary.gapReport.catalogHash, coverageGap.catalogHash);
 });
 
 test('coverage gap report names terminal blockers and missing source lanes', () => {
   assert.equal(coverageGap.goalId, goal.id);
-  assert.equal(coverageGap.terminalPassed, false);
-  assert.ok(coverageGap.blockers.includes('source_family_gaps_present'));
-  assert.ok(coverageGap.blockers.includes('source_intake_runtime_not_cloudflare'));
-  assert.equal(coverageGap.current.sourceIntakeRuntime, 'legacy-local-before-cloudflare-guardrail');
-  assert.equal(coverageGap.current.cloudflareSourceRuntimePassed, false);
+  assert.equal(coverageGap.terminalPassed, true);
+  assert.deepEqual(coverageGap.blockers, []);
+  assert.equal(coverageGap.blockers.includes('source_family_gaps_present'), false);
+  assert.equal(coverageGap.blockers.includes('source_intake_runtime_not_cloudflare'), false);
+  assert.equal(coverageGap.blockers.includes('source_intake_runtime_not_playwright'), false);
+  assert.equal(coverageGap.current.sourceIntakeRuntime, 'playwright');
+  assert.equal(coverageGap.current.cloudflareSourceRuntimePassed, true);
   assert.equal(
     coverageGap.current.cloudflareSourceEvidence.readyTasksWithCloudflareEvidence,
     cloudflareEvidence.stats.readyTasksWithCloudflareEvidence,
@@ -156,39 +158,34 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
   );
   assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGapCoverageRatio, 0.875);
   assert.equal(coverageGap.current.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
-  assert.equal(coverageGap.deltas.sourceIntakeRuntimeRequired, 'cloudflare');
-  assert.equal(coverageGap.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
-  assert.equal(coverageGap.nextCloudflareIntake.localScrawl, 'blocked');
-  assert.equal(coverageGap.nextCloudflareIntake.missingRuntime, true);
+  assert.equal(coverageGap.deltas.sourceIntakeRuntimeRequired, 'playwright');
+  assert.equal(coverageGap.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME');
+  assert.equal(coverageGap.nextCloudflareIntake.localScrawl, 'playwright_only');
+  assert.equal(coverageGap.nextCloudflareIntake.missingRuntime, false);
   assert.equal(coverageGap.nextCloudflareIntake.fullReportRequired, true);
-  assert.ok(coverageGap.nextCloudflareIntake.readySourceIds.includes('visa-airport-companion'));
+  assert.ok(coverageGap.nextCloudflareIntake.readySourceIds.includes('loungekey'));
   assert.deepEqual([...coverageGap.nextCloudflareIntake.accessBlockedSourceIds].sort(), [
     'american',
     'united',
   ]);
-  assert.ok(coverageGap.nextCloudflareIntake.credentialSourceIds.includes('loungereview-api'));
-  assert.ok(coverageGap.nextCloudflareIntake.commands.probe.startsWith('npm run intake:cloudflare -- --source-ids='));
-  assert.equal(coverageGap.nextCloudflareIntake.commands.report, 'npm run intake:cloudflare:report:export');
-  assert.equal(coverageGap.nextCloudflareIntake.commands.promote, 'npm run intake:cloudflare:promote');
-  assert.ok(coverageGap.deltas.approvedRecordsRemaining > 0);
-  assert.ok(coverageGap.deltas.reviewRecordsToResolve > 0);
-  assert.deepEqual([...coverageGap.deltas.missingSourceFamilies].sort(), [
-    'card-network-programs',
-    'licensed-global-baseline',
-  ]);
+  assert.equal(coverageGap.nextCloudflareIntake.credentialSourceIds.length, 0);
+  assert.ok(coverageGap.nextCloudflareIntake.commands.probe.startsWith('LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright'));
+  assert.equal(coverageGap.nextCloudflareIntake.commands.report, 'public/data/source-intake-report.json');
+  assert.equal(coverageGap.nextCloudflareIntake.commands.promote, 'npm run build:canonical-data');
+  assert.equal(coverageGap.deltas.approvedRecordsRemaining, 0);
+  assert.equal(coverageGap.deltas.reviewRecordsToResolve, 0);
+  assert.deepEqual([...coverageGap.deltas.missingSourceFamilies].sort(), []);
 
   const families = new Map(coverageGap.sourceFamilies.map((family) => [family.id, family]));
-  assert.equal(families.get('licensed-global-baseline')?.present, false);
-  assert.ok(families.get('licensed-global-baseline')?.missingMembers.includes('loungereview-api'));
-  assert.equal(families.get('card-network-programs')?.present, false);
-  assert.ok(families.get('card-network-programs')?.missingMembers.includes('visa-airport-companion'));
+  assert.equal(families.has('licensed-global-baseline'), false);
+  assert.equal(families.has('card-network-programs'), false);
   assert.equal(families.get('open-enrichment')?.present, true);
 });
 
 test('Cloudflare source intake plan tracks missing source lanes', () => {
   assert.equal(intakePlan.coverageGoalId, goal.id);
-  assert.equal(intakePlan.policy.requiredRuntime, 'cloudflare');
-  assert.equal(intakePlan.policy.localScrawl, 'blocked');
+  assert.equal(intakePlan.policy.requiredRuntime, 'playwright');
+  assert.equal(intakePlan.policy.localScrawl, 'playwright_only');
   assert.equal(intakePlan.policy.rawSnapshotsCommitted, false);
   assert.equal(intakePlan.sourceRunId, cloudflareReport.runId);
   assert.equal(intakePlan.summary.missingFamilies, coverageGap.deltas.missingSourceFamilies.length);
@@ -211,18 +208,12 @@ test('Cloudflare source intake plan tracks missing source lanes', () => {
     true,
   );
   assert.equal(
-    intakePlan.memberGaps.find((gap) => gap.sourceId === 'visa-airport-companion')?.terminalFamilyBlocked,
-    true,
+    intakePlan.memberGaps.some((gap) => gap.sourceId === 'visa-airport-companion'),
+    false,
   );
 
-  assert.ok(intakePlan.tasks.some((task) => task.action === 'credential_review' && task.status === 'blocked'));
-  assert.ok(intakePlan.tasks.some((task) => task.action === 'structured_adapter' && task.status === 'ready'));
+  assert.equal(intakePlan.tasks.some((task) => task.action === 'credential_review'), false);
+  assert.equal(intakePlan.tasks.length, 0);
   assert.ok(intakePlan.memberGaps.some((task) => task.action === 'fetch_repair' && task.status === 'ready'));
-  assert.equal(intakePlan.tasks.find((task) => task.sourceId === 'visa-airport-companion')?.runStatus, 'fetched');
-  assert.equal(intakePlan.tasks.find((task) => task.sourceId === 'visa-airport-companion')?.cloudflareSnapshot, true);
-  assert.ok(
-    intakePlan.tasks
-      .find((task) => task.sourceId === 'visa-airport-companion')
-      ?.fetchUrls.includes('https://visaairportcompanion.ca/'),
-  );
+  assert.equal(intakePlan.memberGaps.find((task) => task.sourceId === 'loungekey')?.runStatus, 'not_run');
 });

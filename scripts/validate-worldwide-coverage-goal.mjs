@@ -122,8 +122,12 @@ function buildSummary({
   if (missingRegisteredMembers.length > 0) {
     blockers.push('source_registry_missing_goal_members');
   }
-  if (goal.terminalGoal.requiresCloudflareSourceRuntime && !gapReport.current.cloudflareSourceRuntimePassed) {
-    blockers.push('source_intake_runtime_not_cloudflare');
+  if (gapReport.deltas.sourceIntakeRuntimeRequired && !gapReport.current.cloudflareSourceRuntimePassed) {
+    blockers.push(
+      gapReport.deltas.sourceIntakeRuntimeRequired === 'playwright'
+        ? 'source_intake_runtime_not_playwright'
+        : 'source_intake_runtime_not_cloudflare',
+    );
   }
 
   return {
@@ -189,10 +193,10 @@ if (jsonOutput) {
   );
   if (summary.gapReport.nextCloudflareIntake) {
     const intake = summary.gapReport.nextCloudflareIntake;
-    console.log(`Cloudflare token: ${intake.requiredTokenEnv}`);
+    console.log(`Intake runtime env: ${intake.requiredTokenEnv}`);
     console.log(
-      `Cloudflare preflight: intake token ${summary.credentialPreflight.intakeTokenPresent ? 'present' : 'missing'}, ` +
-        `API token ${summary.credentialPreflight.cloudflareApiTokenPresent ? 'present' : 'missing'}, local scrawl blocked`,
+      `Intake preflight: Playwright runtime ${summary.credentialPreflight.intakeTokenPresent ? 'present' : 'missing'}, ` +
+        `API token ${summary.credentialPreflight.cloudflareApiTokenPresent ? 'present' : 'missing'}, local scrawl ${intake.localScrawl}`,
     );
     if (checkCloudflareAuth) {
       console.log(
@@ -202,11 +206,11 @@ if (jsonOutput) {
       );
     }
     console.log(
-      `Cloudflare lanes: ready ${intake.readySourceIds.length}, ` +
+      `Playwright lanes: ready ${intake.readySourceIds.length}, ` +
         `access ${intake.accessBlockedSourceIds?.length ?? 0}, ` +
         `cred ${intake.credentialSourceIds.length}, rights ${intake.rightsReviewSourceIds.length}`,
     );
-    console.log(`Cloudflare report: ${intake.commands.report}`);
+    console.log(`Intake report: ${intake.commands.report}`);
   }
   console.log(`Schema tables: ${summary.tableStatuses.filter((table) => table.present).length}/${summary.tableStatuses.length}`);
   if (summary.terminalPassed) {

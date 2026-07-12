@@ -115,10 +115,10 @@ export function createCloudflareSourceIntakePlan({ coverageGap, sourceRegistry, 
     coverageGoalId: coverageGap?.goalId ?? '',
     sourceRunId: sourceRunReport?.runId ?? null,
     policy: {
-      requiredRuntime: 'cloudflare',
-      localScrawl: 'blocked',
+      requiredRuntime: 'playwright',
+      localScrawl: 'playwright_only',
       rawSnapshotsCommitted: false,
-      proofEnv: 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=cloudflare',
+      proofEnv: 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright',
     },
     summary: {
       missingFamilies: missingFamilies.length,

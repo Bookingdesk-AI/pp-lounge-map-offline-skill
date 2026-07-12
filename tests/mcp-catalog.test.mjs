@@ -43,7 +43,7 @@ test('search_lounges rejects unsupported filters', () => {
 test('search_lounges supports provider, program, and review-status filters', () => {
   const provider = 'Chase Sapphire Lounge by The Club';
   const program = 'Chase Sapphire Reserve';
-  const status = 'review';
+  const status = 'approved';
 
   const result = searchLounges({
     providers: [provider],
@@ -60,10 +60,10 @@ test('search_lounges supports provider, program, and review-status filters', () 
   }
 });
 
-test('search_lounges exposes non-Priority Pass intake candidates for review', () => {
+test('search_lounges exposes approved non-Priority Pass intake candidates', () => {
   const result = searchLounges({
     programs: ['Chase Sapphire Reserve'],
-    reviewStatus: 'review',
+    reviewStatus: 'approved',
     limit: 10,
   });
 
@@ -71,7 +71,7 @@ test('search_lounges exposes non-Priority Pass intake candidates for review', ()
   for (const lounge of result.results) {
     assert.ok(lounge.id.startsWith('candidate-chase-sapphire-'));
     assert.ok(lounge.programs.includes('Chase Sapphire Reserve'));
-    assert.equal(lounge.quality.reviewStatus, 'review');
+    assert.equal(lounge.quality.reviewStatus, 'approved');
   }
 });
 

@@ -93,6 +93,6 @@ export function credentialPreflight(
     cloudflareAuthOauthFallback: auth?.oauthFallback ?? 'unchecked',
     cloudflareAuthFailure: auth?.failure ?? null,
     baseUrlEnvPresent: Boolean(env.LOUNGE_GURU_INTAKE_BASE_URL),
-    localScrawl: 'blocked',
+    localScrawl: nextCloudflareIntake?.localScrawl ?? 'blocked',
   };
 }

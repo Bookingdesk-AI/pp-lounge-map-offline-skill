@@ -107,8 +107,12 @@ function summarize(catalog, goal, migrationSql, sourceReport, sourceRunEvidence)
   if (recordsWithoutQuality > goal.terminalGoal.maxRecordsWithoutQuality) {
     blockers.push('records_without_quality_present');
   }
-  if (goal.terminalGoal.requiresCloudflareSourceRuntime && !gapReport.current.cloudflareSourceRuntimePassed) {
-    blockers.push('source_intake_runtime_not_cloudflare');
+  if (gapReport.deltas.sourceIntakeRuntimeRequired && !gapReport.current.cloudflareSourceRuntimePassed) {
+    blockers.push(
+      gapReport.deltas.sourceIntakeRuntimeRequired === 'playwright'
+        ? 'source_intake_runtime_not_playwright'
+        : 'source_intake_runtime_not_cloudflare',
+    );
   }
 
   return {
