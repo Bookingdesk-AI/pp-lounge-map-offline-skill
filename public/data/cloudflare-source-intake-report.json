@@ -1,7 +1,7 @@
 {
   "ok": true,
-  "generatedAt": "2026-07-12T00:08:44.506Z",
-  "runId": "cloudflare-report-2026-07-12T00-08-44-506Z",
+  "generatedAt": "2026-07-12T21:38:53.521Z",
+  "runId": "cloudflare-report-2026-07-12T21-38-53-521Z",
   "policy": {
     "fetchMode": "cloudflare_d1_source_runs_report",
     "rawSnapshotsCommitted": false,
@@ -15,16 +15,16 @@
     }
   },
   "stats": {
-    "totalSources": 16,
+    "totalSources": 18,
     "fetched": 14,
-    "skipped": 0,
+    "skipped": 2,
     "httpErrors": 2,
     "fetchErrors": 0,
     "childPagesFetched": 0,
     "discoveredAirportCodes": 18,
     "discoveredLoungeLinks": 92,
     "cloudflareSourceRuns": 100,
-    "readyTasks": 16,
+    "readyTasks": 15,
     "readyTasksWithCloudflareEvidence": 14
   },
   "terminalImpact": {
@@ -57,7 +57,7 @@
           "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
           "contentType": "text/html",
           "bytes": 442,
-          "sha256": "bd3c209e7373381f0dffa2da0a535933322c8cc34802df3789d4303c4dc50b2e",
+          "sha256": "9d0c674c41fcbe9e9ce2ca93dfd730ae72647b9fb069a960c13505873a4023b7",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -74,7 +74,7 @@
           "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/flagship-lounge.jsp",
           "contentType": "text/html",
           "bytes": 430,
-          "sha256": "b43321e6847b2eea9e17090c0c97afe5ec31ce0a33ef6a1af8514911442e25a5",
+          "sha256": "030ec5e39cb7072d38ac466145af9fa704a806c1d2881a4dc0a541eb793e9510",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -91,7 +91,7 @@
           "finalUrl": "https://www.american-airlines.co.kr/i18n/travel-info/clubs/admirals-club-locations.jsp",
           "contentType": "text/html",
           "bytes": 467,
-          "sha256": "c97d7688ccf5e6e93f8f6efb33a1e7f7b71007850205e8fa12c9bcfc40ac9bb5",
+          "sha256": "5140a887c3c499b38eb2b78f471fbcc82a24ae0d91e9ee10174747a217e8cc0c",
           "robots": {
             "checked": true,
             "url": "https://www.american-airlines.co.kr/robots.txt",
@@ -108,7 +108,7 @@
           "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp",
           "contentType": "text/html",
           "bytes": 436,
-          "sha256": "5d8c11c6e966387ede21c4b2d3861186f6287ced397fe102945f6c0020d8ffcc",
+          "sha256": "1c8b8cf728ab2abe42ef68aa03aea9053d990a287a1f96aa8ce9341c9a0cffd2",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -125,7 +125,7 @@
           "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/lax-club.jsp",
           "contentType": "text/html",
           "bytes": 436,
-          "sha256": "1583a8c09fdfefa3adee48043c7ab9210ac5477cf3c2163d3d6e875333e487d3",
+          "sha256": "72e4385dba850e24a28f96a814584a62d410f6c2aabe35c44840f19f59bbb273",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -142,7 +142,7 @@
           "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/jfk-club.jsp",
           "contentType": "text/html",
           "bytes": 436,
-          "sha256": "a0757106f481dba0882d757bc3fd9c3c530cddac8b420800ab010e536f60c837",
+          "sha256": "272af503de58910e6b6a8f1921585a3277cc05d5af8e83b3724771a7c85cb263",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -159,7 +159,7 @@
           "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp",
           "contentType": "text/html",
           "bytes": 436,
-          "sha256": "d10f88826c3d5cd8e815940b0dd4942ba93f0314d423222406046775159db477",
+          "sha256": "d1c1088c086b100ba0b512704c8f9eab8b3e6c7e356caa6f7e5513ce20b9943f",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -176,7 +176,7 @@
           "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
           "contentType": "text/html",
           "bytes": 436,
-          "sha256": "22918149d4d41d9576067d4e8712facdae2428f42c174e781710d0f9d9e1a5f7",
+          "sha256": "9937dde6a34aa704fea3eb096f5052dd166acf2a9a9871a0a912504b9333d0f4",
           "robots": {
             "checked": true,
             "url": "https://www.aa.com/robots.txt",
@@ -186,8 +186,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-12T00-08-41-811Z-american",
-      "retrievedAt": "2026-07-12T00:08:41.811Z"
+      "runId": "cloudflare-probe-2026-07-12T21-34-18-862Z-american",
+      "retrievedAt": "2026-07-12T21:34:18.862Z"
     },
     {
       "sourceId": "aspire-lounges",
@@ -493,6 +493,44 @@
       "retrievedAt": "2026-07-11T23:37:44.995Z"
     },
     {
+      "sourceId": "loungekey",
+      "publisher": "LoungeKey",
+      "url": "https://www.loungekey.com/",
+      "adapter": "official_page",
+      "status": "skipped",
+      "reason": "robots_disallow",
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": false,
+      "finalUrl": null,
+      "httpStatus": null,
+      "contentType": "",
+      "bytes": 0,
+      "sha256": null,
+      "fetchAttempts": [
+        {
+          "url": "https://www.loungekey.com/",
+          "status": "skipped",
+          "reason": "robots_disallow",
+          "httpStatus": null,
+          "finalUrl": null,
+          "contentType": "",
+          "bytes": 0,
+          "sha256": null,
+          "robots": {
+            "checked": true,
+            "url": "https://www.loungekey.com/robots.txt",
+            "status": 200,
+            "disallowed": true,
+            "disallowRuleCount": 1
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-12T19-47-35-360Z-loungekey",
+      "retrievedAt": "2026-07-12T19:47:35.360Z"
+    },
+    {
       "sourceId": "marhaba",
       "publisher": "Marhaba Airport Lounges",
       "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
@@ -688,6 +726,44 @@
       ],
       "runId": "cloudflare-probe-2026-07-11T23-38-06-301Z-openstreetmap",
       "retrievedAt": "2026-07-11T23:38:06.301Z"
+    },
+    {
+      "sourceId": "plaza-premium",
+      "publisher": "Plaza Premium Lounge",
+      "url": "https://www.plazapremiumlounge.com/en-uk",
+      "adapter": "official_page",
+      "status": "skipped",
+      "reason": "robots_disallow",
+      "records": 0,
+      "airportCodes": [],
+      "loungeLinks": [],
+      "cloudflareSnapshot": false,
+      "finalUrl": null,
+      "httpStatus": null,
+      "contentType": "",
+      "bytes": 0,
+      "sha256": null,
+      "fetchAttempts": [
+        {
+          "url": "https://www.plazapremiumlounge.com/en-uk",
+          "status": "skipped",
+          "reason": "robots_disallow",
+          "httpStatus": null,
+          "finalUrl": null,
+          "contentType": "",
+          "bytes": 0,
+          "sha256": null,
+          "robots": {
+            "checked": true,
+            "url": "https://www.plazapremiumlounge.com/robots.txt",
+            "status": 200,
+            "disallowed": true,
+            "disallowRuleCount": 1
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-12T19-47-38-100Z-plaza-premium",
+      "retrievedAt": "2026-07-12T19:47:38.100Z"
     },
     {
       "sourceId": "primeclass",
@@ -1143,8 +1219,8 @@
           }
         }
       ],
-      "runId": "cloudflare-probe-2026-07-12T00-08-40-328Z-united",
-      "retrievedAt": "2026-07-12T00:08:40.328Z"
+      "runId": "cloudflare-probe-2026-07-12T21-34-17-209Z-united",
+      "retrievedAt": "2026-07-12T21:34:17.209Z"
     },
     {
       "sourceId": "visa-airport-companion",

@@ -11,15 +11,13 @@ Date: 2026-07-12
 
 ## Result
 
-- Source proof is `11/15`.
-- Missing proof lanes: `loungekey`, `united`, `american`, `plaza-premium`.
+- Source proof is `11/13`.
+- Missing proof lanes: `united`, `american`.
 - Fetch-repair lanes: `united`, `american`.
-- Rights-review lanes: `loungekey`, `plaza-premium`, `nominatim`.
+- Rights-review lanes: `nominatim`.
 
 ## Source Evidence
 
-- `loungekey`: skipped by robots policy.
-- `plaza-premium`: skipped by robots policy.
 - `united`: Cloudflare fetch returned HTTP `520` across official United URLs.
 - `american`: Cloudflare fetch returned HTTP `403` across official American Airlines URLs.
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-12T19:47:41.933Z",
+  "generatedAt": "2026-07-12T21:38:55.141Z",
   "policy": {
     "source": "cloudflare-d1-source_runs",
     "database": "lounge-guru-catalog",
@@ -18,19 +18,11 @@
     "cloudflareSnapshots": 14,
     "readyTasks": 0,
     "readyTasksWithCloudflareEvidence": 0,
-    "readyMemberGaps": 15,
+    "readyMemberGaps": 13,
     "readyMemberGapsWithCloudflareEvidence": 11
   },
   "readyTaskEvidence": [],
   "readyMemberGapEvidence": [
-    {
-      "sourceId": "loungekey",
-      "familyId": "collinson-networks",
-      "terminalFamilyBlocked": false,
-      "present": true,
-      "status": "skipped",
-      "cloudflareSnapshot": false
-    },
     {
       "sourceId": "collinson-international",
       "familyId": "collinson-networks",
@@ -85,14 +77,6 @@
       "terminalFamilyBlocked": false,
       "present": true,
       "status": "http_error",
-      "cloudflareSnapshot": false
-    },
-    {
-      "sourceId": "plaza-premium",
-      "familyId": "operator-operated-lounges",
-      "terminalFamilyBlocked": false,
-      "present": true,
-      "status": "skipped",
       "cloudflareSnapshot": false
     },
     {

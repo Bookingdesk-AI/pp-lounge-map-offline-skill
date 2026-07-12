@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-07-12T02:33:19.252Z",
   "coverageGoalId": "lounge-guru-worldwide-coverage",
-  "sourceRunId": "cloudflare-report-2026-07-12T00-08-44-506Z",
+  "sourceRunId": "cloudflare-report-2026-07-12T21-38-53-521Z",
   "policy": {
     "requiredRuntime": "playwright",
     "localScrawl": "playwright_only",
@@ -25,7 +25,7 @@
       "publisher": "LoungeKey",
       "adapter": "official_page",
       "sourceStatus": "candidate",
-      "runStatus": "not_run",
+      "runStatus": "skipped",
       "runRecords": 0,
       "cloudflareSnapshot": false,
       "action": "rights_review",
@@ -218,7 +218,7 @@
       "publisher": "Plaza Premium Lounge",
       "adapter": "official_page",
       "sourceStatus": "manual_review",
-      "runStatus": "not_run",
+      "runStatus": "skipped",
       "runRecords": 0,
       "cloudflareSnapshot": false,
       "action": "rights_review",
