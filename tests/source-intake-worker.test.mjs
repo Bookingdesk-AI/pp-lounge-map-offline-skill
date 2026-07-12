@@ -204,14 +204,18 @@ test('Cloudflare source intake probe aggregates bounded official source URLs', a
   assert.equal(body.sourceId, 'american');
   assert.equal(body.stats.fetched, 1);
   assert.ok(fetchedUrls.includes('https://www.aa.com/robots.txt'));
+  assert.ok(fetchedUrls.includes('https://www.aa.com/i18n/travel-info/clubs/flagship-lounge.jsp'));
+  assert.ok(
+    fetchedUrls.includes('https://www.american-airlines.co.kr/i18n/travel-info/clubs/admirals-club-locations.jsp'),
+  );
   assert.ok(fetchedUrls.includes('https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp'));
   assert.ok(fetchedUrls.includes('https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp'));
 
   const [, , , , sourcesJson] = d1.calls[0].params;
   const sources = JSON.parse(sourcesJson);
   assert.deepEqual(sources[0].airportCodes, ['CLT', 'DFW', 'JFK', 'LAX', 'ORD']);
-  assert.equal(sources[0].loungeLinks.length, 5);
-  assert.equal(sources[0].records, 5);
+  assert.equal(sources[0].loungeLinks.length, 6);
+  assert.equal(sources[0].records, 6);
   assert.ok(!Object.hasOwn(sources[0], 'text'));
   assert.ok(!Object.hasOwn(sources[0], 'html'));
 });

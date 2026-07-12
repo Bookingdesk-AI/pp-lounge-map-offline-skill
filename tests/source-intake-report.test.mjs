@@ -82,6 +82,24 @@ test('Aspire intake keeps official operator partner fallback', () => {
   assert.match(aspire.rightsNote, /operator partner/);
 });
 
+test('airline intake keeps official fallback pages inside Cloudflare fetch cap', () => {
+  const american = sourceRegistry.find((source) => source.id === 'american');
+  const united = sourceRegistry.find((source) => source.id === 'united');
+
+  assert.equal(american.url, 'https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp');
+  assert.ok(american.fetchUrls.indexOf('https://www.aa.com/i18n/travel-info/clubs/flagship-lounge.jsp') < 2);
+  assert.ok(
+    american.fetchUrls.indexOf('https://www.american-airlines.co.kr/i18n/travel-info/clubs/admirals-club-locations.jsp') < 3,
+  );
+  assert.ok(american.fetchUrls.every((url) => url.startsWith('https://')));
+  assert.match(american.rightsNote, /American Airlines-owned/);
+
+  assert.equal(united.url, 'https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html');
+  assert.equal(united.fetchUrls[0], 'https://business.united.com/en/us/blog/How-to-access-and-enjoy-the-United-Club');
+  assert.ok(united.fetchUrls.every((url) => url.startsWith('https://')));
+  assert.match(united.rightsNote, /United for Business/);
+});
+
 test('latest Visa intake failure remains Cloudflare-only evidence', () => {
   const visa = report.sources.find((source) => source.sourceId === 'visa-airport-companion');
 

@@ -126,3 +126,34 @@ Date: 2026-07-11
 ### Blocker
 
 - Terminal coverage remains blocked by missing licensed global baseline, card-network catalog coverage, open review records, and the non-promotable source-intake runtime.
+
+## Airline Fallback Probe
+
+Date: 2026-07-11
+
+### Change
+
+- Added official United for Business as an early United fallback.
+- Added official AA Flagship Lounge and regional American Airlines-owned Admirals Club pages as early AA fallbacks.
+- Kept the same Cloudflare Worker source-intake boundary and eight-URL cap.
+
+### Verification
+
+- `npm run build:canonical-data`
+- `npm run test -- tests/source-intake-report.test.mjs tests/source-intake-worker.test.mjs tests/worldwide-coverage-goal.test.mjs`
+- `LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 node scripts/run-cloudflare-source-intake.mjs --base-url=https://lounge-guru-mcp.dev-4ee.workers.dev --source-ids=american,united`
+- `LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 node scripts/run-cloudflare-source-intake.mjs --report --base-url=https://lounge-guru-mcp.dev-4ee.workers.dev --output=public/data/cloudflare-source-intake-report.json`
+- `LOUNGE_GURU_INTAKE_TOKEN=<redacted> npm run intake:evidence`
+
+### Data State
+
+- Source proof: `14/16`
+- Fetched sources: `14/16`
+- Failed lanes: `american`, `united`
+- AA result: `403` across official AA and American Airlines-owned regional pages.
+- United result: `520` across official United and United for Business pages.
+
+### Blocker
+
+- Airline source proof remains blocked by official site edge responses from Cloudflare fetch.
+- Terminal coverage remains blocked by catalog volume, approval ratio, incomplete source-family coverage, open review records, and the non-promotable full source-intake runtime.

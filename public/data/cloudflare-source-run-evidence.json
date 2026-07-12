@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-11T23:56:02.447Z",
+  "generatedAt": "2026-07-12T00:05:44.684Z",
   "policy": {
     "source": "cloudflare-d1-source_runs",
     "database": "lounge-guru-catalog",
@@ -10,8 +10,8 @@
     "guardrail": "official/public source-run evidence only; no local page fetch"
   },
   "stats": {
-    "sourceRunsRead": 98,
-    "cloudflareSourceRuns": 98,
+    "sourceRunsRead": 100,
+    "cloudflareSourceRuns": 100,
     "uniqueSources": 14,
     "attemptedSources": 16,
     "fetched": 14,

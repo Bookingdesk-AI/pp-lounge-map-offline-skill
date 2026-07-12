@@ -2,7 +2,7 @@
   "generatedAt": "2026-06-18T20:08:20.197Z",
   "goalId": "lounge-guru-worldwide-coverage",
   "goalVersion": "2026-06-18",
-  "catalogHash": "5a2eb86f42028195884a8ffa3502d7da13fc6882ad63ccd03055018cf16d95fb",
+  "catalogHash": "8798fc60d369eee21986827b515c92988ec267e6a5c88db19183f2af20242e94",
   "terminalPassed": false,
   "blockers": [
     "approved_records_below_target",
@@ -30,8 +30,8 @@
     "sourceIntakeRuntime": "legacy-local-before-cloudflare-guardrail",
     "cloudflareSourceRuntimePassed": false,
     "cloudflareSourceEvidence": {
-      "sourceRunsRead": 98,
-      "cloudflareSourceRuns": 98,
+      "sourceRunsRead": 100,
+      "cloudflareSourceRuns": 100,
       "uniqueSources": 14,
       "fetched": 14,
       "cloudflareSnapshots": 14,
@@ -330,7 +330,7 @@
           "status": "manual_review",
           "adapter": "official_html",
           "records": 0,
-          "rightsNote": "Official public airline location page."
+          "rightsNote": "Official public airline and official United for Business lounge pages."
         },
         {
           "sourceId": "delta",
@@ -346,7 +346,7 @@
           "status": "manual_review",
           "adapter": "official_html",
           "records": 0,
-          "rightsNote": "Official public airline location page."
+          "rightsNote": "Official public airline location pages, including regional American Airlines-owned surfaces."
         },
         {
           "sourceId": "air-canada",
