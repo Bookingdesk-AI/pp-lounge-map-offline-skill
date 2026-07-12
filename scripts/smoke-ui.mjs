@@ -154,7 +154,17 @@ function connectToTarget(webSocketDebuggerUrl) {
           });
         },
         close() {
+          if (socket.readyState === WebSocket.CLOSED) {
+            return Promise.resolve();
+          }
           socket.close();
+          return Promise.race([
+            new Promise((resolveClose) => {
+              socket.addEventListener('close', resolveClose, { once: true });
+              socket.addEventListener('error', resolveClose, { once: true });
+            }),
+            wait(500),
+          ]);
         },
       });
     });
@@ -314,7 +324,7 @@ async function runViewport({ port, baseUrl, selectedId, expectedLogo, width, hei
     };
   } finally {
     await client.send('Target.closeTarget', { targetId: target.id }).catch(() => undefined);
-    client.close();
+    await client.close();
   }
 }
 
@@ -355,7 +365,7 @@ async function runMobileReviewQueue({ port, baseUrl, timeoutMs }) {
     };
   } finally {
     await client.send('Target.closeTarget', { targetId: target.id }).catch(() => undefined);
-    client.close();
+    await client.close();
   }
 }
 
