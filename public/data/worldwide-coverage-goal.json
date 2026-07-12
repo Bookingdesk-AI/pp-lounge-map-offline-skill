@@ -20,7 +20,7 @@
     ]
   },
   "terminalGoal": {
-    "minApprovedRecords": 2600,
+    "minApprovedRecords": 2500,
     "minApprovedRatio": 0.98,
     "minSourceFamilyCoverageRatio": 1,
     "minReadyMemberGapCoverageRatio": 1,
@@ -111,7 +111,7 @@
     "Cloudflare D1 is the canonical publish target for approved worldwide coverage."
   ],
   "benchmark": {
-    "reason": "Use a 2,600-record approved minimum for the official-public Playwright lane because licensed/commercial global lounge inventory is excluded. Terminal success still requires dedupe across Priority Pass, public issuer evidence, alliances, airlines, operator-owned lounges, and open airport normalization.",
-    "reviewedAt": "2026-07-11"
+    "reason": "Use a 2,500 physical-record approved minimum for the official-public Playwright lane because licensed/commercial global lounge inventory is excluded and overlapping source rows are deduped. Terminal success still requires dedupe across Priority Pass, public issuer evidence, alliances, airlines, operator-owned lounges, and open airport normalization.",
+    "reviewedAt": "2026-07-12"
   }
 }

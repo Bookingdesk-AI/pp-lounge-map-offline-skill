@@ -41,6 +41,7 @@
     "smoke:production": "npm run smoke:deploy -- --base-url=https://loungeguru.desk.travel --min-records=2600 --admin-report=forbidden && npm run smoke:routes -- --base-url=https://loungeguru.desk.travel --min-records=2600 && npm run smoke:ui -- --base-url=https://loungeguru.desk.travel --check-review-queue",
     "smoke:routes": "node scripts/smoke-routes.mjs",
     "smoke:ui": "node scripts/smoke-ui.mjs",
+    "smoke:airport-groups": "node scripts/smoke-airport-groups.mjs",
     "deploy:web": "wrangler pages deploy dist --project-name uscf-pps-worker --branch main --commit-dirty=true",
     "deploy:mcp": "wrangler deploy --config wrangler.mcp.toml",
     "deploy": "npm run release:prepare && npm run deploy:mcp && npm run deploy:web"

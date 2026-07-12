@@ -37,11 +37,17 @@ const RAINBOW_THEME =
 
 const markerIconCache = new Map<string, L.DivIcon>();
 const clusterIconCache = new Map<string, L.DivIcon>();
+const airportGroupIconCache = new Map<string, L.DivIcon>();
 
 interface ClusterLike {
   getAllChildMarkers: () => L.Marker[];
-  getChildCount: () => number;
 }
+
+type MarkerWithLoungeCount = L.Marker & {
+  options: L.MarkerOptions & {
+    loungeCount?: number;
+  };
+};
 
 function clusterTier(count: number) {
   if (count >= 24) {
@@ -69,6 +75,11 @@ function clusterSizeForTier(tier: 'small' | 'medium' | 'large') {
 function hasHighlightedChild(marker: L.Marker) {
   const icon = marker.options.icon as L.DivIcon | undefined;
   return typeof icon?.options.html === 'string' && icon.options.html.includes('is-active');
+}
+
+function markerLoungeCount(marker: L.Marker) {
+  const count = (marker as MarkerWithLoungeCount).options.loungeCount;
+  return typeof count === 'number' && Number.isFinite(count) && count > 0 ? count : 1;
 }
 
 function normalizeProgramName(program: string) {
@@ -140,11 +151,47 @@ export function markerIcon(type: string, active: boolean, programs: string[] = [
   return icon;
 }
 
-export function createClusterIcon(cluster: ClusterLike) {
-  const count = cluster.getChildCount();
+export function airportGroupIcon(type: string, active: boolean, count: number, programs: string[] = []): L.DivIcon {
+  if (count <= 1) {
+    return markerIcon(type, active, programs);
+  }
+
+  const normalizedPrograms = uniquePrograms(programs);
   const tier = clusterTier(count);
   const size = clusterSizeForTier(tier);
-  const highlighted = cluster.getAllChildMarkers().some(hasHighlightedChild);
+  const fill = markerFill(type, normalizedPrograms);
+  const key = `airport:${tier}:${count}:${active ? 'active' : 'idle'}:${normalizedPrograms.join('|')}`;
+  const cached = airportGroupIconCache.get(key);
+
+  if (cached) {
+    return cached;
+  }
+
+  const icon = L.divIcon({
+    className: 'cluster-badge-wrap',
+    html: `
+      <span class="cluster-badge airport-group tier-${tier} ${active ? 'is-active' : ''}" style="--cluster-fill:${fill}">
+        <span class="cluster-badge-ring"></span>
+        <span class="cluster-badge-core">
+          <strong>${count}</strong>
+          <small>${count === 1 ? 'lounge' : 'lounges'}</small>
+        </span>
+      </span>
+    `,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+  });
+
+  airportGroupIconCache.set(key, icon);
+  return icon;
+}
+
+export function createClusterIcon(cluster: ClusterLike) {
+  const childMarkers = cluster.getAllChildMarkers();
+  const count = childMarkers.reduce((sum, marker) => sum + markerLoungeCount(marker), 0);
+  const tier = clusterTier(count);
+  const size = clusterSizeForTier(tier);
+  const highlighted = childMarkers.some(hasHighlightedChild);
   const cacheKey = `${tier}:${count}:${highlighted ? 'active' : 'idle'}`;
   const cached = clusterIconCache.get(cacheKey);
 

@@ -1,0 +1,122 @@
+{
+  "id": "lounge-guru-brand-asset-contract",
+  "version": "2026-07-12",
+  "generatedAt": "2026-07-12T02:33:19.252Z",
+  "target": {
+    "database": "desk.travel.brand_assets",
+    "objectStorage": "Cloudflare R2",
+    "publicOrigin": "https://src.desk.travel",
+    "localFallbackPath": "/data/brand-logos/{brandId}.svg"
+  },
+  "entities": {
+    "brandAsset": {
+      "primaryKey": "assetId",
+      "required": [
+        "assetId",
+        "brandId",
+        "displayName",
+        "category",
+        "assetKind",
+        "format",
+        "storageKey",
+        "publicUrl",
+        "sourceUrl",
+        "sourcePublisher",
+        "rightsStatus",
+        "rightsNote",
+        "sha256",
+        "reviewStatus",
+        "retrievedAt",
+        "reviewedAt"
+      ]
+    },
+    "brandAlias": {
+      "primaryKey": "aliasId",
+      "required": [
+        "aliasId",
+        "brandId",
+        "alias",
+        "locale",
+        "sourceId"
+      ]
+    },
+    "brandAssetEvidence": {
+      "primaryKey": "evidenceId",
+      "required": [
+        "evidenceId",
+        "assetId",
+        "sourceUrl",
+        "retrievedAt",
+        "retrievalMode",
+        "sha256"
+      ]
+    }
+  },
+  "allowedSourceClasses": [
+    {
+      "id": "desk_travel_owned",
+      "decision": "auto_approve",
+      "requirement": "Asset is authored or normalized by Desk.Travel and stored with checksum metadata."
+    },
+    {
+      "id": "official_public_brand_source",
+      "decision": "manual_review",
+      "requirement": "Brand owner or official public brand guideline page is the source URL."
+    },
+    {
+      "id": "approved_open_icon_repository",
+      "decision": "manual_review",
+      "requirement": "Icon-level license, source URL, trademark note, and current brand-guideline check are captured."
+    },
+    {
+      "id": "generated_fallback_tile",
+      "decision": "auto_approve",
+      "requirement": "No third-party trademark artwork is copied; tile uses initials and Lounge Guru design tokens."
+    }
+  ],
+  "blockedSourceClasses": [
+    "hotlinked_search_result",
+    "unknown_rights_svg",
+    "private_or_authenticated_asset",
+    "licensed_commercial_lounge_inventory_logo"
+  ],
+  "rightsStatuses": [
+    "owned",
+    "official_public_reference",
+    "open_license_reviewed",
+    "generated_fallback",
+    "blocked"
+  ],
+  "reviewStatuses": [
+    "candidate",
+    "approved",
+    "blocked",
+    "retired"
+  ],
+  "intakeWorkflow": [
+    "discover_source",
+    "capture_snapshot",
+    "normalize_svg_or_png",
+    "compute_sha256",
+    "store_r2_object",
+    "upsert_d1_metadata",
+    "review_rights",
+    "publish_registry",
+    "render_smoke"
+  ],
+  "displayContract": {
+    "resultRow": "brandAsset.logoUrl before lounge.name",
+    "detailPanel": "brandAsset mark before canonical brand label",
+    "fallback": "generated Lounge Guru SVG tile",
+    "altText": "decorative in repeated rows; brand name remains visible as text"
+  },
+  "validation": {
+    "requiredChecks": [
+      "publicUrl uses https://src.desk.travel or local fallback",
+      "sha256 exists for uploaded binary assets",
+      "rightsStatus is not blocked",
+      "reviewStatus is approved before production promotion",
+      "rendered icon has no result-row overflow on desktop or mobile"
+    ]
+  }
+}

@@ -45,10 +45,10 @@ function inferBrand(name) {
     ['Be Relax', 'Be Relax'],
     ['Aspire', 'Aspire'],
     ['Escape', 'Escape Lounges'],
-    ['The Club', 'The Club'],
     ['Sapphire', 'Chase Sapphire Lounge'],
     ['Centurion', 'American Express Centurion Lounge'],
     ['Capital One', 'Capital One Lounge'],
+    ['The Club', 'The Club'],
     ['United Club', 'United Club'],
     ['Polaris', 'United Polaris Lounge'],
     ['Sky Club', 'Delta Sky Club'],
@@ -365,16 +365,173 @@ export function createSchemaMetadata() {
   };
 }
 
+function normalizeIdentityText(value) {
+  return clean(value)
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[-–—]\s*[a-z0-9]{3}$/i, '')
+    .replace(/\bby the club\b/g, '')
+    .replace(/\bwith etihad airways\b/g, '')
+    .replace(/\bby airport dimensions\b/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function dedupeKey(record) {
+  const airportCode = clean(record.airport.iata).toUpperCase();
+  const brandId = clean(record.lounge.brandAsset?.id) || normalizeIdentityText(record.lounge.brand);
+  const name = normalizeIdentityText(record.lounge.name);
+  return `${airportCode}|${brandId}|${name}`;
+}
+
+function hasKnownTerminal(record) {
+  return hasValue(record.location.terminal);
+}
+
+function isLowDetailSourceOverlap(record) {
+  const sourceIds = new Set(record.sources.map((source) => source.sourceId));
+  return (
+    !sourceIds.has('priority-pass') ||
+    record.quality.conflicts.includes('airport_code_only') ||
+    record.quality.conflicts.includes('missing_hours') ||
+    !hasKnownTerminal(record)
+  );
+}
+
+function canMergeCanonicalRecords(first, second) {
+  if (dedupeKey(first) !== dedupeKey(second)) {
+    return false;
+  }
+  if (!hasKnownTerminal(first) || !hasKnownTerminal(second)) {
+    return true;
+  }
+  return normalizeIdentityText(first.location.terminal) === normalizeIdentityText(second.location.terminal);
+}
+
+function recordDetailScore(record) {
+  return [
+    hasValue(record.operations.hours) ? 40 : 0,
+    hasKnownTerminal(record) ? 24 : 0,
+    hasValue(record.location.directions) ? 14 : 0,
+    record.amenities.length > 0 ? 10 : 0,
+    record.restrictions.length > 0 ? 8 : 0,
+    record.sources.some((source) => source.sourceId === 'priority-pass') ? 4 : 0,
+    record.quality.completeness,
+  ].reduce((sum, value) => sum + value, 0);
+}
+
+function pickValue(first, second) {
+  return hasValue(first) ? first : second;
+}
+
+function mergeUniqueBySourceId(sources) {
+  const bySourceId = new Map();
+  for (const source of sources) {
+    const existing = bySourceId.get(source.sourceId);
+    if (!existing || source.confidence > existing.confidence) {
+      bySourceId.set(source.sourceId, source);
+    }
+  }
+
+  const priority = new Map([
+    ['chase-sapphire', 0],
+    ['amex-global-lounge-collection', 0],
+    ['capital-one', 0],
+    ['united', 0],
+    ['delta', 0],
+    ['american', 0],
+    ['air-canada', 0],
+    ['oneworld', 0],
+    ['priority-pass', 1],
+    ['ourairports', 2],
+  ]);
+
+  return [...bySourceId.values()].sort(
+    (first, second) =>
+      (priority.get(first.sourceId) ?? 1) - (priority.get(second.sourceId) ?? 1) ||
+      first.publisher.localeCompare(second.publisher),
+  );
+}
+
+function mergeCanonicalRecords(first, second) {
+  const base = recordDetailScore(first) >= recordDetailScore(second) ? first : second;
+  const overlay = base === first ? second : first;
+  const sources = mergeUniqueBySourceId([...base.sources, ...overlay.sources]);
+  const brandSource = [base, overlay].find((record) =>
+    record.sources.some((source) => !['priority-pass', 'ourairports'].includes(source.sourceId)),
+  );
+  const brandRecord = brandSource ?? base;
+
+  return {
+    ...base,
+    lounge: {
+      ...base.lounge,
+      brand: brandRecord.lounge.brand,
+      brandAsset: brandRecord.lounge.brandAsset ?? base.lounge.brandAsset,
+      operator: pickValue(base.lounge.operator, overlay.lounge.operator),
+      programs: cleanList([...base.lounge.programs, ...overlay.lounge.programs]),
+      accessMethods: cleanList([...base.lounge.accessMethods, ...overlay.lounge.accessMethods]),
+      status: base.lounge.status === 'active' || overlay.lounge.status === 'active' ? 'active' : base.lounge.status,
+    },
+    airport: {
+      ...base.airport,
+      icao: pickValue(base.airport.icao, overlay.airport.icao),
+      timezone: pickValue(base.airport.timezone, overlay.airport.timezone),
+      coordinates: Number.isFinite(base.airport.coordinates.lat) ? base.airport.coordinates : overlay.airport.coordinates,
+    },
+    location: {
+      terminal: pickValue(base.location.terminal, overlay.location.terminal),
+      concourse: pickValue(base.location.concourse, overlay.location.concourse),
+      gate: pickValue(base.location.gate, overlay.location.gate),
+      securitySide: pickValue(base.location.securitySide, overlay.location.securitySide),
+      directions: pickValue(base.location.directions, overlay.location.directions),
+    },
+    operations: {
+      hours: pickValue(base.operations.hours, overlay.operations.hours),
+      exceptions: cleanList([...base.operations.exceptions, ...overlay.operations.exceptions]),
+      plannedOpening: pickValue(base.operations.plannedOpening, overlay.operations.plannedOpening),
+      lastVerifiedAt: latestIsoDate([base.operations.lastVerifiedAt, overlay.operations.lastVerifiedAt], base.operations.lastVerifiedAt),
+    },
+    amenities: cleanList([...base.amenities, ...overlay.amenities]),
+    restrictions: cleanList([...base.restrictions, ...overlay.restrictions]),
+    guestPolicy: pickValue(base.guestPolicy, overlay.guestPolicy),
+    notes: cleanList([...base.notes, ...overlay.notes, 'Merged duplicate source evidence.']),
+    sources,
+    quality: recordDetailScore(base) >= recordDetailScore(overlay) ? base.quality : overlay.quality,
+  };
+}
+
+function dedupeCanonicalRecords(records) {
+  const deduped = [];
+
+  for (const record of records) {
+    const existingIndex = deduped.findIndex((candidate) =>
+      canMergeCanonicalRecords(candidate, record) && (isLowDetailSourceOverlap(candidate) || isLowDetailSourceOverlap(record)),
+    );
+
+    if (existingIndex === -1) {
+      deduped.push(record);
+      continue;
+    }
+
+    deduped[existingIndex] = mergeCanonicalRecords(deduped[existingIndex], record);
+  }
+
+  return deduped;
+}
+
 export function createCanonicalCatalog({ features, meta, additionalRecords = [] }) {
   const priorityPassGeneratedAt = meta.generatedAt ?? new Date().toISOString();
   const generatedAt = latestIsoDate(
     [priorityPassGeneratedAt, ...additionalRecords.flatMap((record) => (record.sources ?? []).map((source) => source.retrievedAt))],
     priorityPassGeneratedAt,
   );
-  const records = [
+  const rawRecords = [
     ...features.map((feature) => createCanonicalRecord(feature, { generatedAt: priorityPassGeneratedAt })),
     ...additionalRecords,
   ];
+  const records = dedupeCanonicalRecords(rawRecords);
   const sources = createSourceRegistryForCatalog(features, generatedAt, records, { priorityPassGeneratedAt });
   const brands = getBrandRegistry();
   const deskTravelBrandImport = createDeskTravelBrandImport({ generatedAt });
@@ -388,7 +545,10 @@ export function createCanonicalCatalog({ features, meta, additionalRecords = [] 
       ...meta.stats,
       totalCatalogRecords: records.length,
       candidateRecords: additionalRecords.length,
-      nonPriorityRecords: additionalRecords.filter((record) => record.sources[0]?.sourceId !== 'priority-pass').length,
+      nonPriorityRecords: records.filter((record) =>
+        record.sources.some((source) => !['priority-pass', 'ourairports'].includes(source.sourceId)),
+      ).length,
+      duplicateSourceRecords: rawRecords.length - records.length,
       totalSources: sources.length,
       reviewQueue: quality.reviewQueue,
       approvedRecords: records.length - quality.reviewQueue,

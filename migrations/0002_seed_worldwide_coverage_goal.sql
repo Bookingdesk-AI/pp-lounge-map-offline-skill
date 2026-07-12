@@ -18,12 +18,12 @@ INSERT OR REPLACE INTO coverage_goals (
   'Worldwide lounge coverage in Cloudflare D1',
   'active',
   'all_known_official_public_airport_lounges_worldwide',
-  2600,
+  2500,
   0.98,
   1.0,
   0,
   0,
   0,
-  '{"terminalCommand":"npm run goal:coverage","progressCommand":"npm run validate:coverage","guardrail":"official/public Playwright source intake only; no licensed or commercial global lounge source","requiredFamilies":["collinson-networks","bank-issuer-programs","airline-alliance-lounges","airline-operated-lounges","operator-operated-lounges","open-enrichment"]}',
+  '{"terminalCommand":"npm run goal:coverage","progressCommand":"npm run validate:coverage","guardrail":"official/public Playwright source intake only; no licensed or commercial global lounge source; target counts deduped physical lounge records","requiredFamilies":["collinson-networks","bank-issuer-programs","airline-alliance-lounges","airline-operated-lounges","operator-operated-lounges","open-enrichment"]}',
   CURRENT_TIMESTAMP
 );

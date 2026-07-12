@@ -38,6 +38,14 @@ test('desktop rail uses command search with structured filters in one panel', ()
   assert.match(appSource, /className="suggestion-copy"/);
   assert.match(appSource, /function ProgramBrandMarks/);
   assert.match(appSource, /<ProgramBrandMarks/);
+  assert.match(appSource, /function parseProgramFamily/);
+  assert.match(appSource, /one\\s\*world\|oneworld\|star\\s\*alliance\|sky\\s\*team\|skyteam/);
+  assert.match(appSource, /sapphireandhigher/);
+  assert.match(appSource, /business\|premiumeconomy\|economy/);
+  assert.match(appSource, /className="program-family-mark"/);
+  assert.match(appSource, /className="program-tier-list"/);
+  assert.doesNotMatch(appSource, /summarizeProgramGroups\(visiblePrograms\.slice/);
+  assert.match(appSource, /const sameAirport = filteredFeatures/);
   assert.doesNotMatch(appSource, />Proof</);
   assert.doesNotMatch(appSource, /<datalist/);
   assert.match(appSource, /className="filter-panel-trigger"/);
@@ -76,9 +84,15 @@ test('desktop rail uses command search with structured filters in one panel', ()
   assert.match(redirects, /\/api\/all-routes\/airports https:\/\/all-routes-web\.pages\.dev\/api\/airports 200/);
 });
 
-test('map markers use pass colors, pie slices, larger dots, and longer spider spokes', () => {
-  assert.match(clusterLayerSource, /spiderfyDistanceMultiplier=\{1\.55\}/);
-  assert.match(clusterLayerSource, /spiderLegPolylineOptions=\{\{/);
+test('map markers use pass colors, pie slices, airport grouping, and aggregate counts', () => {
+  assert.match(clusterLayerSource, /function buildAirportMarkerGroups/);
+  assert.match(clusterLayerSource, /function SelectedAirportBurst/);
+  assert.match(clusterLayerSource, /buildBurstMarkers/);
+  assert.match(clusterLayerSource, /airportKey\(feature\)/);
+  assert.match(clusterLayerSource, /airportGroupIcon\(/);
+  assert.match(clusterLayerSource, /loungeCount: airportGroup\.features\.length/);
+  assert.match(clusterLayerSource, /spiderfyOnMaxZoom=\{false\}/);
+  assert.match(clusterLayerSource, /className: 'airport-burst-spoke'/);
   assert.match(clusterLayerSource, /feature\.properties\.canonical\?\.lounge\.programs/);
   assert.match(clusterLayerSource, /markerIcon\(/);
   assert.match(clusterIconsSource, /PROGRAM_THEME_COLOR/);
@@ -86,7 +100,11 @@ test('map markers use pass colors, pie slices, larger dots, and longer spider sp
   assert.match(clusterIconsSource, /RAINBOW_THEME/);
   assert.match(clusterIconsSource, /conic-gradient/);
   assert.match(clusterIconsSource, /normalizedPrograms\.length > 6/);
+  assert.match(clusterIconsSource, /function markerLoungeCount/);
+  assert.match(clusterIconsSource, /airportGroupIcon/);
   assert.match(clusterIconsSource, /iconSize:\s*\[30, 30\]/);
   assert.match(appCss, /\.marker-dot\s*{[^}]*width:\s*22px;[^}]*height:\s*22px;/s);
+  assert.match(appCss, /background:\s*var\(--cluster-fill, var\(--brand-blue\)\);/);
+  assert.match(appCss, /\.airport-burst-spoke\s*{/);
   assert.match(appCss, /\.leaflet-cluster-spider-leg\s*{[^}]*stroke-width:\s*2\.4px;/s);
 });

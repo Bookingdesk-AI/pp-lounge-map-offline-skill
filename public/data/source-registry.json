@@ -9,7 +9,7 @@
     "url": "https://desk.travel/",
     "rightsNote": "Internal Desk.Travel brand asset registry; use only approved logo assets and source mappings.",
     "lastRunAt": "2026-07-12T02:33:19.252Z",
-    "records": 20,
+    "records": 28,
     "issues": 0,
     "brandIds": [
       "desk-travel",
@@ -25,6 +25,14 @@
       "delta",
       "american-airlines",
       "air-canada",
+      "air-france-klm",
+      "british-airways",
+      "oneworld",
+      "star-alliance",
+      "skyteam",
+      "turkish-airlines",
+      "etihad",
+      "virgin-atlantic",
       "plaza-premium",
       "escape-lounges",
       "airport-dimensions",
@@ -44,10 +52,14 @@
     "url": "https://www.prioritypass.com/en-GB/airport-lounges",
     "rightsNote": "Use only the approved source workbook or public official pages; do not bypass account controls.",
     "lastRunAt": "2026-03-11T13:05:33.139Z",
-    "records": 1754,
+    "records": 1723,
     "issues": 657,
     "brandIds": [
       "priority-pass",
+      "air-france-klm",
+      "turkish-airlines",
+      "etihad",
+      "virgin-atlantic",
       "aspire",
       "marhaba",
       "primeclass",
@@ -345,7 +357,9 @@
     "lastRunAt": null,
     "records": 0,
     "issues": 0,
-    "brandIds": []
+    "brandIds": [
+      "star-alliance"
+    ]
   },
   {
     "id": "oneworld",
@@ -357,9 +371,13 @@
     "url": "https://www.oneworld.com/airport-lounges",
     "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review.",
     "lastRunAt": "2026-07-12T02:33:19.252Z",
-    "records": 778,
+    "records": 770,
     "issues": 0,
-    "brandIds": []
+    "brandIds": [
+      "british-airways",
+      "oneworld",
+      "turkish-airlines"
+    ]
   },
   {
     "id": "skyteam",
@@ -382,7 +400,9 @@
     "lastRunAt": null,
     "records": 0,
     "issues": 0,
-    "brandIds": []
+    "brandIds": [
+      "skyteam"
+    ]
   },
   {
     "id": "plaza-premium",

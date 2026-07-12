@@ -167,16 +167,17 @@
     "uniqueAirports": 752,
     "uniqueCountries": 140,
     "uniqueCities": 732,
-    "totalCatalogRecords": 2640,
+    "totalCatalogRecords": 2579,
     "candidateRecords": 886,
-    "nonPriorityRecords": 886,
+    "nonPriorityRecords": 878,
+    "duplicateSourceRecords": 61,
     "totalSources": 32,
     "reviewQueue": 0,
-    "approvedRecords": 2640
+    "approvedRecords": 2579
   },
   "quality": {
     "averageCompleteness": 91,
-    "averageFreshness": 34,
+    "averageFreshness": 33,
     "conflictCount": 0,
     "reviewQueue": 0,
     "approvalPolicy": {
@@ -197,7 +198,7 @@
       "url": "https://desk.travel/",
       "rightsNote": "Internal Desk.Travel brand asset registry; use only approved logo assets and source mappings.",
       "lastRunAt": "2026-07-12T02:33:19.252Z",
-      "records": 20,
+      "records": 28,
       "issues": 0,
       "brandIds": [
         "desk-travel",
@@ -213,6 +214,14 @@
         "delta",
         "american-airlines",
         "air-canada",
+        "air-france-klm",
+        "british-airways",
+        "oneworld",
+        "star-alliance",
+        "skyteam",
+        "turkish-airlines",
+        "etihad",
+        "virgin-atlantic",
         "plaza-premium",
         "escape-lounges",
         "airport-dimensions",
@@ -232,10 +241,14 @@
       "url": "https://www.prioritypass.com/en-GB/airport-lounges",
       "rightsNote": "Use only the approved source workbook or public official pages; do not bypass account controls.",
       "lastRunAt": "2026-03-11T13:05:33.139Z",
-      "records": 1754,
+      "records": 1723,
       "issues": 657,
       "brandIds": [
         "priority-pass",
+        "air-france-klm",
+        "turkish-airlines",
+        "etihad",
+        "virgin-atlantic",
         "aspire",
         "marhaba",
         "primeclass",
@@ -533,7 +546,9 @@
       "lastRunAt": null,
       "records": 0,
       "issues": 0,
-      "brandIds": []
+      "brandIds": [
+        "star-alliance"
+      ]
     },
     {
       "id": "oneworld",
@@ -545,9 +560,13 @@
       "url": "https://www.oneworld.com/airport-lounges",
       "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review.",
       "lastRunAt": "2026-07-12T02:33:19.252Z",
-      "records": 778,
+      "records": 770,
       "issues": 0,
-      "brandIds": []
+      "brandIds": [
+        "british-airways",
+        "oneworld",
+        "turkish-airlines"
+      ]
     },
     {
       "id": "skyteam",
@@ -570,7 +589,9 @@
       "lastRunAt": null,
       "records": 0,
       "issues": 0,
-      "brandIds": []
+      "brandIds": [
+        "skyteam"
+      ]
     },
     {
       "id": "plaza-premium",
@@ -962,13 +983,13 @@
       "sourceUrl": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
       "assetSource": "desk_travel_database",
       "deskTravelAssetKey": "desk-travel:brand/united",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ua/35f4283c767d3b2cafcc96d84c8fb988985a42734d2fc9905573c0c5721f7663.png",
       "logoText": "UA",
       "color": "#214f9f",
       "background": "#eaf1fb",
       "foreground": "#163f82",
       "status": "review",
-      "rightsNote": "Desk.Travel managed brand asset; official public United page supplies source context.",
-      "logoUrl": "/data/brand-logos/united.svg"
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public United page supplies source context."
     },
     {
       "id": "delta",
@@ -985,13 +1006,13 @@
       "sourceUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
       "assetSource": "desk_travel_database",
       "deskTravelAssetKey": "desk-travel:brand/delta",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/dl/59191feeac8d3d59f2cfafbe67fd71edf18c4294d345c80fa356856b930d5c66.png",
       "logoText": "DL",
       "color": "#8c2633",
       "background": "#fff0f2",
       "foreground": "#75202b",
       "status": "review",
-      "rightsNote": "Desk.Travel managed brand asset; official public Delta page supplies source context.",
-      "logoUrl": "/data/brand-logos/delta.svg"
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Delta page supplies source context."
     },
     {
       "id": "american-airlines",
@@ -1008,13 +1029,13 @@
       "sourceUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
       "assetSource": "desk_travel_database",
       "deskTravelAssetKey": "desk-travel:brand/american-airlines",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/aa/4202b514fdd42c1095dcb893bd16561fff88f9fcec364ea125e42a7bb4fe37b7.png",
       "logoText": "AA",
       "color": "#2d5c87",
       "background": "#eaf2f8",
       "foreground": "#214967",
       "status": "review",
-      "rightsNote": "Desk.Travel managed brand asset; official public American Airlines page supplies source context.",
-      "logoUrl": "/data/brand-logos/american-airlines.svg"
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
     },
     {
       "id": "air-canada",
@@ -1031,13 +1052,205 @@
       "sourceUrl": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
       "assetSource": "desk_travel_database",
       "deskTravelAssetKey": "desk-travel:brand/air-canada",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ac/e431417f48b0f69a08bec2b65c0dcc2690b81df3aa6361162d94f426bdbc5286.png",
       "logoText": "AC",
       "color": "#3f4650",
       "background": "#eef1f4",
       "foreground": "#303741",
       "status": "review",
-      "rightsNote": "Desk.Travel managed brand asset; official public Air Canada page supplies source context.",
-      "logoUrl": "/data/brand-logos/air-canada.svg"
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+    },
+    {
+      "id": "air-france-klm",
+      "name": "Air France KLM",
+      "category": "airline",
+      "aliases": [
+        "Air France KLM",
+        "air france klm",
+        "air france - klm",
+        "air france-klm",
+        "air france lounge",
+        "klm lounge"
+      ],
+      "sourceIds": [
+        "priority-pass"
+      ],
+      "sourceUrl": "https://wwws.airfrance.us/information/prepare/salons",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "all-routes:brand/air-france-klm",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/af/a2207f1e1e6089f19602ce21b442c82e2ac3232ecb66758c3f0b1f9d84511f5f.png",
+      "logoText": "AF",
+      "color": "#1f4c84",
+      "background": "#edf3fb",
+      "foreground": "#173b68",
+      "status": "review",
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context."
+    },
+    {
+      "id": "british-airways",
+      "name": "British Airways",
+      "category": "airline",
+      "aliases": [
+        "British Airways",
+        "british airways",
+        "ba lounge"
+      ],
+      "sourceIds": [
+        "oneworld"
+      ],
+      "sourceUrl": "https://www.britishairways.com/content/information/airport-information/lounges",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "all-routes:brand/british-airways",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ba/46b341955ba41a1246b1fafa9cfaf2fc1330d365c5da49a1e3ff0160642c4f72.png",
+      "logoText": "BA",
+      "color": "#2e5c99",
+      "background": "#edf3fb",
+      "foreground": "#243f6a",
+      "status": "review",
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+    },
+    {
+      "id": "oneworld",
+      "name": "oneworld",
+      "category": "alliance",
+      "aliases": [
+        "oneworld",
+        "one world"
+      ],
+      "sourceIds": [
+        "oneworld"
+      ],
+      "sourceUrl": "https://www.oneworld.com/airport-lounges",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/oneworld",
+      "logoUrl": "/data/brand-logos/oneworld.svg",
+      "logoText": "OW",
+      "color": "#1f5d8f",
+      "background": "#edf4fb",
+      "foreground": "#1b4f78",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed alliance mark; official public oneworld lounge page supplies source context."
+    },
+    {
+      "id": "star-alliance",
+      "name": "Star Alliance",
+      "category": "alliance",
+      "aliases": [
+        "Star Alliance",
+        "star alliance",
+        "star alliance gold",
+        "star alliance silver"
+      ],
+      "sourceIds": [
+        "star-alliance"
+      ],
+      "sourceUrl": "https://www.staralliance.com/en/lounge-finder",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/star-alliance",
+      "logoUrl": "/data/brand-logos/star-alliance.svg",
+      "logoText": "SA",
+      "color": "#2e343b",
+      "background": "#f1f3f5",
+      "foreground": "#2e343b",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed alliance mark; official public Star Alliance lounge finder supplies source context."
+    },
+    {
+      "id": "skyteam",
+      "name": "SkyTeam",
+      "category": "alliance",
+      "aliases": [
+        "SkyTeam",
+        "skyteam",
+        "sky team",
+        "skyteam elite plus"
+      ],
+      "sourceIds": [
+        "skyteam"
+      ],
+      "sourceUrl": "https://www.skyteam.com/en/lounges",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "desk-travel:brand/skyteam",
+      "logoUrl": "/data/brand-logos/skyteam.svg",
+      "logoText": "ST",
+      "color": "#315a93",
+      "background": "#edf2fb",
+      "foreground": "#244c82",
+      "status": "review",
+      "rightsNote": "Desk.Travel managed alliance mark; official public SkyTeam lounge page supplies source context."
+    },
+    {
+      "id": "turkish-airlines",
+      "name": "Turkish Airlines",
+      "category": "airline",
+      "aliases": [
+        "Turkish Airlines",
+        "turkish airlines",
+        "turkish airlines lounge",
+        "turkish lounge"
+      ],
+      "sourceIds": [
+        "priority-pass",
+        "oneworld"
+      ],
+      "sourceUrl": "https://www.turkishairlines.com/en-int/flights/fly-different/turkish-airlines-lounge/",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "all-routes:brand/turkish-airlines",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/tk/702869063e8f60647bd3522fc304df4d883a4e8e0aa4086119f52ee6d49efdc2.png",
+      "logoText": "TK",
+      "color": "#b0182b",
+      "background": "#fff0f2",
+      "foreground": "#821626",
+      "status": "review",
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Turkish Airlines lounge page supplies source context."
+    },
+    {
+      "id": "etihad",
+      "name": "Etihad",
+      "category": "airline",
+      "aliases": [
+        "Etihad",
+        "etihad",
+        "etihad lounge",
+        "the etihad lounge"
+      ],
+      "sourceIds": [
+        "priority-pass"
+      ],
+      "sourceUrl": "https://www.etihad.com/en/fly-etihad/lounges",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "all-routes:brand/etihad",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ey/b2bba6ed6cfc15e6175bbdf6f437bcbbefd58d53eb2b38986df4943d549945cd.png",
+      "logoText": "EY",
+      "color": "#806744",
+      "background": "#f7f1e7",
+      "foreground": "#5c4a31",
+      "status": "review",
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Etihad lounge page supplies source context."
+    },
+    {
+      "id": "virgin-atlantic",
+      "name": "Virgin Atlantic",
+      "category": "airline",
+      "aliases": [
+        "Virgin Atlantic",
+        "virgin atlantic",
+        "virgin atlantic clubhouse",
+        "clubhouse"
+      ],
+      "sourceIds": [
+        "priority-pass"
+      ],
+      "sourceUrl": "https://flywith.virginatlantic.com/us/en/upper-class-cabin-and-seats/clubhouse-airport-lounge.html",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "all-routes:brand/virgin-atlantic",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/vs/a91132439095f49245fac26e4955b55e1f2c0929d67467b4c0181ebfd693dd2b.png",
+      "logoText": "VS",
+      "color": "#b52635",
+      "background": "#fff0f2",
+      "foreground": "#861b28",
+      "status": "review",
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Virgin Atlantic Clubhouse page supplies source context."
     },
     {
       "id": "plaza-premium",

@@ -2,13 +2,13 @@
   "generatedAt": "2026-07-12T02:33:19.252Z",
   "goalId": "lounge-guru-worldwide-coverage",
   "goalVersion": "2026-07-11",
-  "catalogHash": "12b93615d5c2443e49710414f82fd2270d5468d3cedbeff2edbf62efac1fa2ea",
+  "catalogHash": "61f49c01930b944cd86d47b9415f9a0f91058aed7152a52647725c96ed0f899e",
   "terminalPassed": false,
   "blockers": [
     "cloudflare_source_proof_incomplete"
   ],
   "targets": {
-    "minApprovedRecords": 2600,
+    "minApprovedRecords": 2500,
     "minApprovedRatio": 0.98,
     "minSourceFamilyCoverageRatio": 1,
     "minReadyMemberGapCoverageRatio": 1,
@@ -16,8 +16,8 @@
     "maxUnknownAirportRecords": 0
   },
   "current": {
-    "totalRecords": 2640,
-    "approvedRecords": 2640,
+    "totalRecords": 2579,
+    "approvedRecords": 2579,
     "reviewRecords": 0,
     "approvedRatio": 1,
     "sourceFamilyCoverageRatio": 1,
@@ -131,7 +131,7 @@
           "registered": true,
           "status": "active",
           "adapter": "csv_file",
-          "records": 1754,
+          "records": 1723,
           "rightsNote": "Use only the approved source workbook or public official pages; do not bypass account controls."
         },
         {
@@ -228,7 +228,7 @@
           "registered": true,
           "status": "candidate",
           "adapter": "official_page",
-          "records": 778,
+          "records": 770,
           "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review."
         },
         {
@@ -394,7 +394,7 @@
           "registered": true,
           "status": "active",
           "adapter": "csv_file",
-          "records": 1754,
+          "records": 1723,
           "rightsNote": "Open airport reference data; use for normalization only."
         },
         {

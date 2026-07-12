@@ -8,6 +8,7 @@ import { pathToFileURL } from 'node:url';
 const DEFAULT_BASE_URL = 'https://loungeguru.desk.travel';
 const DEFAULT_SELECTED_ID = 'candidate-chase-sapphire-bos-chase-sapphire-lounge-by-the-club';
 const DEFAULT_EXPECTED_LOGO = 'chase-sapphire.svg';
+const CATALOG_PATH = new URL('../public/data/lounge-guru-catalog.json', import.meta.url);
 
 const CHROME_CANDIDATES = [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -24,6 +25,7 @@ export function parseUiSmokeArgs(args, env = process.env) {
     baseUrl: env.LOUNGE_GURU_UI_SMOKE_BASE_URL || DEFAULT_BASE_URL,
     selectedId: env.LOUNGE_GURU_UI_SMOKE_SELECTED_ID || DEFAULT_SELECTED_ID,
     expectedLogo: env.LOUNGE_GURU_UI_SMOKE_EXPECTED_LOGO || DEFAULT_EXPECTED_LOGO,
+    expectedLogoExplicit: Boolean(env.LOUNGE_GURU_UI_SMOKE_EXPECTED_LOGO),
     chromeBin: env.CHROME_BIN || '',
     timeoutMs: Number(env.LOUNGE_GURU_UI_SMOKE_TIMEOUT_MS || 20_000),
     checkReviewQueue: env.LOUNGE_GURU_UI_SMOKE_CHECK_REVIEW_QUEUE === '1',
@@ -44,6 +46,7 @@ export function parseUiSmokeArgs(args, env = process.env) {
     }
     if (arg.startsWith('--expected-logo=')) {
       options.expectedLogo = arg.slice('--expected-logo='.length);
+      options.expectedLogoExplicit = true;
       continue;
     }
     if (arg.startsWith('--chrome-bin=')) {
@@ -72,6 +75,16 @@ export function parseUiSmokeArgs(args, env = process.env) {
     ...options,
     baseUrl: url.origin,
   };
+}
+
+function getExpectedLogoForSelectedRecord(selectedId) {
+  try {
+    const catalog = JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf8'));
+    const record = catalog.records?.find((candidate) => candidate.lounge?.id === selectedId);
+    return record?.lounge?.brandAsset?.logoUrl || null;
+  } catch {
+    return null;
+  }
 }
 
 function findChrome(chromeBin) {
@@ -192,7 +205,8 @@ function browserExpression({ mobile, expectedLogo }) {
     ].join('\\n');
     const programMarks = [...document.querySelectorAll('.program-brand-list .brand-mark')];
     const programLogos = [...document.querySelectorAll('.program-brand-list .brand-mark-img')];
-    const brandImgs = [...document.querySelectorAll('.brand-mark-img')].map((img) => img.getAttribute('src'));
+    const brandImgs = [...document.querySelectorAll('.brand-mark-img, .brand-icon-mark-img')]
+      .map((img) => img.getAttribute('src'));
     const topbarText = document.querySelector('.topbar')?.innerText ?? '';
     const detailText = document.querySelector('.detail-panel, .mobile-selected-view')?.innerText ?? '';
     return {
@@ -428,6 +442,9 @@ async function runWithChrome(options) {
 
 export async function runUiSmoke({ args = process.argv.slice(2), env = process.env, log = console.log } = {}) {
   const options = parseUiSmokeArgs(args, env);
+  if (!options.expectedLogoExplicit) {
+    options.expectedLogo = getExpectedLogoForSelectedRecord(options.selectedId) ?? options.expectedLogo;
+  }
   const results = await runWithChrome(options);
   const failures = results.flatMap((result) =>
     result.failures.map((failure) =>

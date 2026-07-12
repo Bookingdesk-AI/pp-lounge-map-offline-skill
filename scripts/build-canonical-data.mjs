@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createBrandLogoSvg } from './lib/brand-registry.mjs';
+import { createBrandAssetContract } from './lib/brand-asset-contract.mjs';
 import { createCloudflareSourceIntakePlan } from './lib/cloudflare-source-intake-plan.mjs';
 import { createCoverageGapReport } from './lib/coverage-gap-report.mjs';
 import {
@@ -24,6 +25,7 @@ const outputCatalogPath = path.resolve(projectRoot, 'public', 'data', 'lounge-gu
 const outputSourcesPath = path.resolve(projectRoot, 'public', 'data', 'source-registry.json');
 const outputBrandsPath = path.resolve(projectRoot, 'public', 'data', 'brand-registry.json');
 const outputBrandImportPath = path.resolve(projectRoot, 'public', 'data', 'desk-travel-brand-import.json');
+const outputBrandAssetContractPath = path.resolve(projectRoot, 'public', 'data', 'brand-asset-contract.json');
 const outputQualityPath = path.resolve(projectRoot, 'public', 'data', 'quality-report.json');
 const outputCoverageGapPath = path.resolve(projectRoot, 'public', 'data', 'coverage-gap-report.json');
 const outputIntakePlanPath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-intake-plan.json');
@@ -112,6 +114,21 @@ function applyApprovalPolicy({ catalog, features, meta, policy }) {
   };
 }
 
+function applyCandidateApprovalPolicy(records, policy) {
+  if (policy?.mode !== 'approve_all_current_records') {
+    return records;
+  }
+
+  return records.map((record) => ({
+    ...record,
+    quality: {
+      ...record.quality,
+      conflicts: [],
+      reviewStatus: 'approved',
+    },
+  }));
+}
+
 async function main() {
   const geoJson = JSON.parse(await fs.readFile(geoJsonPath, 'utf8'));
   const meta = JSON.parse(await fs.readFile(metaPath, 'utf8'));
@@ -126,6 +143,7 @@ async function main() {
     features: geoJson.features ?? [],
     generatedAt: meta.generatedAt,
   });
+  const outputCandidateRecords = applyCandidateApprovalPolicy(candidateRecords, approvalPolicy);
   const catalog = applyApprovalPolicy({
     catalog: createCanonicalCatalog({
       features: geoJson.features ?? [],
@@ -137,11 +155,10 @@ async function main() {
     policy: approvalPolicy,
   });
   const validationReport = createNonPriorityValidationReport({
-    records: catalog.records,
+    records: outputCandidateRecords,
     report: intakeReport,
     generatedAt: catalog.generatedAt,
   });
-  const outputCandidateRecords = catalog.records.filter((record) => record.sources[0]?.sourceId !== 'priority-pass');
   const [worldwideCoverageGoal, migrationSql] = await Promise.all([
     fs.readFile(worldwideCoverageGoalPath, 'utf8').then(JSON.parse),
     fs.readFile(migrationPath, 'utf8'),
@@ -160,6 +177,7 @@ async function main() {
     sourceRegistry: catalog.sources,
     sourceRunReport: cloudflareSourceIntakeReport,
   });
+  const brandAssetContract = createBrandAssetContract({ generatedAt: catalog.generatedAt });
 
   const serialized = JSON.stringify(catalog);
   const forbiddenFragments = [projectRoot, path.resolve(projectRoot, '..'), process.env.HOME || ''].filter(Boolean);
@@ -179,6 +197,7 @@ async function main() {
   await fs.writeFile(outputSourcesPath, `${JSON.stringify(catalog.sources, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputBrandsPath, `${JSON.stringify(catalog.brands, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputBrandImportPath, `${JSON.stringify(catalog.deskTravelBrandImport, null, 2)}\n`, 'utf8');
+  await fs.writeFile(outputBrandAssetContractPath, `${JSON.stringify(brandAssetContract, null, 2)}\n`, 'utf8');
   await Promise.all(
     catalog.brands.map((brand) =>
       fs.writeFile(path.join(outputBrandLogoDir, `${brand.id}.svg`), createBrandLogoSvg(brand), 'utf8'),

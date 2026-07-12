@@ -444,6 +444,10 @@ function normalizeBrandLookup(value: string) {
     .trim();
 }
 
+function compactBrandLookup(value: string) {
+  return normalizeBrandLookup(value).replace(/\s+/g, '');
+}
+
 function findBrandAssetForText(value: string, brands: LoungeBrandAsset[]) {
   const normalizedValue = normalizeBrandLookup(value);
   if (!normalizedValue) {
@@ -463,6 +467,225 @@ function findBrandAssetForText(value: string, brands: LoungeBrandAsset[]) {
   return brands.find(matchesBrand);
 }
 
+function fallbackLogoText(value: string) {
+  const normalized = normalizeBrandLookup(value);
+  if (normalized === 'oneworld' || normalized === 'one world') {
+    return 'OW';
+  }
+  if (normalized === 'star alliance') {
+    return 'SA';
+  }
+  if (normalized === 'skyteam' || normalized === 'sky team') {
+    return 'ST';
+  }
+
+  const parts = value.trim().split(/\s+/).filter(Boolean);
+  if (parts.length > 1) {
+    return parts
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? '')
+      .join('')
+      .slice(0, 2);
+  }
+  return value.slice(0, 2).toUpperCase();
+}
+
+function formatProgramTier(value: string) {
+  return value
+    .replace(/\b(?:and|or)\s+higher$/iu, '+')
+    .replace(/AndHigher$/u, '+')
+    .replace(/([a-z])([A-Z])/gu, '$1 $2')
+    .replace(/\bClass(\+)?$/u, '$1')
+    .replace(/\s*\+\s*$/u, '+')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+type ProgramDisplayGroup = {
+  id: string;
+  label: string;
+  lookup: string;
+  tiers: string[];
+};
+
+type ParsedProgramFamily = Omit<ProgramDisplayGroup, 'tiers'> & {
+  tier: string;
+};
+
+const PROGRAM_DISPLAY_LIMIT = 6;
+const PROGRAM_TIER_ORDER: Record<string, string[]> = {
+  oneworld: ['emerald', 'sapphire', 'ruby'],
+  'star-alliance': ['gold', 'silver'],
+  skyteam: ['elite plus', 'elite'],
+  cabin: ['first', 'business', 'premium', 'premium economy', 'economy'],
+};
+
+function addProgramTier(group: ProgramDisplayGroup, tier: string) {
+  const formatted = formatProgramTier(tier).replace('Premium Economy', 'Premium economy');
+  if (!formatted) {
+    return;
+  }
+  const isPlusTier = formatted.endsWith('+');
+  const baseNormalized = normalizeBrandLookup(formatted.replace(/\+$/u, ''));
+  const normalized = normalizeBrandLookup(formatted);
+
+  if (isPlusTier) {
+    const existingBaseIndex = group.tiers.findIndex((candidate) => normalizeBrandLookup(candidate) === baseNormalized);
+    if (existingBaseIndex >= 0) {
+      group.tiers[existingBaseIndex] = formatted;
+      return;
+    }
+  }
+
+  const alreadyCovered = group.tiers.some((candidate) => {
+    const candidateIsPlus = candidate.endsWith('+');
+    const candidateBase = normalizeBrandLookup(candidate.replace(/\+$/u, ''));
+    return normalizeBrandLookup(candidate) === normalized || (candidateIsPlus && candidateBase === baseNormalized);
+  });
+  if (!alreadyCovered) {
+    group.tiers.push(formatted);
+  }
+}
+
+function sortedProgramTiers(group: ProgramDisplayGroup) {
+  const order = PROGRAM_TIER_ORDER[group.id] ?? [];
+  return group.tiers.slice().sort((left, right) => {
+    const leftBase = normalizeBrandLookup(left.replace(/\+$/u, ''));
+    const rightBase = normalizeBrandLookup(right.replace(/\+$/u, ''));
+    const leftRank = order.indexOf(leftBase);
+    const rightRank = order.indexOf(rightBase);
+    if (leftRank !== -1 || rightRank !== -1) {
+      return (leftRank === -1 ? Number.MAX_SAFE_INTEGER : leftRank) - (rightRank === -1 ? Number.MAX_SAFE_INTEGER : rightRank);
+    }
+    return left.localeCompare(right);
+  });
+}
+
+function tierFromCompactSuffix(compact: string, prefix: string, fallback: string, aliases: Record<string, string>) {
+  if (!compact.startsWith(prefix)) {
+    return fallback;
+  }
+  const suffix = compact.startsWith(prefix) ? compact.slice(prefix.length) : '';
+  return aliases[suffix] ?? fallback;
+}
+
+function parseProgramFamily(rawProgram: string): ParsedProgramFamily | null {
+  const compact = compactBrandLookup(rawProgram);
+  const prefixedAlliance = rawProgram
+    .trim()
+    .match(/^(one\s*world|oneworld|star\s*alliance|sky\s*team|skyteam)\s+(.+)$/iu);
+
+  if (prefixedAlliance) {
+    const family = compactBrandLookup(prefixedAlliance[1]);
+    if (family === 'oneworld') {
+      return { id: 'oneworld', label: 'oneworld', lookup: 'oneworld', tier: prefixedAlliance[2] };
+    }
+    if (family === 'staralliance') {
+      return { id: 'star-alliance', label: 'Star Alliance', lookup: 'Star Alliance', tier: prefixedAlliance[2] };
+    }
+    if (family === 'skyteam') {
+      return { id: 'skyteam', label: 'SkyTeam', lookup: 'SkyTeam', tier: prefixedAlliance[2] };
+    }
+  }
+
+  const oneworldTier = tierFromCompactSuffix(compact, 'oneworld', rawProgram, {
+    '': '',
+    alliance: '',
+    emerald: 'Emerald',
+    sapphire: 'Sapphire',
+    ruby: 'Ruby',
+    emeraldandhigher: 'EmeraldAndHigher',
+    sapphireandhigher: 'SapphireAndHigher',
+    rubyandhigher: 'RubyAndHigher',
+  });
+  if (oneworldTier !== rawProgram || ['oneworld', 'oneworldalliance'].includes(compact)) {
+    return { id: 'oneworld', label: 'oneworld', lookup: 'oneworld', tier: oneworldTier };
+  }
+
+  const starAllianceTier = tierFromCompactSuffix(compact, 'staralliance', rawProgram, {
+    '': '',
+    gold: 'Gold',
+    silver: 'Silver',
+    goldandhigher: 'GoldAndHigher',
+    silverandhigher: 'SilverAndHigher',
+  });
+  if (starAllianceTier !== rawProgram || compact === 'staralliance') {
+    return {
+      id: 'star-alliance',
+      label: 'Star Alliance',
+      lookup: 'Star Alliance',
+      tier: starAllianceTier,
+    };
+  }
+
+  const skyTeamTier = tierFromCompactSuffix(compact, 'skyteam', rawProgram, {
+    '': '',
+    eliteplus: 'Elite Plus',
+    elite: 'Elite',
+    eliteplusandhigher: 'Elite PlusAndHigher',
+    eliteandhigher: 'EliteAndHigher',
+  });
+  if (skyTeamTier !== rawProgram || compact === 'skyteam') {
+    return {
+      id: 'skyteam',
+      label: 'SkyTeam',
+      lookup: 'SkyTeam',
+      tier: skyTeamTier,
+    };
+  }
+  if (['emeraldandhigher', 'sapphireandhigher', 'rubyandhigher'].includes(compact)) {
+    return { id: 'oneworld', label: 'oneworld', lookup: 'oneworld', tier: rawProgram };
+  }
+  if (['goldandhigher', 'silverandhigher'].includes(compact)) {
+    return { id: 'star-alliance', label: 'Star Alliance', lookup: 'Star Alliance', tier: rawProgram };
+  }
+  if (['eliteplusandhigher', 'eliteandhigher'].includes(compact)) {
+    return { id: 'skyteam', label: 'SkyTeam', lookup: 'SkyTeam', tier: rawProgram };
+  }
+  if (compact === 'premiumcabin') {
+    return { id: 'cabin', label: 'Cabin', lookup: 'Premium cabin', tier: 'Premium' };
+  }
+  if (/^(first|business|premiumeconomy|economy)(class)?andhigher$/iu.test(compact)) {
+    return { id: 'cabin', label: 'Cabin', lookup: 'Premium cabin', tier: rawProgram };
+  }
+
+  return null;
+}
+
+function summarizeProgramGroups(programs: string[]) {
+  const groups: ProgramDisplayGroup[] = [];
+  const byId = new Map<string, ProgramDisplayGroup>();
+  const standalone: string[] = [];
+
+  const ensureGroup = (id: string, label: string, lookup = label) => {
+    let group = byId.get(id);
+    if (!group) {
+      group = { id, label, lookup, tiers: [] };
+      byId.set(id, group);
+      groups.push(group);
+    }
+    return group;
+  };
+
+  for (const rawProgram of Array.from(new Set(programs.map((program) => program.trim()).filter(Boolean)))) {
+    const parsedProgram = parseProgramFamily(rawProgram);
+    if (parsedProgram) {
+      const group = ensureGroup(parsedProgram.id, parsedProgram.label, parsedProgram.lookup);
+      addProgramTier(group, parsedProgram.tier);
+      continue;
+    }
+
+    standalone.push(rawProgram);
+  }
+
+  const displayGroups = groups.map((group) => ({ ...group, tiers: sortedProgramTiers(group) }));
+
+  return {
+    groups: displayGroups.slice(0, PROGRAM_DISPLAY_LIMIT),
+    standalone: standalone.slice(0, Math.max(0, PROGRAM_DISPLAY_LIMIT - displayGroups.length)),
+  };
+}
+
 function ProgramBrandMarks({
   programs,
   brands,
@@ -472,7 +695,8 @@ function ProgramBrandMarks({
   brands: LoungeBrandAsset[];
   fallback?: string;
 }) {
-  const visiblePrograms = Array.from(new Set(programs.map((program) => program.trim()).filter(Boolean))).slice(0, 6);
+  const visiblePrograms = Array.from(new Set(programs.map((program) => program.trim()).filter(Boolean)));
+  const groupedPrograms = summarizeProgramGroups(visiblePrograms);
 
   if (visiblePrograms.length === 0) {
     return <>{fallback}</>;
@@ -480,7 +704,23 @@ function ProgramBrandMarks({
 
   return (
     <span className="program-brand-list">
-      {visiblePrograms.map((program) => (
+      {groupedPrograms.groups.map((group) => (
+        <span className="program-family-mark" key={group.id}>
+          <BrandMark
+            asset={findBrandAssetForText(group.lookup, brands)}
+            label={group.label}
+            compact
+          />
+          {group.tiers.length > 0 ? (
+            <span className="program-tier-list">
+              {group.tiers.map((tier) => (
+                <span key={tier}>{tier}</span>
+              ))}
+            </span>
+          ) : null}
+        </span>
+      ))}
+      {groupedPrograms.standalone.map((program) => (
         <BrandMark
           key={program}
           asset={findBrandAssetForText(program, brands)}
@@ -513,10 +753,44 @@ function BrandMark({
         {asset?.logoUrl ? (
           <img className="brand-mark-img" src={asset.logoUrl} alt="" loading="lazy" />
         ) : (
-          (asset?.logoText ?? label.slice(0, 2).toUpperCase())
+          (asset?.logoText ?? fallbackLogoText(label))
         )}
       </span>
       <span className="brand-mark-name">{label}</span>
+    </span>
+  );
+}
+
+function BrandIconMark({
+  asset,
+  label,
+}: {
+  asset?: LoungeBrandAsset;
+  label: string;
+}) {
+  const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null);
+  const markStyle = {
+    '--brand-mark-bg': asset?.background ?? '#eef3f8',
+    '--brand-mark-fg': asset?.foreground ?? '#405064',
+    '--brand-mark-line': asset?.color ?? '#aebacc',
+  } as CSSProperties;
+  const logoUrl = asset?.logoUrl;
+  const isChallengedDeskTravelAsset = Boolean(logoUrl?.startsWith('https://src.desk.travel/'));
+  const imageFailed = Boolean((logoUrl && failedLogoUrl === logoUrl) || isChallengedDeskTravelAsset);
+
+  return (
+    <span className="brand-icon-mark" style={markStyle} aria-hidden>
+      {logoUrl && !imageFailed ? (
+        <img
+          className="brand-icon-mark-img"
+          src={logoUrl}
+          alt=""
+          loading="lazy"
+          onError={() => setFailedLogoUrl(logoUrl)}
+        />
+      ) : (
+        (asset?.logoText ?? fallbackLogoText(label))
+      )}
     </span>
   );
 }
@@ -1595,13 +1869,15 @@ function ResultsList({
               onBlur={() => onHover(null)}
             >
               <header className="result-card-head">
-                <BrandMark asset={brandAsset} label={brandName} compact />
                 <span className="result-code-group">
                   <span className="badge">{feature.properties.type}</span>
                   <span className="code">{feature.properties.airportCode}</span>
                 </span>
               </header>
-              <h3>{feature.properties.name}</h3>
+              <div className="result-title-row">
+                <BrandIconMark asset={brandAsset} label={brandName} />
+                <h3>{feature.properties.name}</h3>
+              </div>
               <p>{feature.properties.airportName}</p>
               <div className="quality-row">
                 <span>{feature.properties.canonical?.sources[0]?.publisher ?? 'Priority Pass'}</span>
@@ -3394,17 +3670,17 @@ function App() {
       return [];
     }
 
-    const selectedCoordinate = coordinateKey(selectedFeature.geometry.coordinates);
-    const sameCoordinate = filteredFeatures
-      .filter((feature) => coordinateKey(feature.geometry.coordinates) === selectedCoordinate)
+    const sameAirport = filteredFeatures
+      .filter((feature) => feature.properties.airportCode === selectedFeature.properties.airportCode)
       .sort((first, second) => first.properties.name.localeCompare(second.properties.name));
 
-    if (sameCoordinate.length > 1) {
-      return sameCoordinate;
+    if (sameAirport.length > 1) {
+      return sameAirport;
     }
 
+    const selectedCoordinate = coordinateKey(selectedFeature.geometry.coordinates);
     return filteredFeatures
-      .filter((feature) => feature.properties.airportCode === selectedFeature.properties.airportCode)
+      .filter((feature) => coordinateKey(feature.geometry.coordinates) === selectedCoordinate)
       .sort((first, second) => first.properties.name.localeCompare(second.properties.name));
   }, [filteredFeatures, selectedFeature]);
 
