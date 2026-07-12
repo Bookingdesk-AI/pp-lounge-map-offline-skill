@@ -203,27 +203,6 @@ function insertLoungeSources(runId, record) {
 );`);
 }
 
-function insertSourceRun(sourceReport) {
-  const compactSources = (sourceReport.sources ?? []).map((source) => ({
-    sourceId: source.sourceId,
-    publisher: source.publisher,
-    status: source.status,
-    reason: source.reason,
-    httpStatus: source.httpStatus,
-    records: source.records,
-    airportCodeCount: source.airportCodes?.length ?? 0,
-    loungeLinkCount: source.loungeLinks?.length ?? 0,
-    childPageCount: source.childPages?.length ?? 0,
-    snapshotFile: source.snapshotFile,
-    robots: source.robots,
-  }));
-
-  return `INSERT INTO source_runs (id, generated_at, policy_json, stats_json, sources_json) VALUES (
-  ${sql(sourceReport.runId)}, ${sql(sourceReport.generatedAt)}, ${sql(json(sourceReport.policy))},
-  ${sql(json(sourceReport.stats))}, ${sql(json(compactSources))}
-);`;
-}
-
 function insertValidationRun(goal, runId, summary) {
   const validationId = `${goal.id}-${runId}`;
   return `INSERT INTO coverage_validation_runs (
@@ -251,8 +230,6 @@ async function main() {
     'DELETE FROM lounge_sources;',
     'DELETE FROM lounge_records;',
     'DELETE FROM catalog_runs;',
-    'DELETE FROM source_runs;',
-    insertSourceRun(sourceReport),
     insertCatalogRun(runId, catalog, goal, summary, catalogHash),
     ...catalog.records.flatMap((record) => [insertLoungeRecord(runId, record), ...insertLoungeSources(runId, record)]),
     insertValidationRun(goal, runId, summary),

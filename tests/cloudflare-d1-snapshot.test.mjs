@@ -27,6 +27,8 @@ test('D1 snapshot exporter writes a catalog import SQL file', () => {
   assert.match(sql, /INSERT INTO lounge_records/);
   assert.match(sql, /INSERT INTO lounge_sources/);
   assert.match(sql, /INSERT INTO coverage_validation_runs/);
+  assert.doesNotMatch(sql, /DELETE FROM source_runs/);
+  assert.doesNotMatch(sql, /INSERT INTO source_runs/);
   assert.doesNotMatch(sql, /BEGIN TRANSACTION/);
   assert.doesNotMatch(sql, /COMMIT;/);
 });
