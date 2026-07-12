@@ -112,4 +112,8 @@ test('route smoke fails when MCP route serves HTML', async () => {
 
 test('package exposes route smoke command', () => {
   assert.equal(packageJson.scripts['smoke:routes'], 'node scripts/smoke-routes.mjs');
+  assert.match(packageJson.scripts['smoke:production'], /smoke:deploy/);
+  assert.match(packageJson.scripts['smoke:production'], /smoke:routes/);
+  assert.match(packageJson.scripts['smoke:production'], /smoke:ui/);
+  assert.match(packageJson.scripts['smoke:production'], /loungeguru\.desk\.travel/);
 });

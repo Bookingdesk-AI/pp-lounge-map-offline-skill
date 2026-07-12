@@ -16,18 +16,21 @@ This step downloads the workbook into the repo-local `.cache/` directory, rebuil
 
 1. Run `npm run deploy:mcp`.
 2. Run `npm run deploy:web`.
+3. Run `npm run smoke:production`.
 
 If you want one command, run `npm run deploy`.
 
 ## Route verification
 
-Verify the site shell still works:
+Run the production smoke:
 
 ```bash
-curl -I https://loungeguru.desk.travel/
+npm run smoke:production
 ```
 
-Verify health:
+It checks the site shell, catalog JSON, admin guard, `/healthz`, `/mcp`, `/sse`, desktop UI, mobile UI, and review queue.
+
+For diagnosis, verify health:
 
 ```bash
 curl -i https://loungeguru.desk.travel/healthz
@@ -54,4 +57,4 @@ The response should advertise an `event: endpoint` pointing at `/messages?sessio
 
 1. Re-deploy the previous Worker version with `wrangler rollback` or the previous known-good git SHA.
 2. Re-deploy the previous Pages build from the Pages dashboard or by re-running `npm run deploy:web` from the previous commit.
-3. Re-run the route verification commands above.
+3. Re-run `npm run smoke:production`.
