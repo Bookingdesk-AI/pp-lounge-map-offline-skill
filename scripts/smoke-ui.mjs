@@ -227,12 +227,16 @@ function reviewQueueExpression() {
     const text = document.body.innerText;
     const panelText = document.querySelector('.mobile-review-panel')?.innerText ?? '';
     const panel = panelText.toLowerCase();
+    const selectedTab = tabs.find((button) => button.getAttribute('aria-selected') === 'true')?.innerText ?? '';
+    const queueCount = Number(selectedTab.match(/\\d+/)?.[0] ?? Number.NaN);
     return {
       width: 390,
       height: 844,
       mobile: true,
       check: 'review-queue',
-      selectedTab: tabs.find((button) => button.getAttribute('aria-selected') === 'true')?.innerText ?? '',
+      selectedTab,
+      queueCount: Number.isFinite(queueCount) ? queueCount : null,
+      hasEmptyReviewState: panel.includes('no review records'),
       hasOfficialQueue: panel.includes('official airport code review'),
       hasPublishCount: panel.includes('publish'),
       hasManualRows: panel.includes('manual'),
@@ -250,6 +254,14 @@ function reviewQueueExpression() {
 function assertReviewQueue(result) {
   const failures = [];
   if (!result.selectedTab?.toLowerCase().includes('queue')) failures.push('review queue tab not selected');
+  const isEmptyQueue = result.queueCount === 0 || result.hasEmptyReviewState;
+  if (isEmptyQueue) {
+    if (!result.hasEmptyReviewState) failures.push('empty review state missing');
+    if (!result.hasPublishCount) failures.push('source decision counts missing');
+    if (result.hasForbiddenUiCopy) failures.push('forbidden UI copy visible');
+    if (result.horizontalOverflow) failures.push('horizontal overflow');
+    return failures;
+  }
   if (!result.hasOfficialQueue) failures.push('official queue missing');
   if (!result.hasPublishCount) failures.push('source decision counts missing');
   if (!result.hasManualRows) failures.push('manual labels missing');
@@ -330,7 +342,8 @@ async function runMobileReviewQueue({ port, baseUrl, timeoutMs }) {
         expression: reviewQueueExpression(),
       });
       value = result.result.value;
-      if (value?.selectedTab?.toLowerCase().includes('queue') && value?.hasCandidateRow) {
+      const queueReady = value?.hasCandidateRow || value?.queueCount === 0 || value?.hasEmptyReviewState;
+      if (value?.selectedTab?.toLowerCase().includes('queue') && queueReady) {
         break;
       }
       await wait(250);
