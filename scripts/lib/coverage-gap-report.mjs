@@ -116,21 +116,26 @@ function createNextCloudflareIntake({
   cloudflareSourceIntakeReport,
   cloudflareEvidence,
   sourceRuntime,
+  missingSourceProof,
   missingSourceProofIds,
 }) {
   const runs = intakeSourceRunById(sourceIntakeReport);
   const cloudflareRuns = intakeSourceRunById(cloudflareSourceIntakeReport);
+  const missingProofByLane = new Map(
+    (missingSourceProof ?? []).map((lane) => [`${lane.familyId}:${lane.sourceId}`, lane]),
+  );
   const missingMembers = sourceFamilies.flatMap((family) =>
     family.members
       .filter((member) => member.records === 0)
       .map((member) => {
         const run = runs.get(member.sourceId);
         const cloudflareRun = cloudflareRuns.get(member.sourceId);
+        const proofLane = missingProofByLane.get(`${family.id}:${member.sourceId}`);
         const evidenceRun = cloudflareRun ?? run;
         return {
           ...member,
           familyId: family.id,
-          runStatus: run?.status ?? cloudflareRun?.status ?? 'not_run',
+          runStatus: proofLane?.status ?? run?.status ?? cloudflareRun?.status ?? 'not_run',
           accessBlocked: isAccessBlockedRun(evidenceRun),
         };
       }),
@@ -147,7 +152,10 @@ function createNextCloudflareIntake({
   const accessBlockedSourceIds = missingMembers.filter((member) => member.accessBlocked).map((member) => member.sourceId);
   const uniqueReadySourceIds = [...new Set(readySourceIds)];
   const sourceIdArg = uniqueReadySourceIds.join(',');
-  const missingProofSourceIdArg = [...new Set(missingSourceProofIds ?? [])].join(',');
+  const nonRepairableSourceIds = new Set([...credentialSourceIds, ...rightsReviewSourceIds]);
+  const missingProofSourceIdArg = [
+    ...new Set((missingSourceProofIds ?? []).filter((sourceId) => !nonRepairableSourceIds.has(sourceId))),
+  ].join(',');
   const cloudflareCommand = sourceIdArg
     ? `LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare -- --source-ids=${sourceIdArg}`
     : 'LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare';
@@ -255,6 +263,7 @@ export function createCoverageGapReport({
     cloudflareSourceIntakeReport,
     cloudflareEvidence,
     sourceRuntime,
+    missingSourceProof,
     missingSourceProofIds,
   });
   const blockers = [];

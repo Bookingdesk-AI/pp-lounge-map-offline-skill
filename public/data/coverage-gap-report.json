@@ -32,12 +32,12 @@
       "uniqueSources": 14,
       "fetched": 14,
       "cloudflareSnapshots": 14,
-      "readyTasks": 3,
-      "readyTasksWithCloudflareEvidence": 3,
-      "readyTaskCoverageRatio": 1,
-      "readyMemberGaps": 16,
-      "readyMemberGapsWithCloudflareEvidence": 14,
-      "readyMemberGapCoverageRatio": 0.875,
+      "readyTasks": 0,
+      "readyTasksWithCloudflareEvidence": 0,
+      "readyTaskCoverageRatio": 0,
+      "readyMemberGaps": 15,
+      "readyMemberGapsWithCloudflareEvidence": 11,
+      "readyMemberGapCoverageRatio": 0.7333,
       "fullSourceIntakeReportRequired": true
     }
   },
@@ -47,10 +47,18 @@
     "reviewRecordsToResolve": 0,
     "missingSourceFamilies": [],
     "missingSourceProofIds": [
+      "loungekey",
       "united",
-      "american"
+      "american",
+      "plaza-premium"
     ],
     "missingSourceProofLanes": [
+      {
+        "sourceId": "loungekey",
+        "familyId": "collinson-networks",
+        "status": "skipped",
+        "terminalFamilyBlocked": false
+      },
       {
         "sourceId": "united",
         "familyId": "airline-operated-lounges",
@@ -62,6 +70,12 @@
         "familyId": "airline-operated-lounges",
         "status": "http_error",
         "terminalFamilyBlocked": false
+      },
+      {
+        "sourceId": "plaza-premium",
+        "familyId": "operator-operated-lounges",
+        "status": "skipped",
+        "terminalFamilyBlocked": false
       }
     ],
     "sourceIntakeRuntimeRequired": "playwright"
@@ -72,7 +86,6 @@
     "missingRuntime": false,
     "fullReportRequired": true,
     "readySourceIds": [
-      "loungekey",
       "collinson-international",
       "citi-travel",
       "star-alliance",
@@ -80,7 +93,6 @@
       "united",
       "delta",
       "american",
-      "plaza-premium",
       "aspire-lounges",
       "marhaba",
       "primeclass",
@@ -94,14 +106,18 @@
     ],
     "credentialSourceIds": [],
     "rightsReviewSourceIds": [
+      "loungekey",
+      "plaza-premium",
       "nominatim"
     ],
     "missingSourceProofIds": [
+      "loungekey",
       "united",
-      "american"
+      "american",
+      "plaza-premium"
     ],
     "commands": {
-      "probe": "LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare -- --source-ids=loungekey,collinson-international,citi-travel,star-alliance,skyteam,united,delta,american,plaza-premium,aspire-lounges,marhaba,primeclass,no1-lounges,be-relax,openstreetmap",
+      "probe": "LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare -- --source-ids=collinson-international,citi-travel,star-alliance,skyteam,united,delta,american,aspire-lounges,marhaba,primeclass,no1-lounges,be-relax,openstreetmap",
       "proofRepair": "LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare -- --source-ids=united,american",
       "evidence": "npm run intake:evidence",
       "report": "public/data/source-intake-report.json",

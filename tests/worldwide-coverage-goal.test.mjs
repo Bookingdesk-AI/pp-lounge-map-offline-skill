@@ -85,11 +85,11 @@ test('coverage validator reports current progress without pretending terminal co
   );
   const summary = JSON.parse(output);
 
-  assert.match(textOutput, /Source proof: 14\/16/);
-  assert.match(textOutput, /Source proof missing: united, american/);
+  assert.match(textOutput, /Source proof: 11\/15/);
+  assert.match(textOutput, /Source proof missing: loungekey, united, american, plaza-premium/);
   assert.match(textOutput, /Intake token env: LOUNGE_GURU_INTAKE_TOKEN/);
   assert.match(textOutput, /Intake preflight: Playwright runtime (present|missing), API token (present|missing), local scrawl playwright_only/);
-  assert.match(textOutput, /Playwright lanes: ready 15, access 2, cred 0, rights 1/);
+  assert.match(textOutput, /Playwright lanes: ready 13, access 2, cred 0, rights 3/);
   assert.match(textOutput, /Source proof repair: LOUNGE_GURU_INTAKE_TOKEN=<redacted> .*--source-ids=united,american/);
   assert.match(textOutput, /Intake report: public\/data\/source-intake-report\.json/);
   assert.match(textOutput, /Terminal goal: blocked \(cloudflare_source_proof_incomplete\)/);
@@ -135,12 +135,19 @@ test('coverage validator reports current progress without pretending terminal co
     cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence,
   );
   assert.equal(summary.cloudflareSourceEvidence.readyMemberGaps, cloudflareEvidence.stats.readyMemberGaps);
-  assert.deepEqual(summary.gapReport.deltas.missingSourceProofIds, ['united', 'american']);
+  assert.deepEqual(summary.gapReport.deltas.missingSourceProofIds, [
+    'loungekey',
+    'united',
+    'american',
+    'plaza-premium',
+  ]);
   assert.deepEqual(
     summary.gapReport.deltas.missingSourceProofLanes.map((lane) => [lane.familyId, lane.sourceId, lane.status]),
     [
+      ['collinson-networks', 'loungekey', 'skipped'],
       ['airline-operated-lounges', 'united', 'http_error'],
       ['airline-operated-lounges', 'american', 'http_error'],
+      ['operator-operated-lounges', 'plaza-premium', 'skipped'],
     ],
   );
   assert.equal(summary.blockers.includes('source_intake_runtime_not_cloudflare'), false);
@@ -162,13 +169,13 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
     coverageGap.current.cloudflareSourceEvidence.readyTasksWithCloudflareEvidence,
     cloudflareEvidence.stats.readyTasksWithCloudflareEvidence,
   );
-  assert.equal(coverageGap.current.cloudflareSourceEvidence.readyTaskCoverageRatio, 1);
+  assert.equal(coverageGap.current.cloudflareSourceEvidence.readyTaskCoverageRatio, 0);
   assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGaps, cloudflareEvidence.stats.readyMemberGaps);
   assert.equal(
     coverageGap.current.cloudflareSourceEvidence.readyMemberGapsWithCloudflareEvidence,
     cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence,
   );
-  assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGapCoverageRatio, 0.875);
+  assert.equal(coverageGap.current.cloudflareSourceEvidence.readyMemberGapCoverageRatio, 0.7333);
   assert.equal(coverageGap.current.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
   assert.equal(coverageGap.targets.minReadyMemberGapCoverageRatio, 1);
   assert.equal(coverageGap.deltas.sourceIntakeRuntimeRequired, 'playwright');
@@ -176,7 +183,8 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
   assert.equal(coverageGap.nextCloudflareIntake.localScrawl, 'playwright_only');
   assert.equal(coverageGap.nextCloudflareIntake.missingRuntime, false);
   assert.equal(coverageGap.nextCloudflareIntake.fullReportRequired, true);
-  assert.ok(coverageGap.nextCloudflareIntake.readySourceIds.includes('loungekey'));
+  assert.equal(coverageGap.nextCloudflareIntake.rightsReviewSourceIds.includes('loungekey'), true);
+  assert.equal(coverageGap.nextCloudflareIntake.rightsReviewSourceIds.includes('plaza-premium'), true);
   assert.deepEqual([...coverageGap.nextCloudflareIntake.accessBlockedSourceIds].sort(), [
     'american',
     'united',
@@ -184,6 +192,7 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
   assert.equal(coverageGap.nextCloudflareIntake.credentialSourceIds.length, 0);
   assert.ok(coverageGap.nextCloudflareIntake.commands.probe.includes('npm run intake:cloudflare'));
   assert.match(coverageGap.nextCloudflareIntake.commands.proofRepair, /--source-ids=united,american/);
+  assert.doesNotMatch(coverageGap.nextCloudflareIntake.commands.proofRepair, /loungekey|plaza-premium/);
   assert.equal(coverageGap.nextCloudflareIntake.commands.report, 'public/data/source-intake-report.json');
   assert.equal(coverageGap.nextCloudflareIntake.commands.promote, 'npm run build:canonical-data');
   assert.equal(coverageGap.deltas.approvedRecordsRemaining, 0);

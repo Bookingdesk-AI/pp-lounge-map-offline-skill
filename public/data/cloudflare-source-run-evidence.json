@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-12T00:05:44.684Z",
+  "generatedAt": "2026-07-12T19:47:41.933Z",
   "policy": {
     "source": "cloudflare-d1-source_runs",
     "database": "lounge-guru-catalog",
@@ -13,35 +13,24 @@
     "sourceRunsRead": 100,
     "cloudflareSourceRuns": 100,
     "uniqueSources": 14,
-    "attemptedSources": 16,
+    "attemptedSources": 18,
     "fetched": 14,
     "cloudflareSnapshots": 14,
-    "readyTasks": 3,
-    "readyTasksWithCloudflareEvidence": 3,
-    "readyMemberGaps": 16,
-    "readyMemberGapsWithCloudflareEvidence": 14
+    "readyTasks": 0,
+    "readyTasksWithCloudflareEvidence": 0,
+    "readyMemberGaps": 15,
+    "readyMemberGapsWithCloudflareEvidence": 11
   },
-  "readyTaskEvidence": [
-    {
-      "sourceId": "visa-airport-companion",
-      "present": true,
-      "status": "fetched",
-      "cloudflareSnapshot": true
-    },
-    {
-      "sourceId": "mastercard-travel-pass",
-      "present": true,
-      "status": "fetched",
-      "cloudflareSnapshot": true
-    },
-    {
-      "sourceId": "dragonpass",
-      "present": true,
-      "status": "fetched",
-      "cloudflareSnapshot": true
-    }
-  ],
+  "readyTaskEvidence": [],
   "readyMemberGapEvidence": [
+    {
+      "sourceId": "loungekey",
+      "familyId": "collinson-networks",
+      "terminalFamilyBlocked": false,
+      "present": true,
+      "status": "skipped",
+      "cloudflareSnapshot": false
+    },
     {
       "sourceId": "collinson-international",
       "familyId": "collinson-networks",
@@ -54,30 +43,6 @@
       "sourceId": "citi-travel",
       "familyId": "bank-issuer-programs",
       "terminalFamilyBlocked": false,
-      "present": true,
-      "status": "fetched",
-      "cloudflareSnapshot": true
-    },
-    {
-      "sourceId": "visa-airport-companion",
-      "familyId": "card-network-programs",
-      "terminalFamilyBlocked": true,
-      "present": true,
-      "status": "fetched",
-      "cloudflareSnapshot": true
-    },
-    {
-      "sourceId": "mastercard-travel-pass",
-      "familyId": "card-network-programs",
-      "terminalFamilyBlocked": true,
-      "present": true,
-      "status": "fetched",
-      "cloudflareSnapshot": true
-    },
-    {
-      "sourceId": "dragonpass",
-      "familyId": "card-network-programs",
-      "terminalFamilyBlocked": true,
       "present": true,
       "status": "fetched",
       "cloudflareSnapshot": true
@@ -120,6 +85,14 @@
       "terminalFamilyBlocked": false,
       "present": true,
       "status": "http_error",
+      "cloudflareSnapshot": false
+    },
+    {
+      "sourceId": "plaza-premium",
+      "familyId": "operator-operated-lounges",
+      "terminalFamilyBlocked": false,
+      "present": true,
+      "status": "skipped",
       "cloudflareSnapshot": false
     },
     {

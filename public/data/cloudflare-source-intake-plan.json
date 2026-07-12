@@ -28,9 +28,9 @@
       "runStatus": "not_run",
       "runRecords": 0,
       "cloudflareSnapshot": false,
-      "action": "cloudflare_snapshot",
-      "status": "ready",
-      "next": "Snapshot",
+      "action": "rights_review",
+      "status": "blocked",
+      "next": "Rights",
       "url": "https://www.loungekey.com/",
       "fetchUrls": [
         "https://www.loungekey.com/"
@@ -221,9 +221,9 @@
       "runStatus": "not_run",
       "runRecords": 0,
       "cloudflareSnapshot": false,
-      "action": "cloudflare_snapshot",
-      "status": "ready",
-      "next": "Snapshot",
+      "action": "rights_review",
+      "status": "blocked",
+      "next": "Rights",
       "url": "https://www.plazapremiumlounge.com/en-uk",
       "fetchUrls": [
         "https://www.plazapremiumlounge.com/en-uk"
