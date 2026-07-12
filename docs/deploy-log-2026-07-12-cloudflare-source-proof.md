@@ -33,3 +33,13 @@ Date: 2026-07-12
 ## Current Block
 
 Terminal coverage remains blocked by `cloudflare_source_proof_incomplete`.
+
+## Deployment Follow-up
+
+- Confirmed Wrangler OAuth as `dev@k-linellc.com` after the stale global token cleanup.
+- Deployed the current web bundle to Cloudflare Pages.
+- Preview URL: `https://4b7a4b3a.uscf-pps-worker.pages.dev`
+- Production URL: `https://loungeguru.desk.travel`
+- Production smoke passed with `2640` catalog records and admin report access forbidden.
+- Preview smoke passed with `2640` catalog records and static admin fallback.
+- Retried Cloudflare source repair for `united` and `american`; both remain upstream `http_error` with `0` fetched records.
