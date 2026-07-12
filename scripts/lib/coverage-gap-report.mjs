@@ -81,6 +81,17 @@ function requiredReadyMemberGapCoverageRatio(goal) {
   return Number.isFinite(value) ? value : 0;
 }
 
+function missingSourceProofLanes(sourceRunEvidence) {
+  return (sourceRunEvidence?.readyMemberGapEvidence ?? [])
+    .filter((lane) => !lane.cloudflareSnapshot)
+    .map((lane) => ({
+      sourceId: lane.sourceId,
+      familyId: lane.familyId,
+      status: lane.status ?? 'missing',
+      terminalFamilyBlocked: Boolean(lane.terminalFamilyBlocked),
+    }));
+}
+
 function intakeSourceRunById(sourceIntakeReport) {
   return new Map((sourceIntakeReport?.sources ?? []).map((source) => [source.sourceId, source]));
 }
@@ -105,6 +116,7 @@ function createNextCloudflareIntake({
   cloudflareSourceIntakeReport,
   cloudflareEvidence,
   sourceRuntime,
+  missingSourceProofIds,
 }) {
   const runs = intakeSourceRunById(sourceIntakeReport);
   const cloudflareRuns = intakeSourceRunById(cloudflareSourceIntakeReport);
@@ -135,9 +147,16 @@ function createNextCloudflareIntake({
   const accessBlockedSourceIds = missingMembers.filter((member) => member.accessBlocked).map((member) => member.sourceId);
   const uniqueReadySourceIds = [...new Set(readySourceIds)];
   const sourceIdArg = uniqueReadySourceIds.join(',');
+  const missingProofSourceIdArg = [...new Set(missingSourceProofIds ?? [])].join(',');
+  const cloudflareCommand = sourceIdArg
+    ? `LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare -- --source-ids=${sourceIdArg}`
+    : 'LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare';
+  const proofRepairCommand = missingProofSourceIdArg
+    ? `LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare -- --source-ids=${missingProofSourceIdArg}`
+    : cloudflareCommand;
 
   return {
-    requiredTokenEnv: 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME',
+    requiredTokenEnv: 'LOUNGE_GURU_INTAKE_TOKEN',
     localScrawl: 'playwright_only',
     missingRuntime: sourceRuntime !== 'playwright',
     fullReportRequired: cloudflareEvidence.fullSourceIntakeReportRequired,
@@ -145,10 +164,10 @@ function createNextCloudflareIntake({
     accessBlockedSourceIds: [...new Set(accessBlockedSourceIds)],
     credentialSourceIds: [...new Set(credentialSourceIds)],
     rightsReviewSourceIds: [...new Set(rightsReviewSourceIds)],
+    missingSourceProofIds: [...new Set(missingSourceProofIds ?? [])],
     commands: {
-      probe: sourceIdArg
-        ? `LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright SOURCE_SOURCE_IDS=${sourceIdArg} npm run scrape:sources`
-        : 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright npm run scrape:sources',
+      probe: cloudflareCommand,
+      proofRepair: proofRepairCommand,
       evidence: 'npm run intake:evidence',
       report: 'public/data/source-intake-report.json',
       promote: 'npm run build:canonical-data',
@@ -206,6 +225,8 @@ export function createCoverageGapReport({
   const tableStatuses = validateRequiredTables(goal, migrationSql);
   const sourceRuntime = sourceIntakeRuntime(sourceIntakeReport);
   const cloudflareEvidence = cloudflareSourceEvidence(sourceRunEvidence);
+  const missingSourceProof = missingSourceProofLanes(sourceRunEvidence);
+  const missingSourceProofIds = missingSourceProof.map((lane) => lane.sourceId);
   const minReadyMemberGapCoverageRatio = requiredReadyMemberGapCoverageRatio(goal);
   const cloudflareSourceRuntimePassed = hasRequiredSourceRuntime(goal, sourceIntakeReport, sourceRunEvidence);
   const runtimeRequired = requiredSourceRuntime(goal);
@@ -234,6 +255,7 @@ export function createCoverageGapReport({
     cloudflareSourceIntakeReport,
     cloudflareEvidence,
     sourceRuntime,
+    missingSourceProofIds,
   });
   const blockers = [];
 
@@ -306,6 +328,8 @@ export function createCoverageGapReport({
       approvalsNeededForCurrentCatalogRatio: approvalRatioRemaining,
       reviewRecordsToResolve: Math.max(0, reviewRecords - goal.terminalGoal.maxReviewRecords),
       missingSourceFamilies: sourceFamilies.filter((family) => !family.present).map((family) => family.id),
+      missingSourceProofIds,
+      missingSourceProofLanes: missingSourceProof,
       sourceIntakeRuntimeRequired: runtimeRequired,
     },
     nextCloudflareIntake,

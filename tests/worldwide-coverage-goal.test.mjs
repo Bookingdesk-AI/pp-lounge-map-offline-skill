@@ -86,9 +86,11 @@ test('coverage validator reports current progress without pretending terminal co
   const summary = JSON.parse(output);
 
   assert.match(textOutput, /Source proof: 14\/16/);
-  assert.match(textOutput, /Intake runtime env: LOUNGE_GURU_SOURCE_INTAKE_RUNTIME/);
+  assert.match(textOutput, /Source proof missing: united, american/);
+  assert.match(textOutput, /Intake token env: LOUNGE_GURU_INTAKE_TOKEN/);
   assert.match(textOutput, /Intake preflight: Playwright runtime (present|missing), API token (present|missing), local scrawl playwright_only/);
   assert.match(textOutput, /Playwright lanes: ready 15, access 2, cred 0, rights 1/);
+  assert.match(textOutput, /Source proof repair: LOUNGE_GURU_INTAKE_TOKEN=<redacted> .*--source-ids=united,american/);
   assert.match(textOutput, /Intake report: public\/data\/source-intake-report\.json/);
   assert.match(textOutput, /Terminal goal: blocked \(cloudflare_source_proof_incomplete\)/);
   assert.equal(summary.goalId, goal.id);
@@ -105,7 +107,7 @@ test('coverage validator reports current progress without pretending terminal co
     cloudflareEvidence.stats.readyTasksWithCloudflareEvidence,
   );
   assert.equal(summary.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
-  assert.equal(summary.gapReport.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME');
+  assert.equal(summary.gapReport.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
   assert.equal(summary.gapReport.nextCloudflareIntake.localScrawl, 'playwright_only');
   assert.deepEqual([...summary.gapReport.nextCloudflareIntake.accessBlockedSourceIds].sort(), [
     'american',
@@ -122,7 +124,7 @@ test('coverage validator reports current progress without pretending terminal co
     'intakeTokenPresent',
     'localScrawl',
   ]);
-  assert.equal(summary.credentialPreflight.intakeTokenEnv, 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME');
+  assert.equal(summary.credentialPreflight.intakeTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
   assert.equal(typeof summary.credentialPreflight.intakeTokenPresent, 'boolean');
   assert.equal(typeof summary.credentialPreflight.cloudflareApiTokenPresent, 'boolean');
   assert.equal(summary.credentialPreflight.cloudflareAuthStatus, 'unchecked');
@@ -133,6 +135,14 @@ test('coverage validator reports current progress without pretending terminal co
     cloudflareEvidence.stats.readyMemberGapsWithCloudflareEvidence,
   );
   assert.equal(summary.cloudflareSourceEvidence.readyMemberGaps, cloudflareEvidence.stats.readyMemberGaps);
+  assert.deepEqual(summary.gapReport.deltas.missingSourceProofIds, ['united', 'american']);
+  assert.deepEqual(
+    summary.gapReport.deltas.missingSourceProofLanes.map((lane) => [lane.familyId, lane.sourceId, lane.status]),
+    [
+      ['airline-operated-lounges', 'united', 'http_error'],
+      ['airline-operated-lounges', 'american', 'http_error'],
+    ],
+  );
   assert.equal(summary.blockers.includes('source_intake_runtime_not_cloudflare'), false);
   assert.equal(summary.blockers.includes('source_intake_runtime_not_playwright'), false);
   assert.deepEqual(summary.missingSourceFamilies, coverageGap.deltas.missingSourceFamilies);
@@ -162,7 +172,7 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
   assert.equal(coverageGap.current.cloudflareSourceEvidence.fullSourceIntakeReportRequired, true);
   assert.equal(coverageGap.targets.minReadyMemberGapCoverageRatio, 1);
   assert.equal(coverageGap.deltas.sourceIntakeRuntimeRequired, 'playwright');
-  assert.equal(coverageGap.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME');
+  assert.equal(coverageGap.nextCloudflareIntake.requiredTokenEnv, 'LOUNGE_GURU_INTAKE_TOKEN');
   assert.equal(coverageGap.nextCloudflareIntake.localScrawl, 'playwright_only');
   assert.equal(coverageGap.nextCloudflareIntake.missingRuntime, false);
   assert.equal(coverageGap.nextCloudflareIntake.fullReportRequired, true);
@@ -172,7 +182,8 @@ test('coverage gap report names terminal blockers and missing source lanes', () 
     'united',
   ]);
   assert.equal(coverageGap.nextCloudflareIntake.credentialSourceIds.length, 0);
-  assert.ok(coverageGap.nextCloudflareIntake.commands.probe.startsWith('LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright'));
+  assert.ok(coverageGap.nextCloudflareIntake.commands.probe.includes('npm run intake:cloudflare'));
+  assert.match(coverageGap.nextCloudflareIntake.commands.proofRepair, /--source-ids=united,american/);
   assert.equal(coverageGap.nextCloudflareIntake.commands.report, 'public/data/source-intake-report.json');
   assert.equal(coverageGap.nextCloudflareIntake.commands.promote, 'npm run build:canonical-data');
   assert.equal(coverageGap.deltas.approvedRecordsRemaining, 0);

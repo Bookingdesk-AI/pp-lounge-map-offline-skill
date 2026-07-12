@@ -194,9 +194,12 @@ if (jsonOutput) {
     `Source proof: ${summary.cloudflareSourceEvidence.readyMemberGapsWithCloudflareEvidence}/` +
       `${summary.cloudflareSourceEvidence.readyMemberGaps}`,
   );
+  if (summary.gapReport.deltas.missingSourceProofIds?.length > 0) {
+    console.log(`Source proof missing: ${summary.gapReport.deltas.missingSourceProofIds.join(', ')}`);
+  }
   if (summary.gapReport.nextCloudflareIntake) {
     const intake = summary.gapReport.nextCloudflareIntake;
-    console.log(`Intake runtime env: ${intake.requiredTokenEnv}`);
+    console.log(`Intake token env: ${intake.requiredTokenEnv}`);
     console.log(
       `Intake preflight: Playwright runtime ${summary.credentialPreflight.intakeTokenPresent ? 'present' : 'missing'}, ` +
         `API token ${summary.credentialPreflight.cloudflareApiTokenPresent ? 'present' : 'missing'}, local scrawl ${intake.localScrawl}`,
@@ -213,6 +216,9 @@ if (jsonOutput) {
         `access ${intake.accessBlockedSourceIds?.length ?? 0}, ` +
         `cred ${intake.credentialSourceIds.length}, rights ${intake.rightsReviewSourceIds.length}`,
     );
+    if (intake.commands.proofRepair) {
+      console.log(`Source proof repair: ${intake.commands.proofRepair}`);
+    }
     console.log(`Intake report: ${intake.commands.report}`);
   }
   console.log(`Schema tables: ${summary.tableStatuses.filter((table) => table.present).length}/${summary.tableStatuses.length}`);

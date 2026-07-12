@@ -82,16 +82,16 @@ Card-network program pages remain tracked as source evidence, but they are not t
 
 ## Intake
 
-Run bounded Playwright source intake:
+Run bounded Cloudflare source intake:
 
 ```bash
-LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright npm run scrape:sources
+LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare
 ```
 
-Useful bounded repair run:
+Current source-proof repair run:
 
 ```bash
-LOUNGE_GURU_SOURCE_INTAKE_RUNTIME=playwright SOURCE_SOURCE_IDS=loungekey,united,american,plaza-premium npm run scrape:sources
+LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare -- --source-ids=united,american
 ```
 
 Then rebuild:

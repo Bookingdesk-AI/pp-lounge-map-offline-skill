@@ -155,8 +155,8 @@ function validateCoverage(goal, gap) {
     'coverage-gap-report.json: approvedRecordsRemaining missing',
   );
   issue(
-    gap?.nextCloudflareIntake?.requiredTokenEnv === 'LOUNGE_GURU_SOURCE_INTAKE_RUNTIME',
-    'coverage-gap-report.json: Playwright intake env missing',
+    gap?.nextCloudflareIntake?.requiredTokenEnv === 'LOUNGE_GURU_INTAKE_TOKEN',
+    'coverage-gap-report.json: Cloudflare intake token env missing',
   );
   issue(
     gap?.nextCloudflareIntake?.localScrawl === 'playwright_only',
@@ -169,6 +169,25 @@ function validateCoverage(goal, gap) {
   issue(
     Array.isArray(gap?.nextCloudflareIntake?.accessBlockedSourceIds),
     'coverage-gap-report.json: access-blocked Cloudflare source ids missing',
+  );
+  issue(
+    Array.isArray(gap?.deltas?.missingSourceProofIds),
+    'coverage-gap-report.json: missing source proof ids missing',
+  );
+  issue(
+    Array.isArray(gap?.deltas?.missingSourceProofLanes),
+    'coverage-gap-report.json: missing source proof lanes missing',
+  );
+  issue(
+    gap?.deltas?.missingSourceProofIds?.length === 0 ||
+      (typeof gap?.nextCloudflareIntake?.commands?.proofRepair === 'string' &&
+        gap.nextCloudflareIntake.commands.proofRepair.includes('npm run intake:cloudflare')),
+    'coverage-gap-report.json: Cloudflare proof repair command missing',
+  );
+  issue(
+    typeof gap?.nextCloudflareIntake?.commands?.probe === 'string' &&
+      gap.nextCloudflareIntake.commands.probe.includes('npm run intake:cloudflare'),
+    'coverage-gap-report.json: probe command must use Cloudflare intake',
   );
   issue(
     typeof gap?.nextCloudflareIntake?.commands?.report === 'string' &&

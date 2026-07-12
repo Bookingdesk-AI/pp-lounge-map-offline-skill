@@ -30,7 +30,7 @@ test('mobile review exposes compact section tabs with source evidence workflow',
   assert.match(appSource, /nextCloudflareIntake/);
   assert.match(appSource, /preflightStats/);
   assert.match(appSource, /copyPreflightCommand/);
-  assert.match(appSource, /LOUNGE_GURU_SOURCE_INTAKE_RUNTIME|intakePreflight\.requiredTokenEnv/);
+  assert.match(appSource, /intakePreflight\.requiredTokenEnv/);
   assert.match(appSource, />\s*report\s*</);
   assert.match(appSource, /aria-label="Source commands"/);
   assert.match(appSource, /intakePreflight\.commands\.probe/);
