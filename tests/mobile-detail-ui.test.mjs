@@ -16,3 +16,9 @@ test('mobile details expose source and quality badges', () => {
   assert.match(appCss, /\.mobile-selected-summary \.quality-row\s*{[^}]*margin-top:\s*0\.46rem;/s);
   assert.match(appCss, /\.mobile-selected-summary \.quality-row \.code\s*{[^}]*white-space:\s*nowrap;/s);
 });
+
+test('mobile sheet actions preserve touch targets', () => {
+  assert.match(appCss, /\.mobile-actions button strong\s*{[^}]*border-top:\s*1px solid var\(--line-soft\);/s);
+  assert.match(appCss, /\.mobile-sheet \.primary-action\s*,\s*\n\s*\.mobile-sheet \.results-load-more\s*{[^}]*min-height:\s*44px;/s);
+  assert.match(appCss, /\.mobile-type-strip \.quick-type-chip\s*,\s*\n\s*\.mobile-filter-wrap \.type-pill\s*,\s*\n\s*\.mobile-filter-wrap \.filter-chip\s*{[^}]*min-width:\s*44px;[^}]*min-height:\s*44px;/s);
+});

@@ -1877,7 +1877,7 @@
     display: grid;
     align-content: center;
     justify-items: center;
-    gap: 0.1rem;
+    gap: 0.16rem;
     border-radius: 6px;
     padding: 0.28rem 0.2rem;
     font-size: 0.68rem;
@@ -1893,6 +1893,13 @@
   }
 
   .mobile-actions button strong {
+    min-width: 1.35rem;
+    min-height: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid var(--line-soft);
+    padding-top: 0.14rem;
     color: var(--text-soft);
     font-family: var(--font-mono);
     font-size: 0.62rem;
@@ -1900,6 +1907,7 @@
   }
 
   .mobile-actions button.is-active strong {
+    border-top-color: rgba(255, 255, 255, 0.32);
     color: rgba(255, 255, 255, 0.82);
   }
 
@@ -1938,6 +1946,7 @@
 
   .mobile-sheet .ghost-link,
   .mobile-sheet .compare-toggle,
+  .mobile-sheet .primary-action,
   .mobile-sheet .results-load-more {
     display: inline-flex;
     min-height: 44px;
@@ -2054,6 +2063,7 @@
   .mobile-type-strip .quick-type-chip,
   .mobile-filter-wrap .type-pill,
   .mobile-filter-wrap .filter-chip {
+    min-width: 44px;
     min-height: 44px;
   }
 
