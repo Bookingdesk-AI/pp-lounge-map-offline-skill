@@ -227,7 +227,8 @@
     "background": "#eaf1fb",
     "foreground": "#163f82",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public United page supplies source context."
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public United page supplies source context.",
+    "fallbackLogoUrl": "/data/brand-logos/united.svg"
   },
   {
     "id": "delta",
@@ -250,7 +251,8 @@
     "background": "#fff0f2",
     "foreground": "#75202b",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Delta page supplies source context."
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Delta page supplies source context.",
+    "fallbackLogoUrl": "/data/brand-logos/delta.svg"
   },
   {
     "id": "american-airlines",
@@ -273,7 +275,8 @@
     "background": "#eaf2f8",
     "foreground": "#214967",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+    "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
   },
   {
     "id": "air-canada",
@@ -296,7 +299,8 @@
     "background": "#eef1f4",
     "foreground": "#303741",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+    "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
   },
   {
     "id": "air-france-klm",
@@ -322,7 +326,8 @@
     "background": "#edf3fb",
     "foreground": "#173b68",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context."
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context.",
+    "fallbackLogoUrl": "/data/brand-logos/air-france-klm.svg"
   },
   {
     "id": "british-airways",
@@ -345,7 +350,32 @@
     "background": "#edf3fb",
     "foreground": "#243f6a",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+    "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
+  },
+  {
+    "id": "alaska-airlines",
+    "name": "Alaska Airlines",
+    "category": "airline",
+    "aliases": [
+      "Alaska Airlines",
+      "alaska airlines",
+      "alaska lounge"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.alaskaair.com/content/airports/lounges",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/alaska-airlines",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/as/ca87b5a37b83fdb8160788a9f5fb5520c51f97deea59bff3a7ab137bbc3626ee.png",
+    "logoText": "AS",
+    "color": "#245a7e",
+    "background": "#edf5f8",
+    "foreground": "#19435f",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.",
+    "fallbackLogoUrl": "/data/brand-logos/alaska-airlines.svg"
   },
   {
     "id": "oneworld",
@@ -440,7 +470,8 @@
     "background": "#fff0f2",
     "foreground": "#821626",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Turkish Airlines lounge page supplies source context."
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Turkish Airlines lounge page supplies source context.",
+    "fallbackLogoUrl": "/data/brand-logos/turkish-airlines.svg"
   },
   {
     "id": "etihad",
@@ -464,7 +495,8 @@
     "background": "#f7f1e7",
     "foreground": "#5c4a31",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Etihad lounge page supplies source context."
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Etihad lounge page supplies source context.",
+    "fallbackLogoUrl": "/data/brand-logos/etihad.svg"
   },
   {
     "id": "virgin-atlantic",
@@ -488,7 +520,8 @@
     "background": "#fff0f2",
     "foreground": "#861b28",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Virgin Atlantic Clubhouse page supplies source context."
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Virgin Atlantic Clubhouse page supplies source context.",
+    "fallbackLogoUrl": "/data/brand-logos/virgin-atlantic.svg"
   },
   {
     "id": "plaza-premium",

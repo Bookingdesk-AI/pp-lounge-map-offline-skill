@@ -741,17 +741,25 @@ function BrandMark({
   label: string;
   compact?: boolean;
 }) {
+  const [failedLogoUrls, setFailedLogoUrls] = useState<Set<string>>(() => new Set());
   const markStyle = {
     '--brand-mark-bg': asset?.background ?? '#eef3f8',
     '--brand-mark-fg': asset?.foreground ?? '#405064',
     '--brand-mark-line': asset?.color ?? '#aebacc',
   } as CSSProperties;
+  const logoUrl = [asset?.logoUrl, asset?.fallbackLogoUrl].find((url) => url && !failedLogoUrls.has(url));
 
   return (
       <span className={`brand-mark ${compact ? 'is-compact' : ''}`} style={markStyle}>
         <span className="brand-mark-tile" aria-hidden>
-        {asset?.logoUrl ? (
-          <img className="brand-mark-img" src={asset.logoUrl} alt="" loading="lazy" />
+        {logoUrl ? (
+          <img
+            className="brand-mark-img"
+            src={logoUrl}
+            alt=""
+            loading="lazy"
+            onError={() => setFailedLogoUrls((current) => new Set(current).add(logoUrl))}
+          />
         ) : (
           (asset?.logoText ?? fallbackLogoText(label))
         )}
@@ -768,25 +776,23 @@ function BrandIconMark({
   asset?: LoungeBrandAsset;
   label: string;
 }) {
-  const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null);
+  const [failedLogoUrls, setFailedLogoUrls] = useState<Set<string>>(() => new Set());
   const markStyle = {
     '--brand-mark-bg': asset?.background ?? '#eef3f8',
     '--brand-mark-fg': asset?.foreground ?? '#405064',
     '--brand-mark-line': asset?.color ?? '#aebacc',
   } as CSSProperties;
-  const logoUrl = asset?.logoUrl;
-  const isChallengedDeskTravelAsset = Boolean(logoUrl?.startsWith('https://src.desk.travel/'));
-  const imageFailed = Boolean((logoUrl && failedLogoUrl === logoUrl) || isChallengedDeskTravelAsset);
+  const logoUrl = [asset?.logoUrl, asset?.fallbackLogoUrl].find((url) => url && !failedLogoUrls.has(url));
 
   return (
     <span className="brand-icon-mark" style={markStyle} aria-hidden>
-      {logoUrl && !imageFailed ? (
+      {logoUrl ? (
         <img
           className="brand-icon-mark-img"
           src={logoUrl}
           alt=""
           loading="lazy"
-          onError={() => setFailedLogoUrl(logoUrl)}
+          onError={() => setFailedLogoUrls((current) => new Set(current).add(logoUrl))}
         />
       ) : (
         (asset?.logoText ?? fallbackLogoText(label))
@@ -3711,7 +3717,7 @@ function App() {
   }, [filteredFeatures, loading, selectedId]);
 
   useEffect(() => {
-    if (!query) {
+    if (!query || selectedId) {
       return;
     }
 
@@ -3722,7 +3728,7 @@ function App() {
     if (exactIata) {
       setSelectedId(exactIata.properties.id);
     }
-  }, [query, filteredFeatures]);
+  }, [query, filteredFeatures, selectedId]);
 
   const filterSignature = useMemo(
     () =>

@@ -2,7 +2,7 @@
   "generatedAt": "2026-07-12T02:33:19.252Z",
   "goalId": "lounge-guru-worldwide-coverage",
   "goalVersion": "2026-07-11",
-  "catalogHash": "61f49c01930b944cd86d47b9415f9a0f91058aed7152a52647725c96ed0f899e",
+  "catalogHash": "78997e176cf960152f57a21fa98bb53aaf6d2aa2be9f2aaf63d5f61029c78c3a",
   "terminalPassed": false,
   "blockers": [
     "cloudflare_source_proof_incomplete"

@@ -3501,7 +3501,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -3592,7 +3593,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -3683,7 +3685,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -3774,7 +3777,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -3865,7 +3869,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -3956,7 +3961,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -4047,7 +4053,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -4138,7 +4145,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -4229,7 +4237,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -4320,7 +4329,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -4411,7 +4421,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -4502,7 +4513,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -4593,7 +4605,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -4684,7 +4697,8 @@
         "background": "#eef1f4",
         "foreground": "#303741",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
       },
       "operator": "Air Canada Maple Leaf Lounges",
       "category": "lounge",
@@ -8001,26 +8015,28 @@
       "name": "Alaska Lounge",
       "brand": "oneworld Airport Lounges",
       "brandAsset": {
-        "id": "oneworld",
-        "name": "oneworld",
-        "category": "alliance",
+        "id": "alaska-airlines",
+        "name": "Alaska Airlines",
+        "category": "airline",
         "aliases": [
-          "oneworld",
-          "one world"
+          "Alaska Airlines",
+          "alaska airlines",
+          "alaska lounge"
         ],
         "sourceIds": [
           "oneworld"
         ],
-        "sourceUrl": "https://www.oneworld.com/airport-lounges",
+        "sourceUrl": "https://www.alaskaair.com/content/airports/lounges",
         "assetSource": "desk_travel_database",
-        "deskTravelAssetKey": "desk-travel:brand/oneworld",
-        "logoUrl": "/data/brand-logos/oneworld.svg",
-        "logoText": "OW",
-        "color": "#1f5d8f",
-        "background": "#edf4fb",
-        "foreground": "#1b4f78",
+        "deskTravelAssetKey": "all-routes:brand/alaska-airlines",
+        "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/as/ca87b5a37b83fdb8160788a9f5fb5520c51f97deea59bff3a7ab137bbc3626ee.png",
+        "logoText": "AS",
+        "color": "#245a7e",
+        "background": "#edf5f8",
+        "foreground": "#19435f",
         "status": "review",
-        "rightsNote": "Desk.Travel managed alliance mark; official public oneworld lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/alaska-airlines.svg"
       },
       "operator": "AS",
       "category": "lounge",
@@ -9219,7 +9235,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -9651,7 +9668,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -13721,7 +13739,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -14704,7 +14723,8 @@
         "background": "#edf3fb",
         "foreground": "#173b68",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-france-klm.svg"
       },
       "operator": "Air France",
       "category": "lounge",
@@ -14811,7 +14831,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -14916,7 +14937,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -15033,7 +15055,8 @@
         "background": "#fff0f2",
         "foreground": "#75202b",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Delta page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Delta page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/delta.svg"
       },
       "operator": "DL",
       "category": "lounge",
@@ -18059,7 +18082,8 @@
         "background": "#edf3fb",
         "foreground": "#173b68",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-france-klm.svg"
       },
       "operator": "Air France",
       "category": "lounge",
@@ -18164,7 +18188,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -20238,7 +20263,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "-",
       "category": "lounge",
@@ -20342,7 +20368,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -20446,7 +20473,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -20552,7 +20580,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "American Airlines",
       "category": "lounge",
@@ -22319,7 +22348,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -22435,7 +22465,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "Dnata Marhaba",
       "category": "lounge",
@@ -23861,7 +23892,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -23965,7 +23997,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -24069,7 +24102,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -24287,7 +24321,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -24393,7 +24428,8 @@
         "background": "#eaf1fb",
         "foreground": "#163f82",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public United page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public United page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/united.svg"
       },
       "operator": "United Airlines",
       "category": "lounge",
@@ -24500,7 +24536,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -24605,7 +24642,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -24710,7 +24748,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -24815,7 +24854,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -24920,7 +24960,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -25024,7 +25065,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -28788,7 +28830,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -29114,7 +29157,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "-",
       "category": "lounge",
@@ -29553,7 +29597,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -29780,7 +29825,8 @@
         "background": "#fff0f2",
         "foreground": "#821626",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Turkish Airlines lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Turkish Airlines lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/turkish-airlines.svg"
       },
       "operator": "Plaza Premium Group",
       "category": "lounge",
@@ -30327,7 +30373,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -30431,7 +30478,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -30656,7 +30704,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -31201,7 +31250,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -32493,7 +32543,8 @@
         "background": "#edf3fb",
         "foreground": "#173b68",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-france-klm.svg"
       },
       "operator": "AF/KLM",
       "category": "lounge",
@@ -33782,7 +33833,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -33890,7 +33942,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -34434,7 +34487,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -35175,7 +35229,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -35396,7 +35451,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "Dnata Switzerland AG",
       "category": "lounge",
@@ -40747,7 +40803,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -40867,7 +40924,8 @@
         "background": "#fff0f2",
         "foreground": "#821626",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Turkish Airlines lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Turkish Airlines lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/turkish-airlines.svg"
       },
       "operator": "-",
       "category": "lounge",
@@ -40987,7 +41045,8 @@
         "background": "#edf3fb",
         "foreground": "#173b68",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-france-klm.svg"
       },
       "operator": "Societe Air France",
       "category": "lounge",
@@ -41096,7 +41155,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -43051,7 +43111,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -43157,7 +43218,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "BA/AA",
       "category": "lounge",
@@ -43272,7 +43334,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "BA/AA",
       "category": "lounge",
@@ -43388,7 +43451,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "BA/AA",
       "category": "lounge",
@@ -43828,7 +43892,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -48749,26 +48814,28 @@
       "name": "Alaska Lounge",
       "brand": "oneworld Airport Lounges",
       "brandAsset": {
-        "id": "oneworld",
-        "name": "oneworld",
-        "category": "alliance",
+        "id": "alaska-airlines",
+        "name": "Alaska Airlines",
+        "category": "airline",
         "aliases": [
-          "oneworld",
-          "one world"
+          "Alaska Airlines",
+          "alaska airlines",
+          "alaska lounge"
         ],
         "sourceIds": [
           "oneworld"
         ],
-        "sourceUrl": "https://www.oneworld.com/airport-lounges",
+        "sourceUrl": "https://www.alaskaair.com/content/airports/lounges",
         "assetSource": "desk_travel_database",
-        "deskTravelAssetKey": "desk-travel:brand/oneworld",
-        "logoUrl": "/data/brand-logos/oneworld.svg",
-        "logoText": "OW",
-        "color": "#1f5d8f",
-        "background": "#edf4fb",
-        "foreground": "#1b4f78",
+        "deskTravelAssetKey": "all-routes:brand/alaska-airlines",
+        "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/as/ca87b5a37b83fdb8160788a9f5fb5520c51f97deea59bff3a7ab137bbc3626ee.png",
+        "logoText": "AS",
+        "color": "#245a7e",
+        "background": "#edf5f8",
+        "foreground": "#19435f",
         "status": "review",
-        "rightsNote": "Desk.Travel managed alliance mark; official public oneworld lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/alaska-airlines.svg"
       },
       "operator": "AS",
       "category": "lounge",
@@ -48880,7 +48947,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -48984,7 +49052,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -49090,7 +49159,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "American Airlines",
       "category": "lounge",
@@ -49194,7 +49264,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -49629,7 +49700,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "-",
       "category": "lounge",
@@ -50367,7 +50439,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -50579,7 +50652,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -51121,7 +51195,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -51228,7 +51303,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -51332,7 +51408,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -51445,7 +51522,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -51560,7 +51638,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -51674,7 +51753,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -51791,7 +51871,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -51903,7 +51984,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -53022,7 +53104,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -55966,7 +56049,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -56628,7 +56712,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "Alpha Flight Services Pty Ltd",
       "category": "lounge",
@@ -57164,7 +57249,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -57380,7 +57466,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "American airlines",
       "category": "lounge",
@@ -57483,7 +57570,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -57595,7 +57683,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -57706,7 +57795,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -57818,7 +57908,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "British Airways",
       "category": "lounge",
@@ -57936,7 +58027,8 @@
         "background": "#fff0f2",
         "foreground": "#821626",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Turkish Airlines lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Turkish Airlines lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/turkish-airlines.svg"
       },
       "operator": "Global Lounge Turkish Airlines MIA",
       "category": "lounge",
@@ -58708,7 +58800,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "Dnata Inc.",
       "category": "lounge",
@@ -59799,7 +59892,8 @@
         "background": "#edf3fb",
         "foreground": "#173b68",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-france-klm.svg"
       },
       "operator": "Air FRance / KLM",
       "category": "lounge",
@@ -64792,7 +64886,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -64897,7 +64992,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -65001,7 +65097,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -65106,7 +65203,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -66607,26 +66705,28 @@
       "name": "Alaska Lounge",
       "brand": "oneworld Airport Lounges",
       "brandAsset": {
-        "id": "oneworld",
-        "name": "oneworld",
-        "category": "alliance",
+        "id": "alaska-airlines",
+        "name": "Alaska Airlines",
+        "category": "airline",
         "aliases": [
-          "oneworld",
-          "one world"
+          "Alaska Airlines",
+          "alaska airlines",
+          "alaska lounge"
         ],
         "sourceIds": [
           "oneworld"
         ],
-        "sourceUrl": "https://www.oneworld.com/airport-lounges",
+        "sourceUrl": "https://www.alaskaair.com/content/airports/lounges",
         "assetSource": "desk_travel_database",
-        "deskTravelAssetKey": "desk-travel:brand/oneworld",
-        "logoUrl": "/data/brand-logos/oneworld.svg",
-        "logoText": "OW",
-        "color": "#1f5d8f",
-        "background": "#edf4fb",
-        "foreground": "#1b4f78",
+        "deskTravelAssetKey": "all-routes:brand/alaska-airlines",
+        "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/as/ca87b5a37b83fdb8160788a9f5fb5520c51f97deea59bff3a7ab137bbc3626ee.png",
+        "logoText": "AS",
+        "color": "#245a7e",
+        "background": "#edf5f8",
+        "foreground": "#19435f",
         "status": "review",
-        "rightsNote": "Desk.Travel managed alliance mark; official public oneworld lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/alaska-airlines.svg"
       },
       "operator": "AS",
       "category": "lounge",
@@ -66739,7 +66839,8 @@
         "background": "#eaf1fb",
         "foreground": "#163f82",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public United page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public United page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/united.svg"
       },
       "operator": "United Airlines",
       "category": "lounge",
@@ -68575,7 +68676,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -68679,7 +68781,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -68783,7 +68886,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -68895,7 +68999,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "American Airlines",
       "category": "lounge",
@@ -69006,7 +69111,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -69121,7 +69227,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -69225,7 +69332,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -69329,7 +69437,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -69544,7 +69653,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -72598,7 +72708,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -75510,26 +75621,28 @@
       "name": "Alaska Lounge",
       "brand": "oneworld Airport Lounges",
       "brandAsset": {
-        "id": "oneworld",
-        "name": "oneworld",
-        "category": "alliance",
+        "id": "alaska-airlines",
+        "name": "Alaska Airlines",
+        "category": "airline",
         "aliases": [
-          "oneworld",
-          "one world"
+          "Alaska Airlines",
+          "alaska airlines",
+          "alaska lounge"
         ],
         "sourceIds": [
           "oneworld"
         ],
-        "sourceUrl": "https://www.oneworld.com/airport-lounges",
+        "sourceUrl": "https://www.alaskaair.com/content/airports/lounges",
         "assetSource": "desk_travel_database",
-        "deskTravelAssetKey": "desk-travel:brand/oneworld",
-        "logoUrl": "/data/brand-logos/oneworld.svg",
-        "logoText": "OW",
-        "color": "#1f5d8f",
-        "background": "#edf4fb",
-        "foreground": "#1b4f78",
+        "deskTravelAssetKey": "all-routes:brand/alaska-airlines",
+        "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/as/ca87b5a37b83fdb8160788a9f5fb5520c51f97deea59bff3a7ab137bbc3626ee.png",
+        "logoText": "AS",
+        "color": "#245a7e",
+        "background": "#edf5f8",
+        "foreground": "#19435f",
         "status": "review",
-        "rightsNote": "Desk.Travel managed alliance mark; official public oneworld lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/alaska-airlines.svg"
       },
       "operator": "AS",
       "category": "lounge",
@@ -75621,26 +75734,28 @@
       "name": "Alaska Lounge",
       "brand": "oneworld Airport Lounges",
       "brandAsset": {
-        "id": "oneworld",
-        "name": "oneworld",
-        "category": "alliance",
+        "id": "alaska-airlines",
+        "name": "Alaska Airlines",
+        "category": "airline",
         "aliases": [
-          "oneworld",
-          "one world"
+          "Alaska Airlines",
+          "alaska airlines",
+          "alaska lounge"
         ],
         "sourceIds": [
           "oneworld"
         ],
-        "sourceUrl": "https://www.oneworld.com/airport-lounges",
+        "sourceUrl": "https://www.alaskaair.com/content/airports/lounges",
         "assetSource": "desk_travel_database",
-        "deskTravelAssetKey": "desk-travel:brand/oneworld",
-        "logoUrl": "/data/brand-logos/oneworld.svg",
-        "logoText": "OW",
-        "color": "#1f5d8f",
-        "background": "#edf4fb",
-        "foreground": "#1b4f78",
+        "deskTravelAssetKey": "all-routes:brand/alaska-airlines",
+        "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/as/ca87b5a37b83fdb8160788a9f5fb5520c51f97deea59bff3a7ab137bbc3626ee.png",
+        "logoText": "AS",
+        "color": "#245a7e",
+        "background": "#edf5f8",
+        "foreground": "#19435f",
         "status": "review",
-        "rightsNote": "Desk.Travel managed alliance mark; official public oneworld lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/alaska-airlines.svg"
       },
       "operator": "AS",
       "category": "lounge",
@@ -75732,26 +75847,28 @@
       "name": "Alaska Lounge",
       "brand": "oneworld Airport Lounges",
       "brandAsset": {
-        "id": "oneworld",
-        "name": "oneworld",
-        "category": "alliance",
+        "id": "alaska-airlines",
+        "name": "Alaska Airlines",
+        "category": "airline",
         "aliases": [
-          "oneworld",
-          "one world"
+          "Alaska Airlines",
+          "alaska airlines",
+          "alaska lounge"
         ],
         "sourceIds": [
           "oneworld"
         ],
-        "sourceUrl": "https://www.oneworld.com/airport-lounges",
+        "sourceUrl": "https://www.alaskaair.com/content/airports/lounges",
         "assetSource": "desk_travel_database",
-        "deskTravelAssetKey": "desk-travel:brand/oneworld",
-        "logoUrl": "/data/brand-logos/oneworld.svg",
-        "logoText": "OW",
-        "color": "#1f5d8f",
-        "background": "#edf4fb",
-        "foreground": "#1b4f78",
+        "deskTravelAssetKey": "all-routes:brand/alaska-airlines",
+        "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/as/ca87b5a37b83fdb8160788a9f5fb5520c51f97deea59bff3a7ab137bbc3626ee.png",
+        "logoText": "AS",
+        "color": "#245a7e",
+        "background": "#edf5f8",
+        "foreground": "#19435f",
         "status": "review",
-        "rightsNote": "Desk.Travel managed alliance mark; official public oneworld lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/alaska-airlines.svg"
       },
       "operator": "AS",
       "category": "lounge",
@@ -75863,7 +75980,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -76184,26 +76302,28 @@
       "name": "Alaska Lounge",
       "brand": "oneworld Airport Lounges",
       "brandAsset": {
-        "id": "oneworld",
-        "name": "oneworld",
-        "category": "alliance",
+        "id": "alaska-airlines",
+        "name": "Alaska Airlines",
+        "category": "airline",
         "aliases": [
-          "oneworld",
-          "one world"
+          "Alaska Airlines",
+          "alaska airlines",
+          "alaska lounge"
         ],
         "sourceIds": [
           "oneworld"
         ],
-        "sourceUrl": "https://www.oneworld.com/airport-lounges",
+        "sourceUrl": "https://www.alaskaair.com/content/airports/lounges",
         "assetSource": "desk_travel_database",
-        "deskTravelAssetKey": "desk-travel:brand/oneworld",
-        "logoUrl": "/data/brand-logos/oneworld.svg",
-        "logoText": "OW",
-        "color": "#1f5d8f",
-        "background": "#edf4fb",
-        "foreground": "#1b4f78",
+        "deskTravelAssetKey": "all-routes:brand/alaska-airlines",
+        "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/as/ca87b5a37b83fdb8160788a9f5fb5520c51f97deea59bff3a7ab137bbc3626ee.png",
+        "logoText": "AS",
+        "color": "#245a7e",
+        "background": "#edf5f8",
+        "foreground": "#19435f",
         "status": "review",
-        "rightsNote": "Desk.Travel managed alliance mark; official public oneworld lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/alaska-airlines.svg"
       },
       "operator": "AS",
       "category": "lounge",
@@ -76314,7 +76434,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -76419,7 +76540,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -77511,7 +77633,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "BA",
       "category": "lounge",
@@ -77851,7 +77974,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "Dnata",
       "category": "lounge",
@@ -79286,7 +79410,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -79824,7 +79949,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -83601,7 +83727,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -88043,7 +88170,8 @@
         "background": "#edf3fb",
         "foreground": "#173b68",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/air-france-klm.svg"
       },
       "operator": "Plaza Premium",
       "category": "lounge",
@@ -88487,7 +88615,8 @@
         "background": "#eaf2f8",
         "foreground": "#214967",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
       },
       "operator": "AA",
       "category": "lounge",
@@ -89024,7 +89153,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "Dnata Zanzibar",
       "category": "lounge",
@@ -89356,7 +89486,8 @@
         "background": "#edf3fb",
         "foreground": "#243f6a",
         "status": "review",
-        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
+        "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
+        "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
       },
       "operator": "dnata Switzerland",
       "category": "lounge",

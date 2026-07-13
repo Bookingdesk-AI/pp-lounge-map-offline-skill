@@ -55,6 +55,8 @@ test('airline-operated Priority Pass records prefer airline brand assets over so
     ['IAD-iad17-the-etihad-lounge-722', 'etihad'],
     ['IAD-iad11-turkish-airlines-lounge-washington-723', 'turkish-airlines'],
     ['candidate-oneworld-iad-836', 'british-airways'],
+    ['candidate-oneworld-sea-1583', 'alaska-airlines'],
+    ['candidate-oneworld-sea-833', 'british-airways'],
     ['candidate-airport-dimensions-iad-airport-dimensions-the-club', 'airport-dimensions'],
     ['candidate-amex-global-lounge-collection-iad-american-express-global-lounge-collection', 'american-express'],
     ['candidate-capital-one-iad-capital-one-lounges', 'capital-one'],
@@ -80,14 +82,24 @@ test('all-routes airline logos are served from centralized Desk.Travel brand sto
     'delta',
     'american-airlines',
     'air-canada',
+    'alaska-airlines',
   ];
 
   for (const brandId of airlineBrandIds) {
     const brand = brands.find((candidate) => candidate.id === brandId);
     assert.ok(brand, `missing brand ${brandId}`);
     assert.ok(brand.logoUrl.startsWith('https://src.desk.travel/brand-logos/'));
+    assert.equal(brand.fallbackLogoUrl, `/data/brand-logos/${brand.id}.svg`);
+    assert.ok(fs.existsSync(new URL(`../public${brand.fallbackLogoUrl}`, import.meta.url)));
     assert.ok(brand.rightsNote.includes('all-routes'));
   }
+});
+
+test('SEA deep links keep explicit lounge selection when query matches airport code', () => {
+  const appSource = fs.readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8');
+
+  assert.match(appSource, /if \(!query \|\| selectedId\) \{/);
+  assert.match(appSource, /\}, \[query, filteredFeatures, selectedId\]\);/);
 });
 
 test('brand asset contract defines the approved Cloudflare storage path', () => {

@@ -4,6 +4,7 @@ const ALL_ROUTES_AIRLINE_LOGOS = {
   airFrance: 'https://src.desk.travel/brand-logos/airlines-transparent/af/a2207f1e1e6089f19602ce21b442c82e2ac3232ecb66758c3f0b1f9d84511f5f.png',
   klm: 'https://src.desk.travel/brand-logos/airlines-transparent/kl/a0220679b77ebc1a9eb4dea1b5dbbc0f3aec7487fcc9a83e89f8e67f66f596d8.png',
   britishAirways: 'https://src.desk.travel/brand-logos/airlines-transparent/ba/46b341955ba41a1246b1fafa9cfaf2fc1330d365c5da49a1e3ff0160642c4f72.png',
+  alaskaAirlines: 'https://src.desk.travel/brand-logos/airlines-transparent/as/ca87b5a37b83fdb8160788a9f5fb5520c51f97deea59bff3a7ab137bbc3626ee.png',
   turkishAirlines: 'https://src.desk.travel/brand-logos/airlines-transparent/tk/702869063e8f60647bd3522fc304df4d883a4e8e0aa4086119f52ee6d49efdc2.png',
   etihad: 'https://src.desk.travel/brand-logos/airlines-transparent/ey/b2bba6ed6cfc15e6175bbdf6f437bcbbefd58d53eb2b38986df4943d549945cd.png',
   virginAtlantic: 'https://src.desk.travel/brand-logos/airlines-transparent/vs/a91132439095f49245fac26e4955b55e1f2c0929d67467b4c0181ebfd693dd2b.png',
@@ -261,6 +262,23 @@ export const BRAND_REGISTRY = [
     rightsNote: 'Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.',
   },
   {
+    id: 'alaska-airlines',
+    name: 'Alaska Airlines',
+    category: 'airline',
+    aliases: ['alaska airlines', 'alaska lounge'],
+    sourceIds: ['oneworld'],
+    sourceUrl: 'https://www.alaskaair.com/content/airports/lounges',
+    assetSource: 'desk_travel_database',
+    deskTravelAssetKey: 'all-routes:brand/alaska-airlines',
+    logoUrl: ALL_ROUTES_AIRLINE_LOGOS.alaskaAirlines,
+    logoText: 'AS',
+    color: '#245a7e',
+    background: '#edf5f8',
+    foreground: '#19435f',
+    status: 'review',
+    rightsNote: 'Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.',
+  },
+  {
     id: 'oneworld',
     name: 'oneworld',
     category: 'alliance',
@@ -485,9 +503,14 @@ function normalize(value) {
 }
 
 function normalizeEntry(entry) {
+  const logoUrl = entry.logoUrl ?? `/data/brand-logos/${entry.id}.svg`;
+  const fallbackLogoUrl =
+    entry.fallbackLogoUrl ?? (logoUrl.startsWith('https://src.desk.travel/') ? `/data/brand-logos/${entry.id}.svg` : undefined);
+
   return {
     ...entry,
-    logoUrl: entry.logoUrl ?? `/data/brand-logos/${entry.id}.svg`,
+    logoUrl,
+    ...(fallbackLogoUrl ? { fallbackLogoUrl } : {}),
     aliases: [...new Set([entry.name, ...(entry.aliases ?? [])])],
   };
 }
@@ -612,6 +635,7 @@ export function createDeskTravelBrandImport({ generatedAt = new Date().toISOStri
       assetSource: brand.assetSource,
       deskTravelAssetKey: brand.deskTravelAssetKey,
       logoUrl: brand.logoUrl,
+      fallbackLogoUrl: brand.fallbackLogoUrl,
       logoText: brand.logoText,
       color: brand.color,
       background: brand.background,

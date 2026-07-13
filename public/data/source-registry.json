@@ -9,7 +9,7 @@
     "url": "https://desk.travel/",
     "rightsNote": "Internal Desk.Travel brand asset registry; use only approved logo assets and source mappings.",
     "lastRunAt": "2026-07-12T02:33:19.252Z",
-    "records": 28,
+    "records": 29,
     "issues": 0,
     "brandIds": [
       "desk-travel",
@@ -27,6 +27,7 @@
       "air-canada",
       "air-france-klm",
       "british-airways",
+      "alaska-airlines",
       "oneworld",
       "star-alliance",
       "skyteam",
@@ -375,6 +376,7 @@
     "issues": 0,
     "brandIds": [
       "british-airways",
+      "alaska-airlines",
       "oneworld",
       "turkish-airlines"
     ]

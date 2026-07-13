@@ -21,13 +21,14 @@ export interface LoungeSourceRegistryEntry {
 export interface LoungeBrandAsset {
   id: string;
   name: string;
-  category: 'program' | 'issuer' | 'airline' | 'operator' | 'card_network' | 'aggregator';
+  category: 'program' | 'issuer' | 'airline' | 'operator' | 'card_network' | 'aggregator' | 'alliance';
   aliases?: string[];
   sourceIds: string[];
   sourceUrl: string;
   assetSource: 'desk_travel_database' | 'official_public_source' | 'generated_fallback';
   deskTravelAssetKey: string;
   logoUrl: string;
+  fallbackLogoUrl?: string;
   logoText: string;
   color: string;
   background: string;
