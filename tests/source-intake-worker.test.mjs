@@ -169,6 +169,65 @@ test('Cloudflare source intake probe supports ready airline HTML lanes', async (
   assert.equal(d1.calls.length, 1);
 });
 
+test('Cloudflare source intake probe can fall back to Cloudflare browser rendering after source-side edge error', async () => {
+  const d1 = createD1Mock();
+  const browserRenderedUrls = [];
+  const response = await createSourceIntakeProbeResponse(
+    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=united', {
+      method: 'POST',
+      headers: {
+        'x-lounge-guru-intake-token': 'secret',
+      },
+    }),
+    {
+      LOUNGE_GURU_INTAKE_TOKEN: 'secret',
+      LOUNGE_GURU_DB: d1,
+      BROWSER: {},
+    },
+    {
+      fetchImpl: async (url) => {
+        if (String(url).endsWith('/robots.txt')) {
+          return textResponse('User-agent: *\n');
+        }
+        return textResponse('source-side edge error', { status: 520 });
+      },
+      browserRenderer: async (url) => {
+        browserRenderedUrls.push(String(url));
+        return {
+          ok: true,
+          status: 200,
+          statusText: 'OK',
+          finalUrl: String(url),
+          contentType: 'text/html; charset=utf-8',
+          text: '<html><body>Newark Liberty International Airport (EWR)<a href="/en/us/fly/travel/airport/united-club-and-lounge-locations.html">United Club locations</a></body></html>',
+        };
+      },
+    },
+  );
+
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.ok, true);
+  assert.equal(body.sourceId, 'united');
+  assert.equal(body.status, 'fetched');
+  assert.equal(body.cloudflareSnapshot, true);
+  assert.ok(browserRenderedUrls.length >= 1);
+
+  const [, , policyJson, , sourcesJson] = d1.calls[0].params;
+  const policy = JSON.parse(policyJson);
+  const sources = JSON.parse(sourcesJson);
+  assert.equal(policy.execution.browserFallback, true);
+  assert.equal(sources[0].fetchDriver, 'cloudflare_browser');
+  assert.deepEqual(sources[0].airportCodes, ['EWR']);
+  assert.equal(sources[0].fetchAttempts[0].status, 'http_error');
+  assert.equal(sources[0].fetchAttempts[0].httpStatus, 520);
+  assert.equal(sources[0].fetchAttempts[0].fetchDriver, 'cloudflare_fetch');
+  assert.equal(sources[0].fetchAttempts[1].status, 'fetched');
+  assert.equal(sources[0].fetchAttempts[1].fetchDriver, 'cloudflare_browser');
+  assert.ok(!Object.hasOwn(sources[0], 'text'));
+  assert.ok(!Object.hasOwn(sources[0], 'html'));
+});
+
 test('Cloudflare source intake probe aggregates bounded official source URLs', async () => {
   const d1 = createD1Mock();
   const fetchedUrls = [];

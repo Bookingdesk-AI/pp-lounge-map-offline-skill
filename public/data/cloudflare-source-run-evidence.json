@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-12T21:38:55.141Z",
+  "generatedAt": "2026-07-13T04:40:30.734Z",
   "policy": {
     "source": "cloudflare-d1-source_runs",
     "database": "lounge-guru-catalog",
@@ -12,14 +12,14 @@
   "stats": {
     "sourceRunsRead": 100,
     "cloudflareSourceRuns": 100,
-    "uniqueSources": 14,
+    "uniqueSources": 16,
     "attemptedSources": 18,
-    "fetched": 14,
-    "cloudflareSnapshots": 14,
+    "fetched": 16,
+    "cloudflareSnapshots": 16,
     "readyTasks": 0,
     "readyTasksWithCloudflareEvidence": 0,
     "readyMemberGaps": 13,
-    "readyMemberGapsWithCloudflareEvidence": 11
+    "readyMemberGapsWithCloudflareEvidence": 13
   },
   "readyTaskEvidence": [],
   "readyMemberGapEvidence": [
@@ -60,8 +60,8 @@
       "familyId": "airline-operated-lounges",
       "terminalFamilyBlocked": false,
       "present": true,
-      "status": "http_error",
-      "cloudflareSnapshot": false
+      "status": "fetched",
+      "cloudflareSnapshot": true
     },
     {
       "sourceId": "delta",
@@ -76,8 +76,8 @@
       "familyId": "airline-operated-lounges",
       "terminalFamilyBlocked": false,
       "present": true,
-      "status": "http_error",
-      "cloudflareSnapshot": false
+      "status": "fetched",
+      "cloudflareSnapshot": true
     },
     {
       "sourceId": "aspire-lounges",
@@ -129,6 +129,284 @@
     }
   ],
   "sources": [
+    {
+      "sourceId": "american",
+      "publisher": "American Airlines Admirals Club",
+      "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+      "adapter": "official_html",
+      "status": "fetched",
+      "records": 16,
+      "airportCodeCount": 5,
+      "loungeLinkCount": 16,
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+      "httpStatus": 200,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 61157,
+      "sha256": "710008024ca95fa655e2a53e36e2c5faf550c67af4f94f91d89185a90ea67273",
+      "reason": null,
+      "fetchAttempts": [
+        {
+          "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "contentType": "text/html",
+          "bytes": 442,
+          "sha256": "be157687340787b3365f90e9a77b590609ecb138f97d9c0286ca0a89bf4a053e",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 61157,
+          "sha256": "710008024ca95fa655e2a53e36e2c5faf550c67af4f94f91d89185a90ea67273",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travel-info/clubs/flagship-lounge.jsp",
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/flagship-lounge.jsp",
+          "contentType": "text/html",
+          "bytes": 430,
+          "sha256": "14a8b3ecf17b9a4be126d85b2735acfe40e14368d65229eea96ed452f33d2439",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travel-info/clubs/flagship-lounge.jsp",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.aa.com/i18n/travel-info/clubs/flagship-lounge.jsp",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 45070,
+          "sha256": "c2cd7902ce83a5df3288c49552932dcb5f4bfbc28936a8916c4e7cedbf158adc",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.american-airlines.co.kr/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.american-airlines.co.kr/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "contentType": "text/html",
+          "bytes": 467,
+          "sha256": "69f876cf0cb7574876fc111e9d33f6d265ad90985569d048f313e391c2e59193",
+          "robots": {
+            "checked": true,
+            "url": "https://www.american-airlines.co.kr/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.american-airlines.co.kr/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.american-airlines.co.kr/i18n/travel-info/clubs/admirals-club-locations.jsp",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 60741,
+          "sha256": "965c75d18963f86f5a133c9d5fdb2ba8ababf3b0dd2d8af2f3f37a70114cd3b3",
+          "robots": {
+            "checked": true,
+            "url": "https://www.american-airlines.co.kr/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp",
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp",
+          "contentType": "text/html",
+          "bytes": 436,
+          "sha256": "9e1678f3328f6a73263e7240a2d504856d62bfe7ae6287f994ff7cb9d2170aca",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 32959,
+          "sha256": "32f59638d5e0acb1cf70c36eab4a0045b6dd882490970ceb3414b2b11c1d4063",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/lax-club.jsp",
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/lax-club.jsp",
+          "contentType": "text/html",
+          "bytes": 436,
+          "sha256": "0e32db55d21189cab72a7c5eb39106c3901dc8e88e7a8009ec060b8cde5fd2c1",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/lax-club.jsp",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/lax-club.jsp",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 28172,
+          "sha256": "154489c2a4ccc8d458594dafef7efbf814a3a2232543e674e27c96b289acf7f8",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/jfk-club.jsp",
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/jfk-club.jsp",
+          "contentType": "text/html",
+          "bytes": 436,
+          "sha256": "2816b2c12c3ffe28bfa215e0af79a4c5df8e14aa421c2b69f8420bd91c83f0b9",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/jfk-club.jsp",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/jfk-club.jsp",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 25440,
+          "sha256": "bc1075f6784d0c66cd9564e932d6e010c765044b792b1168426b55790f0531d9",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp",
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp",
+          "contentType": "text/html",
+          "bytes": 436,
+          "sha256": "3b8ecdd2a689e71eaadbb0342a00676947d1f494aef659a7554bb4e36139a676",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 28391,
+          "sha256": "b053a945fbf42c9d37d471f22ce1d9ff6fdca8e6a61e1347b865db74c51916fa",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
+          "status": "http_error",
+          "httpStatus": 403,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
+          "contentType": "text/html",
+          "bytes": 436,
+          "sha256": "7fec4bfbe2ee22ea818cf14dfb9536e61c19fda9d223c61040c720652be45150",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        },
+        {
+          "url": "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 28346,
+          "sha256": "124ed63cce1b694123a1350486fdae0935a1febaa396fb6b1ed70c78197fc5d5",
+          "robots": {
+            "checked": true,
+            "url": "https://www.aa.com/robots.txt",
+            "status": 200,
+            "disallowed": false,
+            "disallowRuleCount": 18
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-13T04-35-06-945Z-american",
+      "generatedAt": "2026-07-13T04:35:06.945Z",
+      "fetchMode": "cloudflare_single_source_probe"
+    },
     {
       "sourceId": "aspire-lounges",
       "publisher": "Aspire Lounges",
@@ -797,6 +1075,284 @@
       ],
       "runId": "cloudflare-probe-2026-07-11T23-46-59-899Z-star-alliance",
       "generatedAt": "2026-07-11T23:46:59.899Z",
+      "fetchMode": "cloudflare_single_source_probe"
+    },
+    {
+      "sourceId": "united",
+      "publisher": "United Club and Polaris Lounges",
+      "url": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+      "adapter": "official_html",
+      "status": "fetched",
+      "records": 0,
+      "airportCodeCount": 0,
+      "loungeLinkCount": 0,
+      "cloudflareSnapshot": true,
+      "finalUrl": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 1520539,
+      "sha256": "58650fd4b2eba8d827090968f27a9e17be2d74021bf1b677a0a52279317e6c33",
+      "reason": null,
+      "fetchAttempts": [
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+          "status": "http_error",
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
+          "contentType": "text/html",
+          "bytes": 1520539,
+          "sha256": "58650fd4b2eba8d827090968f27a9e17be2d74021bf1b677a0a52279317e6c33",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://business.united.com/en/us/blog/How-to-access-and-enjoy-the-United-Club",
+          "status": "http_error",
+          "httpStatus": 520,
+          "finalUrl": "https://business.united.com/en/us/blog/How-to-access-and-enjoy-the-United-Club",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://business.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://business.united.com/en/us/blog/How-to-access-and-enjoy-the-United-Club",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://business.united.com/en/us/blog/How-to-access-and-enjoy-the-United-Club",
+          "contentType": "text/html",
+          "bytes": 897356,
+          "sha256": "e97bd17ad466f9fecd9b464913701142e22c513b9179cacd21386e7204c4a571",
+          "robots": {
+            "checked": true,
+            "url": "https://business.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/sfo-map.html",
+          "status": "http_error",
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/sfo-map.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/sfo-map.html",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/sfo-map.html",
+          "contentType": "text/html",
+          "bytes": 1520458,
+          "sha256": "2c9db22e96e539ef42e3925c0b0d7ae1d7426d7e4fdb76c61294ebfe231330f7",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/lax-map.html",
+          "status": "http_error",
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/lax-map.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/lax-map.html",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/lax-map.html",
+          "contentType": "text/html",
+          "bytes": 1520189,
+          "sha256": "e4962ccc02c1cdfa1d3f81b2ab2ad0165af586a42cef761d3a5cfb1ae66c5755",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/ewr-map.html",
+          "status": "http_error",
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/ewr-map.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/ewr-map.html",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/ewr-map.html",
+          "contentType": "text/html",
+          "bytes": 1521405,
+          "sha256": "6f2f14ddbad0aca3dd185f5b3eda5b57257d77ee6cc05774be23973e1e6cc91c",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/iad-map.html",
+          "status": "http_error",
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/iad-map.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/iad-map.html",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/iad-map.html",
+          "contentType": "text/html",
+          "bytes": 1519026,
+          "sha256": "3392edd5afbe5a0988fcf6a450a25c85ae9834527ef5c5369b841e2b69be8d10",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/ord-map.html",
+          "status": "http_error",
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/ord-map.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/ord-map.html",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/ord-map.html",
+          "contentType": "text/html",
+          "bytes": 1519941,
+          "sha256": "10904839d019fad217c53d270ab070e4830e74d03e9824cdc1cfc56d50cc7f1d",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/united-club.html",
+          "status": "http_error",
+          "httpStatus": 520,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/united-club.html",
+          "contentType": "text/plain; charset=UTF-8",
+          "bytes": 16,
+          "sha256": "b59e493586b4118c563aaa751e04a7f7bc1c9741d241e0c1d3ba9405c323c570",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        },
+        {
+          "url": "https://www.united.com/en/us/fly/travel/airport/united-club.html",
+          "status": "fetched",
+          "httpStatus": 200,
+          "finalUrl": "https://www.united.com/en/us/fly/travel/airport/united-club.html",
+          "contentType": "text/html",
+          "bytes": 1520192,
+          "sha256": "fedb6e32edc0ea63db5f034cdd18ac27ca485ff9aa688f66df2f8af04266ec46",
+          "robots": {
+            "checked": true,
+            "url": "https://www.united.com/robots.txt",
+            "status": 520,
+            "disallowed": false,
+            "disallowRuleCount": 0
+          }
+        }
+      ],
+      "runId": "cloudflare-probe-2026-07-13T04-39-49-846Z-united",
+      "generatedAt": "2026-07-13T04:39:49.846Z",
       "fetchMode": "cloudflare_single_source_probe"
     },
     {

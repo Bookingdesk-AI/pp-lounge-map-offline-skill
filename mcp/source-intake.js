@@ -7,6 +7,7 @@ const DEFAULT_TIMEOUT_MS = 12000;
 const MAX_FETCH_URLS = 8;
 const MAX_BATCH_TASKS = 20;
 const MAX_DERIVED_ITEMS = 40;
+const BROWSER_FALLBACK_STATUSES = new Set([401, 403, 406, 409, 429, 503, 520]);
 const CLOUDFLARE_FETCH_ADAPTERS = new Set(['official_page', 'official_html', 'open_data']);
 const LOUNGE_LINK_PATH_INCLUDE = [
   /(^|\/)airport-lounges?(\/|$)/,
@@ -177,6 +178,48 @@ async function fetchText(url, fetchImpl, timeoutMs) {
   }
 }
 
+async function renderTextWithCloudflareBrowser(url, env, timeoutMs) {
+  if (!env?.BROWSER) {
+    return null;
+  }
+
+  const puppeteer = await import('@cloudflare/puppeteer');
+  const browser = await puppeteer.default.launch(env.BROWSER);
+  try {
+    const page = await browser.newPage();
+    await page.setUserAgent(USER_AGENT);
+    await page.setExtraHTTPHeaders({
+      'accept-language': 'en-US,en;q=0.9',
+      'cache-control': 'no-cache',
+      pragma: 'no-cache',
+    });
+    const response = await page.goto(url, {
+      waitUntil: 'domcontentloaded',
+      timeout: timeoutMs,
+    });
+    const text = await page.content();
+    return {
+      ok: Boolean(response?.ok()),
+      status: response?.status() ?? 0,
+      statusText: response?.statusText() ?? '',
+      finalUrl: page.url() || String(url),
+      contentType: response?.headers()?.['content-type'] ?? 'text/html',
+      text,
+    };
+  } finally {
+    await browser.close();
+  }
+}
+
+function shouldTryBrowserFallback({ task, response, browserRenderer }) {
+  return (
+    Boolean(browserRenderer) &&
+    task.adapter !== 'open_data' &&
+    !response.ok &&
+    BROWSER_FALLBACK_STATUSES.has(response.status)
+  );
+}
+
 async function fetchRobots(targetUrl, fetchImpl, timeoutMs) {
   const robotsUrl = `${new URL(targetUrl).origin}/robots.txt`;
   try {
@@ -341,7 +384,14 @@ function mergeDerivedEvidence(target, source) {
   target.loungeLinks.sort();
 }
 
-async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new Date().toISOString() }) {
+async function runTaskProbe({
+  task,
+  env,
+  fetchImpl,
+  browserRenderer,
+  timeoutMs,
+  generatedAt = new Date().toISOString(),
+}) {
   const runId = `cloudflare-probe-${generatedAt.replace(/[:.]/g, '-')}-${task.sourceId}`;
   const attempts = [];
   let fetched = null;
@@ -364,6 +414,7 @@ async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new
       const attempt = {
         url: fetchUrl,
         status: response.ok ? 'fetched' : 'http_error',
+        fetchDriver: 'cloudflare_fetch',
         httpStatus: response.status,
         finalUrl: response.finalUrl,
         contentType: response.contentType,
@@ -375,11 +426,32 @@ async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new
       if (response.ok) {
         fetched ??= attempt;
         mergeDerivedEvidence(derivedEvidence, deriveSourceEvidence(response));
+      } else if (shouldTryBrowserFallback({ task, response, browserRenderer })) {
+        const browserResponse = await browserRenderer(fetchUrl, env, timeoutMs);
+        if (browserResponse) {
+          const browserAttempt = {
+            url: fetchUrl,
+            status: browserResponse.ok ? 'fetched' : 'http_error',
+            fetchDriver: 'cloudflare_browser',
+            httpStatus: browserResponse.status,
+            finalUrl: browserResponse.finalUrl,
+            contentType: browserResponse.contentType,
+            bytes: new TextEncoder().encode(browserResponse.text).byteLength,
+            sha256: await sha256(browserResponse.text),
+            robots,
+          };
+          attempts.push(browserAttempt);
+          if (browserResponse.ok) {
+            fetched ??= browserAttempt;
+            mergeDerivedEvidence(derivedEvidence, deriveSourceEvidence(browserResponse));
+          }
+        }
       }
     } catch (error) {
       attempts.push({
         url: fetchUrl,
         status: 'fetch_error',
+        fetchDriver: 'cloudflare_fetch',
         reason: error instanceof Error ? error.message : String(error),
         robots,
       });
@@ -392,6 +464,7 @@ async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new
     url: task.url,
     adapter: task.adapter,
     status: fetched ? 'fetched' : attempts.at(-1)?.status ?? 'fetch_error',
+    fetchDriver: fetched?.fetchDriver ?? attempts.at(-1)?.fetchDriver ?? 'cloudflare_fetch',
     records: Math.max(derivedEvidence.airportCodes.length, derivedEvidence.loungeLinks.length),
     airportCodes: derivedEvidence.airportCodes,
     loungeLinks: derivedEvidence.loungeLinks,
@@ -401,6 +474,7 @@ async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new
       ? {
           finalUrl: fetched.finalUrl,
           httpStatus: fetched.httpStatus,
+          fetchDriver: fetched.fetchDriver,
           contentType: fetched.contentType,
           bytes: fetched.bytes,
           sha256: fetched.sha256,
@@ -419,6 +493,7 @@ async function runTaskProbe({ task, env, fetchImpl, timeoutMs, generatedAt = new
       runtime: 'cloudflare',
       localScrawl: 'blocked',
       proofEnv: 'LOUNGE_GURU_INTAKE_TOKEN',
+      browserFallback: Boolean(browserRenderer),
     },
     timeoutMs,
   };
@@ -467,6 +542,7 @@ function compactStatusSource(source, row) {
     generatedAt: row.generated_at,
     cloudflareSnapshot: Boolean(source.cloudflareSnapshot),
     httpStatus: source.httpStatus ?? null,
+    fetchDriver: source.fetchDriver ?? null,
     bytes: Number(source.bytes ?? 0),
     sha256: source.sha256 ?? null,
   };
@@ -478,6 +554,7 @@ function compactReportAttempt(attempt) {
     status: attempt.status,
     reason: attempt.reason ?? null,
     httpStatus: attempt.httpStatus ?? null,
+    fetchDriver: attempt.fetchDriver ?? null,
     finalUrl: attempt.finalUrl ?? null,
     contentType: attempt.contentType ?? '',
     bytes: Number(attempt.bytes ?? 0),
@@ -508,6 +585,7 @@ function compactReportSource(source) {
     cloudflareSnapshot: Boolean(source.cloudflareSnapshot),
     finalUrl: source.finalUrl ?? null,
     httpStatus: source.httpStatus ?? null,
+    fetchDriver: source.fetchDriver ?? null,
     contentType: source.contentType ?? '',
     bytes: Number(source.bytes ?? 0),
     sha256: source.sha256 ?? null,
@@ -565,7 +643,7 @@ function latestCloudflareSourceRows(rows, compactSource) {
   return latestBySource;
 }
 
-async function runProbe({ request, env, fetchImpl = fetch }) {
+async function runProbe({ request, env, fetchImpl = fetch, browserRenderer = renderTextWithCloudflareBrowser }) {
   const readyResponse = await requireReadyRequest({ request, env, method: 'POST' });
   if (readyResponse) {
     return readyResponse;
@@ -582,6 +660,7 @@ async function runProbe({ request, env, fetchImpl = fetch }) {
     task,
     env,
     fetchImpl,
+    browserRenderer,
     timeoutMs: Number(env.SOURCE_FETCH_TIMEOUT_MS || DEFAULT_TIMEOUT_MS),
   });
 
@@ -591,7 +670,7 @@ async function runProbe({ request, env, fetchImpl = fetch }) {
   });
 }
 
-async function runBatch({ request, env, fetchImpl = fetch }) {
+async function runBatch({ request, env, fetchImpl = fetch, browserRenderer = renderTextWithCloudflareBrowser }) {
   const readyResponse = await requireReadyRequest({ request, env, method: 'POST' });
   if (readyResponse) {
     return readyResponse;
@@ -615,7 +694,7 @@ async function runBatch({ request, env, fetchImpl = fetch }) {
   const timeoutMs = Number(env.SOURCE_FETCH_TIMEOUT_MS || DEFAULT_TIMEOUT_MS);
   const results = [];
   for (const task of tasks) {
-    results.push(await runTaskProbe({ task, env, fetchImpl, timeoutMs }));
+    results.push(await runTaskProbe({ task, env, fetchImpl, browserRenderer, timeoutMs }));
   }
 
   return jsonResponse({
@@ -697,6 +776,7 @@ async function sourceReport({ request, env }) {
         runtime: 'cloudflare',
         localScrawl: 'blocked',
         proofEnv: 'LOUNGE_GURU_INTAKE_TOKEN',
+        browserFallback: true,
       },
     },
     stats: {
@@ -721,11 +801,21 @@ async function sourceReport({ request, env }) {
 }
 
 export async function createSourceIntakeProbeResponse(request, env, options = {}) {
-  return runProbe({ request, env, fetchImpl: options.fetchImpl ?? fetch });
+  return runProbe({
+    request,
+    env,
+    fetchImpl: options.fetchImpl ?? fetch,
+    browserRenderer: options.browserRenderer ?? (env?.BROWSER ? renderTextWithCloudflareBrowser : null),
+  });
 }
 
 export async function createSourceIntakeBatchResponse(request, env, options = {}) {
-  return runBatch({ request, env, fetchImpl: options.fetchImpl ?? fetch });
+  return runBatch({
+    request,
+    env,
+    fetchImpl: options.fetchImpl ?? fetch,
+    browserRenderer: options.browserRenderer ?? (env?.BROWSER ? renderTextWithCloudflareBrowser : null),
+  });
 }
 
 export async function createSourceIntakeStatusResponse(request, env) {

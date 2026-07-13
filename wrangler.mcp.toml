@@ -11,6 +11,9 @@ routes = [
   "loungeguru.desk.travel/admin/source-intake*",
 ]
 
+[browser]
+binding = "BROWSER"
+
 [[durable_objects.bindings]]
 name = "MCP_RATE_LIMITER"
 class_name = "McpRateLimiter"
