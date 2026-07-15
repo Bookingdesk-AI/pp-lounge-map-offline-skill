@@ -46,6 +46,37 @@ const ALL_ROUTES_ALLIANCE_LOGOS = {
   skyteam: '/data/brand-logos/skyteam-all-routes.png',
 };
 
+const REVIEWED_BRAND_LOGOS = {
+  priorityPass: {
+    logoUrl: '/data/brand-logos/priority-pass-reviewed.svg',
+    upstreamLogoUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/77/Priority_Pass_logo.svg',
+  },
+  chaseSapphire: {
+    logoUrl: '/data/brand-logos/chase-sapphire-lounge-reviewed.png',
+    upstreamLogoUrl:
+      'https://runway-media-production.global.ssl.fastly.net/us/originals/2021/08/SapphireLoungeTheClub-Logo-FullColor-Digital-Large.jpg',
+  },
+  centurionLounge: {
+    logoUrl: '/data/brand-logos/centurion-lounge-reviewed.png',
+    upstreamLogoUrl:
+      'https://cdn.prod.website-files.com/64146bf94f70d00b60750876/654172fed0b1988b98ff1c18_35-352052_american-express-centurion-lounge-logo-hd-png-download%20(4).png',
+  },
+  capitalOneTravel: {
+    logoUrl: '/data/brand-logos/capital-one-travel-reviewed.svg',
+    upstreamLogoUrl:
+      'https://images.contentstack.io/v3/assets/blt1788ad84f88b68a8/bltfb0a779302eedf93/61660dc8a8d4d0113d89bb04/COT_logo.svg',
+  },
+  loungeKey: {
+    logoUrl: '/data/brand-logos/loungekey-reviewed.png',
+    upstreamLogoUrl: 'https://portal.loungekey.com/media/1020/lounge-kye-logo.png',
+  },
+  plazaPremium: {
+    logoUrl: '/data/brand-logos/plaza-premium-reviewed.png',
+    upstreamLogoUrl:
+      'https://www.plazapremiumlounge.com/getContentAsset/7142b141-fd02-452d-919e-4a47a788a792/341dd76e-3aed-4a04-aa89-d958c5c0d319/PPL_logo.png?language=en-uk',
+  },
+};
+
 export const BRAND_REGISTRY = [
   {
     id: 'desk-travel',
@@ -72,12 +103,14 @@ export const BRAND_REGISTRY = [
     sourceUrl: 'https://www.prioritypass.com/en-GB/airport-lounges',
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'desk-travel:brand/priority-pass',
+    logoUrl: REVIEWED_BRAND_LOGOS.priorityPass.logoUrl,
+    upstreamLogoUrl: REVIEWED_BRAND_LOGOS.priorityPass.upstreamLogoUrl,
     logoText: 'PP',
     color: '#214f9f',
     background: '#eaf1fb',
     foreground: '#163f82',
     status: 'approved',
-    rightsNote: 'Desk.Travel managed brand asset; source mapping uses official public program page.',
+    rightsNote: 'Desk.Travel reviewed public Priority Pass logo asset stored same-origin; source mapping uses official public program page.',
   },
   {
     id: 'chase-sapphire',
@@ -88,12 +121,14 @@ export const BRAND_REGISTRY = [
     sourceUrl: 'https://account.chase.com/sapphire-airport-lounge',
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'desk-travel:brand/chase-sapphire',
+    logoUrl: REVIEWED_BRAND_LOGOS.chaseSapphire.logoUrl,
+    upstreamLogoUrl: REVIEWED_BRAND_LOGOS.chaseSapphire.upstreamLogoUrl,
     logoText: 'CS',
     color: '#0c3f78',
     background: '#e8f0fb',
     foreground: '#0c3f78',
     status: 'review',
-    rightsNote: 'Desk.Travel managed brand asset; official public Chase page supplies source context.',
+    rightsNote: 'Desk.Travel reviewed public Chase Sapphire Lounge logo asset stored same-origin; official public Chase page supplies source context.',
   },
   {
     id: 'american-express',
@@ -104,12 +139,14 @@ export const BRAND_REGISTRY = [
     sourceUrl: 'https://global.americanexpress.com/lounge-access/the-platinum-card',
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'desk-travel:brand/american-express',
+    logoUrl: REVIEWED_BRAND_LOGOS.centurionLounge.logoUrl,
+    upstreamLogoUrl: REVIEWED_BRAND_LOGOS.centurionLounge.upstreamLogoUrl,
     logoText: 'AX',
     color: '#1f5f9f',
     background: '#e8f3fb',
     foreground: '#164b7a',
     status: 'review',
-    rightsNote: 'Desk.Travel managed brand asset; official public Amex page supplies source context.',
+    rightsNote: 'Desk.Travel reviewed public Centurion Lounge logo asset stored same-origin; official public Amex page supplies source context.',
   },
   {
     id: 'capital-one',
@@ -120,12 +157,14 @@ export const BRAND_REGISTRY = [
     sourceUrl: 'https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/',
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'desk-travel:brand/capital-one',
+    logoUrl: REVIEWED_BRAND_LOGOS.capitalOneTravel.logoUrl,
+    upstreamLogoUrl: REVIEWED_BRAND_LOGOS.capitalOneTravel.upstreamLogoUrl,
     logoText: 'CO',
     color: '#244f7a',
     background: '#eaf2f8',
     foreground: '#1f405f',
     status: 'review',
-    rightsNote: 'Desk.Travel managed brand asset; official public Capital One page supplies source context.',
+    rightsNote: 'Desk.Travel reviewed public Capital One Travel logo asset stored same-origin; official public Capital One lounge page supplies source context.',
   },
   {
     id: 'visa-airport-companion',
@@ -152,12 +191,14 @@ export const BRAND_REGISTRY = [
     sourceUrl: 'https://mastercardtravelpass.dragonpass.com/',
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'desk-travel:brand/mastercard-travel-pass',
+    logoUrl: REVIEWED_BRAND_LOGOS.loungeKey.logoUrl,
+    upstreamLogoUrl: REVIEWED_BRAND_LOGOS.loungeKey.upstreamLogoUrl,
     logoText: 'MC',
     color: '#9b3f1d',
     background: '#fff0e7',
     foreground: '#7b3217',
     status: 'candidate',
-    rightsNote: 'Desk.Travel managed brand asset; official public Mastercard/DragonPass page supplies source context.',
+    rightsNote: 'Desk.Travel reviewed public LoungeKey logo asset stored same-origin; official public Mastercard/DragonPass page supplies source context.',
   },
   {
     id: 'citi',
@@ -488,12 +529,14 @@ export const BRAND_REGISTRY = [
     sourceUrl: 'https://www.plazapremiumlounge.com/en-uk',
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'desk-travel:brand/plaza-premium',
+    logoUrl: REVIEWED_BRAND_LOGOS.plazaPremium.logoUrl,
+    upstreamLogoUrl: REVIEWED_BRAND_LOGOS.plazaPremium.upstreamLogoUrl,
     logoText: 'PL',
     color: '#846229',
     background: '#f8f1e4',
     foreground: '#694d1f',
     status: 'review',
-    rightsNote: 'Desk.Travel managed brand asset; official public Plaza Premium page supplies source context.',
+    rightsNote: 'Desk.Travel reviewed official Plaza Premium Lounge logo asset stored same-origin; official public Plaza Premium page supplies source context.',
   },
   {
     id: 'escape-lounges',
@@ -734,6 +777,7 @@ export function createDeskTravelBrandImport({ generatedAt = new Date().toISOStri
       deskTravelAssetKey: brand.deskTravelAssetKey,
       logoUrl: brand.logoUrl,
       fallbackLogoUrl: brand.fallbackLogoUrl,
+      upstreamLogoUrl: brand.upstreamLogoUrl,
       logoText: brand.logoText,
       color: brand.color,
       background: brand.background,

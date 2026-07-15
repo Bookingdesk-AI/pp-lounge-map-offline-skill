@@ -41,6 +41,7 @@ const outputCandidatePath = path.resolve(projectRoot, 'public', 'data', 'non-pri
 const outputValidationPath = path.resolve(projectRoot, 'public', 'data', 'non-priority-validation-report.json');
 const outputBrandLogoDir = path.resolve(projectRoot, 'public', 'data', 'brand-logos');
 const sourceAllianceLogoDir = path.resolve(projectRoot, 'assets', 'brand-logos', 'alliances');
+const sourceReviewedLogoDir = path.resolve(projectRoot, 'assets', 'brand-logos', 'reviewed');
 const worldwideCoverageGoalPath = path.resolve(projectRoot, 'public', 'data', 'worldwide-coverage-goal.json');
 const approvalPolicyPath = path.resolve(projectRoot, 'public', 'data', 'catalog-approval-policy.json');
 const migrationPath = path.resolve(projectRoot, 'migrations', '0001_lounge_guru_catalog.sql');
@@ -441,6 +442,11 @@ async function main() {
       ['skyteam.png', 'skyteam-all-routes.png'],
     ].map(([sourceFileName, outputFileName]) =>
       fs.copyFile(path.join(sourceAllianceLogoDir, sourceFileName), path.join(outputBrandLogoDir, outputFileName)),
+    ),
+  );
+  await Promise.all(
+    (await fs.readdir(sourceReviewedLogoDir)).map((fileName) =>
+      fs.copyFile(path.join(sourceReviewedLogoDir, fileName), path.join(outputBrandLogoDir, fileName)),
     ),
   );
   await fs.writeFile(

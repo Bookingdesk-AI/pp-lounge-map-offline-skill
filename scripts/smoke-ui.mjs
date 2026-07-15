@@ -7,7 +7,7 @@ import { pathToFileURL } from 'node:url';
 
 const DEFAULT_BASE_URL = 'https://loungeguru.desk.travel';
 const DEFAULT_SELECTED_ID = 'BOS-bos19-chase-sapphire-lounge-by-the-club-357';
-const DEFAULT_EXPECTED_LOGO = 'chase-sapphire.svg';
+const DEFAULT_EXPECTED_LOGO = 'chase-sapphire-lounge-reviewed.png';
 const CATALOG_PATH = new URL('../public/data/lounge-guru-catalog.json', import.meta.url);
 
 const CHROME_CANDIDATES = [

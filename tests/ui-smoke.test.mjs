@@ -10,7 +10,7 @@ test('UI smoke parses default live target and selected record', () => {
 
   assert.equal(options.baseUrl, 'https://loungeguru.desk.travel');
   assert.equal(options.selectedId, 'BOS-bos19-chase-sapphire-lounge-by-the-club-357');
-  assert.equal(options.expectedLogo, 'chase-sapphire.svg');
+  assert.equal(options.expectedLogo, 'chase-sapphire-lounge-reviewed.png');
   assert.equal(options.expectedLogoExplicit, false);
   assert.equal(options.timeoutMs, 20_000);
   assert.equal(options.checkReviewQueue, false);
@@ -20,7 +20,7 @@ test('UI smoke accepts local preview options', () => {
   const options = parseUiSmokeArgs([
     '--base-url=http://127.0.0.1:4302/path',
     '--selected=test-record',
-    '--expected-logo=priority-pass.svg',
+    '--expected-logo=priority-pass-reviewed.svg',
     '--chrome-bin=/tmp/chrome',
     '--timeout-ms=7000',
     '--check-review-queue',
@@ -28,7 +28,7 @@ test('UI smoke accepts local preview options', () => {
 
   assert.equal(options.baseUrl, 'http://127.0.0.1:4302');
   assert.equal(options.selectedId, 'test-record');
-  assert.equal(options.expectedLogo, 'priority-pass.svg');
+  assert.equal(options.expectedLogo, 'priority-pass-reviewed.svg');
   assert.equal(options.expectedLogoExplicit, true);
   assert.equal(options.chromeBin, '/tmp/chrome');
   assert.equal(options.timeoutMs, 7000);

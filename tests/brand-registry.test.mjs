@@ -123,6 +123,58 @@ test('alliance logos are served from centralized all-routes brand storage', () =
   }
 });
 
+test('reviewed lounge program and issuer logos render from same-origin assets', () => {
+  const reviewedBrands = [
+    [
+      'priority-pass',
+      'priority-pass-reviewed.svg',
+      'https://upload.wikimedia.org/wikipedia/commons/7/77/Priority_Pass_logo.svg',
+      '542deab06a712bdc2da4185c1fdde58457cbca96c8f47ad740093cec07c3db68',
+    ],
+    [
+      'chase-sapphire',
+      'chase-sapphire-lounge-reviewed.png',
+      'https://runway-media-production.global.ssl.fastly.net/us/originals/2021/08/SapphireLoungeTheClub-Logo-FullColor-Digital-Large.jpg',
+      '96aca69c0d0c1c5b98f5c23fa788d5869ba951325edb90267e5915b86cbda0b2',
+    ],
+    [
+      'american-express',
+      'centurion-lounge-reviewed.png',
+      'https://cdn.prod.website-files.com/64146bf94f70d00b60750876/654172fed0b1988b98ff1c18_35-352052_american-express-centurion-lounge-logo-hd-png-download%20(4).png',
+      '6422c6098c78a3594de27b0c734d8c3333ed37de2fd616323e0199bba6f97014',
+    ],
+    [
+      'capital-one',
+      'capital-one-travel-reviewed.svg',
+      'https://images.contentstack.io/v3/assets/blt1788ad84f88b68a8/bltfb0a779302eedf93/61660dc8a8d4d0113d89bb04/COT_logo.svg',
+      '02afe7bea7041ea216435dbadd05cf3c565277292210a0910324a0a320aab51b',
+    ],
+    [
+      'mastercard-travel-pass',
+      'loungekey-reviewed.png',
+      'https://portal.loungekey.com/media/1020/lounge-kye-logo.png',
+      '86b0dca59ad73b837f6c91f483c01960fc2b3c778dab84d84866bea5ec841267',
+    ],
+    [
+      'plaza-premium',
+      'plaza-premium-reviewed.png',
+      'https://www.plazapremiumlounge.com/getContentAsset/7142b141-fd02-452d-919e-4a47a788a792/341dd76e-3aed-4a04-aa89-d958c5c0d319/PPL_logo.png?language=en-uk',
+      '24ef2626097e16b404608cbec66c810968c9f96c124e8c90947e17793fbca7f5',
+    ],
+  ];
+
+  for (const [brandId, fileName, upstreamLogoUrl, sha256] of reviewedBrands) {
+    const brand = brands.find((candidate) => candidate.id === brandId);
+    assert.ok(brand, `missing brand ${brandId}`);
+    assert.equal(brand.logoUrl, `/data/brand-logos/${fileName}`);
+    assert.equal(brand.upstreamLogoUrl, upstreamLogoUrl);
+    const assetPath = new URL(`../public${brand.logoUrl}`, import.meta.url);
+    assert.ok(fs.existsSync(assetPath), `${brandId} logo file missing`);
+    assert.equal(crypto.createHash('sha256').update(fs.readFileSync(assetPath)).digest('hex'), sha256);
+    assert.ok(/reviewed/i.test(brand.rightsNote), `${brandId} missing reviewed rights note`);
+  }
+});
+
 test('SEA deep links keep explicit lounge selection when query matches airport code', () => {
   const appSource = fs.readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8');
 
