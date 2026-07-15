@@ -52,7 +52,7 @@ test('canonical lounge records include display-ready brand assets', () => {
   assert.ok(firstRecord.lounge.brandAsset.logoUrl);
 });
 
-test('airline-operated Priority Pass records prefer airline brand assets over source fallback', () => {
+test('airline-operated lounge records prefer airline brand assets over source fallback', () => {
   const expectedAssets = new Map([
     ['IAD-iad6-air-france-klm-lounge-719', 'air-france-klm'],
     ['IAD-iad8-virgin-atlantic-clubhouse-721', 'virgin-atlantic'],
@@ -61,6 +61,20 @@ test('airline-operated Priority Pass records prefer airline brand assets over so
     ['candidate-oneworld-iad-836', 'british-airways'],
     ['candidate-oneworld-sea-1583', 'alaska-airlines'],
     ['candidate-oneworld-sea-833', 'british-airways'],
+    ['candidate-oneworld-hkg-885', 'cathay-pacific'],
+    ['candidate-oneworld-bkk-1017', 'japan-airlines'],
+    ['candidate-oneworld-kul-1059', 'malaysia-airlines'],
+    ['candidate-oneworld-hel-771', 'finnair'],
+    ['candidate-oneworld-mad-945', 'iberia'],
+    ['candidate-oneworld-amm-1218', 'royal-jordanian'],
+    ['candidate-oneworld-nan-1790', 'fiji-airways'],
+    ['candidate-oneworld-bkk-1753', 'oman-air'],
+    ['candidate-oneworld-lim-1867', 'latam-airlines'],
+    ['candidate-oneworld-hkg-1725', 'qantas'],
+    [
+      'candidate-airport-official-pages-hkg-airport-official-pages-hkg-cathay-pacific-lounge-the-deck-terminal-1-near-gate-6',
+      'cathay-pacific',
+    ],
     ['candidate-capital-one-iad-capital-one-iad-capital-one-lounge', 'capital-one'],
   ]);
 
@@ -84,6 +98,17 @@ test('all-routes airline logos are served from centralized Desk.Travel brand sto
     'american-airlines',
     'air-canada',
     'alaska-airlines',
+    'cathay-pacific',
+    'japan-airlines',
+    'malaysia-airlines',
+    'finnair',
+    'iberia',
+    'royal-jordanian',
+    'fiji-airways',
+    'oman-air',
+    'latam-airlines',
+    'royal-air-maroc',
+    'srilankan-airlines',
   ];
 
   for (const brandId of airlineBrandIds) {

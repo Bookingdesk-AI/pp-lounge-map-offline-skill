@@ -443,7 +443,14 @@
       "qantas club",
       "qantas lounge",
       "qantas business lounge",
-      "qantas first lounge"
+      "qantas first lounge",
+      "qantas domestic business",
+      "qantas international business",
+      "qantas international first",
+      "qantas regional lounge",
+      "qantas hong kong international lounge",
+      "the qantas london lounge",
+      "the qantas singapore lounge"
     ],
     "sourceIds": [
       "qantas"
@@ -459,6 +466,298 @@
     "foreground": "#8f171b",
     "status": "candidate",
     "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Qantas lounge pages supply source context."
+  },
+  {
+    "id": "cathay-pacific",
+    "name": "Cathay Pacific",
+    "category": "airline",
+    "aliases": [
+      "Cathay Pacific",
+      "cathay pacific",
+      "cathay pacific lounge",
+      "the bridge",
+      "the deck",
+      "the pier",
+      "the wing"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.cathaypacific.com/cx/en_US/flying-with-us/airport-lounges.html",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/cathay-pacific",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/cx/3c044030aff698c5b677d274079a55a6018d44d7ca263cc8b38101bbd39a5f8b.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/cx/b0b9bd787e58c061ed660471eb152f8025339b49ddbb400e8a77d32b42a6dd5e.png",
+    "logoText": "CX",
+    "color": "#245f57",
+    "background": "#eaf5f2",
+    "foreground": "#17483f",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Cathay Pacific lounge page supplies source context."
+  },
+  {
+    "id": "japan-airlines",
+    "name": "Japan Airlines",
+    "category": "airline",
+    "aliases": [
+      "Japan Airlines",
+      "japan airlines",
+      "jal",
+      "jal sakura",
+      "sakura lounge",
+      "japan airlines sakura lounge"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.jal.co.jp/ar/en/inter/service/lounge/",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/japan-airlines",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/jl/21ea30a4c17b00f302c74c26cf46ad0189255fc732cee5c44e5b0117071c8127.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/jl/22566cc64cf902f0a4b75ae1f3e9d71dc5aff51b3c06664634041d05d60029a8.png",
+    "logoText": "JL",
+    "color": "#b51620",
+    "background": "#fff0f0",
+    "foreground": "#8d1219",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Japan Airlines lounge page supplies source context."
+  },
+  {
+    "id": "malaysia-airlines",
+    "name": "Malaysia Airlines",
+    "category": "airline",
+    "aliases": [
+      "Malaysia Airlines",
+      "malaysia airlines",
+      "malaysia airlines golden lounge",
+      "golden lounge"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.malaysiaairlines.com/us/en/experience/at-the-airport/airport-lounges.html",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/malaysia-airlines",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/mh/d781700b96073790a7cb3a62f08cc8e552b0eeb81e939cebc9518ff6ad37fd06.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/mh/bebea71eed2c768ea02b0ebd4e4f76ee85cb5f3b86b10bd0387cc5538ee51008.png",
+    "logoText": "MH",
+    "color": "#1d5685",
+    "background": "#edf3fb",
+    "foreground": "#1b4568",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Malaysia Airlines lounge page supplies source context."
+  },
+  {
+    "id": "finnair",
+    "name": "Finnair",
+    "category": "airline",
+    "aliases": [
+      "Finnair",
+      "finnair",
+      "finnair lounge",
+      "finnair business lounge",
+      "finnair platinum wing"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.finnair.com/us-en/at-the-airport/lounges",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/finnair",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/ay/c87849b263dad1a267beb2440d18790f6bad23839f96f95cf21c8044c100f391.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ay/cb1c2bd5508658dc0170f0af57e82d22755aa2256fd256846c9a879b947a2bb0.png",
+    "logoText": "AY",
+    "color": "#25456e",
+    "background": "#edf2f8",
+    "foreground": "#1e3658",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Finnair lounge page supplies source context."
+  },
+  {
+    "id": "iberia",
+    "name": "Iberia",
+    "category": "airline",
+    "aliases": [
+      "Iberia",
+      "iberia",
+      "iberia airlines",
+      "iberia lounge",
+      "iberia premium lounge",
+      "premium lounge dalí",
+      "premium lounge velazquez"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.iberia.com/us/vip-lounges/",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/iberia",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/ib/6c6066e240cf46738f01c71943eaa0b4e1fdb05edf42f78ac7a7eb5c7074d4b5.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ib/460df199cf74f871d1b22a584c0997d66159485bb626852053871d4fe6f6f93c.png",
+    "logoText": "IB",
+    "color": "#b33a22",
+    "background": "#fff2ed",
+    "foreground": "#8d2c19",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Iberia lounge page supplies source context."
+  },
+  {
+    "id": "royal-jordanian",
+    "name": "Royal Jordanian",
+    "category": "airline",
+    "aliases": [
+      "Royal Jordanian",
+      "royal jordanian",
+      "royal jordanian crown lounge",
+      "crown lounge"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.rj.com/en/info-and-tips/flying-with-us/crown-lounge",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/royal-jordanian",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/rj/29076f7bee3036adc0a5f1f20d6df4582a0817a107c3fc90036c6151ea128702.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/rj/ac4574cc63b2d10992e0f8fe2b299ba1c8f1b13f2bcff7658243d0a8fcefd052.png",
+    "logoText": "RJ",
+    "color": "#654332",
+    "background": "#f5efeb",
+    "foreground": "#4e3326",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Royal Jordanian lounge page supplies source context."
+  },
+  {
+    "id": "fiji-airways",
+    "name": "Fiji Airways",
+    "category": "airline",
+    "aliases": [
+      "Fiji Airways",
+      "fiji airways",
+      "fiji airways premier lounge",
+      "premier lounge"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.fijiairways.com/en-us/experience/airport-lounges",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/fiji-airways",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/fj/06b7da5f63439998a9c73c9bd992b281d1ed952859885b552c363b3ba6083bd1.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/fj/9a2be86f2d8689c5efa34cc0dfab7b440af3d40a106651896496db7ef3944216.png",
+    "logoText": "FJ",
+    "color": "#4b4f53",
+    "background": "#f1f3f4",
+    "foreground": "#35393d",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Fiji Airways lounge page supplies source context."
+  },
+  {
+    "id": "oman-air",
+    "name": "Oman Air",
+    "category": "airline",
+    "aliases": [
+      "Oman Air",
+      "oman air",
+      "oman air lounge",
+      "oman air business class",
+      "oman air first and business class lounge",
+      "al khareef lounge by oman air"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.omanair.com/us/en/experience/airport-lounges",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/oman-air",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/wy/d3eca4c49a93bcb6b0f6f046ab08640b9a4f03f520e5a28e54e62548c3552b08.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/wy/12672ee2508d241f07ec033924ed8d4642bf1e98270614f67b078c4ff45e5183.png",
+    "logoText": "WY",
+    "color": "#2d6960",
+    "background": "#eaf5f2",
+    "foreground": "#214d47",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Oman Air lounge page supplies source context."
+  },
+  {
+    "id": "latam-airlines",
+    "name": "LATAM Airlines",
+    "category": "airline",
+    "aliases": [
+      "LATAM Airlines",
+      "latam",
+      "latam airlines",
+      "latam lounge",
+      "latam vip lounge",
+      "latam premium lounge",
+      "latam signature lounge"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.latamairlines.com/us/en/experience/airport/lounges",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/latam-airlines",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/la/5383a8a5b07c90d0efba617139a787728cfa453e840631a4335d909d3c7f2dd2.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/la/79dae2db7f5379aeadb7a969b9977b3d45c99e00a0fb0c732e40e63002cb3461.png",
+    "logoText": "LA",
+    "color": "#312f78",
+    "background": "#f0f0fb",
+    "foreground": "#29265f",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public LATAM Airlines lounge page supplies source context."
+  },
+  {
+    "id": "royal-air-maroc",
+    "name": "Royal Air Maroc",
+    "category": "airline",
+    "aliases": [
+      "Royal Air Maroc",
+      "royal air maroc",
+      "royal air maroc lounge",
+      "ram lounge"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.royalairmaroc.com/us-en/airport/airport-lounges",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/royal-air-maroc",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/at/4da3e7274ed7e94f1f5625e58a11b1febd2a5cef8c295e45fceb2f923e7caa04.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/at/c400d34c83aca3ff0df7d071ea54091e0653e118cc7d0e15014795ddaf33b3c4.png",
+    "logoText": "AT",
+    "color": "#9f242d",
+    "background": "#fff0f1",
+    "foreground": "#7d1b22",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Royal Air Maroc lounge page supplies source context."
+  },
+  {
+    "id": "srilankan-airlines",
+    "name": "SriLankan Airlines",
+    "category": "airline",
+    "aliases": [
+      "SriLankan Airlines",
+      "srilankan",
+      "sri lankan",
+      "srilankan airlines",
+      "sri lankan airlines",
+      "srilankan lounge",
+      "serendib lounge"
+    ],
+    "sourceIds": [
+      "oneworld"
+    ],
+    "sourceUrl": "https://www.srilankan.com/en_uk/flying-with-us/lounges",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/srilankan-airlines",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/ul/5ee336aca3b476d4b517340eda611163cb65a88bb8e553fbd0a1491ace532e2b.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ul/f3a7ef34cd21477127d080a8baa95d5eb5e8905a25a5ac7604800774ee927077.png",
+    "logoText": "UL",
+    "color": "#27558a",
+    "background": "#edf3fb",
+    "foreground": "#1d416c",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public SriLankan Airlines lounge page supplies source context."
   },
   {
     "id": "oneworld",

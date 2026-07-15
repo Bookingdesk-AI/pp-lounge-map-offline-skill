@@ -12,11 +12,11 @@
       "total": 3227,
       "hours": 3132,
       "gates": 1491,
-      "prices": 878,
+      "prices": 879,
       "recordsWithoutFieldEvidence": 0,
       "hoursRatio": 0.9706,
       "gateRatio": 0.462,
-      "priceRatio": 0.2721
+      "priceRatio": 0.2724
     }
   },
   "targets": {
@@ -769,27 +769,6 @@
       "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
     },
     {
-      "airportCode": "GRU",
-      "airportName": "Governador André Franco Montoro International Airport Of Cumbica/Guarulhos/São Paulo",
-      "city": "São Paulo",
-      "country": "Brazil",
-      "totalRecords": 39,
-      "missingHours": 0,
-      "missingGate": 10,
-      "missingPrice": 13,
-      "officialAirportAction": "airport_authority_enrichment",
-      "missingFieldScore": 43,
-      "sourceIds": [
-        "airport-official-pages",
-        "delta",
-        "oneworld",
-        "ourairports",
-        "plaza-premium",
-        "priority-pass"
-      ],
-      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
-    },
-    {
       "airportCode": "HND",
       "airportName": "Tokyo International Airport",
       "city": "Tokyo",
@@ -843,6 +822,27 @@
       "officialAirportAction": "airport_authority_enrichment",
       "missingFieldScore": 43,
       "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "GRU",
+      "airportName": "Governador André Franco Montoro International Airport Of Cumbica/Guarulhos/São Paulo",
+      "city": "São Paulo",
+      "country": "Brazil",
+      "totalRecords": 39,
+      "missingHours": 0,
+      "missingGate": 10,
+      "missingPrice": 12,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 42,
+      "sourceIds": [
+        "airport-official-pages",
+        "delta",
         "oneworld",
         "ourairports",
         "plaza-premium",
@@ -1424,7 +1424,7 @@
       "records": 820,
       "missingHours": 46,
       "missingGate": 135,
-      "missingPrice": 738,
+      "missingPrice": 737,
       "priorityScore": 747,
       "nextAction": "enrich_existing_records_with_field_evidence",
       "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review."
@@ -1434,7 +1434,7 @@
       "publisher": "Official airport lounge pages",
       "adapter": "official_page",
       "status": "candidate",
-      "records": 316,
+      "records": 317,
       "missingHours": 33,
       "missingGate": 11,
       "missingPrice": 173,
@@ -2141,7 +2141,7 @@
         },
         {
           "sourceId": "airport-official-pages",
-          "records": 316
+          "records": 317
         },
         {
           "sourceId": "openstreetmap",

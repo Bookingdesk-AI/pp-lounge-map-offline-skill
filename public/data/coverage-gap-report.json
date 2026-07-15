@@ -2,7 +2,7 @@
   "generatedAt": "2026-07-15T00:31:42.825Z",
   "goalId": "lounge-guru-worldwide-coverage",
   "goalVersion": "2026-07-11",
-  "catalogHash": "20a420c45187cd170883fa2c416b064a4059c51d4a99343aa82b8163de2f0287",
+  "catalogHash": "b32c6c0d30cee14bf21edd3cb7e43a985c5a2a1ed53c6c15e4125e225d908823",
   "terminalPassed": true,
   "blockers": [],
   "targets": {
@@ -28,11 +28,11 @@
       "total": 3227,
       "hours": 3132,
       "gates": 1491,
-      "prices": 878,
+      "prices": 879,
       "recordsWithoutFieldEvidence": 0,
       "hoursRatio": 0.9706,
       "gateRatio": 0.462,
-      "priceRatio": 0.2721
+      "priceRatio": 0.2724
     },
     "sourceFamilyCoverageRatio": 1,
     "unknownAirportRecords": 0,
@@ -412,7 +412,7 @@
           "registered": true,
           "status": "candidate",
           "adapter": "official_page",
-          "records": 316,
+          "records": 317,
           "rightsNote": "Official airport public pages; use for field evidence and candidate discovery only, without inferred map proximity."
         },
         {

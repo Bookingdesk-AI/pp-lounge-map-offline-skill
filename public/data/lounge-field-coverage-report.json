@@ -12,8 +12,8 @@
       "missingHours": 95,
       "gate": 1491,
       "missingGate": 1736,
-      "accessOffers": 878,
-      "missingAccessOffers": 2349
+      "accessOffers": 879,
+      "missingAccessOffers": 2348
     },
     "bySource": {
       "air-canada": {
@@ -139,8 +139,8 @@
         "missingHours": 46,
         "gate": 676,
         "missingGate": 135,
-        "accessOffers": 73,
-        "missingAccessOffers": 738
+        "accessOffers": 74,
+        "missingAccessOffers": 737
       },
       "plaza-premium": {
         "total": 380,
@@ -35512,10 +35512,12 @@
       "reviewStatus": "approved",
       "hours": "Sun 24 hours; Mon 24 hours; Tue 24 hours; Wed 24 hours; Thu 24 hours; Fri 24 hours; Sat 24 hours",
       "gate": "",
-      "accessOfferLabels": [],
+      "accessOfferLabels": [
+        "BRL 320"
+      ],
       "hasHours": true,
       "hasGate": false,
-      "hasAccessOffer": false
+      "hasAccessOffer": true
     },
     {
       "recordId": "candidate-oneworld-gua-988",
