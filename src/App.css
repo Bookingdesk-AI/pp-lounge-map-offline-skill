@@ -467,6 +467,14 @@
   border-left: 3px solid var(--suggestion-accent, transparent);
 }
 
+.search-command-option.is-depth-1 .suggestion-copy {
+  padding-left: 0.42rem;
+}
+
+.search-command-option.is-depth-2 .suggestion-copy {
+  padding-left: 0.84rem;
+}
+
 .search-command-option .brand-mark {
   min-width: 0;
 }

@@ -116,6 +116,10 @@ interface SearchCommandSuggestion {
   query: string;
   source: 'city' | 'airport' | 'brand' | 'lounge';
   asset?: LoungeBrandAsset;
+  matchRank?: number;
+  cityKey?: string;
+  airportCode?: string;
+  hierarchyDepth?: 0 | 1 | 2;
 }
 
 interface FilterSummaryChip {
@@ -1352,6 +1356,107 @@ function formatAirportCount(count: number) {
   return count === 1 ? '1 airport' : `${count} airports`;
 }
 
+function airportSuggestionCodeFromFeature(feature: LoungeFeature) {
+  return feature.properties.airportCode.trim().toUpperCase();
+}
+
+function airportSuggestionHaystackFromFeature(feature: LoungeFeature) {
+  const { airportCode, airportName, city, country } = feature.properties;
+  return `${airportCode} ${airportName} ${city} ${country}`.toLowerCase();
+}
+
+function rankedSuggestionMatch(query: string, values: string[]) {
+  const normalizedValues = values.map((value) => value.trim().toLowerCase()).filter(Boolean);
+  if (normalizedValues.some((value) => value === query)) {
+    return 0;
+  }
+  if (normalizedValues.some((value) => value.startsWith(query))) {
+    return 1;
+  }
+  if (normalizedValues.some((value) => value.includes(query))) {
+    return 2;
+  }
+  return Number.POSITIVE_INFINITY;
+}
+
+function sortSearchSuggestions(query: string, suggestions: SearchCommandSuggestion[]) {
+  return [...suggestions].sort(
+    (first, second) =>
+      (first.matchRank ?? Number.POSITIVE_INFINITY) - (second.matchRank ?? Number.POSITIVE_INFINITY) ||
+      Number(!first.label.toLowerCase().startsWith(query)) -
+        Number(!second.label.toLowerCase().startsWith(query)) ||
+      first.label.localeCompare(second.label),
+  );
+}
+
+function buildHierarchicalSearchSuggestions({
+  airportSuggestions,
+  brandSuggestions,
+  citySuggestions,
+  loungeSuggestions,
+  query,
+}: {
+  airportSuggestions: SearchCommandSuggestion[];
+  brandSuggestions: SearchCommandSuggestion[];
+  citySuggestions: SearchCommandSuggestion[];
+  loungeSuggestions: SearchCommandSuggestion[];
+  query: string;
+}) {
+  const output: SearchCommandSuggestion[] = [];
+  const airportsByCityKey = new Map<string, SearchCommandSuggestion[]>();
+  const loungesByAirportCode = new Map<string, SearchCommandSuggestion[]>();
+
+  for (const airport of airportSuggestions) {
+    if (!airport.cityKey) {
+      continue;
+    }
+    const list = airportsByCityKey.get(airport.cityKey) ?? [];
+    list.push(airport);
+    airportsByCityKey.set(airport.cityKey, list);
+  }
+
+  for (const lounge of loungeSuggestions) {
+    if (!lounge.airportCode) {
+      continue;
+    }
+    const list = loungesByAirportCode.get(lounge.airportCode) ?? [];
+    list.push(lounge);
+    loungesByAirportCode.set(lounge.airportCode, list);
+  }
+
+  for (const city of sortSearchSuggestions(query, citySuggestions)) {
+    output.push({ ...city, hierarchyDepth: 0 });
+
+    for (const airport of sortSearchSuggestions(query, airportsByCityKey.get(city.cityKey ?? '') ?? [])) {
+      output.push({ ...airport, hierarchyDepth: 1 });
+
+      for (const lounge of sortSearchSuggestions(query, loungesByAirportCode.get(airport.airportCode ?? '') ?? []).slice(0, 4)) {
+        output.push({ ...lounge, hierarchyDepth: 2 });
+      }
+    }
+  }
+
+  const groupedIds = new Set(output.map((suggestion) => suggestion.id));
+  const ungrouped = [...airportSuggestions, ...loungeSuggestions]
+    .filter((suggestion) => !groupedIds.has(suggestion.id))
+    .map((suggestion) => ({
+      ...suggestion,
+      hierarchyDepth: suggestion.source === 'airport' ? (1 as const) : suggestion.source === 'lounge' ? (2 as const) : suggestion.hierarchyDepth,
+    }));
+
+  return [...output, ...sortSearchSuggestions(query, ungrouped), ...sortSearchSuggestions(query, brandSuggestions)].slice(0, 10);
+}
+
+function searchSuggestionCategoryLabel(suggestion: SearchCommandSuggestion) {
+  if (suggestion.source === 'airport') {
+    return '— Airport';
+  }
+  if (suggestion.source === 'lounge') {
+    return '—— Lounge';
+  }
+  return suggestion.source === 'city' ? 'City' : 'Brand';
+}
+
 function SearchCommandCombobox({
   search,
   features,
@@ -1427,15 +1532,68 @@ function SearchCommandCombobox({
 
     const airportSuggestions: SearchCommandSuggestion[] = [];
     const citySuggestionsByKey = new Map<string, SearchCommandSuggestion & { airportCount: number }>();
+    const airportSuggestionCodes = new Set<string>();
+
+    for (const feature of features) {
+      const airportCode = airportSuggestionCodeFromFeature(feature);
+      if (!airportCode || !airportSuggestionHaystackFromFeature(feature).includes(query)) {
+        continue;
+      }
+
+      const { airportName, city, country } = feature.properties;
+      const matchRank = rankedSuggestionMatch(query, [airportCode, airportName, city, country]);
+      const cityKey = `${city.toLowerCase()}-${country.toLowerCase()}`;
+      const existingCity = citySuggestionsByKey.get(cityKey);
+
+      if (existingCity) {
+        existingCity.matchRank = Math.min(existingCity.matchRank ?? Number.POSITIVE_INFINITY, matchRank);
+        if (!airportSuggestionCodes.has(airportCode)) {
+          existingCity.airportCount += 1;
+          existingCity.detail = `${country} · ${formatAirportCount(existingCity.airportCount)}`;
+        }
+      } else {
+        citySuggestionsByKey.set(cityKey, {
+          id: `city-${cityKey}`,
+          label: city,
+          detail: `${country} · ${formatAirportCount(1)}`,
+          query: city,
+          source: 'city',
+          airportCount: 1,
+          matchRank,
+          cityKey,
+          hierarchyDepth: 0,
+        });
+      }
+
+      if (!airportSuggestionCodes.has(airportCode)) {
+        airportSuggestionCodes.add(airportCode);
+        airportSuggestions.push({
+          id: `airport-local-${airportCode}`,
+          label: `${airportName} (${airportCode})`,
+          detail: `${city} · ${country}`,
+          query: airportCode,
+          source: 'airport',
+          matchRank,
+          cityKey,
+          airportCode,
+          hierarchyDepth: 1,
+        });
+      }
+    }
 
     if (airportQuery === draft.trim()) {
       for (const airport of airports) {
+        const airportCode = (airport.iata ?? airport.id).trim().toUpperCase();
+        const matchRank = rankedSuggestionMatch(query, [airportCode, airport.icao ?? '', airport.name, airport.city, airport.country]);
         const cityKey = `${airport.city.toLowerCase()}-${airport.country.toLowerCase()}`;
         const existingCity = citySuggestionsByKey.get(cityKey);
 
         if (existingCity) {
-          existingCity.airportCount += 1;
-          existingCity.detail = `${airport.country} · ${formatAirportCount(existingCity.airportCount)}`;
+          existingCity.matchRank = Math.min(existingCity.matchRank ?? Number.POSITIVE_INFINITY, matchRank);
+          if (!airportSuggestionCodes.has(airportCode)) {
+            existingCity.airportCount += 1;
+            existingCity.detail = `${airport.country} · ${formatAirportCount(existingCity.airportCount)}`;
+          }
         } else if (airport.city.toLowerCase().includes(query)) {
           citySuggestionsByKey.set(cityKey, {
             id: `city-${cityKey}`,
@@ -1444,15 +1602,26 @@ function SearchCommandCombobox({
             query: airport.city,
             source: 'city',
             airportCount: 1,
+            matchRank,
+            cityKey,
+            hierarchyDepth: 0,
           });
         }
 
+        if (airportSuggestionCodes.has(airportCode)) {
+          continue;
+        }
+        airportSuggestionCodes.add(airportCode);
         airportSuggestions.push({
           id: `airport-${airport.id}`,
           label: formatAirportSuggestionLabel(airport),
           detail: formatAirportSuggestionDetail(airport),
           query: airport.iata ?? airport.id,
           source: 'airport',
+          matchRank,
+          cityKey,
+          airportCode,
+          hierarchyDepth: 1,
         });
       }
     }
@@ -1463,9 +1632,12 @@ function SearchCommandCombobox({
       detail: city.detail,
       query: city.query,
       source: city.source,
+      matchRank: city.matchRank,
+      cityKey: city.cityKey,
+      hierarchyDepth: 0,
     }));
 
-    const brandSuggestions = brandOptions
+    const brandSuggestions: SearchCommandSuggestion[] = brandOptions
       .filter((brand) => brand.label.toLowerCase().includes(query))
       .slice(0, 4)
       .map((brand) => ({
@@ -1483,7 +1655,9 @@ function SearchCommandCombobox({
       if (loungeSuggestions.length >= 4) {
         break;
       }
-      const { airportCode, airportName, city, name } = feature.properties;
+      const { airportCode, airportName, city, country, name } = feature.properties;
+      const normalizedAirportCode = airportCode.trim().toUpperCase();
+      const cityKey = `${city.toLowerCase()}-${country.toLowerCase()}`;
       const haystack = `${airportCode} ${airportName} ${city} ${name}`.toLowerCase();
       if (!haystack.includes(query) || seenLounges.has(name)) {
         continue;
@@ -1495,25 +1669,20 @@ function SearchCommandCombobox({
         detail: `${airportCode} · ${city}`,
         query: name,
         source: 'lounge',
+        matchRank: rankedSuggestionMatch(query, [airportCode, airportName, city, name]),
+        cityKey,
+        airportCode: normalizedAirportCode,
+        hierarchyDepth: 2,
       });
     }
 
-    const sourceRank: Record<SearchCommandSuggestion['source'], number> = {
-      city: 0,
-      airport: 1,
-      lounge: 2,
-      brand: 3,
-    };
-
-    return [...citySuggestions, ...airportSuggestions, ...loungeSuggestions, ...brandSuggestions]
-      .sort(
-        (first, second) =>
-          sourceRank[first.source] - sourceRank[second.source] ||
-          Number(!first.label.toLowerCase().startsWith(query)) -
-            Number(!second.label.toLowerCase().startsWith(query)) ||
-          first.label.localeCompare(second.label),
-      )
-      .slice(0, 10);
+    return buildHierarchicalSearchSuggestions({
+      airportSuggestions,
+      brandSuggestions,
+      citySuggestions,
+      loungeSuggestions,
+      query,
+    });
   }, [airportQuery, airports, brandOptions, brands, draft, features]);
 
   useEffect(() => {
@@ -1595,7 +1764,9 @@ function SearchCommandCombobox({
               type="button"
               role="option"
               aria-selected={index === activeIndex}
-              className={`search-command-option is-${suggestion.source} ${index === activeIndex ? 'is-active' : ''}`}
+              className={`search-command-option is-${suggestion.source} is-depth-${suggestion.hierarchyDepth ?? 0} ${
+                index === activeIndex ? 'is-active' : ''
+              }`}
               onMouseDown={(event) => {
                 event.preventDefault();
                 selectSuggestion(suggestion);
@@ -1605,7 +1776,7 @@ function SearchCommandCombobox({
               {suggestion.source === 'brand' ? (
                 <BrandMark asset={suggestion.asset} label={suggestion.label} compact />
               ) : (
-                <span className="suggestion-category">{suggestion.source}</span>
+                <span className="suggestion-category">{searchSuggestionCategoryLabel(suggestion)}</span>
               )}
               <span className="suggestion-copy">
                 <span>{suggestion.label}</span>
