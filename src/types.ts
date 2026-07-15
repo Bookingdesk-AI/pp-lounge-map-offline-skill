@@ -29,6 +29,7 @@ export interface LoungeBrandAsset {
   deskTravelAssetKey: string;
   logoUrl: string;
   fallbackLogoUrl?: string;
+  upstreamLogoUrl?: string;
   logoText: string;
   color: string;
   background: string;

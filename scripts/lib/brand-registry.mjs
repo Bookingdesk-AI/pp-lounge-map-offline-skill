@@ -34,19 +34,16 @@ const ALL_ROUTES_AIRLINE_LOGO_BACKUPS = {
   qantas: 'https://src.desk.travel/brand-logos/airlines-transparent/qf/7668c520fe78b8dba00927e04958b4ca10e45395c72ac7191e92b518fed08d90.png',
 };
 
-const ALL_ROUTES_ALLIANCE_LOGOS = {
+const ALL_ROUTES_ALLIANCE_UPSTREAM_LOGOS = {
   oneworld: 'https://all-routes.desk.travel/brand-logos/alliances/oneworld.svg',
   starAlliance: 'https://all-routes.desk.travel/brand-logos/alliances/star-alliance.svg',
   skyteam: 'https://all-routes.desk.travel/brand-logos/alliances/skyteam.png',
 };
 
-const ALL_ROUTES_ALLIANCE_LOGO_BACKUPS = {
-  oneworld:
-    'https://src.desk.travel/brand-logos/alliances/oneworld/ff4596a65981298ac5a6c9ed065c43299428210e7f6ef68e280ccf78b8183121.svg',
-  starAlliance:
-    'https://src.desk.travel/brand-logos/alliances/star/8a13ff8d1353d8282c0cbda10940cc48b07bd630cdd0f58e8878602fdb698145.svg',
-  skyteam:
-    'https://src.desk.travel/brand-logos/alliances/skyteam/275760f605bc9da86179525da787ba856c99015845de9e800ab777276e91fe3a.png',
+const ALL_ROUTES_ALLIANCE_LOGOS = {
+  oneworld: '/data/brand-logos/oneworld-all-routes.svg',
+  starAlliance: '/data/brand-logos/star-alliance-all-routes.svg',
+  skyteam: '/data/brand-logos/skyteam-all-routes.png',
 };
 
 export const BRAND_REGISTRY = [
@@ -384,7 +381,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/oneworld',
     logoUrl: ALL_ROUTES_ALLIANCE_LOGOS.oneworld,
-    fallbackLogoUrl: ALL_ROUTES_ALLIANCE_LOGO_BACKUPS.oneworld,
+    upstreamLogoUrl: ALL_ROUTES_ALLIANCE_UPSTREAM_LOGOS.oneworld,
     logoText: 'OW',
     color: '#1f5d8f',
     background: '#edf4fb',
@@ -402,7 +399,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/star-alliance',
     logoUrl: ALL_ROUTES_ALLIANCE_LOGOS.starAlliance,
-    fallbackLogoUrl: ALL_ROUTES_ALLIANCE_LOGO_BACKUPS.starAlliance,
+    upstreamLogoUrl: ALL_ROUTES_ALLIANCE_UPSTREAM_LOGOS.starAlliance,
     logoText: 'SA',
     color: '#2e343b',
     background: '#f1f3f5',
@@ -420,7 +417,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/skyteam',
     logoUrl: ALL_ROUTES_ALLIANCE_LOGOS.skyteam,
-    fallbackLogoUrl: ALL_ROUTES_ALLIANCE_LOGO_BACKUPS.skyteam,
+    upstreamLogoUrl: ALL_ROUTES_ALLIANCE_UPSTREAM_LOGOS.skyteam,
     logoText: 'ST',
     color: '#315a93',
     background: '#edf2fb',

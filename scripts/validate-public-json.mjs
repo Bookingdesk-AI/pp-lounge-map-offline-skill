@@ -571,7 +571,7 @@ for (const fileName of fs.readdirSync(dataDir)) {
     const logoFiles = fs.readdirSync(fullPath);
     issue(logoFiles.length > 0, `${relativePath}: expected logo files`);
     for (const logoFile of logoFiles) {
-      issue(logoFile.endsWith('.svg'), `${relativePath}/${logoFile}: expected SVG logo`);
+      issue(/\.(svg|png)$/.test(logoFile), `${relativePath}/${logoFile}: expected SVG or PNG logo`);
     }
   } else {
     issue(fs.statSync(fullPath).isFile(), `${relativePath}: unexpected public data entry`);

@@ -40,6 +40,7 @@ const sourceRunEvidencePath = path.resolve(projectRoot, 'public', 'data', 'cloud
 const outputCandidatePath = path.resolve(projectRoot, 'public', 'data', 'non-priority-lounge-candidates.json');
 const outputValidationPath = path.resolve(projectRoot, 'public', 'data', 'non-priority-validation-report.json');
 const outputBrandLogoDir = path.resolve(projectRoot, 'public', 'data', 'brand-logos');
+const sourceAllianceLogoDir = path.resolve(projectRoot, 'assets', 'brand-logos', 'alliances');
 const worldwideCoverageGoalPath = path.resolve(projectRoot, 'public', 'data', 'worldwide-coverage-goal.json');
 const approvalPolicyPath = path.resolve(projectRoot, 'public', 'data', 'catalog-approval-policy.json');
 const migrationPath = path.resolve(projectRoot, 'migrations', '0001_lounge_guru_catalog.sql');
@@ -430,8 +431,17 @@ async function main() {
   await fs.writeFile(outputBrandAssetContractPath, `${JSON.stringify(brandAssetContract, null, 2)}\n`, 'utf8');
   await Promise.all(
     catalog.brands
-      .filter((brand) => brand.logoUrl.startsWith('/data/brand-logos/'))
+      .filter((brand) => brand.logoUrl.startsWith('/data/brand-logos/') && !brand.upstreamLogoUrl)
       .map((brand) => fs.writeFile(path.join(outputBrandLogoDir, `${brand.id}.svg`), createBrandLogoSvg(brand), 'utf8')),
+  );
+  await Promise.all(
+    [
+      ['oneworld.svg', 'oneworld-all-routes.svg'],
+      ['star-alliance.svg', 'star-alliance-all-routes.svg'],
+      ['skyteam.png', 'skyteam-all-routes.png'],
+    ].map(([sourceFileName, outputFileName]) =>
+      fs.copyFile(path.join(sourceAllianceLogoDir, sourceFileName), path.join(outputBrandLogoDir, outputFileName)),
+    ),
   );
   await fs.writeFile(
     outputQualityPath,

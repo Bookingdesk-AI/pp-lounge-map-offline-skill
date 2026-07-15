@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 
 const brands = JSON.parse(fs.readFileSync(new URL('../public/data/brand-registry.json', import.meta.url), 'utf8'));
 const sourceRegistry = JSON.parse(fs.readFileSync(new URL('../public/data/source-registry.json', import.meta.url), 'utf8'));
@@ -97,17 +98,26 @@ test('all-routes airline logos are served from centralized Desk.Travel brand sto
 
 test('alliance logos are served from centralized all-routes brand storage', () => {
   const allianceBrands = [
-    ['oneworld', 'oneworld.svg'],
-    ['star-alliance', 'star-alliance.svg'],
-    ['skyteam', 'skyteam.png'],
+    ['oneworld', 'oneworld.svg', 'oneworld-all-routes.svg', 'f98dba240b28b19a2c4b59152efcd5a6cf27b76833ff7d7a0bfcf09c600e4283'],
+    [
+      'star-alliance',
+      'star-alliance.svg',
+      'star-alliance-all-routes.svg',
+      '862a2ed13e2373a543c6dae077ff2c24619215158ff6be5ace72b052c8a61e2e',
+    ],
+    ['skyteam', 'skyteam.png', 'skyteam-all-routes.png', 'a5709c79b6f3dabf760deb1446d5b8b5535310df2e35b3143fca47b83aa9f405'],
   ];
 
-  for (const [brandId, fileName] of allianceBrands) {
+  for (const [brandId, upstreamFileName, fallbackFileName, sha256] of allianceBrands) {
     const brand = brands.find((candidate) => candidate.id === brandId);
     assert.ok(brand, `missing brand ${brandId}`);
-    assert.equal(brand.logoUrl, `https://all-routes.desk.travel/brand-logos/alliances/${fileName}`);
-    assert.ok(brand.fallbackLogoUrl.startsWith('https://src.desk.travel/brand-logos/alliances/'));
+    assert.equal(brand.logoUrl, `/data/brand-logos/${fallbackFileName}`);
+    assert.equal(brand.upstreamLogoUrl, `https://all-routes.desk.travel/brand-logos/alliances/${upstreamFileName}`);
+    assert.equal(brand.fallbackLogoUrl, undefined);
     assert.equal(brand.deskTravelAssetKey, `all-routes:brand/${brandId}`);
+    const fallbackPath = new URL(`../public${brand.logoUrl}`, import.meta.url);
+    assert.ok(fs.existsSync(fallbackPath));
+    assert.equal(crypto.createHash('sha256').update(fs.readFileSync(fallbackPath)).digest('hex'), sha256);
     assert.equal(fs.existsSync(new URL(`../public/data/brand-logos/${brand.id}.svg`, import.meta.url)), false);
     assert.ok(brand.rightsNote.includes('all-routes'));
   }
@@ -125,6 +135,7 @@ test('brand asset contract defines the approved Cloudflare storage path', () => 
   assert.equal(brandAssetContract.target.objectStorage, 'Cloudflare R2');
   assert.equal(brandAssetContract.target.publicOrigin, 'https://src.desk.travel');
   assert.equal(brandAssetContract.target.allRoutesPublicOrigin, 'https://all-routes.desk.travel');
+  assert.equal(brandAssetContract.target.sameOriginAllianceFallbackPath, '/data/brand-logos/{allianceId}-all-routes.{svg|png}');
   assert.ok(brandAssetContract.allowedSourceClasses.some((sourceClass) => sourceClass.id === 'official_public_brand_source'));
   assert.ok(brandAssetContract.allowedSourceClasses.some((sourceClass) => sourceClass.id === 'generated_fallback_tile'));
   assert.ok(brandAssetContract.blockedSourceClasses.includes('unknown_rights_svg'));

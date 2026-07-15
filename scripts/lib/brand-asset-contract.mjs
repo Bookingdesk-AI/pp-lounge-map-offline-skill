@@ -11,6 +11,7 @@ export function createBrandAssetContract({ generatedAt = new Date().toISOString(
       publicOrigin: 'https://src.desk.travel',
       allRoutesPublicOrigin: 'https://all-routes.desk.travel',
       generatedFallbackPath: '/data/brand-logos/{brandId}.svg',
+      sameOriginAllianceFallbackPath: '/data/brand-logos/{allianceId}-all-routes.{svg|png}',
     },
     entities: {
       brandAsset: {
@@ -87,7 +88,7 @@ export function createBrandAssetContract({ generatedAt = new Date().toISOString(
     displayContract: {
       resultRow: 'brandAsset.logoUrl before lounge.name',
       detailPanel: 'brandAsset mark before canonical brand label',
-      fallback: 'central backup URL; generated Lounge Guru SVG tile only for brands without approved central artwork',
+      fallback: 'same-origin copy of centralized all-routes artwork for alliance marks; central backup URL for airlines; generated Lounge Guru SVG tile only for brands without approved central artwork',
       altText: 'decorative in repeated rows; brand name remains visible as text',
     },
     validation: {
