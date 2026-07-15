@@ -9,9 +9,51 @@ const RUNTIME_SOURCES = [
   ['mcp/catalog-core.js', 'catalog-core.mjs'],
   ['mcp/server-core.js', 'server-core.mjs'],
 ];
+const FIELD_COVERAGE_CODES = Object.freeze({
+  'access.accessOffers': 'a',
+  'airport.city': 'b',
+  'airport.coordinates': 'c',
+  'airport.country': 'd',
+  'airport.iata': 'e',
+  'airport.name': 'f',
+  amenities: 'g',
+  'location.gate': 'h',
+  'location.terminal': 'i',
+  'lounge.brand': 'j',
+  'lounge.name': 'k',
+  'operations.exceptions': 'l',
+  'operations.hours': 'm',
+  restrictions: 'n',
+  'source.url': 'o',
+});
 
 function rewriteRuntimeImports(source) {
   return source.replace(/from '\.\/([^']+)\.js'/g, "from './$1.mjs'");
+}
+
+function slimSource(source) {
+  const { rightsNote, ...rest } = source;
+  void rightsNote;
+  return rest;
+}
+
+function slimLoungeSource(source) {
+  const { fieldCoverage, publisher, rightsNote, ...rest } = source;
+  const fc = (fieldCoverage ?? []).map((field) => FIELD_COVERAGE_CODES[field] ?? field);
+  void fieldCoverage;
+  void publisher;
+  void rightsNote;
+  return fc.length > 0 ? { ...rest, fc } : rest;
+}
+
+function buildSourceRights(lounges) {
+  return Object.fromEntries(
+    lounges.flatMap((lounge) =>
+      (lounge.sources ?? [])
+        .filter((source) => source.sourceId && source.rightsNote)
+        .map((source) => [source.sourceId, source.rightsNote]),
+    ),
+  );
 }
 
 export function getOfflineSkillPaths(projectRoot) {
@@ -45,10 +87,16 @@ export async function buildOfflineSkill(projectRoot) {
     stats: catalog.stats,
     filters: catalog.filters,
     quality: catalog.quality,
-    sources: catalog.sources,
-    lounges: catalog.lounges.map(({ searchText, canonical, ...lounge }) => {
+    sources: (catalog.sources ?? []).map(slimSource),
+    sourceRights: buildSourceRights(catalog.lounges),
+    lounges: catalog.lounges.map(({ searchText, canonical, slug, url, ...lounge }) => {
       void canonical;
-      return lounge;
+      void slug;
+      void url;
+      return {
+        ...lounge,
+        sources: (lounge.sources ?? []).map(slimLoungeSource),
+      };
     }),
   };
   const serialized = JSON.stringify(slimCatalog);

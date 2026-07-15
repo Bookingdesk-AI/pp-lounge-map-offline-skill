@@ -1,0 +1,247 @@
+{
+  "generatedAt": "2026-07-14T00:00:00.000Z",
+  "policy": {
+    "sourceMode": "official public Priority Pass detail pages",
+    "guardrail": "Use exact public detail-page text only; do not infer hours, gates, or prices from neighboring lounge listings."
+  },
+  "records": [
+    {
+      "recordId": "CNF-cnf1-ambaar-lounge-85",
+      "url": "https://my.prioritypass.com/en-GB/lounges/brazil/belo-horizonte-confins-intl/cnf1-ambaar-lounge",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Belo Horizonte Tancredo Neves Intl, Terminal 1, airside after check-in and X-ray. Domestic flights only.",
+      "conditions": [
+        "Maximum 4 hour stay but during peak hours access is only permitted 4 hours prior to scheduled flight departure.",
+        "Children under 3 years are admitted free.",
+        "Complimentary alcoholic beverages limited to beers and wines. Wine and spirits are served from 11:00."
+      ]
+    },
+    {
+      "recordId": "CNF-cnf4-advantage-vip-lounge-86",
+      "url": "https://my.prioritypass.com/en-GB/lounges/brazil/belo-horizonte-confins-intl/cnf4-advantage-vip-lounge",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Belo Horizonte Tancredo Neves Intl, Terminal 1, departures, after security checks and after passport control. Take the lift or stairs in front of Boarding Gate 2 to the 2nd Floor where the lounge is located.",
+      "conditions": [
+        "The Plus Area of the lounge is available for entry, subject to availability and validated at reception.",
+        "Maximum 3 hour stay.",
+        "Children under 2 years admitted free."
+      ]
+    },
+    {
+      "recordId": "CNF-cnf8r-siesta-box-confins-87",
+      "url": "https://my.prioritypass.com/en-GB/lounges/brazil/belo-horizonte-confins-intl/cnf8r-siesta-box-confins",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Belo Horizonte Tancredo Neves Intl, Terminal 1, departures, before security checks and before passport control, opposite the Azul Airlines check-in counter. Also accessible to in-transit passengers airside with a valid boarding pass.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to use a Siesta Box for a 2 hour stay in a double cabin (max. 2 pax)."
+      ]
+    },
+    {
+      "recordId": "BAQ-baq4-sala-vip-lounge-las-americas-119",
+      "url": "https://my.prioritypass.com/en-GB/lounges/colombia/ernesto-cortissoz-international/baq4-sala-vip-lounge-las-americas",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "03:00 - 23:00 daily",
+      "terminal": "Domestic",
+      "location": "Barranquilla Ernesto Cortissoz Intl, domestic departures, after security checks and after passport control.",
+      "conditions": [
+        "Domestic flights only.",
+        "Maximum 3 hour stay.",
+        "Access requires a standard visit allocation and mandatory additional fee of US$10 per person, payable directly to the lounge upon entry."
+      ]
+    },
+    {
+      "recordId": "BAH-bah15r-bahrain-airport-hotel-12",
+      "url": "https://my.prioritypass.com/en-GB/lounges/bahrain/bahrain-international/bah15r-bahrain-airport-hotel",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Bahrain International, New Passenger Terminal Building, departures, after security checks and after passport control, opposite Gate 15.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to use a Sleep Pod for a 90 minute stay.",
+        "Cardholder is responsible for all additional charges incurred.",
+        "No explicit amount or currency is published on the official Priority Pass detail page."
+      ]
+    },
+    {
+      "recordId": "AOG-aog-first-class-lounge-151",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/anshan-tengao/aog-first-class-lounge",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "location": "Anshan Teng'ao, departures, after security checks and after passport control, 2nd Floor via stairs. Turn right and the lounge is located 20 metres ahead."
+    },
+    {
+      "recordId": "AUH-auh13d-tgi-fridays-200",
+      "url": "https://my.prioritypass.com/en-GB/lounges/united-arab-emirates/abu-dhabi-international/auh13d-tgi-fridays",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Abu Dhabi Intl, Terminal A, departures, after security checks and after passport control, Level 5 Pier C.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to receive AED99 off the bill, valid on all menus.",
+        "AED99 is valid for the purchase of any meal and/or drinks.",
+        "Children are not admitted."
+      ]
+    },
+    {
+      "recordId": "AUS-aus1w-jabbrrbox-203",
+      "url": "https://my.prioritypass.com/en-GB/lounges/united-states-of-america/austin-bergstrom-international/aus1w-jabbrrbox",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Austin TX Bergstrom International, Barbara Jordan Terminal, departures, after security checks, near Gate 15.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to use a Jabbrrbox for a 1 hour 15-minute stay, a US$37.50 value.",
+        "No guests allowed.",
+        "Each subsequent hour of Jabbrrbox usage will be payable directly to Jabbrrbox."
+      ]
+    },
+    {
+      "recordId": "CGK-cgk18-blue-sky-premier-lounge-251",
+      "url": "https://my.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk18-blue-sky-premier-lounge",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "location": "Jakarta Soekarno-Hatta Intl, Terminal 1C, departures, after security checks and before passport control. Upper Floor, near Skechers.",
+      "conditions": [
+        "Maximum 3 hour stay.",
+        "Only coffee, tea, fresh juices and water available."
+      ]
+    },
+    {
+      "recordId": "DUB-dub4d-garden-terrace-478",
+      "url": "https://my.prioritypass.com/en-GB/lounges/ireland/dublin/dub4d-garden-terrace",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "location": "Dublin International, Terminal 1, departures, after security checks and after passport control, Mezzanine Level.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to receive EUR23 off the bill, valid on all menus.",
+        "Children are not admitted."
+      ]
+    },
+    {
+      "recordId": "DTW-dtw11g-gameway-476",
+      "url": "https://my.prioritypass.com/en-GB/lounges/united-states-of-america/detroit-metropolitan-wayne-county/dtw11g-gameway",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "08:00 - 21:00 daily",
+      "location": "Detroit Metropolitan Wayne County, McNamara Terminal, airside, Concourse A, near Gate A17.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement for 1 hour of gaming and 1 snack item and 1 non-alcoholic drink or 1 hour of gaming and 1 alcoholic drink.",
+        "Each subsequent hour of game station usage will be charged at a 10% discounted rate and payable directly to Gameway.",
+        "No explicit amount or currency is published on the official Priority Pass detail page."
+      ]
+    },
+    {
+      "recordId": "DTW-dtw10g-gameway-477",
+      "url": "https://my.prioritypass.com/en-GB/lounges/united-states-of-america/detroit-metropolitan-wayne-county/dtw10g-gameway",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "08:00 - 21:00 daily",
+      "location": "Detroit Metropolitan Wayne County, McNamara Terminal, airside, Concourse A, near Gate A63.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement for 1 hour of gaming and 1 snack item and 1 non-alcoholic drink or 1 hour of gaming and 1 alcoholic drink.",
+        "Each subsequent hour of game station usage will be charged at a 10% discounted rate and payable directly to Gameway.",
+        "No explicit amount or currency is published on the official Priority Pass detail page."
+      ]
+    },
+    {
+      "recordId": "GUW-guw-cip-lounge-614",
+      "url": "https://my.prioritypass.com/en-GB/lounges/kazakhstan/atyrau/guw-cip-lounge",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Atyrau, departures, before security checks and before passport control. The lounge is located on the right hand side as you enter from the terminal entrance.",
+      "conditions": [
+        "Priority Assistance, passport and customs control, baggage drop off available inside the lounge.",
+        "Maximum 3 hour stay."
+      ]
+    },
+    {
+      "recordId": "HND-hnd19d-all-day-dining-grande-aile-694",
+      "url": "https://my.prioritypass.com/en-GB/lounges/japan/haneda/hnd19d-all-day-dining-grande-aile",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "11:00 - 15:00, 17:00 - 22:00 daily",
+      "location": "Tokyo Haneda Intl, Haneda Airport Garden, departures, before security checks and before passport control, 1st Floor. The restaurant is located in the Haneda Airport Garden building directly connected to Terminal 3.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement for a maximum of a 2 hour stay.",
+        "Option 2: JPY3,400 inclusive of local taxes reduction off the total dinner charges between 17:00 - 22:00 and payable directly to the restaurant.",
+        "No guests allowed."
+      ]
+    },
+    {
+      "recordId": "LIM-lim15d-tgi-fridays-938",
+      "url": "https://my.prioritypass.com/en-GB/lounges/peru/jorge-chavez-international/lim15d-tgi-fridays",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Jorge Chavez International, domestic departures, after security checks and after passport control, after the Duty Free, between Gates A3 and A4.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to receive US$27 off the bill.",
+        "The US$27 is valid for the purchase of any meal and/or drinks.",
+        "Cardholder is responsible for the balance if total final bill exceeds US$27 per person."
+      ]
+    },
+    {
+      "recordId": "MAD-mad10r-gettsleep-998",
+      "url": "https://my.prioritypass.com/en-GB/lounges/spain/adolfo-suarez-madrid-barajas/mad10r-gettsleep",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "24 hours daily",
+      "location": "Adolfo Suarez Madrid-Barajas, departures, after security checks and after passport control, 1st Floor. GettSleep is located next to the pharmacy and entrance to Duty Free.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to use a capsule for a 1 hour stay or a shower cabin for a 30 minute stay.",
+        "No explicit amount or currency is published on the official detail page."
+      ]
+    },
+    {
+      "recordId": "KUL-kul41-kepler-club-858",
+      "url": "https://my.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul41-kepler-club",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Kuala Lumpur Intl, KLIA Terminal 1, landside, Level 2. Follow signs for Sama Sama Hotel. Kepler Club is located directly, or on the right after going through the Food Court, depending on which escalator you use to go to Level 2.",
+      "conditions": [
+        "Cardholders can use one visit entitlement for a 2 hour stay within a 24 hour period.",
+        "Children under 7 years are not admitted.",
+        "No explicit amount or currency is published on the official detail page."
+      ]
+    },
+    {
+      "recordId": "KUL-kul14d-travellers-bar-and-grill-sama-sama-hotel-865",
+      "url": "https://my.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul14d-travellers-bar-and-grill-sama-sama-hotel",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "16:00 - 01:00 daily",
+      "location": "Kuala Lumpur Intl, KLIA Terminal 1, landside, 2nd Floor of the hotel lobby, connected to the terminal via Skybridge with a complimentary 24 hour buggy service.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to take advantage of unlimited selected tapas and beverage for 3 hours within a 24 hour period.",
+        "A la carte menu available, subject to payment.",
+        "No explicit amount or currency is published on the official detail page."
+      ]
+    },
+    {
+      "recordId": "WUH-wuh14-china-eastern-airlines-v1-lounge-1665",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/wuhan-tianhe-international/wuh14-china-eastern-airlines-v1-lounge",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "05:50 - 19:00 daily",
+      "location": "Wuhan Tianhe International, Terminal 3, domestic departures, after security checks and after passport control, 2nd Floor, opposite Gate 29.",
+      "conditions": [
+        "The lounge is only accessible when flying with China Eastern Airlines (MU) and Shanghai Airlines (FM) for domestic departure passengers only.",
+        "Maximum 2 hour stay."
+      ]
+    },
+    {
+      "recordId": "YBP-ybp-first-class-lounge-02-1704",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/yibin-wuliangye/ybp-first-class-lounge-02",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "Linked to flight: First flight - last flight",
+      "location": "Yibin Wuliangye, domestic departures, after security checks and after passport control, 1st Floor, near Gate 7.",
+      "conditions": [
+        "Maximum 2 hour stay."
+      ]
+    },
+    {
+      "recordId": "YNT-ynt4-frist-business-class-lounge-06-1713",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/yantai-penglai-international/ynt4-frist-business-class-lounge-06",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "Linked to flight: Lounge opens 90 minutes prior to each scheduled flight departure.",
+      "location": "Yantai Penglai International, Terminal 2, international departures, after security checks and after passport control. Follow signs to the lounge, 3rd Floor International Departures."
+    },
+    {
+      "recordId": "YNT-ynt3-airlines-lounge-02-1714",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/yantai-penglai-international/ynt3-airlines-lounge-02",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "Linked to flight: 06:00 - last flight",
+      "location": "Yantai Penglai International, Terminal 2, domestic departures, after security checks and after passport control, 2nd Floor, Gate 216."
+    }
+  ]
+}

@@ -14,6 +14,40 @@ function sourceRecordCounts(catalog) {
   return counts;
 }
 
+function hasText(value) {
+  return String(value ?? '').trim() !== '';
+}
+
+function hasExplicitPriceOffer(record) {
+  return (record.accessOffers ?? []).some((offer) => Number.isFinite(Number(offer.amount)) && hasText(offer.currency));
+}
+
+function fieldCoverageStats(records) {
+  const totals = records.reduce(
+    (stats, record) => {
+      stats.hours += hasText(record.operations?.hours) ? 1 : 0;
+      stats.gates += hasText(record.location?.gate) ? 1 : 0;
+      stats.prices += hasExplicitPriceOffer(record) ? 1 : 0;
+      stats.recordsWithoutFieldEvidence += (record.sources ?? []).some(
+        (source) => Array.isArray(source.fieldCoverage) && source.fieldCoverage.length > 0,
+      )
+        ? 0
+        : 1;
+      return stats;
+    },
+    { hours: 0, gates: 0, prices: 0, recordsWithoutFieldEvidence: 0 },
+  );
+  const total = records.length;
+
+  return {
+    total,
+    ...totals,
+    hoursRatio: total > 0 ? Number((totals.hours / total).toFixed(4)) : 0,
+    gateRatio: total > 0 ? Number((totals.gates / total).toFixed(4)) : 0,
+    priceRatio: total > 0 ? Number((totals.prices / total).toFixed(4)) : 0,
+  };
+}
+
 function sourceStatuses(sourceRegistry, counts) {
   const byId = new Map(sourceRegistry.map((source) => [source.id, source]));
   return (sourceId) => {
@@ -223,7 +257,9 @@ export function createCoverageGapReport({
   const sourceStatus = sourceStatuses(sourceRegistry, counts);
   const approvedRecords = records.filter((record) => record.quality?.reviewStatus === 'approved').length;
   const reviewRecords = records.length - approvedRecords;
+  const nonPriorityRecords = Number(catalog.stats?.nonPriorityRecords ?? 0);
   const approvedRatio = records.length > 0 ? approvedRecords / records.length : 0;
+  const fieldCoverage = fieldCoverageStats(records);
   const recordsWithoutSources = records.filter((record) => !Array.isArray(record.sources) || record.sources.length === 0).length;
   const recordsWithoutQuality = records.filter((record) => !record.quality).length;
   const unknownAirportRecords = records.filter((record) => {
@@ -255,6 +291,10 @@ export function createCoverageGapReport({
     };
   });
   const approvedRecordRemaining = Math.max(0, goal.terminalGoal.minApprovedRecords - approvedRecords);
+  const nonPriorityRecordRemaining = Math.max(0, (goal.terminalGoal.minNonPriorityRecords ?? 0) - nonPriorityRecords);
+  const hoursCoverageRemaining = Math.max(0, Math.ceil(records.length * (goal.terminalGoal.minHoursCoverageRatio ?? 0)) - fieldCoverage.hours);
+  const gateCoverageRemaining = Math.max(0, Math.ceil(records.length * (goal.terminalGoal.minGateCoverageRatio ?? 0)) - fieldCoverage.gates);
+  const priceCoverageRemaining = Math.max(0, Math.ceil(records.length * (goal.terminalGoal.minPriceCoverageRatio ?? 0)) - fieldCoverage.prices);
   const targetApprovedForCurrentCatalog = Math.ceil(records.length * goal.terminalGoal.minApprovedRatio);
   const approvalRatioRemaining = Math.max(0, targetApprovedForCurrentCatalog - approvedRecords);
   const nextCloudflareIntake = createNextCloudflareIntake({
@@ -271,8 +311,20 @@ export function createCoverageGapReport({
   if (approvedRecordRemaining > 0) {
     blockers.push('approved_records_below_target');
   }
+  if (nonPriorityRecordRemaining > 0) {
+    blockers.push('non_priority_records_below_target');
+  }
   if (approvalRatioRemaining > 0) {
     blockers.push('approved_ratio_below_target');
+  }
+  if (hoursCoverageRemaining > 0) {
+    blockers.push('hours_coverage_below_target');
+  }
+  if (gateCoverageRemaining > 0) {
+    blockers.push('gate_coverage_below_target');
+  }
+  if (priceCoverageRemaining > 0) {
+    blockers.push('price_coverage_below_target');
   }
   if (sourceFamilies.some((family) => !family.present)) {
     blockers.push('source_family_gaps_present');
@@ -288,6 +340,9 @@ export function createCoverageGapReport({
   }
   if (recordsWithoutQuality > goal.terminalGoal.maxRecordsWithoutQuality) {
     blockers.push('records_without_quality_present');
+  }
+  if (fieldCoverage.recordsWithoutFieldEvidence > (goal.terminalGoal.maxRecordsWithoutFieldEvidence ?? 0)) {
+    blockers.push('records_without_field_evidence_present');
   }
   if (tableStatuses.some((table) => !table.present)) {
     blockers.push('cloudflare_d1_schema_missing_tables');
@@ -311,17 +366,24 @@ export function createCoverageGapReport({
     blockers,
     targets: {
       minApprovedRecords: goal.terminalGoal.minApprovedRecords,
+      minNonPriorityRecords: goal.terminalGoal.minNonPriorityRecords ?? 0,
       minApprovedRatio: goal.terminalGoal.minApprovedRatio,
+      minHoursCoverageRatio: goal.terminalGoal.minHoursCoverageRatio ?? 0,
+      minGateCoverageRatio: goal.terminalGoal.minGateCoverageRatio ?? 0,
+      minPriceCoverageRatio: goal.terminalGoal.minPriceCoverageRatio ?? 0,
       minSourceFamilyCoverageRatio: goal.terminalGoal.minSourceFamilyCoverageRatio,
       minReadyMemberGapCoverageRatio,
       maxReviewRecords: goal.terminalGoal.maxReviewRecords,
       maxUnknownAirportRecords: goal.terminalGoal.maxUnknownAirportRecords,
+      maxRecordsWithoutFieldEvidence: goal.terminalGoal.maxRecordsWithoutFieldEvidence ?? 0,
     },
     current: {
       totalRecords: records.length,
       approvedRecords,
+      nonPriorityRecords,
       reviewRecords,
       approvedRatio: Number(approvedRatio.toFixed(4)),
+      fieldCoverage,
       sourceFamilyCoverageRatio: Number(
         (sourceFamilies.filter((family) => family.present).length / sourceFamilies.length).toFixed(4),
       ),
@@ -334,8 +396,16 @@ export function createCoverageGapReport({
     },
     deltas: {
       approvedRecordsRemaining: approvedRecordRemaining,
+      nonPriorityRecordsRemaining: nonPriorityRecordRemaining,
       approvalsNeededForCurrentCatalogRatio: approvalRatioRemaining,
+      hoursCoverageRecordsRemaining: hoursCoverageRemaining,
+      gateCoverageRecordsRemaining: gateCoverageRemaining,
+      priceCoverageRecordsRemaining: priceCoverageRemaining,
       reviewRecordsToResolve: Math.max(0, reviewRecords - goal.terminalGoal.maxReviewRecords),
+      recordsWithoutFieldEvidenceToResolve: Math.max(
+        0,
+        fieldCoverage.recordsWithoutFieldEvidence - (goal.terminalGoal.maxRecordsWithoutFieldEvidence ?? 0),
+      ),
       missingSourceFamilies: sourceFamilies.filter((family) => !family.present).map((family) => family.id),
       missingSourceProofIds,
       missingSourceProofLanes: missingSourceProof,

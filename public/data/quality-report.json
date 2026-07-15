@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-12T02:33:19.252Z",
+  "generatedAt": "2026-07-15T00:31:42.825Z",
   "schema": {
     "version": "2026-06-14",
     "fields": [
@@ -129,6 +129,11 @@
         "required": true
       },
       {
+        "group": "access",
+        "name": "accessOffers",
+        "required": false
+      },
+      {
         "group": "record",
         "name": "amenities",
         "required": false
@@ -167,17 +172,17 @@
     "uniqueAirports": 752,
     "uniqueCountries": 140,
     "uniqueCities": 732,
-    "totalCatalogRecords": 2579,
-    "candidateRecords": 886,
-    "nonPriorityRecords": 878,
-    "duplicateSourceRecords": 61,
-    "totalSources": 32,
+    "totalCatalogRecords": 3227,
+    "candidateRecords": 1907,
+    "nonPriorityRecords": 1869,
+    "duplicateSourceRecords": 434,
+    "totalSources": 39,
     "reviewQueue": 0,
-    "approvedRecords": 2579
+    "approvedRecords": 3227
   },
   "quality": {
-    "averageCompleteness": 91,
-    "averageFreshness": 33,
+    "averageCompleteness": 90,
+    "averageFreshness": 49,
     "conflictCount": 0,
     "reviewQueue": 0,
     "approvalPolicy": {
@@ -197,8 +202,8 @@
       "freshnessDays": 7,
       "url": "https://desk.travel/",
       "rightsNote": "Internal Desk.Travel brand asset registry; use only approved logo assets and source mappings.",
-      "lastRunAt": "2026-07-12T02:33:19.252Z",
-      "records": 29,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 32,
       "issues": 0,
       "brandIds": [
         "desk-travel",
@@ -217,6 +222,9 @@
         "air-france-klm",
         "british-airways",
         "alaska-airlines",
+        "singapore-airlines",
+        "qatar-airways",
+        "qantas",
         "oneworld",
         "star-alliance",
         "skyteam",
@@ -243,7 +251,7 @@
       "rightsNote": "Use only the approved source workbook or public official pages; do not bypass account controls.",
       "lastRunAt": "2026-03-11T13:05:33.139Z",
       "records": 1723,
-      "issues": 657,
+      "issues": 653,
       "brandIds": [
         "priority-pass",
         "air-france-klm",
@@ -265,7 +273,7 @@
       "freshnessDays": 14,
       "url": "https://account.chase.com/sapphire-airport-lounge",
       "rightsNote": "Official public Chase page; parse only public location and policy text.",
-      "lastRunAt": "2026-07-12T02:33:19.252Z",
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
       "records": 8,
       "issues": 0,
       "brandIds": [
@@ -281,8 +289,8 @@
       "freshnessDays": 14,
       "url": "https://global.americanexpress.com/lounge-access/the-platinum-card",
       "rightsNote": "Official public Amex page; treat partner eligibility as source evidence, not canonical operator data.",
-      "lastRunAt": "2026-07-12T02:33:19.252Z",
-      "records": 24,
+      "lastRunAt": null,
+      "records": 0,
       "issues": 0,
       "brandIds": [
         "american-express"
@@ -297,8 +305,8 @@
       "freshnessDays": 14,
       "url": "https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/",
       "rightsNote": "Official public Capital One page; retain URL provenance for every imported location.",
-      "lastRunAt": "2026-07-12T02:33:19.252Z",
-      "records": 6,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 7,
       "issues": 0,
       "brandIds": [
         "capital-one"
@@ -479,8 +487,8 @@
       "freshnessDays": 14,
       "url": "https://www.delta.com/us/en/delta-sky-club/locations",
       "rightsNote": "Official public airline location page.",
-      "lastRunAt": null,
-      "records": 0,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 90,
       "issues": 0,
       "brandIds": [
         "delta"
@@ -507,8 +515,8 @@
         "https://www.aa.com/i18n/travel-info/clubs/admirals-club-access.jsp"
       ],
       "rightsNote": "Official public airline location pages, including regional American Airlines-owned surfaces.",
-      "lastRunAt": null,
-      "records": 0,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 14,
       "issues": 0,
       "brandIds": [
         "american-airlines"
@@ -523,11 +531,67 @@
       "freshnessDays": 14,
       "url": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
       "rightsNote": "Official public airline location page.",
-      "lastRunAt": "2026-07-12T02:33:19.252Z",
-      "records": 14,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 9,
       "issues": 0,
       "brandIds": [
         "air-canada"
+      ]
+    },
+    {
+      "id": "singapore-airlines",
+      "publisher": "Singapore Airlines SilverKris Lounges",
+      "coverage": "Singapore Airlines SilverKris lounge locations, terminal/gate areas, facilities, and operating hours",
+      "adapter": "official_page",
+      "status": "candidate",
+      "freshnessDays": 14,
+      "url": "https://www.singaporeair.com/en_UK/sg/flying-withus/before-the-flight/lounges/silverkris/",
+      "rightsNote": "Official public Singapore Airlines lounge page; retain URL provenance for every imported field.",
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 13,
+      "issues": 0,
+      "brandIds": [
+        "singapore-airlines"
+      ]
+    },
+    {
+      "id": "qatar-airways",
+      "publisher": "Qatar Airways Lounges",
+      "coverage": "Qatar Airways operated premium lounge locations, access tiers, amenities, and operating-hour evidence where published",
+      "adapter": "official_page",
+      "status": "candidate",
+      "freshnessDays": 14,
+      "url": "https://www.qatarairways.com/en-us/lounges.html",
+      "fetchUrls": [
+        "https://www.qatarairways.com/en-us/lounges.html",
+        "https://www.qatarairways.com/en-us/lounges/worldwide.html"
+      ],
+      "rightsNote": "Official public Qatar Airways lounge pages; retain URL provenance for every imported field and do not infer unpublished gate or price data.",
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 12,
+      "issues": 0,
+      "brandIds": [
+        "qatar-airways"
+      ]
+    },
+    {
+      "id": "qantas",
+      "publisher": "Qantas Lounges",
+      "coverage": "Qantas and Qantas-published partner lounge locations, operators, coordinates, location text, opening hours, and facilities",
+      "adapter": "official_page",
+      "status": "candidate",
+      "freshnessDays": 14,
+      "url": "https://www.qantas.com/en-us/at-the-airport/lounges/locations",
+      "fetchUrls": [
+        "https://www.qantas.com/en-us/at-the-airport/lounges/locations",
+        "https://www.qantas.com/us/en/qantas-experience/at-the-airport/airport-lounges/all-qantas-airport-lounges.html"
+      ],
+      "rightsNote": "Official public Qantas lounge pages; retain URL provenance for every imported field and do not infer unpublished gate or price data.",
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 44,
+      "issues": 0,
+      "brandIds": [
+        "qantas"
       ]
     },
     {
@@ -560,8 +624,8 @@
       "freshnessDays": 14,
       "url": "https://www.oneworld.com/airport-lounges",
       "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review.",
-      "lastRunAt": "2026-07-12T02:33:19.252Z",
-      "records": 770,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 820,
       "issues": 0,
       "brandIds": [
         "british-airways",
@@ -603,9 +667,19 @@
       "status": "manual_review",
       "freshnessDays": 14,
       "url": "https://www.plazapremiumlounge.com/en-uk",
+      "fetchUrls": [
+        "https://www.plazapremiumlounge.com/en-uk/find/americas/united-states-of-america/dallas-fort-worth",
+        "https://www.plazapremiumlounge.com/en-uk/find/australia/brisbane/brisbane-international-airport",
+        "https://www.plazapremiumlounge.com/en-uk/find/australia/adelaide/adelaide-airport",
+        "https://www.plazapremiumlounge.com/en-uk/find/asia/singapore/singapore-changi-airport",
+        "https://www.plazapremiumlounge.com/en-uk/find/china-regions/hong-kong/hong-kong/hong-kong-international-airport",
+        "https://www.plazapremiumlounge.com/en-uk/find/asia/malaysia/kuala-lumpur",
+        "https://www.plazapremiumlounge.com/en-uk/find/china-regions/mainland-china/shanghai",
+        "https://www.plazapremiumlounge.com/en-uk/find/india-middle-east-south-africa/jordan/amman/queen-alia-international-airport/plaza-premium-lounge-departures"
+      ],
       "rightsNote": "Official public operator page.",
-      "lastRunAt": null,
-      "records": 0,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 467,
       "issues": 0,
       "brandIds": [
         "plaza-premium"
@@ -620,8 +694,8 @@
       "freshnessDays": 14,
       "url": "https://escapelounges.com/",
       "rightsNote": "Official public operator page.",
-      "lastRunAt": "2026-07-12T02:33:19.252Z",
-      "records": 9,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 33,
       "issues": 0,
       "brandIds": [
         "escape-lounges"
@@ -636,8 +710,8 @@
       "freshnessDays": 14,
       "url": "https://www.airportdimensions.com/locations",
       "rightsNote": "Official public operator page.",
-      "lastRunAt": "2026-07-12T02:33:19.252Z",
-      "records": 47,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 34,
       "issues": 0,
       "brandIds": [
         "airport-dimensions"
@@ -672,8 +746,8 @@
       "freshnessDays": 14,
       "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
       "rightsNote": "Official Marhaba location surface; retain URL provenance for every imported field.",
-      "lastRunAt": null,
-      "records": 0,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 54,
       "issues": 0,
       "brandIds": []
     },
@@ -684,10 +758,13 @@
       "adapter": "official_page",
       "status": "candidate",
       "freshnessDays": 14,
-      "url": "https://www.primeclass.com.tr/en/lounge",
+      "url": "https://tavoperationservices.com/en-EN/services/lounges",
+      "fetchUrls": [
+        "https://www.primeclass.com.tr/en/lounge"
+      ],
       "rightsNote": "Official Primeclass location surface; retain URL provenance for every imported field.",
-      "lastRunAt": null,
-      "records": 0,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 49,
       "issues": 0,
       "brandIds": []
     },
@@ -700,8 +777,8 @@
       "freshnessDays": 14,
       "url": "https://no1lounges.com/airport-lounges/",
       "rightsNote": "Official No1 Lounges location surface; retain URL provenance for every imported field.",
-      "lastRunAt": null,
-      "records": 0,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 41,
       "issues": 0,
       "brandIds": []
     },
@@ -712,10 +789,143 @@
       "adapter": "official_page",
       "status": "candidate",
       "freshnessDays": 14,
-      "url": "https://www.berelax.com/locations/",
+      "url": "https://berelax.com/find-us/",
       "rightsNote": "Official Be Relax location surface; classify spa-only records separately from lounge access.",
-      "lastRunAt": null,
-      "records": 0,
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 37,
+      "issues": 0,
+      "brandIds": []
+    },
+    {
+      "id": "gameway",
+      "publisher": "Gameway",
+      "coverage": "Gameway airport gaming lounge locations, gates, hours, amenities, and rate tiers",
+      "adapter": "official_page",
+      "status": "candidate",
+      "freshnessDays": 14,
+      "url": "https://gameway.gg/locations/",
+      "rightsNote": "Official Gameway locations and location detail pages; retain URL provenance for every imported field.",
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 13,
+      "issues": 0,
+      "brandIds": []
+    },
+    {
+      "id": "sleepover",
+      "publisher": "Sleepover",
+      "coverage": "Airport sleeping pods, cabins, private rooms, terminal areas, hours, and booking-from prices",
+      "adapter": "official_page",
+      "status": "candidate",
+      "freshnessDays": 14,
+      "url": "https://www.airport-sleepover.com/en",
+      "rightsNote": "Official Sleepover terminal pages; retain URL provenance for every imported field.",
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 10,
+      "issues": 0,
+      "brandIds": []
+    },
+    {
+      "id": "minute-suites",
+      "publisher": "Minute Suites",
+      "coverage": "Airport private suites, terminal/gate locations, hours, Priority Pass access, and hourly price evidence",
+      "adapter": "official_page",
+      "status": "candidate",
+      "freshnessDays": 14,
+      "url": "https://minutesuites.com/locations/",
+      "rightsNote": "Official Minute Suites public location and Priority Pass pages; honor robots crawl delay and retain URL provenance for every imported field.",
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 15,
+      "issues": 0,
+      "brandIds": []
+    },
+    {
+      "id": "airport-official-pages",
+      "publisher": "Official airport lounge pages",
+      "coverage": "Airport-operated official lounge pages with terminal, gate-area, and operating-hour evidence",
+      "adapter": "official_page",
+      "status": "candidate",
+      "freshnessDays": 14,
+      "url": "https://www.flysfo.com/passengers/shop-dine-relax/lounges",
+      "fetchUrls": [
+        "https://www.flysfo.com/passengers/shop-dine-relax/lounges",
+        "https://www.phl.org/at-phl/services-and-amenities/lounges-and-concierge-services",
+        "https://www.dfwairport.com/explore/lounges/",
+        "https://www.changiairport.com/bin/changiairport/airport/getfacilitieslistingcards.all.all.airline-lounges_pay-per-use-lounges.0.15.en-SG.data",
+        "https://www.changiairport.com/en/at-changi/facilities-and-services-directory/plaza-premium-lounge.html",
+        "https://www.gatwickairport.com/premium-services/lounge-airport/lounge-no1.html",
+        "https://www.gatwickairport.com/premium-services/lounge-airport/lounge-my-lounge.html",
+        "https://www.gatwickairport.com/premium-services/lounge-airport/lounge-plaza-premium.html",
+        "https://www.gatwickairport.com/premium-services/lounge-airport/lounge-plaza-express.html",
+        "https://www.gatwickairport.com/premium-services/lounge-airport/lounge-club-aspire.html",
+        "https://www.gatwickairport.com/premium-services/lounge-airport/lounge-clubrooms.html",
+        "https://www.gatwickairport.com/premium-services/lounge-airport/lounge-arrive-refresh.html",
+        "https://www.miami-airport.com/clubs-and-lounges.asp",
+        "https://www.portseattle.org/services-amenities/airport-lounges",
+        "https://www.melbourneairport.com.au/plaza-premium-lounge",
+        "https://www.melbourneairport.com.au/marhaba-lounge",
+        "https://www.melbourneairport.com.au/aspire-lounge",
+        "https://www.sydneyairport.com.au/info-sheet/airline-lounges-t1",
+        "https://www.sydneyairport.com.au/info-sheet/t3-facilities-and-services",
+        "https://www.hongkongairport.com/en/passenger-guide/airport-facilities-services/airline-lounges",
+        "https://www.hongkongairport.com/en/passenger-guide/airport-facilities-services/pay-in-corporate-lounges",
+        "https://tokyo-haneda.com/en/service/facilities/lounge.html",
+        "https://www.adr.it/web/aeroporti-di-roma-en/emirates-lounge",
+        "https://www.adr.it/web/aeroporti-di-roma-en/british-airways-lounge",
+        "https://www.adr.it/web/aeroporti-di-roma-en/ita-airways-lounge",
+        "https://www.adr.it/web/aeroporti-di-roma-en/plaza-premium-lounge-t1",
+        "https://www.adr.it/web/aeroporti-di-roma-en/plaza-premium-lounge-t3",
+        "https://www.adr.it/web/aeroporti-di-roma-en/passenger-lounge1",
+        "https://www.adr.it/web/aeroporti-di-roma-en/hellosky",
+        "https://www.adr.it/web/aeroporti-di-roma-en/plaza-premium-first-lounge-t1",
+        "https://www.prg.aero/en/erste-premier-lounge-en",
+        "https://www.prg.aero/en/erste-premier-lounge-t1",
+        "https://www.prg.aero/en/visa-lounge",
+        "https://www.prg.aero/en/vip-service-club-continental",
+        "https://www.aena.es/es/madrid-barajas-adolfo-suarez/servicios-del-aeropuerto/servicios-vip/salas-vip/sala-vip-cibeles.html&p=1575033929773",
+        "https://www.aena.es/es/madrid-barajas-adolfo-suarez/servicios-del-aeropuerto/servicios-vip/salas-vip/sala-vip-neptuno.html&p=1575033929773",
+        "https://www.aena.es/es/madrid-barajas-adolfo-suarez/servicios-del-aeropuerto/servicios-vip/salas-vip/sala-vip-puerta-alcala.html&p=1575033633286",
+        "https://www.aena.es/es/madrid-barajas-adolfo-suarez/servicios-del-aeropuerto/servicios-vip/salas-vip/sala-vip-puerta-del-sol.html&p=1575033633658",
+        "https://www.aena.es/es/madrid-barajas-adolfo-suarez/servicios-del-aeropuerto/servicios-vip/salas-vip/sala-vip-plaza-mayor.html&p=1575033929773",
+        "https://www.aena.es/es/madrid-barajas-adolfo-suarez/servicios-vip/salas-vip/sala-vip-retiro-t4.html&p=1575033633704",
+        "https://www.aena.es/es/a-coruna/servicios-vip/salas-vip/sala-vip-aeropuerto-acoruna.html?p=1575037011690",
+        "https://www.aena.es/es/alicante-elche/servicios-vip/salas-vip/sala-vip-costa-blanca.html?p=1575036771904",
+        "https://www.aena.es/es/bilbao/servicios-vip/salas-vip/sala-vip-aeropuerto-bilbao.html?p=1575036765897",
+        "https://www.aena.es/es/fuerteventura/servicios-vip/salas-vip/salas-vip-jable-fue.html?p=1575050524424",
+        "https://www.aena.es/es/gran-canaria/servicios-vip/salas-vip/sala-vip-aeropuerto-gran-canaria.html?p=1575049385014",
+        "https://www.aena.es/es/ibiza/servicios-vip/salas-vip/sala-vip-cap-des-falco.html?p=1575049401515",
+        "https://www.aena.es/es/josep-tarradellas-barcelona-el-prat/servicios-vip/salas-vip/sala-vip-colomer.html?p=1575033154799",
+        "https://www.aena.es/es/josep-tarradellas-barcelona-el-prat/servicios-vip/salas-vip/sala-vip-joan-miro.html?p=1575033154799",
+        "https://www.aena.es/es/josep-tarradellas-barcelona-el-prat/servicios-vip/salas-vip/sala-vip-pau-casals.html?p=1575033154799",
+        "https://www.aena.es/es/josep-tarradellas-barcelona-el-prat/servicios-vip/salas-vip/sala-vip-canudas.html?p=1575033154799",
+        "https://www.aena.es/es/menorca/servicios-vip/salas-vip/sala-vip-tramuntana.html?p=1575050150549",
+        "https://www.aena.es/es/palma-de-mallorca/servicios-vip/salas-vip/sala-vip-formentor.html?p=1575048305010",
+        "https://www.aena.es/es/palma-de-mallorca/servicios-vip/salas-vip/sala-vip-mediterraneo.html?p=1575048305010",
+        "https://www.aena.es/es/santiago-rosalia-de-castro/servicios-vip/salas-vip/sala-vip-santiago.html?p=1575037856492",
+        "https://www.aena.es/es/sevilla/servicios-vip/salas-vip/sala-vip-azahar.html?p=1575050212219",
+        "https://www.aena.es/es/tenerife-norte-ciudad-de-la-laguna/servicios-vip/salas-vip/sala-vip-nivaria.html?p=1575045391431",
+        "https://www.aena.es/es/tenerife-sur/servicios-vip/salas-vip/sala-vip-montana-roja.html?p=1575050059304",
+        "https://www.aena.es/es/valencia/servicios-vip/salas-vip/sala-joan-olivert.html?p=1575037608781",
+        "https://www.aena.es/es/vigo/servicios-vip/salas-vip/sala-vip-aeropuerto-vigo.html?p=1575037750596",
+        "https://dohahamadairport.com/lounge/al-maha-arrival-lounge-after-immigration",
+        "https://dohahamadairport.com/lounge/al-maha-arrival-lounge-immigration",
+        "https://dohahamadairport.com/lounge/al-maha-departure-lounge",
+        "https://dohahamadairport.com/lounge/al-maha-lounge-north",
+        "https://dohahamadairport.com/lounge/al-maha-lounge-south",
+        "https://dohahamadairport.com/lounge/al-mourjan-business-lounge-garden",
+        "https://dohahamadairport.com/lounge/al-mourjan-business-lounge-south",
+        "https://dohahamadairport.com/lounge/al-safwa-first-lounge",
+        "https://dohahamadairport.com/lounge/first-and-business-class-arrival-lounge-after-immigration",
+        "https://dohahamadairport.com/lounge/first-and-business-class-arrival-lounge-after-immigration-0",
+        "https://dohahamadairport.com/lounge/gold-lounge-south",
+        "https://dohahamadairport.com/lounge/mariner-lounge",
+        "https://dohahamadairport.com/lounge/platinum-and-gold-lounge-north",
+        "https://dohahamadairport.com/lounge/platinum-lounge-south",
+        "https://dohahamadairport.com/lounge/sensory-room-muzn-lounge",
+        "https://dohahamadairport.com/lounge/silver-lounge-south"
+      ],
+      "rightsNote": "Official airport public pages; use for field evidence and candidate discovery only, without inferred map proximity.",
+      "lastRunAt": "2026-07-15T00:31:42.825Z",
+      "records": 316,
       "issues": 0,
       "brandIds": []
     },
@@ -814,8 +1024,7 @@
       "category": "issuer",
       "aliases": [
         "Chase Sapphire",
-        "chase sapphire",
-        "sapphire lounge"
+        "chase sapphire"
       ],
       "sourceIds": [
         "chase-sapphire"
@@ -1140,6 +1349,85 @@
       "status": "review",
       "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.",
       "fallbackLogoUrl": "/data/brand-logos/alaska-airlines.svg"
+    },
+    {
+      "id": "singapore-airlines",
+      "name": "Singapore Airlines",
+      "category": "airline",
+      "aliases": [
+        "Singapore Airlines",
+        "singapore airlines",
+        "silverkris",
+        "silverkris lounge",
+        "krisflyer gold lounge"
+      ],
+      "sourceIds": [
+        "singapore-airlines"
+      ],
+      "sourceUrl": "https://www.singaporeair.com/en_UK/sg/flying-withus/before-the-flight/lounges/silverkris/",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "all-routes:brand/singapore-airlines",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/sq/64e86a3a01ed310445daec5d4b51350350513b65a4cf1705277bd2724887d403.png",
+      "logoText": "SQ",
+      "color": "#24446f",
+      "background": "#edf2f8",
+      "foreground": "#1f375f",
+      "status": "review",
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Singapore Airlines lounge page supplies source context.",
+      "fallbackLogoUrl": "/data/brand-logos/singapore-airlines.svg"
+    },
+    {
+      "id": "qatar-airways",
+      "name": "Qatar Airways",
+      "category": "airline",
+      "aliases": [
+        "Qatar Airways",
+        "qatar airways",
+        "al safwa",
+        "al mourjan",
+        "qatar premium lounge"
+      ],
+      "sourceIds": [
+        "qatar-airways"
+      ],
+      "sourceUrl": "https://www.qatarairways.com/en-us/lounges.html",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "all-routes:brand/qatar-airways",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/qr/bb207913044d70cce632574255bacef97abbb243b1380453e0c189715f4c32be.png",
+      "logoText": "QR",
+      "color": "#662046",
+      "background": "#f7edf2",
+      "foreground": "#662046",
+      "status": "candidate",
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Qatar Airways lounge pages supply source context.",
+      "fallbackLogoUrl": "/data/brand-logos/qatar-airways.svg"
+    },
+    {
+      "id": "qantas",
+      "name": "Qantas",
+      "category": "airline",
+      "aliases": [
+        "Qantas",
+        "qantas",
+        "qantas club",
+        "qantas lounge",
+        "qantas business lounge",
+        "qantas first lounge"
+      ],
+      "sourceIds": [
+        "qantas"
+      ],
+      "sourceUrl": "https://www.qantas.com/en-us/at-the-airport/lounges/locations",
+      "assetSource": "desk_travel_database",
+      "deskTravelAssetKey": "all-routes:brand/qantas",
+      "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/qf/7668c520fe78b8dba00927e04958b4ca10e45395c72ac7191e92b518fed08d90.png",
+      "logoText": "QF",
+      "color": "#a81e22",
+      "background": "#fff0f0",
+      "foreground": "#8f171b",
+      "status": "candidate",
+      "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Qantas lounge pages supply source context.",
+      "fallbackLogoUrl": "/data/brand-logos/qantas.svg"
     },
     {
       "id": "oneworld",

@@ -69,8 +69,19 @@ function buildSummary({
   const records = catalog.records ?? [];
   const approvedRecords = records.filter((record) => record.quality?.reviewStatus === 'approved').length;
   const reviewRecords = records.length - approvedRecords;
+  const staleOpenReviewRecords = records.filter((record) => {
+    if (record.quality?.reviewStatus === 'approved') {
+      return false;
+    }
+    const openedAt = Date.parse(record.operations?.lastVerifiedAt ?? record.sources?.[0]?.retrievedAt ?? catalog.generatedAt);
+    const staleDays = Number(goal.reviewQueue?.staleOpenHighConfidenceDays ?? 14);
+    const cutoff = Date.now() - staleDays * 24 * 60 * 60 * 1000;
+    return Number.isFinite(openedAt) && openedAt <= cutoff;
+  }).length;
+  const nonPriorityRecords = catalog.stats?.nonPriorityRecords ?? 0;
   const recordsWithoutSources = records.filter((record) => !Array.isArray(record.sources) || record.sources.length === 0).length;
   const recordsWithoutQuality = records.filter((record) => !record.quality).length;
+  const recordsWithoutFieldEvidence = gapReport.current.fieldCoverage?.recordsWithoutFieldEvidence ?? 0;
   const unknownAirportRecords = records.filter((record) => {
     const airport = record.airport ?? {};
     return !airport.iata || !airport.name || !Number.isFinite(Number(airport.coordinates?.lat)) || !Number.isFinite(Number(airport.coordinates?.lon));
@@ -98,8 +109,20 @@ function buildSummary({
   if (approvedRecords < goal.terminalGoal.minApprovedRecords) {
     blockers.push(`approved_records_below_${goal.terminalGoal.minApprovedRecords}`);
   }
+  if (nonPriorityRecords < (goal.terminalGoal.minNonPriorityRecords ?? 0)) {
+    blockers.push(`non_priority_records_below_${goal.terminalGoal.minNonPriorityRecords}`);
+  }
   if (approvedRatio < goal.terminalGoal.minApprovedRatio) {
     blockers.push(`approved_ratio_below_${goal.terminalGoal.minApprovedRatio}`);
+  }
+  if ((gapReport.current.fieldCoverage?.hoursRatio ?? 0) < (goal.terminalGoal.minHoursCoverageRatio ?? 0)) {
+    blockers.push(`hours_coverage_below_${goal.terminalGoal.minHoursCoverageRatio}`);
+  }
+  if ((gapReport.current.fieldCoverage?.gateRatio ?? 0) < (goal.terminalGoal.minGateCoverageRatio ?? 0)) {
+    blockers.push(`gate_coverage_below_${goal.terminalGoal.minGateCoverageRatio}`);
+  }
+  if ((gapReport.current.fieldCoverage?.priceRatio ?? 0) < (goal.terminalGoal.minPriceCoverageRatio ?? 0)) {
+    blockers.push(`price_coverage_below_${goal.terminalGoal.minPriceCoverageRatio}`);
   }
   if (sourceFamilyCoverageRatio < goal.terminalGoal.minSourceFamilyCoverageRatio) {
     blockers.push('source_family_coverage_incomplete');
@@ -113,8 +136,14 @@ function buildSummary({
   if (recordsWithoutQuality > goal.terminalGoal.maxRecordsWithoutQuality) {
     blockers.push('records_without_quality_present');
   }
+  if (recordsWithoutFieldEvidence > (goal.terminalGoal.maxRecordsWithoutFieldEvidence ?? 0)) {
+    blockers.push('records_without_field_evidence_present');
+  }
   if (reviewRecords > goal.terminalGoal.maxReviewRecords) {
     blockers.push('review_records_present');
+  }
+  if (staleOpenReviewRecords > (goal.terminalGoal.maxStaleOpenReviewRecords ?? 0)) {
+    blockers.push('stale_open_review_records_present');
   }
   if (tableStatuses.some((table) => !table.present)) {
     blockers.push('cloudflare_d1_schema_missing_tables');
@@ -142,13 +171,20 @@ function buildSummary({
     totalRecords: records.length,
     approvedRecords,
     reviewRecords,
+    staleOpenReviewRecords,
+    reviewQueueSla: {
+      staleOpenHighConfidenceDays: goal.reviewQueue?.staleOpenHighConfidenceDays ?? 14,
+      highConfidenceThreshold: goal.reviewQueue?.highConfidenceThreshold ?? 0.75,
+      maxStaleOpenReviewRecords: goal.terminalGoal.maxStaleOpenReviewRecords ?? 0,
+    },
     candidateRecords: catalog.stats?.candidateRecords ?? 0,
-    nonPriorityRecords: catalog.stats?.nonPriorityRecords ?? 0,
+    nonPriorityRecords,
     approvedRatio: Number(approvedRatio.toFixed(4)),
     sourceFamilyCoverageRatio: Number(sourceFamilyCoverageRatio.toFixed(4)),
     unknownAirportRecords,
     recordsWithoutSources,
     recordsWithoutQuality,
+    recordsWithoutFieldEvidence,
     sourceIntakeRuntime: gapReport.current.sourceIntakeRuntime,
     cloudflareSourceRuntimePassed: gapReport.current.cloudflareSourceRuntimePassed,
     cloudflareSourceEvidence: gapReport.current.cloudflareSourceEvidence,
@@ -186,8 +222,17 @@ if (jsonOutput) {
   console.log(`Goal: ${summary.goalId} (${summary.goalVersion})`);
   console.log(`D1: ${summary.database.databaseName} / ${summary.database.binding}`);
   console.log(`Catalog: ${summary.totalRecords} records, ${summary.approvedRecords} approved, ${summary.reviewRecords} review`);
+  console.log(
+    `Review SLA: ${summary.staleOpenReviewRecords} stale open high-confidence ` +
+      `over ${summary.reviewQueueSla.staleOpenHighConfidenceDays} days`,
+  );
   console.log(`Non-PP: ${summary.nonPriorityRecords} records, candidates ${summary.candidateRecords}`);
   console.log(`Approved ratio: ${(summary.approvedRatio * 100).toFixed(2)}%`);
+  console.log(
+    `Field coverage: hours ${(summary.gapReport.current.fieldCoverage.hoursRatio * 100).toFixed(2)}%, ` +
+      `gate ${(summary.gapReport.current.fieldCoverage.gateRatio * 100).toFixed(2)}%, ` +
+      `price ${(summary.gapReport.current.fieldCoverage.priceRatio * 100).toFixed(2)}%`,
+  );
   console.log(`Source families: ${(summary.sourceFamilyCoverageRatio * 100).toFixed(2)}%`);
   console.log(`Source intake: ${summary.sourceIntakeRuntime}`);
   console.log(
@@ -201,7 +246,7 @@ if (jsonOutput) {
     const intake = summary.gapReport.nextCloudflareIntake;
     console.log(`Intake token env: ${intake.requiredTokenEnv}`);
     console.log(
-      `Intake preflight: Playwright runtime ${summary.credentialPreflight.intakeTokenPresent ? 'present' : 'missing'}, ` +
+      `Intake preflight: intake token ${summary.credentialPreflight.intakeTokenPresent ? 'present' : 'missing'}, ` +
         `API token ${summary.credentialPreflight.cloudflareApiTokenPresent ? 'present' : 'missing'}, local scrawl ${intake.localScrawl}`,
     );
     if (checkCloudflareAuth) {

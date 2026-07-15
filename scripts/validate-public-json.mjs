@@ -245,6 +245,180 @@ function validateIntakePlan(plan, gap) {
   }
 }
 
+function validateMaxCoveragePlan(plan, goal, gap) {
+  issue(plan?.goalId === goal?.id, 'max-coverage-plan.json: goal id mismatch');
+  issue(plan?.goalVersion === goal?.version, 'max-coverage-plan.json: goal version mismatch');
+  issue(plan?.status === (gap?.terminalPassed ? 'complete' : 'blocked'), 'max-coverage-plan.json: status mismatch');
+  issue(
+    plan?.baseline?.totalRecords === gap?.current?.totalRecords,
+    'max-coverage-plan.json: baseline total records mismatch',
+  );
+  issue(
+    plan?.deltas?.approvedRecordsRemaining === gap?.deltas?.approvedRecordsRemaining,
+    'max-coverage-plan.json: approved delta mismatch',
+  );
+  issue(Array.isArray(plan?.waves) && plan.waves.length >= 5, 'max-coverage-plan.json: coverage waves missing');
+  issue(
+    Array.isArray(plan?.sourceScaleEvidence) && plan.sourceScaleEvidence.length >= 8,
+    'max-coverage-plan.json: source scale evidence missing',
+  );
+  const scaleSourceIds = new Set((plan?.sourceScaleEvidence ?? []).map((source) => source.sourceId));
+  for (const sourceId of ['priority-pass', 'american-express', 'mastercard-travel-pass', 'star-alliance', 'oneworld', 'skyteam']) {
+    issue(scaleSourceIds.has(sourceId), `max-coverage-plan.json: ${sourceId} scale evidence missing`);
+  }
+  for (const [index, source] of (plan?.sourceScaleEvidence ?? []).entries()) {
+    const prefix = `max-coverage-plan.json.sourceScaleEvidence[${index}]`;
+    issue(Boolean(source.publisher), `${prefix}: publisher missing`);
+    issue(/^https:\/\//.test(source.officialUrl ?? ''), `${prefix}: official URL missing`);
+    issue(Boolean(source.publishedScale), `${prefix}: published scale missing`);
+    issue(Boolean(source.planningUse), `${prefix}: planning use missing`);
+  }
+  issue(
+    Array.isArray(plan?.officialPriceResearchEvidence) && plan.officialPriceResearchEvidence.length >= 5,
+    'max-coverage-plan.json: official price research missing',
+  );
+  const priceResearchSourceIds = new Set((plan?.officialPriceResearchEvidence ?? []).map((source) => source.sourceId));
+  for (const sourceId of ['plaza-premium', 'airport-dimensions', 'aspire-lounges', 'escape-lounges', 'no1-lounges']) {
+    issue(priceResearchSourceIds.has(sourceId), `max-coverage-plan.json: ${sourceId} price research missing`);
+  }
+  for (const [index, source] of (plan?.officialPriceResearchEvidence ?? []).entries()) {
+    const prefix = `max-coverage-plan.json.officialPriceResearchEvidence[${index}]`;
+    issue(Boolean(source.publisher), `${prefix}: publisher missing`);
+    issue(/^https:\/\//.test(source.officialUrl ?? ''), `${prefix}: official URL missing`);
+    issue(
+      Array.isArray(source.evidenceFields) && source.evidenceFields.includes('access.accessOffers'),
+      `${prefix}: access offer evidence field missing`,
+    );
+    issue(Boolean(source.researchUse), `${prefix}: research use missing`);
+    issue(Boolean(source.firstBatchRule), `${prefix}: first batch rule missing`);
+  }
+  issue(
+    Array.isArray(plan?.airportEnrichmentBacklog) && plan.airportEnrichmentBacklog.length > 0,
+    'max-coverage-plan.json: airport backlog missing',
+  );
+  issue(
+    Array.isArray(plan?.sourceBacklog) && plan.sourceBacklog.length > 0,
+    'max-coverage-plan.json: source backlog missing',
+  );
+  issue(
+    Array.isArray(plan?.priceOfferWorklist) && plan.priceOfferWorklist.length > 0,
+    'max-coverage-plan.json: price offer worklist missing',
+  );
+  const priceOfferSourceIds = new Set((plan?.priceOfferWorklist ?? []).map((source) => source.sourceId));
+  for (const sourceId of ['plaza-premium', 'airport-dimensions', 'primeclass']) {
+    issue(priceOfferSourceIds.has(sourceId), `max-coverage-plan.json: ${sourceId} price work missing`);
+  }
+  for (const [index, source] of (plan?.priceOfferWorklist ?? []).entries()) {
+    const prefix = `max-coverage-plan.json.priceOfferWorklist[${index}]`;
+    issue(Boolean(source.sourceId), `${prefix}: sourceId missing`);
+    issue(Boolean(source.publisher), `${prefix}: publisher missing`);
+    issue(Number.isFinite(Number(source.missingPrice)), `${prefix}: missing price count missing`);
+    issue(Boolean(source.evidenceTarget), `${prefix}: evidence target missing`);
+    issue(Boolean(source.acceptance) && source.acceptance.includes('amount, currency'), `${prefix}: price acceptance missing`);
+  }
+  issue(
+    Array.isArray(plan?.sourceFamilyBacklog) && plan.sourceFamilyBacklog.length === goal?.sourceFamilies?.length,
+    'max-coverage-plan.json: source family backlog mismatch',
+  );
+  issue(
+    plan?.d1EvidenceContract?.databaseName === goal?.cloudflareDatabase?.databaseName,
+    'max-coverage-plan.json: D1 database contract mismatch',
+  );
+  issue(
+    plan?.d1EvidenceContract?.binding === goal?.cloudflareDatabase?.binding,
+    'max-coverage-plan.json: D1 binding contract mismatch',
+  );
+  issue(
+    Array.isArray(plan?.d1EvidenceContract?.proofTables) &&
+      plan.d1EvidenceContract.proofTables.includes('record_field_evidence') &&
+      plan.d1EvidenceContract.proofTables.includes('coverage_validation_runs'),
+    'max-coverage-plan.json: D1 proof tables missing',
+  );
+  issue(
+    plan?.d1EvidenceContract?.rawSnapshotPolicy?.includes('raw HTML/JSON bodies stay out of git'),
+    'max-coverage-plan.json: raw snapshot policy missing',
+  );
+  issue(
+    Array.isArray(plan?.terminalBurndown) && plan.terminalBurndown.length === 4,
+    'max-coverage-plan.json: terminal burndown missing',
+  );
+  const burndownById = new Map((plan?.terminalBurndown ?? []).map((batch) => [batch.id, batch]));
+  issue(
+    burndownById.get('close-approved-record-gap')?.remaining === gap?.deltas?.approvedRecordsRemaining,
+    'max-coverage-plan.json: approved record burndown mismatch',
+  );
+  issue(
+    burndownById.get('raise-hours-coverage')?.remaining === gap?.deltas?.hoursCoverageRecordsRemaining,
+    'max-coverage-plan.json: hours burndown mismatch',
+  );
+  issue(
+    burndownById.get('raise-gate-coverage')?.remaining === gap?.deltas?.gateCoverageRecordsRemaining,
+    'max-coverage-plan.json: gate burndown mismatch',
+  );
+  issue(
+    burndownById.get('raise-price-coverage')?.remaining === gap?.deltas?.priceCoverageRecordsRemaining,
+    'max-coverage-plan.json: price burndown mismatch',
+  );
+  for (const [index, batch] of (plan?.terminalBurndown ?? []).entries()) {
+    const prefix = `max-coverage-plan.json.terminalBurndown[${index}]`;
+    issue(Boolean(batch.gapMetric), `${prefix}: gap metric missing`);
+    issue(Number.isFinite(Number(batch.remaining)), `${prefix}: remaining gap missing`);
+    issue(Boolean(batch.target), `${prefix}: target missing`);
+    issue(Array.isArray(batch.firstBatch) && batch.firstBatch.length > 0, `${prefix}: first batch missing`);
+    issue(Boolean(batch.acceptance), `${prefix}: acceptance missing`);
+  }
+  const operatorPriceSlice = (plan?.currentWorkOrder?.slices ?? []).find((slice) => slice.id === 'operator-price-offers');
+  issue(
+    Array.isArray(operatorPriceSlice?.scope) &&
+      operatorPriceSlice.scope[0] === plan?.priceOfferWorklist?.[0]?.sourceId,
+    'max-coverage-plan.json: operator price slice does not use price worklist',
+  );
+  issue(
+    plan?.validation?.terminal === goal?.validation?.terminalCommand,
+    'max-coverage-plan.json: terminal command mismatch',
+  );
+  issue(
+    plan?.validation?.d1SmokeQueries?.fieldCoverage === goal?.validation?.d1SmokeQueries?.fieldCoverage,
+    'max-coverage-plan.json: D1 field coverage smoke mismatch',
+  );
+  issue(
+    plan?.validation?.d1SmokeQueries?.openReviewQueue === goal?.validation?.d1SmokeQueries?.openReviewQueue,
+    'max-coverage-plan.json: D1 review smoke mismatch',
+  );
+  issue(
+    plan?.validation?.d1SmokeQueries?.provenance === goal?.validation?.d1SmokeQueries?.provenance,
+    'max-coverage-plan.json: D1 provenance smoke mismatch',
+  );
+  issue(
+    plan?.reviewQueueSla?.staleOpenHighConfidenceDays === goal?.reviewQueue?.staleOpenHighConfidenceDays,
+    'max-coverage-plan.json: review SLA mismatch',
+  );
+  issue(
+    plan?.reviewQueueSla?.maxStaleOpenReviewRecords === goal?.terminalGoal?.maxStaleOpenReviewRecords,
+    'max-coverage-plan.json: stale review target mismatch',
+  );
+
+  const firstAirport = plan?.airportEnrichmentBacklog?.[0];
+  const lastAirport = plan?.airportEnrichmentBacklog?.at(-1);
+  issue(/^[A-Z0-9]{3}$/.test(firstAirport?.airportCode ?? ''), 'max-coverage-plan.json: first airport code invalid');
+  issue(
+    Number(firstAirport?.missingFieldScore ?? 0) >= Number(lastAirport?.missingFieldScore ?? 0),
+    'max-coverage-plan.json: airport backlog not sorted by missing field score',
+  );
+  issue(
+    firstAirport?.nextEvidenceRule?.includes('field evidence'),
+    'max-coverage-plan.json: airport evidence rule missing',
+  );
+  issue(
+    plan?.guardrails?.includes('No licensed commercial global lounge feeds.'),
+    'max-coverage-plan.json: commercial-feed guardrail missing',
+  );
+  issue(
+    plan?.guardrails?.includes('Airport pages enrich matched records before creating new physical lounges.'),
+    'max-coverage-plan.json: enrichment-before-create guardrail missing',
+  );
+}
+
 function validateSourceIntake(report) {
   issue(report?.policy?.execution?.requiredRuntime === 'playwright', 'source-intake-report.json: required runtime mismatch');
   issue(report?.policy?.execution?.localScrawl === 'playwright_only', 'source-intake-report.json: local scrawl mode mismatch');
@@ -408,6 +582,7 @@ const catalog = readJson('public/data/lounge-guru-catalog.json');
 const geoJson = readJson('public/data/lounges.geojson');
 const goal = readJson('public/data/worldwide-coverage-goal.json');
 const gap = readJson('public/data/coverage-gap-report.json');
+const maxCoveragePlan = readJson('public/data/max-coverage-plan.json');
 const intakePlan = readJson('public/data/cloudflare-source-intake-plan.json');
 const sourceIntake = readJson('public/data/source-intake-report.json');
 const cloudflareEvidence = readJson('public/data/cloudflare-source-run-evidence.json');
@@ -417,6 +592,7 @@ const nonPriorityCandidates = readJson('public/data/non-priority-lounge-candidat
 validateCatalog(catalog);
 validateGeoJson(geoJson);
 validateCoverage(goal, gap);
+validateMaxCoveragePlan(maxCoveragePlan, goal, gap);
 validateIntakePlan(intakePlan, gap);
 validateSourceIntake(sourceIntake);
 validateCloudflareSourceRunEvidence(cloudflareEvidence, intakePlan);

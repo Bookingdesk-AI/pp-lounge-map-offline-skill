@@ -639,8 +639,8 @@
 }
 
 .brand-mark-tile {
-  width: 34px;
-  height: 28px;
+  width: 38px;
+  height: 34px;
   display: inline-grid;
   place-items: center;
   flex: 0 0 auto;
@@ -653,22 +653,22 @@
 }
 
 .brand-mark.is-compact .brand-mark-tile {
-  width: 30px;
-  height: 24px;
+  width: 34px;
+  height: 30px;
   font-size: 0.62rem;
 }
 
 .brand-mark-img {
-  width: 24px;
-  height: 24px;
+  width: 100%;
+  height: 100%;
   display: block;
   border-radius: inherit;
   object-fit: contain;
 }
 
 .brand-mark.is-compact .brand-mark-img {
-  width: 20px;
-  height: 20px;
+  width: 100%;
+  height: 100%;
 }
 
 .brand-mark-name {
@@ -686,9 +686,9 @@
 }
 
 .brand-icon-mark {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
   display: inline-grid;
   place-items: center;
   border-radius: 7px;
@@ -703,8 +703,8 @@
 }
 
 .brand-icon-mark-img {
-  width: 25px;
-  height: 25px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   display: block;
 }
@@ -1438,6 +1438,18 @@
   line-height: 1.5;
 }
 
+.detail-source-link {
+  color: var(--text-main);
+  font-weight: 650;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.detail-source-link:hover {
+  color: var(--brand-blue);
+  border-bottom-color: currentColor;
+}
+
 .spot-group {
   display: grid;
   gap: 0.55rem;
@@ -1970,14 +1982,14 @@
   }
 
   .app-shell.is-mobile .brand-icon-mark {
-    width: 36px;
-    height: 36px;
-    flex-basis: 36px;
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
   }
 
   .app-shell.is-mobile .brand-icon-mark-img {
-    width: 27px;
-    height: 27px;
+    width: 100%;
+    height: 100%;
   }
 
   .mobile-sheet-body {

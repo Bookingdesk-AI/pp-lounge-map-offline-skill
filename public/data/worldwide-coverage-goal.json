@@ -16,21 +16,42 @@
       "lounge_records",
       "lounge_sources",
       "source_runs",
+      "source_targets",
+      "airport_authority",
+      "source_fetch_runs",
+      "source_snapshots",
+      "source_parse_runs",
+      "source_candidates",
+      "lounge_identity_links",
+      "record_field_evidence",
+      "lounge_field_coverage",
+      "review_queue",
       "coverage_validation_runs"
     ]
   },
   "terminalGoal": {
-    "minApprovedRecords": 2500,
+    "minApprovedRecords": 3000,
+    "minNonPriorityRecords": 1300,
     "minApprovedRatio": 0.98,
+    "minHoursCoverageRatio": 0.97,
+    "minGateCoverageRatio": 0.45,
+    "minPriceCoverageRatio": 0.25,
     "minSourceFamilyCoverageRatio": 1,
     "minReadyMemberGapCoverageRatio": 1,
     "maxUnknownAirportRecords": 0,
     "maxRecordsWithoutSources": 0,
     "maxRecordsWithoutQuality": 0,
+    "maxRecordsWithoutFieldEvidence": 0,
     "maxReviewRecords": 0,
+    "maxStaleOpenReviewRecords": 0,
     "requiresCloudflareSchema": true,
     "requiresCloudflareSourceRuntime": false,
     "requiresPlaywrightSourceRuntime": true
+  },
+  "reviewQueue": {
+    "staleOpenHighConfidenceDays": 14,
+    "highConfidenceThreshold": 0.75,
+    "terminalQuery": "SELECT COUNT(*) AS stale_open_high_confidence FROM review_queue WHERE status = 'open' AND severity = 'high' AND datetime(opened_at) <= datetime('now', '-14 days');"
   },
   "sourceFamilies": [
     {
@@ -74,7 +95,7 @@
       "label": "Airline-operated lounges",
       "mode": "official_public_playwright",
       "requiredForTerminal": true,
-      "members": ["united", "delta", "american", "air-canada"],
+      "members": ["united", "delta", "american", "air-canada", "singapore-airlines"],
       "benchmark": "Airline pages are the preferred source for operator-owned clubs, hours, restrictions, and temporary closures.",
       "acquisition": "Bounded official page intake through Playwright plus manual review for conflict resolution."
     },
@@ -83,7 +104,7 @@
       "label": "Independent and contract lounge operators",
       "mode": "official_public_playwright",
       "requiredForTerminal": true,
-      "members": ["plaza-premium", "escape-lounges", "airport-dimensions", "aspire-lounges", "marhaba", "primeclass", "no1-lounges", "be-relax"],
+      "members": ["plaza-premium", "escape-lounges", "airport-dimensions", "aspire-lounges", "marhaba", "primeclass", "no1-lounges", "be-relax", "minute-suites"],
       "benchmark": "Operator networks cover lounges missed by card/bank pages and must include Plaza Premium, Aspire, The Club, Escape, Marhaba, Primeclass, No1, and Be Relax.",
       "acquisition": "Official operator pages first. If public pages block automated intake, keep the lane in review instead of using licensed feeds."
     },
@@ -92,16 +113,22 @@
       "label": "Open normalization and enrichment",
       "mode": "open_data_enrichment",
       "requiredForTerminal": true,
-      "members": ["ourairports", "openstreetmap", "nominatim"],
-      "benchmark": "Open data normalizes airports and enriches coordinates; it is not authoritative for lounge existence.",
-      "acquisition": "OurAirports CSV, OSM/Taginfo monitoring, and Nominatim only as cached, rate-limited fallback."
+      "members": ["ourairports", "airport-official-pages", "openstreetmap", "nominatim"],
+      "benchmark": "Airport authority and open data normalize airports and enrich location fields; open data is not authoritative for lounge existence.",
+      "acquisition": "OurAirports CSV, official airport lounge/service pages, OSM/Taginfo monitoring, and Nominatim only as cached, rate-limited fallback."
     }
   ],
   "validation": {
     "progressCommand": "npm run validate:coverage",
     "terminalCommand": "npm run goal:coverage",
     "strictExitCode": "non_zero_until_terminal_goal_passes",
-    "remoteSmokeCommand": "npx wrangler d1 execute lounge-guru-catalog --remote --command=\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\""
+    "remoteSmokeCommand": "npx wrangler d1 execute lounge-guru-catalog --remote --command=\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\"",
+    "d1SmokeQueries": {
+      "fieldCoverage": "SELECT COUNT(*) AS total, SUM(has_hours) AS hours, SUM(has_gate) AS gates, SUM(has_price) AS prices FROM lounge_field_coverage;",
+      "openReviewQueue": "SELECT COUNT(*) AS open_review_records FROM review_queue WHERE status = 'open';",
+      "staleReviewQueue": "SELECT COUNT(*) AS stale_open_high_confidence FROM review_queue WHERE status = 'open' AND severity = 'high' AND datetime(opened_at) <= datetime('now', '-14 days');",
+      "provenance": "SELECT COUNT(*) AS records_missing_provenance FROM lounge_records WHERE source_count = 0 OR canonical_json IS NULL OR canonical_json = '';"
+    }
   },
   "guardrails": [
     "Every lounge record must carry source provenance.",
@@ -111,7 +138,7 @@
     "Cloudflare D1 is the canonical publish target for approved worldwide coverage."
   ],
   "benchmark": {
-    "reason": "Use a 2,500 physical-record approved minimum for the official-public Playwright lane because licensed/commercial global lounge inventory is excluded and overlapping source rows are deduped. Terminal success still requires dedupe across Priority Pass, public issuer evidence, alliances, airlines, operator-owned lounges, and open airport normalization.",
-    "reviewedAt": "2026-07-12"
+    "reason": "Max coverage v1 requires at least 3,000 deduped approved physical records, 1,300 approved non-Priority Pass records, stronger hours/gate/price coverage, and D1 field-level evidence for every canonical record while licensed/commercial global lounge inventory remains excluded.",
+    "reviewedAt": "2026-07-13"
   }
 }

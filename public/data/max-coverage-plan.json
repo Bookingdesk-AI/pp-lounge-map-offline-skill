@@ -1,0 +1,2208 @@
+{
+  "generatedAt": "2026-07-15T00:31:42.825Z",
+  "goalId": "lounge-guru-worldwide-coverage",
+  "goalVersion": "2026-07-11",
+  "status": "complete",
+  "baseline": {
+    "totalRecords": 3227,
+    "approvedRecords": 3227,
+    "nonPriorityRecords": 1869,
+    "reviewRecords": 0,
+    "fieldCoverage": {
+      "total": 3227,
+      "hours": 3132,
+      "gates": 1491,
+      "prices": 878,
+      "recordsWithoutFieldEvidence": 0,
+      "hoursRatio": 0.9706,
+      "gateRatio": 0.462,
+      "priceRatio": 0.2721
+    }
+  },
+  "targets": {
+    "minApprovedRecords": 3000,
+    "minNonPriorityRecords": 1300,
+    "minApprovedRatio": 0.98,
+    "minHoursCoverageRatio": 0.97,
+    "minGateCoverageRatio": 0.45,
+    "minPriceCoverageRatio": 0.25,
+    "minSourceFamilyCoverageRatio": 1,
+    "minReadyMemberGapCoverageRatio": 1,
+    "maxReviewRecords": 0,
+    "maxUnknownAirportRecords": 0,
+    "maxRecordsWithoutFieldEvidence": 0
+  },
+  "deltas": {
+    "approvedRecordsRemaining": 0,
+    "nonPriorityRecordsRemaining": 0,
+    "approvalsNeededForCurrentCatalogRatio": 0,
+    "hoursCoverageRecordsRemaining": 0,
+    "gateCoverageRecordsRemaining": 0,
+    "priceCoverageRecordsRemaining": 0,
+    "reviewRecordsToResolve": 0,
+    "recordsWithoutFieldEvidenceToResolve": 0,
+    "missingSourceFamilies": [],
+    "missingSourceProofIds": [],
+    "missingSourceProofLanes": [],
+    "sourceIntakeRuntimeRequired": "playwright"
+  },
+  "waves": [
+    {
+      "id": "airport-field-enrichment",
+      "target": "gate_hours",
+      "sourceFamilyIds": [
+        "open-enrichment"
+      ],
+      "rule": "Start from top airport backlog; update existing lounges with field evidence only.",
+      "acceptance": "No fabricated gates; every filled field has source URL and retrieved timestamp."
+    },
+    {
+      "id": "alliance-expansion",
+      "target": "non_priority_count",
+      "sourceFamilyIds": [
+        "airline-alliance-lounges"
+      ],
+      "rule": "Use alliance finders as discovery and access evidence; operator/airline/airport page confirms canonical identity.",
+      "acceptance": "Alliance tier names become program tiers, not separate lounge brands."
+    },
+    {
+      "id": "airline-owned-expansion",
+      "target": "hours_location_access",
+      "sourceFamilyIds": [
+        "airline-operated-lounges"
+      ],
+      "rule": "Airline-owned pages outrank alliance and issuer pages for hours, status, and access policy.",
+      "acceptance": "Owned lounge status and closures match the cited airline page."
+    },
+    {
+      "id": "operator-network-expansion",
+      "target": "non_priority_price_hours",
+      "sourceFamilyIds": [
+        "operator-operated-lounges"
+      ],
+      "rule": "Operator detail and booking pages are preferred for prices, hours, amenities, and restrictions.",
+      "acceptance": "Price offers require explicit amount, currency, terms label, and official URL."
+    },
+    {
+      "id": "issuer-pass-evidence",
+      "target": "access_programs",
+      "sourceFamilyIds": [
+        "bank-issuer-programs",
+        "card-network-programs",
+        "collinson-networks"
+      ],
+      "rule": "Issuer and pass pages prove access eligibility, not physical location when stronger sources exist.",
+      "acceptance": "Eligibility fields do not overwrite operator, airline, or airport location evidence."
+    }
+  ],
+  "sourceScaleEvidence": [
+    {
+      "sourceId": "priority-pass",
+      "publisher": "Priority Pass",
+      "officialUrl": "https://www.prioritypass.com/en-GB/airport-lounges",
+      "publishedScale": "1900+ lounges and airport experiences",
+      "planningUse": "baseline breadth and duplicate detection, not canonical truth by itself"
+    },
+    {
+      "sourceId": "american-express",
+      "publisher": "American Express Global Lounge Collection",
+      "officialUrl": "https://www.americanexpress.com/en-us/travel/lounges/the-platinum-card/",
+      "publishedScale": "1550+ airport lounges",
+      "planningUse": "issuer access evidence and Centurion/operator confirmation targets"
+    },
+    {
+      "sourceId": "mastercard-travel-pass",
+      "publisher": "Mastercard Airport Experiences",
+      "officialUrl": "https://airport.mastercard.com/",
+      "publishedScale": "1600+ airport lounges and travel experiences",
+      "planningUse": "card-network access evidence only unless physical inventory is public and stable"
+    },
+    {
+      "sourceId": "star-alliance",
+      "publisher": "Star Alliance Lounge Finder",
+      "officialUrl": "https://www.staralliance.com/en/lounge-finder",
+      "publishedScale": "1000+ lounges",
+      "planningUse": "alliance discovery and program-tier evidence"
+    },
+    {
+      "sourceId": "oneworld",
+      "publisher": "oneworld Airport Lounges",
+      "officialUrl": "https://www.oneworld.com/airport-lounge-results",
+      "publishedScale": "nearly 700 airport lounges",
+      "planningUse": "alliance discovery and program-tier evidence"
+    },
+    {
+      "sourceId": "skyteam",
+      "publisher": "SkyTeam Lounges",
+      "officialUrl": "https://www.skyteam.com/en/lounges/",
+      "publishedScale": "750+ lounges worldwide",
+      "planningUse": "alliance discovery and program-tier evidence"
+    },
+    {
+      "sourceId": "plaza-premium",
+      "publisher": "Plaza Premium Lounge",
+      "officialUrl": "https://www.plazapremiumlounge.com/en-uk",
+      "publishedScale": "global operator network",
+      "planningUse": "operator-owned hours, locations, facilities, and paid-access offers"
+    },
+    {
+      "sourceId": "airport-dimensions",
+      "publisher": "Airport Dimensions",
+      "officialUrl": "https://www.airportdimensions.com/locations",
+      "publishedScale": "global operator location portfolio",
+      "planningUse": "operator-owned The Club, Clubrooms, and partner lounge confirmation"
+    }
+  ],
+  "officialPriceResearchEvidence": [
+    {
+      "sourceId": "plaza-premium",
+      "publisher": "Plaza Premium Lounge",
+      "officialUrl": "https://www.plazapremiumlounge.com/en-uk/find",
+      "evidenceFields": [
+        "access.accessOffers",
+        "operations.hours",
+        "location.terminal",
+        "amenities"
+      ],
+      "researchUse": "Use official operator detail and booking pages to match existing Plaza Premium-branded records and attach explicit paid-entry offers.",
+      "firstBatchRule": "Start with likely catalog matches missing prices; do not create new records unless the physical lounge identity is unambiguous."
+    },
+    {
+      "sourceId": "airport-dimensions",
+      "publisher": "Airport Dimensions / The Club",
+      "officialUrl": "https://www.airportdimensions.com/locations",
+      "evidenceFields": [
+        "access.accessOffers",
+        "operations.hours",
+        "location.gate",
+        "location.directions"
+      ],
+      "researchUse": "Use The Club and Airport Dimensions official location/detail pages for price, hours, gate, and lounge-level identity reconciliation.",
+      "firstBatchRule": "Prefer existing Airport Dimensions and The Club records; generic airport-code-only discovery rows stay out of canonical publish."
+    },
+    {
+      "sourceId": "aspire-lounges",
+      "publisher": "Aspire Lounges",
+      "officialUrl": "https://www.executivelounges.com/",
+      "evidenceFields": [
+        "access.accessOffers",
+        "operations.hours",
+        "location.terminal",
+        "restrictions"
+      ],
+      "researchUse": "Use official Aspire booking pages for public pre-book prices and operator-published hours where source rights allow bounded intake.",
+      "firstBatchRule": "Attach offers to matched Aspire records first; classify partner-operated records conservatively."
+    },
+    {
+      "sourceId": "escape-lounges",
+      "publisher": "Escape Lounges",
+      "officialUrl": "https://escapelounges.com/",
+      "evidenceFields": [
+        "access.accessOffers",
+        "operations.hours",
+        "location.terminal",
+        "amenities"
+      ],
+      "researchUse": "Use official Escape booking/location pages to refresh already-promoted Escape price evidence and close residual location gaps.",
+      "firstBatchRule": "Prioritize records without gate or terminal evidence, since most Escape price rows are already covered."
+    },
+    {
+      "sourceId": "no1-lounges",
+      "publisher": "No1 Lounges",
+      "officialUrl": "https://www.no1lounges.com/",
+      "evidenceFields": [
+        "access.accessOffers",
+        "operations.hours",
+        "location.terminal",
+        "restrictions"
+      ],
+      "researchUse": "Use official No1 booking pages for UK lounge prices and terminal-level details, then resolve partner lounge naming collisions.",
+      "firstBatchRule": "Attach prices to existing UK airport records before expanding partner inventory."
+    }
+  ],
+  "d1EvidenceContract": {
+    "databaseName": "lounge-guru-catalog",
+    "binding": "LOUNGE_GURU_DB",
+    "canonicalTables": [
+      "coverage_goals",
+      "catalog_runs",
+      "lounge_records",
+      "lounge_sources",
+      "source_runs",
+      "source_targets",
+      "airport_authority",
+      "source_fetch_runs",
+      "source_snapshots",
+      "source_parse_runs",
+      "source_candidates",
+      "lounge_identity_links",
+      "record_field_evidence",
+      "lounge_field_coverage",
+      "review_queue",
+      "coverage_validation_runs"
+    ],
+    "proofTables": [
+      "source_targets",
+      "source_fetch_runs",
+      "source_snapshots",
+      "source_parse_runs",
+      "source_candidates",
+      "lounge_identity_links",
+      "record_field_evidence",
+      "lounge_field_coverage",
+      "review_queue",
+      "coverage_validation_runs"
+    ],
+    "rawSnapshotPolicy": "R2 or local cache pointer plus hash in D1; raw HTML/JSON bodies stay out of git and public payloads.",
+    "publishRule": "D1 is terminal only after db:catalog:push, db:catalog:smoke, D1 smoke SQL, and goal:coverage pass against the pushed catalog."
+  },
+  "terminalBurndown": [
+    {
+      "id": "close-approved-record-gap",
+      "gapMetric": "approvedRecordsRemaining",
+      "remaining": 0,
+      "target": ">= 3000 approved deduped physical lounge records",
+      "firstBatch": [
+        "star-alliance",
+        "plaza-premium",
+        "airport-dimensions",
+        "united",
+        "loungekey",
+        "collinson-international",
+        "citi-travel",
+        "openstreetmap"
+      ],
+      "acceptance": "Add approved records only from official/public source evidence, or store blocker evidence for each attempted lane."
+    },
+    {
+      "id": "raise-hours-coverage",
+      "gapMetric": "hoursCoverageRecordsRemaining",
+      "remaining": 0,
+      "target": ">= 97% records with hours or explicit missing reason evidence",
+      "firstBatch": [
+        "PVG",
+        "BKK",
+        "SIN",
+        "LHR",
+        "JFK",
+        "DOH",
+        "PKX",
+        "DFW",
+        "ICN",
+        "MEL"
+      ],
+      "acceptance": "Hours must be published by official airport, operator, airline, or verified source field evidence."
+    },
+    {
+      "id": "raise-gate-coverage",
+      "gapMetric": "gateCoverageRecordsRemaining",
+      "remaining": 0,
+      "target": ">= 45% records with exact gate or published near-gate text",
+      "firstBatch": [
+        "PVG",
+        "BKK",
+        "SIN",
+        "LHR",
+        "JFK",
+        "DOH",
+        "PKX",
+        "DFW",
+        "ICN",
+        "MEL"
+      ],
+      "acceptance": "Exact gates and near-gates must come from published text; no map-proximity inference."
+    },
+    {
+      "id": "raise-price-coverage",
+      "gapMetric": "priceCoverageRecordsRemaining",
+      "remaining": 0,
+      "target": ">= 25% records with explicit amount and currency where official pages publish offers",
+      "firstBatch": [
+        "plaza-premium",
+        "aspire-lounges",
+        "primeclass",
+        "airport-dimensions",
+        "be-relax",
+        "marhaba",
+        "no1-lounges",
+        "escape-lounges"
+      ],
+      "acceptance": "Price offers require amount, currency, offer label, source URL, retrieved timestamp, and parser version."
+    }
+  ],
+  "currentWorkOrder": {
+    "mode": "field_enrichment_first",
+    "reason": "Approved and non-Priority Pass count targets are met; prioritize hours, gate, and price evidence before adding weak records.",
+    "terminalBlockers": [],
+    "slices": [
+      {
+        "id": "airport-authority-top-backlog",
+        "type": "airport_batch",
+        "scope": [
+          "PVG",
+          "BKK",
+          "SIN",
+          "LHR",
+          "JFK",
+          "DOH",
+          "PKX",
+          "DFW",
+          "ICN",
+          "MEL"
+        ],
+        "fields": [
+          "operations.hours",
+          "location.gate",
+          "access.accessOffers"
+        ],
+        "acceptance": "Use official airport pages only; exact or near-gate fields require published text and prices require explicit amount and currency."
+      },
+      {
+        "id": "operator-price-offers",
+        "type": "source_batch",
+        "scope": [
+          "plaza-premium",
+          "aspire-lounges",
+          "primeclass",
+          "airport-dimensions",
+          "be-relax",
+          "marhaba",
+          "no1-lounges",
+          "escape-lounges"
+        ],
+        "fields": [
+          "access.accessOffers",
+          "operations.hours",
+          "location.gate"
+        ],
+        "acceptance": "Use official operator detail or booking pages; store amount, currency, label, source URL, retrieved timestamp, and parser version."
+      },
+      {
+        "id": "airline-owned-hours-location",
+        "type": "source_batch",
+        "scope": [
+          "oneworld",
+          "delta",
+          "air-canada",
+          "qatar-airways",
+          "singapore-airlines"
+        ],
+        "fields": [
+          "operations.hours",
+          "location.gate",
+          "lounge.status",
+          "access.programs"
+        ],
+        "acceptance": "Airline-owned pages outrank alliance pages for owned lounge hours, gate/location, status, closures, and access policy."
+      }
+    ]
+  },
+  "airportEnrichmentBacklog": [
+    {
+      "airportCode": "PVG",
+      "airportName": "Shanghai Pudong International Airport",
+      "city": "Shanghai (Pudong)",
+      "country": "China",
+      "totalRecords": 38,
+      "missingHours": 0,
+      "missingGate": 28,
+      "missingPrice": 21,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 105,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "BKK",
+      "airportName": "Suvarnabhumi Airport",
+      "city": "Bangkok",
+      "country": "Thailand",
+      "totalRecords": 68,
+      "missingHours": 10,
+      "missingGate": 3,
+      "missingPrice": 62,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 91,
+      "sourceIds": [
+        "airport-official-pages",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass",
+        "qantas",
+        "qatar-airways",
+        "singapore-airlines"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "SIN",
+      "airportName": "Singapore Changi Airport",
+      "city": "Singapore",
+      "country": "Singapore",
+      "totalRecords": 58,
+      "missingHours": 1,
+      "missingGate": 12,
+      "missingPrice": 45,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 83,
+      "sourceIds": [
+        "airport-official-pages",
+        "be-relax",
+        "marhaba",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass",
+        "qatar-airways",
+        "singapore-airlines"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "LHR",
+      "airportName": "Heathrow Airport",
+      "city": "London",
+      "country": "United Kingdom",
+      "totalRecords": 38,
+      "missingHours": 1,
+      "missingGate": 20,
+      "missingPrice": 19,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 81,
+      "sourceIds": [
+        "airport-dimensions",
+        "airport-official-pages",
+        "delta",
+        "marhaba",
+        "no1-lounges",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass",
+        "qatar-airways",
+        "singapore-airlines"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "JFK",
+      "airportName": "John F. Kennedy International Airport",
+      "city": "New York",
+      "country": "United States of America",
+      "totalRecords": 40,
+      "missingHours": 0,
+      "missingGate": 13,
+      "missingPrice": 29,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 68,
+      "sourceIds": [
+        "airport-official-pages",
+        "american",
+        "capital-one",
+        "chase-sapphire",
+        "delta",
+        "gameway",
+        "minute-suites",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "primeclass",
+        "priority-pass",
+        "qantas"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "DOH",
+      "airportName": "Hamad International Airport",
+      "city": "Doha",
+      "country": "Qatar",
+      "totalRecords": 36,
+      "missingHours": 10,
+      "missingGate": 5,
+      "missingPrice": 33,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 68,
+      "sourceIds": [
+        "airport-official-pages",
+        "be-relax",
+        "oneworld",
+        "ourairports",
+        "priority-pass",
+        "qatar-airways",
+        "sleepover"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "PKX",
+      "airportName": "Beijing Daxing International Airport",
+      "city": "Beijing",
+      "country": "China",
+      "totalRecords": 21,
+      "missingHours": 0,
+      "missingGate": 17,
+      "missingPrice": 9,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 60,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "DFW",
+      "airportName": "Dallas/Fort Worth International Airport",
+      "city": "Dallas-Fort Worth",
+      "country": "United States of America",
+      "totalRecords": 44,
+      "missingHours": 7,
+      "missingGate": 3,
+      "missingPrice": 29,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 52,
+      "sourceIds": [
+        "airport-official-pages",
+        "american",
+        "be-relax",
+        "capital-one",
+        "gameway",
+        "marhaba",
+        "minute-suites",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass",
+        "qantas"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "ICN",
+      "airportName": "Incheon International Airport",
+      "city": "Seoul",
+      "country": "South Korea",
+      "totalRecords": 24,
+      "missingHours": 0,
+      "missingGate": 11,
+      "missingPrice": 18,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 51,
+      "sourceIds": [
+        "delta",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass",
+        "qantas",
+        "singapore-airlines"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "MEL",
+      "airportName": "Melbourne Airport",
+      "city": "Melbourne",
+      "country": "Australia",
+      "totalRecords": 22,
+      "missingHours": 4,
+      "missingGate": 11,
+      "missingPrice": 8,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 49,
+      "sourceIds": [
+        "airport-official-pages",
+        "marhaba",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass",
+        "singapore-airlines"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "LOS",
+      "airportName": "Murtala Mohammed International Airport",
+      "city": "Lagos",
+      "country": "Nigeria",
+      "totalRecords": 16,
+      "missingHours": 0,
+      "missingGate": 12,
+      "missingPrice": 13,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 49,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "BLR",
+      "airportName": "Kempegowda International Airport",
+      "city": "Bangalore",
+      "country": "India",
+      "totalRecords": 16,
+      "missingHours": 0,
+      "missingGate": 13,
+      "missingPrice": 9,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 48,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass",
+        "qantas"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "KUL",
+      "airportName": "Kuala Lumpur International Airport",
+      "city": "Sepang",
+      "country": "Malaysia",
+      "totalRecords": 25,
+      "missingHours": 0,
+      "missingGate": 10,
+      "missingPrice": 17,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 47,
+      "sourceIds": [
+        "be-relax",
+        "marhaba",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "XIY",
+      "airportName": "Xi&#x27;an Xianyang International Airport(Xiy)",
+      "city": "Xianyang (Weicheng)",
+      "country": "China",
+      "totalRecords": 13,
+      "missingHours": 0,
+      "missingGate": 12,
+      "missingPrice": 11,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 47,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "CAN",
+      "airportName": "Guangzhou Baiyun International Airport",
+      "city": "Guangzhou (Huadu)",
+      "country": "China",
+      "totalRecords": 13,
+      "missingHours": 0,
+      "missingGate": 11,
+      "missingPrice": 13,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 46,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "YYZ",
+      "airportName": "Toronto Pearson International Airport",
+      "city": "Toronto",
+      "country": "Canada",
+      "totalRecords": 21,
+      "missingHours": 3,
+      "missingGate": 9,
+      "missingPrice": 12,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 45,
+      "sourceIds": [
+        "air-canada",
+        "be-relax",
+        "marhaba",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "SHA",
+      "airportName": "Shanghai Hongqiao International Airport",
+      "city": "Shanghai (Minhang)",
+      "country": "China",
+      "totalRecords": 13,
+      "missingHours": 1,
+      "missingGate": 12,
+      "missingPrice": 7,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 45,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "GRU",
+      "airportName": "Governador André Franco Montoro International Airport Of Cumbica/Guarulhos/São Paulo",
+      "city": "São Paulo",
+      "country": "Brazil",
+      "totalRecords": 39,
+      "missingHours": 0,
+      "missingGate": 10,
+      "missingPrice": 13,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 43,
+      "sourceIds": [
+        "airport-official-pages",
+        "delta",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "HND",
+      "airportName": "Tokyo International Airport",
+      "city": "Tokyo",
+      "country": "Japan",
+      "totalRecords": 22,
+      "missingHours": 0,
+      "missingGate": 9,
+      "missingPrice": 16,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 43,
+      "sourceIds": [
+        "airport-official-pages",
+        "delta",
+        "oneworld",
+        "ourairports",
+        "priority-pass",
+        "qantas"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "SCL",
+      "airportName": "Comodoro Arturo Merino Benítez International Airport",
+      "city": "Santiago",
+      "country": "Chile",
+      "totalRecords": 21,
+      "missingHours": 1,
+      "missingGate": 9,
+      "missingPrice": 14,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 43,
+      "sourceIds": [
+        "delta",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "primeclass",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "TSN",
+      "airportName": "Tianjin Binhai International Airport",
+      "city": "Tianjin",
+      "country": "China",
+      "totalRecords": 12,
+      "missingHours": 0,
+      "missingGate": 11,
+      "missingPrice": 10,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 43,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "BOM",
+      "airportName": "Chhatrapati Shivaji International Airport",
+      "city": "Mumbai",
+      "country": "India",
+      "totalRecords": 13,
+      "missingHours": 0,
+      "missingGate": 12,
+      "missingPrice": 5,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 41,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "SYD",
+      "airportName": "Sydney (Kingsford Smith) Airport",
+      "city": "Sydney (Mascot)",
+      "country": "Australia",
+      "totalRecords": 26,
+      "missingHours": 2,
+      "missingGate": 6,
+      "missingPrice": 18,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 40,
+      "sourceIds": [
+        "airport-official-pages",
+        "delta",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass",
+        "singapore-airlines"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "CGK",
+      "airportName": "Soekarno-Hatta International Airport",
+      "city": "Jakarta",
+      "country": "Indonesia",
+      "totalRecords": 15,
+      "missingHours": 1,
+      "missingGate": 8,
+      "missingPrice": 14,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 40,
+      "sourceIds": [
+        "marhaba",
+        "oneworld",
+        "ourairports",
+        "priority-pass",
+        "qantas"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "PEK",
+      "airportName": "Beijing Capital International Airport",
+      "city": "Beijing",
+      "country": "China",
+      "totalRecords": 13,
+      "missingHours": 0,
+      "missingGate": 11,
+      "missingPrice": 7,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 40,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "WUH",
+      "airportName": "Wuhan Tianhe International Airport",
+      "city": "Wuhan (Huangpi)",
+      "country": "China",
+      "totalRecords": 13,
+      "missingHours": 0,
+      "missingGate": 10,
+      "missingPrice": 10,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 40,
+      "sourceIds": [
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "CKG",
+      "airportName": "Chongqing Jiangbei International Airport",
+      "city": "Chongqing",
+      "country": "China",
+      "totalRecords": 12,
+      "missingHours": 0,
+      "missingGate": 11,
+      "missingPrice": 6,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 39,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "LGW",
+      "airportName": "London Gatwick Airport",
+      "city": "London",
+      "country": "United Kingdom",
+      "totalRecords": 29,
+      "missingHours": 0,
+      "missingGate": 11,
+      "missingPrice": 3,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 36,
+      "sourceIds": [
+        "airport-dimensions",
+        "airport-official-pages",
+        "no1-lounges",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "SGN",
+      "airportName": "Tan Son Nhat International Airport",
+      "city": "Ho Chi Minh City",
+      "country": "Vietnam",
+      "totalRecords": 15,
+      "missingHours": 0,
+      "missingGate": 9,
+      "missingPrice": 9,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 36,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "MAD",
+      "airportName": "Adolfo Suárez Madrid-Barajas Airport",
+      "city": "Madrid",
+      "country": "Spain",
+      "totalRecords": 18,
+      "missingHours": 0,
+      "missingGate": 7,
+      "missingPrice": 14,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 35,
+      "sourceIds": [
+        "airport-official-pages",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "NRT",
+      "airportName": "Narita International Airport",
+      "city": "Narita",
+      "country": "Japan",
+      "totalRecords": 13,
+      "missingHours": 0,
+      "missingGate": 9,
+      "missingPrice": 8,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 35,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "SFO",
+      "airportName": "San Francisco International Airport",
+      "city": "San Francisco",
+      "country": "United States of America",
+      "totalRecords": 23,
+      "missingHours": 0,
+      "missingGate": 6,
+      "missingPrice": 16,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 34,
+      "sourceIds": [
+        "air-canada",
+        "airport-dimensions",
+        "airport-official-pages",
+        "delta",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "GIG",
+      "airportName": "Riogaleão - Tom Jobim International Airport",
+      "city": "Rio De Janeiro",
+      "country": "Brazil",
+      "totalRecords": 12,
+      "missingHours": 0,
+      "missingGate": 9,
+      "missingPrice": 7,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 34,
+      "sourceIds": [
+        "delta",
+        "marhaba",
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "CAI",
+      "airportName": "Cairo International Airport",
+      "city": "Cairo",
+      "country": "Egypt",
+      "totalRecords": 11,
+      "missingHours": 0,
+      "missingGate": 9,
+      "missingPrice": 7,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 34,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "PRG",
+      "airportName": "Václav Havel Airport Prague",
+      "city": "Prague",
+      "country": "Czechia",
+      "totalRecords": 13,
+      "missingHours": 0,
+      "missingGate": 10,
+      "missingPrice": 3,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 33,
+      "sourceIds": [
+        "airport-official-pages",
+        "delta",
+        "oneworld",
+        "ourairports",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "CSX",
+      "airportName": "Changsha Huanghua International Airport",
+      "city": "Changsha (Changsha)",
+      "country": "China",
+      "totalRecords": 10,
+      "missingHours": 1,
+      "missingGate": 8,
+      "missingPrice": 7,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 33,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "DMK",
+      "airportName": "Don Mueang International Airport",
+      "city": "Bangkok",
+      "country": "Thailand",
+      "totalRecords": 9,
+      "missingHours": 0,
+      "missingGate": 9,
+      "missingPrice": 6,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 33,
+      "sourceIds": [
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "SHE",
+      "airportName": "Shenyang Taoxian International Airport",
+      "city": "Hunnan, Shenyang",
+      "country": "China",
+      "totalRecords": 9,
+      "missingHours": 0,
+      "missingGate": 9,
+      "missingPrice": 6,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 33,
+      "sourceIds": [
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "HAK",
+      "airportName": "Haikou Meilan International Airport",
+      "city": "Haikou (Meilan)",
+      "country": "China",
+      "totalRecords": 9,
+      "missingHours": 0,
+      "missingGate": 8,
+      "missingPrice": 8,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 32,
+      "sourceIds": [
+        "oneworld",
+        "ourairports",
+        "plaza-premium",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    },
+    {
+      "airportCode": "VCP",
+      "airportName": "Viracopos-Campinas International Airport",
+      "city": "Campinas",
+      "country": "Brazil",
+      "totalRecords": 8,
+      "missingHours": 0,
+      "missingGate": 8,
+      "missingPrice": 8,
+      "officialAirportAction": "airport_authority_enrichment",
+      "missingFieldScore": 32,
+      "sourceIds": [
+        "ourairports",
+        "priority-pass"
+      ],
+      "nextEvidenceRule": "Use official airport/operator/airline pages to add field evidence to matched lounges; create records only when no physical match exists."
+    }
+  ],
+  "sourceBacklog": [
+    {
+      "sourceId": "priority-pass",
+      "publisher": "Priority Pass",
+      "adapter": "csv_file",
+      "status": "active",
+      "records": 1723,
+      "missingHours": 3,
+      "missingGate": 1197,
+      "missingPrice": 1121,
+      "priorityScore": 3847,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Use only the approved source workbook or public official pages; do not bypass account controls."
+    },
+    {
+      "sourceId": "plaza-premium",
+      "publisher": "Plaza Premium Lounge",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "records": 467,
+      "missingHours": 4,
+      "missingGate": 313,
+      "missingPrice": 80,
+      "priorityScore": 1027,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official public operator page."
+    },
+    {
+      "sourceId": "amex-global-lounge-collection",
+      "publisher": "American Express Global Lounge Collection",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Official public Amex page; treat partner eligibility as source evidence, not canonical operator data."
+    },
+    {
+      "sourceId": "aspire-lounges",
+      "publisher": "Aspire Lounges",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Official Aspire and official operator partner location surfaces; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "citi-travel",
+      "publisher": "Citi Travel",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Official public Citi travel page; issuer-program mapping requires manual review before publishing records."
+    },
+    {
+      "sourceId": "collinson-international",
+      "publisher": "Collinson International",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Official Collinson corporate surface; use as network evidence and licensing path, not a raw scrape target."
+    },
+    {
+      "sourceId": "dragonpass",
+      "publisher": "DragonPass",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Official public DragonPass page; import only public program and location evidence."
+    },
+    {
+      "sourceId": "loungekey",
+      "publisher": "LoungeKey",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Official public LoungeKey surface; licensed or partner access is required for complete record intake."
+    },
+    {
+      "sourceId": "mastercard-travel-pass",
+      "publisher": "Mastercard Travel Pass",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Official public Mastercard Travel Pass page; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "nominatim",
+      "publisher": "OpenStreetMap Nominatim",
+      "adapter": "official_page",
+      "status": "blocked",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Fallback only; honor rate limits and cache results."
+    },
+    {
+      "sourceId": "openstreetmap",
+      "publisher": "OpenStreetMap",
+      "adapter": "open_data",
+      "status": "candidate",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Open data enrichment only; comply with ODbL attribution and do not treat as canonical lounge inventory."
+    },
+    {
+      "sourceId": "skyteam",
+      "publisher": "SkyTeam Lounges",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review."
+    },
+    {
+      "sourceId": "star-alliance",
+      "publisher": "Star Alliance Lounge Finder",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review."
+    },
+    {
+      "sourceId": "united",
+      "publisher": "United Club and Polaris Lounges",
+      "adapter": "official_html",
+      "status": "manual_review",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Official public airline and official United for Business lounge pages."
+    },
+    {
+      "sourceId": "visa-airport-companion",
+      "publisher": "Visa Airport Companion",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 0,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 1000,
+      "nextAction": "run_official_source_intake_or_record_blocker",
+      "rightsNote": "Official public Visa program page; import only public program and eligibility evidence."
+    },
+    {
+      "sourceId": "oneworld",
+      "publisher": "oneworld Airport Lounges",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 820,
+      "missingHours": 46,
+      "missingGate": 135,
+      "missingPrice": 738,
+      "priorityScore": 747,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review."
+    },
+    {
+      "sourceId": "airport-official-pages",
+      "publisher": "Official airport lounge pages",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 316,
+      "missingHours": 33,
+      "missingGate": 11,
+      "missingPrice": 173,
+      "priorityScore": 272,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official airport public pages; use for field evidence and candidate discovery only, without inferred map proximity."
+    },
+    {
+      "sourceId": "delta",
+      "publisher": "Delta Sky Club",
+      "adapter": "official_html",
+      "status": "manual_review",
+      "records": 90,
+      "missingHours": 0,
+      "missingGate": 2,
+      "missingPrice": 86,
+      "priorityScore": 92,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official public airline location page."
+    },
+    {
+      "sourceId": "no1-lounges",
+      "publisher": "No1 Lounges",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 41,
+      "missingHours": 0,
+      "missingGate": 25,
+      "missingPrice": 0,
+      "priorityScore": 75,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official No1 Lounges location surface; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "primeclass",
+      "publisher": "Primeclass Lounge",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 49,
+      "missingHours": 0,
+      "missingGate": 10,
+      "missingPrice": 42,
+      "priorityScore": 72,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official Primeclass location surface; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "escape-lounges",
+      "publisher": "Escape Lounges",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "records": 33,
+      "missingHours": 0,
+      "missingGate": 16,
+      "missingPrice": 0,
+      "priorityScore": 48,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official public operator page."
+    },
+    {
+      "sourceId": "be-relax",
+      "publisher": "Be Relax",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 37,
+      "missingHours": 0,
+      "missingGate": 3,
+      "missingPrice": 30,
+      "priorityScore": 39,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official Be Relax location surface; classify spa-only records separately from lounge access."
+    },
+    {
+      "sourceId": "air-canada",
+      "publisher": "Air Canada Maple Leaf Lounges",
+      "adapter": "official_html",
+      "status": "manual_review",
+      "records": 9,
+      "missingHours": 7,
+      "missingGate": 8,
+      "missingPrice": 0,
+      "priorityScore": 38,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official public airline location page."
+    },
+    {
+      "sourceId": "qantas",
+      "publisher": "Qantas Lounges",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 44,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 34,
+      "priorityScore": 34,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official public Qantas lounge pages; retain URL provenance for every imported field and do not infer unpublished gate or price data."
+    },
+    {
+      "sourceId": "qatar-airways",
+      "publisher": "Qatar Airways Lounges",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 12,
+      "missingHours": 0,
+      "missingGate": 5,
+      "missingPrice": 9,
+      "priorityScore": 24,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official public Qatar Airways lounge pages; retain URL provenance for every imported field and do not infer unpublished gate or price data."
+    },
+    {
+      "sourceId": "marhaba",
+      "publisher": "Marhaba Airport Lounges",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 54,
+      "missingHours": 0,
+      "missingGate": 5,
+      "missingPrice": 0,
+      "priorityScore": 15,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official Marhaba location surface; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "airport-dimensions",
+      "publisher": "Airport Dimensions / The Club",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "records": 34,
+      "missingHours": 0,
+      "missingGate": 4,
+      "missingPrice": 3,
+      "priorityScore": 15,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official public operator page."
+    },
+    {
+      "sourceId": "american",
+      "publisher": "American Airlines Admirals Club",
+      "adapter": "official_html",
+      "status": "manual_review",
+      "records": 14,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 14,
+      "priorityScore": 14,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official public airline location pages, including regional American Airlines-owned surfaces."
+    },
+    {
+      "sourceId": "singapore-airlines",
+      "publisher": "Singapore Airlines SilverKris Lounges",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 13,
+      "missingHours": 0,
+      "missingGate": 1,
+      "missingPrice": 11,
+      "priorityScore": 14,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official public Singapore Airlines lounge page; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "capital-one",
+      "publisher": "Capital One Lounges",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "records": 7,
+      "missingHours": 0,
+      "missingGate": 1,
+      "missingPrice": 6,
+      "priorityScore": 9,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official public Capital One page; retain URL provenance for every imported location."
+    },
+    {
+      "sourceId": "gameway",
+      "publisher": "Gameway",
+      "adapter": "official_page",
+      "status": "candidate",
+      "records": 13,
+      "missingHours": 2,
+      "missingGate": 0,
+      "missingPrice": 0,
+      "priorityScore": 4,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official Gameway locations and location detail pages; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "chase-sapphire",
+      "publisher": "Chase Sapphire Lounge by The Club",
+      "adapter": "official_page",
+      "status": "manual_review",
+      "records": 8,
+      "missingHours": 0,
+      "missingGate": 0,
+      "missingPrice": 2,
+      "priorityScore": 2,
+      "nextAction": "enrich_existing_records_with_field_evidence",
+      "rightsNote": "Official public Chase page; parse only public location and policy text."
+    }
+  ],
+  "priceOfferWorklist": [
+    {
+      "sourceId": "plaza-premium",
+      "publisher": "Plaza Premium Lounge",
+      "status": "manual_review",
+      "adapter": "official_page",
+      "records": 380,
+      "likelyCatalogMatches": 436,
+      "likelyMissingPriceMatches": 133,
+      "topLikelyAirports": [
+        "ACC",
+        "ADD",
+        "ADL",
+        "ALA",
+        "AMM",
+        "AMQ",
+        "AQI",
+        "ARN",
+        "ATL",
+        "AUS",
+        "AYT",
+        "BAQ"
+      ],
+      "missingPrice": 133,
+      "priorityScore": 1587,
+      "evidenceTarget": "official operator detail and booking pages",
+      "nextAction": "match_existing_catalog_records_then_attach_price_evidence",
+      "acceptance": "Explicit amount, currency, offer label, source URL, retrieved timestamp, and parser version.",
+      "rightsNote": "Official public operator page."
+    },
+    {
+      "sourceId": "aspire-lounges",
+      "publisher": "Aspire Lounges",
+      "status": "candidate",
+      "adapter": "official_page",
+      "records": 0,
+      "likelyCatalogMatches": 59,
+      "likelyMissingPriceMatches": 43,
+      "topLikelyAirports": [
+        "AGA",
+        "AMS",
+        "BHD",
+        "BHX",
+        "BSL",
+        "CMN",
+        "CPH",
+        "EDI",
+        "FEZ",
+        "GVA",
+        "HEL",
+        "HUY"
+      ],
+      "missingPrice": 43,
+      "priorityScore": 577,
+      "evidenceTarget": "official Aspire location and booking pages",
+      "nextAction": "match_existing_catalog_records_then_attach_price_evidence",
+      "acceptance": "Explicit amount, currency, offer label, source URL, retrieved timestamp, and parser version.",
+      "rightsNote": "Official Aspire and official operator partner location surfaces; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "primeclass",
+      "publisher": "Primeclass Lounge",
+      "status": "candidate",
+      "adapter": "official_page",
+      "records": 42,
+      "likelyCatalogMatches": 92,
+      "likelyMissingPriceMatches": 63,
+      "topLikelyAirports": [
+        "ADB",
+        "ALA",
+        "BDA",
+        "BGY",
+        "BJV",
+        "BUS",
+        "CDG",
+        "DQM",
+        "ESB",
+        "FCO",
+        "FRA",
+        "IAD"
+      ],
+      "missingPrice": 63,
+      "priorityScore": 544,
+      "evidenceTarget": "official Primeclass location and booking pages",
+      "nextAction": "match_existing_catalog_records_then_attach_price_evidence",
+      "acceptance": "Explicit amount, currency, offer label, source URL, retrieved timestamp, and parser version.",
+      "rightsNote": "Official Primeclass location surface; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "airport-dimensions",
+      "publisher": "Airport Dimensions / The Club",
+      "status": "manual_review",
+      "adapter": "official_page",
+      "records": 34,
+      "likelyCatalogMatches": 71,
+      "likelyMissingPriceMatches": 21,
+      "topLikelyAirports": [
+        "ATL",
+        "BHX",
+        "BOS",
+        "BUF",
+        "BWI",
+        "CHS",
+        "CLE",
+        "CLT",
+        "CVG",
+        "DFW",
+        "HKG",
+        "JFK"
+      ],
+      "missingPrice": 21,
+      "priorityScore": 296,
+      "evidenceTarget": "official Airport Dimensions and The Club detail/booking pages",
+      "nextAction": "match_existing_catalog_records_then_attach_price_evidence",
+      "acceptance": "Explicit amount, currency, offer label, source URL, retrieved timestamp, and parser version.",
+      "rightsNote": "Official public operator page."
+    },
+    {
+      "sourceId": "be-relax",
+      "publisher": "Be Relax",
+      "status": "candidate",
+      "adapter": "official_page",
+      "records": 37,
+      "likelyCatalogMatches": 45,
+      "likelyMissingPriceMatches": 30,
+      "topLikelyAirports": [
+        "ATL",
+        "AUH",
+        "CLT",
+        "DFW",
+        "DOH",
+        "DTW",
+        "DXB",
+        "EWR",
+        "IAH",
+        "JFK",
+        "KUL",
+        "LAX"
+      ],
+      "missingPrice": 30,
+      "priorityScore": 280,
+      "evidenceTarget": "official Be Relax location and booking pages",
+      "nextAction": "match_existing_catalog_records_then_attach_price_evidence",
+      "acceptance": "Explicit amount, currency, offer label, source URL, retrieved timestamp, and parser version.",
+      "rightsNote": "Official Be Relax location surface; classify spa-only records separately from lounge access."
+    },
+    {
+      "sourceId": "marhaba",
+      "publisher": "Marhaba Airport Lounges",
+      "status": "candidate",
+      "adapter": "official_page",
+      "records": 44,
+      "likelyCatalogMatches": 60,
+      "likelyMissingPriceMatches": 8,
+      "topLikelyAirports": [
+        "CGK",
+        "CRK",
+        "DFW",
+        "DMM",
+        "DWC",
+        "DXB",
+        "FCO",
+        "GIG",
+        "GVA",
+        "HEL",
+        "HKG",
+        "KHI"
+      ],
+      "missingPrice": 8,
+      "priorityScore": 206,
+      "evidenceTarget": "official Marhaba lounge detail and booking pages",
+      "nextAction": "match_existing_catalog_records_then_attach_price_evidence",
+      "acceptance": "Explicit amount, currency, offer label, source URL, retrieved timestamp, and parser version.",
+      "rightsNote": "Official Marhaba location surface; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "no1-lounges",
+      "publisher": "No1 Lounges",
+      "status": "candidate",
+      "adapter": "official_page",
+      "records": 36,
+      "likelyCatalogMatches": 46,
+      "likelyMissingPriceMatches": 6,
+      "topLikelyAirports": [
+        "ATL",
+        "BHD",
+        "BHX",
+        "EDI",
+        "JER",
+        "LAS",
+        "LGW",
+        "LHR",
+        "LPL",
+        "LTN",
+        "MAN",
+        "MCO"
+      ],
+      "missingPrice": 6,
+      "priorityScore": 169,
+      "evidenceTarget": "official No1 Lounges booking pages",
+      "nextAction": "match_existing_catalog_records_then_attach_price_evidence",
+      "acceptance": "Explicit amount, currency, offer label, source URL, retrieved timestamp, and parser version.",
+      "rightsNote": "Official No1 Lounges location surface; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "escape-lounges",
+      "publisher": "Escape Lounges",
+      "status": "manual_review",
+      "adapter": "official_page",
+      "records": 26,
+      "likelyCatalogMatches": 36,
+      "likelyMissingPriceMatches": 1,
+      "topLikelyAirports": [
+        "BDL",
+        "BNE",
+        "BRS",
+        "CMH",
+        "CNS",
+        "CVG",
+        "EDI",
+        "EMA",
+        "FLL",
+        "GSP",
+        "LHR",
+        "MAN"
+      ],
+      "missingPrice": 1,
+      "priorityScore": 125,
+      "evidenceTarget": "official Escape Lounges detail and booking pages",
+      "nextAction": "match_existing_catalog_records_then_attach_price_evidence",
+      "acceptance": "Explicit amount, currency, offer label, source URL, retrieved timestamp, and parser version.",
+      "rightsNote": "Official public operator page."
+    },
+    {
+      "sourceId": "minute-suites",
+      "publisher": "Minute Suites",
+      "status": "candidate",
+      "adapter": "official_page",
+      "records": 15,
+      "likelyCatalogMatches": 24,
+      "likelyMissingPriceMatches": 0,
+      "topLikelyAirports": [
+        "ATL",
+        "BNA",
+        "BWI",
+        "CLT",
+        "DFW",
+        "DTW",
+        "EWR",
+        "IAH",
+        "JFK",
+        "PHL",
+        "SLC"
+      ],
+      "missingPrice": 0,
+      "priorityScore": 91,
+      "evidenceTarget": "official Minute Suites location and booking pages",
+      "nextAction": "match_existing_catalog_records_then_attach_price_evidence",
+      "acceptance": "Explicit amount, currency, offer label, source URL, retrieved timestamp, and parser version.",
+      "rightsNote": "Official Minute Suites public location and Priority Pass pages; honor robots crawl delay and retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "sleepover",
+      "publisher": "Sleepover",
+      "status": "candidate",
+      "adapter": "official_page",
+      "records": 6,
+      "likelyCatalogMatches": 12,
+      "likelyMissingPriceMatches": 2,
+      "topLikelyAirports": [
+        "DOH",
+        "DXB",
+        "LIM"
+      ],
+      "missingPrice": 2,
+      "priorityScore": 75,
+      "evidenceTarget": "official Sleepover location and booking pages",
+      "nextAction": "match_existing_catalog_records_then_attach_price_evidence",
+      "acceptance": "Explicit amount, currency, offer label, source URL, retrieved timestamp, and parser version.",
+      "rightsNote": "Official Sleepover terminal pages; retain URL provenance for every imported field."
+    },
+    {
+      "sourceId": "gameway",
+      "publisher": "Gameway",
+      "status": "candidate",
+      "adapter": "official_page",
+      "records": 13,
+      "likelyCatalogMatches": 13,
+      "likelyMissingPriceMatches": 0,
+      "topLikelyAirports": [
+        "CLT",
+        "DFW",
+        "DTW",
+        "HOU",
+        "IAD",
+        "JFK",
+        "LAX",
+        "MDW",
+        "PIT"
+      ],
+      "missingPrice": 0,
+      "priorityScore": 68,
+      "evidenceTarget": "official Gameway location and booking pages",
+      "nextAction": "match_existing_catalog_records_then_attach_price_evidence",
+      "acceptance": "Explicit amount, currency, offer label, source URL, retrieved timestamp, and parser version.",
+      "rightsNote": "Official Gameway locations and location detail pages; retain URL provenance for every imported field."
+    }
+  ],
+  "sourceFamilyBacklog": [
+    {
+      "familyId": "collinson-networks",
+      "label": "Collinson access networks",
+      "requiredForTerminal": true,
+      "presentMembers": [
+        "priority-pass"
+      ],
+      "missingMembers": [
+        "loungekey",
+        "collinson-international"
+      ],
+      "members": [
+        {
+          "sourceId": "priority-pass",
+          "records": 1723
+        },
+        {
+          "sourceId": "loungekey",
+          "records": 0
+        },
+        {
+          "sourceId": "collinson-international",
+          "records": 0
+        }
+      ]
+    },
+    {
+      "familyId": "bank-issuer-programs",
+      "label": "Bank issuer lounge programs",
+      "requiredForTerminal": true,
+      "presentMembers": [
+        "chase-sapphire",
+        "capital-one"
+      ],
+      "missingMembers": [
+        "amex-global-lounge-collection",
+        "citi-travel"
+      ],
+      "members": [
+        {
+          "sourceId": "amex-global-lounge-collection",
+          "records": 0
+        },
+        {
+          "sourceId": "chase-sapphire",
+          "records": 8
+        },
+        {
+          "sourceId": "capital-one",
+          "records": 7
+        },
+        {
+          "sourceId": "citi-travel",
+          "records": 0
+        }
+      ]
+    },
+    {
+      "familyId": "airline-alliance-lounges",
+      "label": "Airline alliance lounge finders",
+      "requiredForTerminal": true,
+      "presentMembers": [
+        "oneworld"
+      ],
+      "missingMembers": [
+        "star-alliance",
+        "skyteam"
+      ],
+      "members": [
+        {
+          "sourceId": "star-alliance",
+          "records": 0
+        },
+        {
+          "sourceId": "oneworld",
+          "records": 820
+        },
+        {
+          "sourceId": "skyteam",
+          "records": 0
+        }
+      ]
+    },
+    {
+      "familyId": "airline-operated-lounges",
+      "label": "Airline-operated lounges",
+      "requiredForTerminal": true,
+      "presentMembers": [
+        "delta",
+        "american",
+        "air-canada",
+        "singapore-airlines"
+      ],
+      "missingMembers": [
+        "united"
+      ],
+      "members": [
+        {
+          "sourceId": "united",
+          "records": 0
+        },
+        {
+          "sourceId": "delta",
+          "records": 90
+        },
+        {
+          "sourceId": "american",
+          "records": 14
+        },
+        {
+          "sourceId": "air-canada",
+          "records": 9
+        },
+        {
+          "sourceId": "singapore-airlines",
+          "records": 13
+        }
+      ]
+    },
+    {
+      "familyId": "operator-operated-lounges",
+      "label": "Independent and contract lounge operators",
+      "requiredForTerminal": true,
+      "presentMembers": [
+        "plaza-premium",
+        "escape-lounges",
+        "airport-dimensions",
+        "marhaba",
+        "primeclass",
+        "no1-lounges",
+        "be-relax",
+        "minute-suites"
+      ],
+      "missingMembers": [
+        "aspire-lounges"
+      ],
+      "members": [
+        {
+          "sourceId": "plaza-premium",
+          "records": 467
+        },
+        {
+          "sourceId": "escape-lounges",
+          "records": 33
+        },
+        {
+          "sourceId": "airport-dimensions",
+          "records": 34
+        },
+        {
+          "sourceId": "aspire-lounges",
+          "records": 0
+        },
+        {
+          "sourceId": "marhaba",
+          "records": 54
+        },
+        {
+          "sourceId": "primeclass",
+          "records": 49
+        },
+        {
+          "sourceId": "no1-lounges",
+          "records": 41
+        },
+        {
+          "sourceId": "be-relax",
+          "records": 37
+        },
+        {
+          "sourceId": "minute-suites",
+          "records": 15
+        }
+      ]
+    },
+    {
+      "familyId": "open-enrichment",
+      "label": "Open normalization and enrichment",
+      "requiredForTerminal": true,
+      "presentMembers": [
+        "ourairports",
+        "airport-official-pages"
+      ],
+      "missingMembers": [
+        "openstreetmap",
+        "nominatim"
+      ],
+      "members": [
+        {
+          "sourceId": "ourairports",
+          "records": 1723
+        },
+        {
+          "sourceId": "airport-official-pages",
+          "records": 316
+        },
+        {
+          "sourceId": "openstreetmap",
+          "records": 0
+        },
+        {
+          "sourceId": "nominatim",
+          "records": 0
+        }
+      ]
+    },
+    {
+      "familyId": "card-network-programs",
+      "label": "Card network and benefit-platform programs",
+      "requiredForTerminal": false,
+      "presentMembers": [],
+      "missingMembers": [
+        "visa-airport-companion",
+        "mastercard-travel-pass",
+        "dragonpass"
+      ],
+      "members": [
+        {
+          "sourceId": "visa-airport-companion",
+          "records": 0
+        },
+        {
+          "sourceId": "mastercard-travel-pass",
+          "records": 0
+        },
+        {
+          "sourceId": "dragonpass",
+          "records": 0
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "progress": "npm run validate:coverage",
+    "terminal": "npm run goal:coverage",
+    "json": "npm run validate:json",
+    "d1Push": "npm run db:catalog:push",
+    "d1SmokeQueries": {
+      "fieldCoverage": "SELECT COUNT(*) AS total, SUM(has_hours) AS hours, SUM(has_gate) AS gates, SUM(has_price) AS prices FROM lounge_field_coverage;",
+      "openReviewQueue": "SELECT COUNT(*) AS open_review_records FROM review_queue WHERE status = 'open';",
+      "staleReviewQueue": "SELECT COUNT(*) AS stale_open_high_confidence FROM review_queue WHERE status = 'open' AND severity = 'high' AND datetime(opened_at) <= datetime('now', '-14 days');",
+      "provenance": "SELECT COUNT(*) AS records_missing_provenance FROM lounge_records WHERE source_count = 0 OR canonical_json IS NULL OR canonical_json = '';"
+    }
+  },
+  "reviewQueueSla": {
+    "staleOpenHighConfidenceDays": 14,
+    "highConfidenceThreshold": 0.75,
+    "maxStaleOpenReviewRecords": 0,
+    "terminalQuery": "SELECT COUNT(*) AS stale_open_high_confidence FROM review_queue WHERE status = 'open' AND severity = 'high' AND datetime(opened_at) <= datetime('now', '-14 days');"
+  },
+  "guardrails": [
+    "Official/public sources only.",
+    "No licensed commercial global lounge feeds.",
+    "No login-only, captcha, private API, or robots bypass.",
+    "Airport pages enrich matched records before creating new physical lounges.",
+    "Prices require explicit amount and currency from official booking or payment pages.",
+    "Near-gate text is allowed only when published by the source."
+  ]
+}

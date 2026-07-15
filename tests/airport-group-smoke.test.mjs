@@ -33,8 +33,8 @@ test('airport group smoke rejects unsafe or incomplete options', () => {
 test('airport group smoke derives expected counts from the canonical catalog', () => {
   const counts = readCatalogAirportCounts();
 
-  assert.equal(counts.get('EWR'), 6);
-  assert.equal(counts.get('SEA'), 12);
+  assert.equal(counts.get('EWR'), 14);
+  assert.equal(counts.get('SEA'), 23);
 });
 
 test('package exposes airport group smoke command', () => {

@@ -18,12 +18,12 @@ INSERT OR REPLACE INTO coverage_goals (
   'Worldwide lounge coverage in Cloudflare D1',
   'active',
   'all_known_official_public_airport_lounges_worldwide',
-  2500,
+  3000,
   0.98,
   1.0,
   0,
   0,
   0,
-  '{"terminalCommand":"npm run goal:coverage","progressCommand":"npm run validate:coverage","guardrail":"official/public Playwright source intake only; no licensed or commercial global lounge source; target counts deduped physical lounge records","requiredFamilies":["collinson-networks","bank-issuer-programs","airline-alliance-lounges","airline-operated-lounges","operator-operated-lounges","open-enrichment"]}',
+  '{"terminalCommand":"npm run goal:coverage","progressCommand":"npm run validate:coverage","guardrail":"official/public Playwright source intake only; no licensed or commercial global lounge source; target counts deduped physical lounge records","maxCoverageTargets":{"minApprovedRecords":3000,"minNonPriorityRecords":1300,"minHoursCoverageRatio":0.97,"minGateCoverageRatio":0.45,"minPriceCoverageRatio":0.25,"maxStaleOpenReviewRecords":0},"reviewQueue":{"staleOpenHighConfidenceDays":14,"highConfidenceThreshold":0.75},"d1SmokeQueries":{"fieldCoverage":"SELECT COUNT(*) AS total, SUM(has_hours) AS hours, SUM(has_gate) AS gates, SUM(has_price) AS prices FROM lounge_field_coverage;","openReviewQueue":"SELECT COUNT(*) AS open_review_records FROM review_queue WHERE status = ''open'';","staleReviewQueue":"SELECT COUNT(*) AS stale_open_high_confidence FROM review_queue WHERE status = ''open'' AND severity = ''high'' AND datetime(opened_at) <= datetime(''now'', ''-14 days'');","provenance":"SELECT COUNT(*) AS records_missing_provenance FROM lounge_records WHERE source_count = 0 OR canonical_json IS NULL OR canonical_json = '''';"},"requiredFamilies":["collinson-networks","bank-issuer-programs","airline-alliance-lounges","airline-operated-lounges","operator-operated-lounges","open-enrichment"]}',
   CURRENT_TIMESTAMP
 );

@@ -62,6 +62,7 @@ test('search_lounges supports provider, program, and review-status filters', () 
 
 test('search_lounges exposes approved non-Priority Pass intake candidates', () => {
   const result = searchLounges({
+    providers: ['Chase Sapphire Lounge by The Club'],
     programs: ['Chase Sapphire Reserve'],
     reviewStatus: 'approved',
     limit: 10,
@@ -69,9 +70,9 @@ test('search_lounges exposes approved non-Priority Pass intake candidates', () =
 
   assert.ok(result.results.length > 0);
   for (const lounge of result.results) {
-    assert.ok(lounge.id.startsWith('candidate-chase-sapphire-'));
     assert.ok(lounge.programs.includes('Chase Sapphire Reserve'));
     assert.equal(lounge.quality.reviewStatus, 'approved');
+    assert.ok(lounge.sources.some((source) => source.sourceId === 'chase-sapphire'));
   }
 });
 
@@ -79,7 +80,7 @@ test('catalog metadata counts non-Priority Pass candidate intake', () => {
   const meta = getCatalogMeta();
   assert.ok(meta.stats.totalCatalogRecords > meta.stats.totalFeatures);
   assert.ok(meta.stats.nonPriorityRecords > 0);
-  assert.ok(meta.filters.programs.includes('American Express Platinum'));
+  assert.ok(meta.filters.programs.includes('American Express'));
   assert.ok(meta.filters.programs.includes('Capital One Venture X'));
 });
 
@@ -106,4 +107,18 @@ test('approved catalog records preserve airport normalization provenance', () =>
   assert.ok(ourAirports);
   assert.ok(ourAirports.fieldCoverage.includes('airport.coordinates'));
   assert.match(ourAirports.rightsNote, /normalization/);
+});
+
+test('official airport pages enrich missing Priority Pass gate evidence without broad merging', () => {
+  const enriched = getAllLounges().find(
+    (lounge) =>
+      lounge.airportCode === 'BKK' &&
+      lounge.name === 'Miracle Business Class Lounge' &&
+      lounge.terminal === 'International Concourse D',
+  );
+
+  assert.ok(enriched);
+  assert.equal(enriched.canonical.location.gate, 'Gate D5');
+  assert.ok(enriched.sources.some((source) => source.sourceId === 'priority-pass'));
+  assert.ok(enriched.sources.some((source) => source.sourceId === 'airport-official-pages'));
 });

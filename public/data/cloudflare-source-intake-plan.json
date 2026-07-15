@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-12T02:33:19.252Z",
+  "generatedAt": "2026-07-15T00:31:42.825Z",
   "coverageGoalId": "lounge-guru-worldwide-coverage",
-  "sourceRunId": "cloudflare-report-2026-07-12T21-38-53-521Z",
+  "sourceRunId": "cloudflare-report-2026-07-13T10-52-38-985Z",
   "policy": {
     "requiredRuntime": "playwright",
     "localScrawl": "playwright_only",
@@ -10,7 +10,7 @@
   },
   "summary": {
     "missingFamilies": 0,
-    "memberGaps": 16,
+    "memberGaps": 10,
     "tasks": 0,
     "readyTasks": 0,
     "blockedTasks": 0,
@@ -57,6 +57,27 @@
         "https://www.collinsongroup.com/"
       ],
       "rightsNote": "Official Collinson corporate surface; use as network evidence and licensing path, not a raw scrape target.",
+      "familyPresent": true,
+      "terminalFamilyBlocked": false
+    },
+    {
+      "familyId": "bank-issuer-programs",
+      "familyLabel": "Bank issuer lounge programs",
+      "sourceId": "amex-global-lounge-collection",
+      "publisher": "American Express Global Lounge Collection",
+      "adapter": "official_page",
+      "sourceStatus": "manual_review",
+      "runStatus": "not_run",
+      "runRecords": 0,
+      "cloudflareSnapshot": false,
+      "action": "cloudflare_snapshot",
+      "status": "ready",
+      "next": "Snapshot",
+      "url": "https://global.americanexpress.com/lounge-access/the-platinum-card",
+      "fetchUrls": [
+        "https://global.americanexpress.com/lounge-access/the-platinum-card"
+      ],
+      "rightsNote": "Official public Amex page; treat partner eligibility as source evidence, not canonical operator data.",
       "familyPresent": true,
       "terminalFamilyBlocked": false
     },
@@ -138,12 +159,12 @@
       "publisher": "United Club and Polaris Lounges",
       "adapter": "official_html",
       "sourceStatus": "manual_review",
-      "runStatus": "http_error",
+      "runStatus": "fetched",
       "runRecords": 0,
-      "cloudflareSnapshot": false,
-      "action": "fetch_repair",
+      "cloudflareSnapshot": true,
+      "action": "structured_adapter",
       "status": "ready",
-      "next": "Fetch",
+      "next": "Adapter",
       "url": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
       "fetchUrls": [
         "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
@@ -157,78 +178,6 @@
         "https://www.united.com/en/us/fly/travel/airport/lounge-access.html"
       ],
       "rightsNote": "Official public airline and official United for Business lounge pages.",
-      "familyPresent": true,
-      "terminalFamilyBlocked": false
-    },
-    {
-      "familyId": "airline-operated-lounges",
-      "familyLabel": "Airline-operated lounges",
-      "sourceId": "delta",
-      "publisher": "Delta Sky Club",
-      "adapter": "official_html",
-      "sourceStatus": "manual_review",
-      "runStatus": "fetched",
-      "runRecords": 3,
-      "cloudflareSnapshot": true,
-      "action": "review_import",
-      "status": "ready",
-      "next": "Review",
-      "url": "https://www.delta.com/us/en/delta-sky-club/locations",
-      "fetchUrls": [
-        "https://www.delta.com/us/en/delta-sky-club/locations"
-      ],
-      "rightsNote": "Official public airline location page.",
-      "familyPresent": true,
-      "terminalFamilyBlocked": false
-    },
-    {
-      "familyId": "airline-operated-lounges",
-      "familyLabel": "Airline-operated lounges",
-      "sourceId": "american",
-      "publisher": "American Airlines Admirals Club",
-      "adapter": "official_html",
-      "sourceStatus": "manual_review",
-      "runStatus": "http_error",
-      "runRecords": 0,
-      "cloudflareSnapshot": false,
-      "action": "fetch_repair",
-      "status": "ready",
-      "next": "Fetch",
-      "url": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
-      "fetchUrls": [
-        "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
-        "https://www.aa.com/i18n/travel-info/clubs/flagship-lounge.jsp",
-        "https://www.american-airlines.co.kr/i18n/travel-info/clubs/admirals-club-locations.jsp",
-        "https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp",
-        "https://www.aa.com/i18n/travelInformation/airportAmenities/lax-club.jsp",
-        "https://www.aa.com/i18n/travelInformation/airportAmenities/jfk-club.jsp",
-        "https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp",
-        "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
-        "https://www.aa.com/i18n/travel-info/clubs/admirals-club.jsp",
-        "https://www.aa.com/i18n/travel-info/clubs/admirals-club-access.jsp"
-      ],
-      "rightsNote": "Official public airline location pages, including regional American Airlines-owned surfaces.",
-      "familyPresent": true,
-      "terminalFamilyBlocked": false
-    },
-    {
-      "familyId": "operator-operated-lounges",
-      "familyLabel": "Independent and contract lounge operators",
-      "sourceId": "plaza-premium",
-      "publisher": "Plaza Premium Lounge",
-      "adapter": "official_page",
-      "sourceStatus": "manual_review",
-      "runStatus": "skipped",
-      "runRecords": 0,
-      "cloudflareSnapshot": false,
-      "action": "rights_review",
-      "status": "blocked",
-      "next": "Rights",
-      "url": "https://www.plazapremiumlounge.com/en-uk",
-      "fetchUrls": [
-        "https://www.plazapremiumlounge.com/en-uk"
-      ],
-      "rightsNote": "Official public operator page.",
       "familyPresent": true,
       "terminalFamilyBlocked": false
     },
@@ -253,90 +202,6 @@
         "https://no1lounges.com/partner-lounges/aspire-lounges/"
       ],
       "rightsNote": "Official Aspire and official operator partner location surfaces; retain URL provenance for every imported field.",
-      "familyPresent": true,
-      "terminalFamilyBlocked": false
-    },
-    {
-      "familyId": "operator-operated-lounges",
-      "familyLabel": "Independent and contract lounge operators",
-      "sourceId": "marhaba",
-      "publisher": "Marhaba Airport Lounges",
-      "adapter": "official_page",
-      "sourceStatus": "candidate",
-      "runStatus": "fetched",
-      "runRecords": 26,
-      "cloudflareSnapshot": true,
-      "action": "review_import",
-      "status": "ready",
-      "next": "Review",
-      "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
-      "fetchUrls": [
-        "https://www.marhabaservices.com/ae/english/airport-lounges/"
-      ],
-      "rightsNote": "Official Marhaba location surface; retain URL provenance for every imported field.",
-      "familyPresent": true,
-      "terminalFamilyBlocked": false
-    },
-    {
-      "familyId": "operator-operated-lounges",
-      "familyLabel": "Independent and contract lounge operators",
-      "sourceId": "primeclass",
-      "publisher": "Primeclass Lounge",
-      "adapter": "official_page",
-      "sourceStatus": "candidate",
-      "runStatus": "fetched",
-      "runRecords": 1,
-      "cloudflareSnapshot": true,
-      "action": "review_import",
-      "status": "ready",
-      "next": "Review",
-      "url": "https://www.primeclass.com.tr/en/lounge",
-      "fetchUrls": [
-        "https://www.primeclass.com.tr/en/lounge"
-      ],
-      "rightsNote": "Official Primeclass location surface; retain URL provenance for every imported field.",
-      "familyPresent": true,
-      "terminalFamilyBlocked": false
-    },
-    {
-      "familyId": "operator-operated-lounges",
-      "familyLabel": "Independent and contract lounge operators",
-      "sourceId": "no1-lounges",
-      "publisher": "No1 Lounges",
-      "adapter": "official_page",
-      "sourceStatus": "candidate",
-      "runStatus": "fetched",
-      "runRecords": 13,
-      "cloudflareSnapshot": true,
-      "action": "review_import",
-      "status": "ready",
-      "next": "Review",
-      "url": "https://no1lounges.com/airport-lounges/",
-      "fetchUrls": [
-        "https://no1lounges.com/airport-lounges/"
-      ],
-      "rightsNote": "Official No1 Lounges location surface; retain URL provenance for every imported field.",
-      "familyPresent": true,
-      "terminalFamilyBlocked": false
-    },
-    {
-      "familyId": "operator-operated-lounges",
-      "familyLabel": "Independent and contract lounge operators",
-      "sourceId": "be-relax",
-      "publisher": "Be Relax",
-      "adapter": "official_page",
-      "sourceStatus": "candidate",
-      "runStatus": "fetched",
-      "runRecords": 9,
-      "cloudflareSnapshot": true,
-      "action": "review_import",
-      "status": "ready",
-      "next": "Review",
-      "url": "https://www.berelax.com/locations/",
-      "fetchUrls": [
-        "https://www.berelax.com/locations/"
-      ],
-      "rightsNote": "Official Be Relax location surface; classify spa-only records separately from lounge access.",
       "familyPresent": true,
       "terminalFamilyBlocked": false
     },

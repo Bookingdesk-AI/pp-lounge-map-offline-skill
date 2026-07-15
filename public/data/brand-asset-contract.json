@@ -1,7 +1,7 @@
 {
   "id": "lounge-guru-brand-asset-contract",
   "version": "2026-07-12",
-  "generatedAt": "2026-07-12T02:33:19.252Z",
+  "generatedAt": "2026-07-15T00:31:42.825Z",
   "target": {
     "database": "desk.travel.brand_assets",
     "objectStorage": "Cloudflare R2",

@@ -141,7 +141,7 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
 test('Cloudflare source intake probe supports ready airline HTML lanes', async () => {
   const d1 = createD1Mock();
   const response = await createSourceIntakeProbeResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=delta', {
+    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=united', {
       method: 'POST',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -156,7 +156,7 @@ test('Cloudflare source intake probe supports ready airline HTML lanes', async (
         if (String(url).endsWith('/robots.txt')) {
           return textResponse('User-agent: *\n');
         }
-        return textResponse('<html><title>Delta Sky Club</title></html>');
+        return textResponse('<html><title>United Club</title></html>');
       },
     },
   );
@@ -164,7 +164,7 @@ test('Cloudflare source intake probe supports ready airline HTML lanes', async (
   assert.equal(response.status, 200);
   const body = await response.json();
   assert.equal(body.ok, true);
-  assert.equal(body.sourceId, 'delta');
+  assert.equal(body.sourceId, 'united');
   assert.equal(body.cloudflareSnapshot, true);
   assert.equal(d1.calls.length, 1);
 });
@@ -232,7 +232,7 @@ test('Cloudflare source intake probe aggregates bounded official source URLs', a
   const d1 = createD1Mock();
   const fetchedUrls = [];
   const response = await createSourceIntakeProbeResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=american', {
+    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=united', {
       method: 'POST',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -249,9 +249,9 @@ test('Cloudflare source intake probe aggregates bounded official source URLs', a
         if (textUrl.endsWith('/robots.txt')) {
           return textResponse('User-agent: *\n');
         }
-        const airportCode = textUrl.match(/airportAmenities\/([a-z]{3})-club\.jsp/)?.[1]?.toUpperCase() ?? 'DFW';
+        const airportCode = textUrl.match(/airport\/([a-z]{3})-map\.html/)?.[1]?.toUpperCase() ?? 'SFO';
         return textResponse(
-          `<html><body>${airportCode} Airport (${airportCode})<a href="/i18n/travelInformation/airportAmenities/${airportCode.toLowerCase()}-club.jsp">Club</a></body></html>`,
+          `<html><body>${airportCode} Airport (${airportCode})<a href="/en/us/fly/travel/airport/${airportCode.toLowerCase()}-map.html">United Club</a></body></html>`,
         );
       },
     },
@@ -260,21 +260,19 @@ test('Cloudflare source intake probe aggregates bounded official source URLs', a
   assert.equal(response.status, 200);
   const body = await response.json();
   assert.equal(body.ok, true);
-  assert.equal(body.sourceId, 'american');
+  assert.equal(body.sourceId, 'united');
   assert.equal(body.stats.fetched, 1);
-  assert.ok(fetchedUrls.includes('https://www.aa.com/robots.txt'));
-  assert.ok(fetchedUrls.includes('https://www.aa.com/i18n/travel-info/clubs/flagship-lounge.jsp'));
-  assert.ok(
-    fetchedUrls.includes('https://www.american-airlines.co.kr/i18n/travel-info/clubs/admirals-club-locations.jsp'),
-  );
-  assert.ok(fetchedUrls.includes('https://www.aa.com/i18n/travelInformation/airportAmenities/dfw-club.jsp'));
-  assert.ok(fetchedUrls.includes('https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp'));
+  assert.ok(fetchedUrls.includes('https://www.united.com/robots.txt'));
+  assert.ok(fetchedUrls.includes('https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html'));
+  assert.ok(fetchedUrls.includes('https://business.united.com/en/us/blog/How-to-access-and-enjoy-the-United-Club'));
+  assert.ok(fetchedUrls.includes('https://www.united.com/en/us/fly/travel/airport/sfo-map.html'));
+  assert.ok(fetchedUrls.includes('https://www.united.com/en/us/fly/travel/airport/ord-map.html'));
 
   const [, , , , sourcesJson] = d1.calls[0].params;
   const sources = JSON.parse(sourcesJson);
-  assert.deepEqual(sources[0].airportCodes, ['CLT', 'DFW', 'JFK', 'LAX', 'ORD']);
-  assert.equal(sources[0].loungeLinks.length, 6);
-  assert.equal(sources[0].records, 6);
+  assert.deepEqual(sources[0].airportCodes, ['EWR', 'IAD', 'LAX', 'ORD', 'SFO']);
+  assert.equal(sources[0].loungeLinks.length, 0);
+  assert.equal(sources[0].records, 5);
   assert.ok(!Object.hasOwn(sources[0], 'text'));
   assert.ok(!Object.hasOwn(sources[0], 'html'));
 });
@@ -306,22 +304,17 @@ test('Cloudflare source intake batch probes ready public lanes only', async () =
   const body = await response.json();
   assert.equal(body.ok, true);
   assert.equal(body.mode, 'batch');
-  assert.equal(body.totalTasks, 13);
-  assert.equal(body.fetched, 13);
-  assert.equal(d1.calls.length, 13);
+  assert.equal(body.totalTasks, 8);
+  assert.equal(body.fetched, 8);
+  assert.equal(d1.calls.length, 8);
   assert.deepEqual(
     body.results.map((result) => result.sourceId).sort(),
     [
-      'american',
+      'amex-global-lounge-collection',
       'aspire-lounges',
-      'be-relax',
       'citi-travel',
       'collinson-international',
-      'delta',
-      'marhaba',
-      'no1-lounges',
       'openstreetmap',
-      'primeclass',
       'skyteam',
       'star-alliance',
       'united',
@@ -370,7 +363,7 @@ test('Cloudflare source intake status returns compact D1 evidence', async () => 
   assert.equal(body.ok, true);
   assert.equal(body.policy.localScrawl, 'blocked');
   assert.equal(body.policy.rawPageContentCommitted, false);
-  assert.equal(body.stats.readyTasks, 13);
+  assert.equal(body.stats.readyTasks, 8);
   assert.equal(body.stats.readyTasksWithCloudflareEvidence, 1);
   assert.deepEqual(body.sources.map((source) => source.sourceId), ['collinson-international']);
   assert.ok(body.sources[0].sha256);
@@ -422,27 +415,22 @@ test('Cloudflare source intake report returns D1-derived source report without r
   assert.equal(body.policy.execution.runtime, 'cloudflare');
   assert.equal(body.policy.execution.localScrawl, 'blocked');
   assert.equal(body.policy.rawPageContentCommitted, false);
-  assert.equal(body.stats.totalSources, 13);
-  assert.equal(body.stats.fetched, 13);
-  assert.equal(body.stats.readyTasks, 13);
-  assert.equal(body.stats.readyTasksWithCloudflareEvidence, 13);
-  assert.equal(body.stats.discoveredAirportCodes, 13);
-  assert.ok(body.stats.discoveredLoungeLinks >= 13);
+  assert.equal(body.stats.totalSources, 8);
+  assert.equal(body.stats.fetched, 8);
+  assert.equal(body.stats.readyTasks, 8);
+  assert.equal(body.stats.readyTasksWithCloudflareEvidence, 8);
+  assert.equal(body.stats.discoveredAirportCodes, 8);
+  assert.ok(body.stats.discoveredLoungeLinks >= 5);
   assert.equal(body.terminalImpact.fullCatalogIntakeReport, false);
   assert.equal(body.terminalImpact.coverageGateStillRequiresFullCloudflareReport, true);
   assert.deepEqual(
     body.sources.map((source) => source.sourceId).sort(),
     [
-      'american',
+      'amex-global-lounge-collection',
       'aspire-lounges',
-      'be-relax',
       'citi-travel',
       'collinson-international',
-      'delta',
-      'marhaba',
-      'no1-lounges',
       'openstreetmap',
-      'primeclass',
       'skyteam',
       'star-alliance',
       'united',

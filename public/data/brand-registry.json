@@ -50,8 +50,7 @@
     "category": "issuer",
     "aliases": [
       "Chase Sapphire",
-      "chase sapphire",
-      "sapphire lounge"
+      "chase sapphire"
     ],
     "sourceIds": [
       "chase-sapphire"
@@ -376,6 +375,85 @@
     "status": "review",
     "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.",
     "fallbackLogoUrl": "/data/brand-logos/alaska-airlines.svg"
+  },
+  {
+    "id": "singapore-airlines",
+    "name": "Singapore Airlines",
+    "category": "airline",
+    "aliases": [
+      "Singapore Airlines",
+      "singapore airlines",
+      "silverkris",
+      "silverkris lounge",
+      "krisflyer gold lounge"
+    ],
+    "sourceIds": [
+      "singapore-airlines"
+    ],
+    "sourceUrl": "https://www.singaporeair.com/en_UK/sg/flying-withus/before-the-flight/lounges/silverkris/",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/singapore-airlines",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/sq/64e86a3a01ed310445daec5d4b51350350513b65a4cf1705277bd2724887d403.png",
+    "logoText": "SQ",
+    "color": "#24446f",
+    "background": "#edf2f8",
+    "foreground": "#1f375f",
+    "status": "review",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Singapore Airlines lounge page supplies source context.",
+    "fallbackLogoUrl": "/data/brand-logos/singapore-airlines.svg"
+  },
+  {
+    "id": "qatar-airways",
+    "name": "Qatar Airways",
+    "category": "airline",
+    "aliases": [
+      "Qatar Airways",
+      "qatar airways",
+      "al safwa",
+      "al mourjan",
+      "qatar premium lounge"
+    ],
+    "sourceIds": [
+      "qatar-airways"
+    ],
+    "sourceUrl": "https://www.qatarairways.com/en-us/lounges.html",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/qatar-airways",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/qr/bb207913044d70cce632574255bacef97abbb243b1380453e0c189715f4c32be.png",
+    "logoText": "QR",
+    "color": "#662046",
+    "background": "#f7edf2",
+    "foreground": "#662046",
+    "status": "candidate",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Qatar Airways lounge pages supply source context.",
+    "fallbackLogoUrl": "/data/brand-logos/qatar-airways.svg"
+  },
+  {
+    "id": "qantas",
+    "name": "Qantas",
+    "category": "airline",
+    "aliases": [
+      "Qantas",
+      "qantas",
+      "qantas club",
+      "qantas lounge",
+      "qantas business lounge",
+      "qantas first lounge"
+    ],
+    "sourceIds": [
+      "qantas"
+    ],
+    "sourceUrl": "https://www.qantas.com/en-us/at-the-airport/lounges/locations",
+    "assetSource": "desk_travel_database",
+    "deskTravelAssetKey": "all-routes:brand/qantas",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/qf/7668c520fe78b8dba00927e04958b4ca10e45395c72ac7191e92b518fed08d90.png",
+    "logoText": "QF",
+    "color": "#a81e22",
+    "background": "#fff0f0",
+    "foreground": "#8f171b",
+    "status": "candidate",
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Qantas lounge pages supply source context.",
+    "fallbackLogoUrl": "/data/brand-logos/qantas.svg"
   },
   {
     "id": "oneworld",

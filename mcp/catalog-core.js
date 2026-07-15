@@ -1,6 +1,23 @@
 import { MAX_PAGE_SIZE } from './contract.js';
 
 const SEARCH_CACHE_TTL_MS = 60_000;
+const FIELD_COVERAGE_BY_CODE = Object.freeze({
+  a: 'access.accessOffers',
+  b: 'airport.city',
+  c: 'airport.coordinates',
+  d: 'airport.country',
+  e: 'airport.iata',
+  f: 'airport.name',
+  g: 'amenities',
+  h: 'location.gate',
+  i: 'location.terminal',
+  j: 'lounge.brand',
+  k: 'lounge.name',
+  l: 'operations.exceptions',
+  m: 'operations.hours',
+  n: 'restrictions',
+  o: 'source.url',
+});
 
 function normalizeText(value) {
   return value.trim().toLowerCase();
@@ -76,6 +93,7 @@ function toSummary(lounge) {
     provider: lounge.provider,
     programs: lounge.programs,
     accessMethods: lounge.accessMethods,
+    sources: lounge.sources,
     quality: lounge.quality,
   };
 }
@@ -83,7 +101,11 @@ function toSummary(lounge) {
 function toDetail(lounge) {
   const { searchText, ...detail } = lounge;
   void searchText;
-  return detail;
+  return {
+    ...detail,
+    url: detail.url ?? '',
+    slug: detail.slug ?? '',
+  };
 }
 
 function scoreLounge(lounge, query, airportCode) {
@@ -133,6 +155,46 @@ function sortMatches(first, second) {
 }
 
 export function createCatalogStore(catalogData) {
+  const sourceRightsById = new Map([
+    ...(catalogData.sources ?? [])
+      .filter((source) => (source?.sourceId || source?.id) && source?.rightsNote)
+      .map((source) => [source.sourceId ?? source.id, source.rightsNote]),
+    ...Object.entries(catalogData.sourceRights ?? {}),
+  ]);
+  const sourcePublishersById = new Map(
+    (catalogData.sources ?? [])
+      .filter((source) => (source?.sourceId || source?.id) && source?.publisher)
+      .map((source) => [source.sourceId ?? source.id, source.publisher]),
+  );
+
+  function hydrateSource(source) {
+    if (!source || !source.sourceId) {
+      return source;
+    }
+
+    const hydrated = { ...source };
+    const publisher = sourcePublishersById.get(source.sourceId);
+    const rightsNote = sourceRightsById.get(source.sourceId);
+    if (publisher && !hydrated.publisher) {
+      hydrated.publisher = publisher;
+    }
+    if (rightsNote && !hydrated.rightsNote) {
+      hydrated.rightsNote = rightsNote;
+    }
+    if (!hydrated.fieldCoverage && Array.isArray(hydrated.fc)) {
+      hydrated.fieldCoverage = hydrated.fc.map((field) => FIELD_COVERAGE_BY_CODE[field] ?? field);
+    }
+    delete hydrated.fc;
+    return hydrated;
+  }
+
+  function hydrateLoungeSources(lounge) {
+    return {
+      ...lounge,
+      sources: (lounge.sources ?? []).map(hydrateSource),
+    };
+  }
+
   const catalog = {
     generatedAt: catalogData.generatedAt,
     sourceFile: catalogData.sourceFile,
@@ -142,7 +204,7 @@ export function createCatalogStore(catalogData) {
     quality: catalogData.quality,
     sources: catalogData.sources,
     lounges: catalogData.lounges.map((lounge) => ({
-      ...lounge,
+      ...hydrateLoungeSources(lounge),
       searchText: lounge.searchText ?? getSearchText(lounge),
     })),
   };

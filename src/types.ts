@@ -94,11 +94,22 @@ export interface CanonicalOperations {
   lastVerifiedAt: string;
 }
 
+export interface CanonicalAccessOffer {
+  type: string;
+  label: string;
+  amount: number | null;
+  currency: string;
+  sourceId: string;
+  url: string;
+  retrievedAt: string;
+}
+
 export interface CanonicalLoungeRecord {
   lounge: CanonicalLounge;
   airport: CanonicalAirport;
   location: CanonicalLocation;
   operations: CanonicalOperations;
+  accessOffers: CanonicalAccessOffer[];
   amenities: string[];
   restrictions: string[];
   guestPolicy: string;

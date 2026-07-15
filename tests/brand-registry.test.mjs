@@ -57,10 +57,7 @@ test('airline-operated Priority Pass records prefer airline brand assets over so
     ['candidate-oneworld-iad-836', 'british-airways'],
     ['candidate-oneworld-sea-1583', 'alaska-airlines'],
     ['candidate-oneworld-sea-833', 'british-airways'],
-    ['candidate-airport-dimensions-iad-airport-dimensions-the-club', 'airport-dimensions'],
-    ['candidate-amex-global-lounge-collection-iad-american-express-global-lounge-collection', 'american-express'],
-    ['candidate-capital-one-iad-capital-one-lounges', 'capital-one'],
-    ['candidate-chase-sapphire-iad-chase-sapphire-lounge-by-the-club', 'chase-sapphire'],
+    ['candidate-capital-one-iad-capital-one-iad-capital-one-lounge', 'capital-one'],
   ]);
 
   for (const [recordId, brandId] of expectedAssets) {
@@ -98,8 +95,8 @@ test('all-routes airline logos are served from centralized Desk.Travel brand sto
 test('SEA deep links keep explicit lounge selection when query matches airport code', () => {
   const appSource = fs.readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8');
 
-  assert.match(appSource, /if \(!query \|\| selectedId\) \{/);
-  assert.match(appSource, /\}, \[query, filteredFeatures, selectedId\]\);/);
+  assert.match(appSource, /if \(!query \|\| selectedId \|\| autoSelectDismissedQuery === query\) \{/);
+  assert.match(appSource, /\}, \[autoSelectDismissedQuery, query, filteredFeatures, selectedId\]\);/);
 });
 
 test('brand asset contract defines the approved Cloudflare storage path', () => {
@@ -117,6 +114,11 @@ test('Chase Sapphire source overlap is merged into one physical lounge per airpo
   const duplicateKeys = chaseRows.map((record) => `${record.airport.iata}:${record.lounge.name}`);
 
   assert.equal(new Set(duplicateKeys).size, duplicateKeys.length);
+
+  const iadEtihad = canonical.records.find((record) => record.lounge.id === 'IAD-iad17-the-etihad-lounge-722');
+  assert.ok(iadEtihad);
+  assert.equal(iadEtihad.lounge.brandAsset.id, 'etihad');
+  assert.ok(iadEtihad.sources.some((source) => source.sourceId === 'chase-sapphire'));
 
   const bos = chaseRows.find((record) => record.airport.iata === 'BOS');
   assert.ok(bos);

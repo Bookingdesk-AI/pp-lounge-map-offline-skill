@@ -79,6 +79,7 @@ export const LoungeSummarySchema = z.object({
   provider: z.string().optional(),
   programs: z.array(z.string()).optional(),
   accessMethods: z.array(z.string()).optional(),
+  sources: z.array(LoungeSourceEvidenceSchema).optional(),
   quality: LoungeQualitySchema.optional(),
 });
 

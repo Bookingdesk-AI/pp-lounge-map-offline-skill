@@ -13,6 +13,7 @@ import type {
   LoungeFeatureCollection,
   LoungeFeatureProperties,
   LoungeMeta,
+  LoungeSourceEvidence,
   LoungeSourceRegistryEntry,
   MobileSheetMode,
   MobileUIState,
@@ -387,11 +388,39 @@ function sortFeatures(features: LoungeFeature[], sort: SortOption, query: string
   });
 }
 
-function joinOrFallback(values: string[], fallback: string, limit = values.length) {
+const FACILITY_EMOJI_RULES: Array<[RegExp, string]> = [
+  [/air conditioning/i, '❄️'],
+  [/alcohol|beer|wine|spirits|bar/i, '🍷'],
+  [/digital card|card accepted|payment/i, '💳'],
+  [/disabled|wheelchair|accessible|access/i, '♿'],
+  [/soft drinks|refreshment|beverage/i, '🥤'],
+  [/television|tv\b/i, '📺'],
+  [/wi-?fi|internet/i, '📶'],
+  [/shower/i, '🚿'],
+  [/food|snack|buffet|dining|meal/i, '🍽️'],
+  [/spa|relax/i, '💆'],
+  [/business|conference|work/i, '💼'],
+  [/flight information|fligh information|screens/i, '🛫'],
+  [/newspaper|magazine|reading/i, '📰'],
+  [/phone/i, '☎️'],
+  [/restroom|toilet/i, '🚻'],
+  [/runway|view/i, '🪟'],
+];
+
+function facilityEmoji(value: string) {
+  return FACILITY_EMOJI_RULES.find(([pattern]) => pattern.test(value))?.[1] ?? '•';
+}
+
+function formatFacilityWithEmoji(value: string) {
+  const compactValue = value.replace(/\s+/g, ' ').trim();
+  return `${facilityEmoji(compactValue)} ${compactValue}`;
+}
+
+function joinFacilitiesWithEmoji(values: string[], fallback: string, limit = values.length) {
   if (values.length === 0) {
     return fallback;
   }
-  return values.slice(0, limit).join(' · ');
+  return values.slice(0, limit).map(formatFacilityWithEmoji).join(' · ');
 }
 
 function compactList(values: string[], fallback: string, limit = values.length, maxItemLength = 160) {
@@ -421,6 +450,85 @@ function locationLabel(feature: LoungeFeature) {
 
 function detailLocation(feature: LoungeFeature) {
   return `${feature.properties.airportCode} · ${feature.properties.airportName}`;
+}
+
+function sourceForFeature(feature: LoungeFeature) {
+  return feature.properties.canonical?.sources[0] ?? feature.properties.sources?.[0];
+}
+
+function cleanLocationPart(value?: string) {
+  return (value ?? '').replace(/\s+/g, ' ').trim();
+}
+
+function normalizeGateLabel(value: string) {
+  const compact = cleanLocationPart(value);
+  if (!compact) {
+    return '';
+  }
+  return /^gates?\b/i.test(compact) ? compact.replace(/^gate\b/i, 'Gate').replace(/^gates\b/i, 'Gates') : `Gate ${compact}`;
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function compactDirectionForDetail(directions: string, structuredParts: string[]) {
+  let compact = directions;
+  const gate = structuredParts.find((part) => /^gates?\b/i.test(part)) ?? '';
+  if (gate) {
+    compact = compact.replace(new RegExp(`\\b(?:near|next to|above|beside|opposite|between)?\\s*${escapeRegExp(gate)}\\b`, 'i'), '');
+  }
+  for (const part of structuredParts.filter((value) => value && value !== gate)) {
+    compact = compact.replace(new RegExp(`\\b${escapeRegExp(part)}\\b`, 'ig'), '');
+  }
+  return compact
+    .replace(/\bAfterSecurity\b/g, '')
+    .replace(/\bBeforeSecurity\b/g, '')
+    .replace(/\s*,\s*,/g, ', ')
+    .replace(/^\s*[,·-]\s*/, '')
+    .replace(/\s*[,·-]\s*$/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function formatSecuritySide(value: string) {
+  if (/^aftersecurity$/i.test(value)) {
+    return 'After security';
+  }
+  if (/^beforesecurity$/i.test(value)) {
+    return 'Before security';
+  }
+  return value;
+}
+
+function detailLoungeLocation(feature: LoungeFeature) {
+  const location = feature.properties.canonical?.location;
+  const terminal = cleanLocationPart(location?.terminal || feature.properties.terminal);
+  const concourse = cleanLocationPart(location?.concourse);
+  const gate = normalizeGateLabel(location?.gate ?? '');
+  const directions = compactDirectionForDetail(cleanLocationPart(location?.directions || feature.properties.location), [
+    terminal,
+    concourse,
+    gate,
+  ]);
+  const securitySide = formatSecuritySide(cleanLocationPart(location?.securitySide));
+  const parts = [terminal !== 'Unknown' ? terminal : '', concourse, gate, directions, securitySide].filter(Boolean);
+  const uniqueParts = parts.filter((part, index) => {
+    const normalized = part.toLowerCase();
+    return parts.findIndex((candidate) => candidate.toLowerCase() === normalized) === index;
+  });
+  return uniqueParts.length > 0 ? uniqueParts.join(' · ') : locationLabel(feature);
+}
+
+function SourceTextLink({ source }: { source?: LoungeSourceEvidence }) {
+  const label = source?.publisher ?? 'Unknown';
+  return source?.url ? (
+    <a className="detail-source-link" href={source.url} target="_blank" rel="noreferrer" aria-label={`Open source: ${label}`}>
+      {label}
+    </a>
+  ) : (
+    <>{label}</>
+  );
 }
 
 function getFeatureBrandAsset(feature: LoungeFeature) {
@@ -801,15 +909,92 @@ function BrandIconMark({
   );
 }
 
+const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAY_INDEX = new Map(DAY_LABELS.map((day, index) => [day.toLowerCase(), index]));
+
+function formatClockTime(value: string) {
+  const match = value.match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) {
+    return value;
+  }
+
+  const hour = Number(match[1]);
+  const minute = match[2];
+  if (hour === 0 && minute === '00') {
+    return 'midnight';
+  }
+  if (hour === 12 && minute === '00') {
+    return 'noon';
+  }
+
+  const period = hour >= 12 ? 'PM' : 'AM';
+  const displayHour = hour % 12 || 12;
+  return `${displayHour}:${minute} ${period}`;
+}
+
+function formatHourSlot(value: string) {
+  const normalized = value.replace(/\s+/g, ' ').trim();
+  return normalized.replace(/\b(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})\b/g, (_match, opens: string, closes: string) => {
+    const openLabel = formatClockTime(opens);
+    const closeLabel = formatClockTime(closes);
+    return `${openLabel}-${closeLabel}`;
+  });
+}
+
+function groupDailyOpeningHours(entries: string[]) {
+  const byDay = new Map<number, string>();
+
+  for (const entry of entries) {
+    const match = entry.match(/^(Sun|Mon|Tue|Wed|Thu|Fri|Sat)(?:day)?\s+(.+)$/i);
+    if (!match) {
+      return [];
+    }
+    const day = DAY_INDEX.get(match[1].slice(0, 3).toLowerCase());
+    if (day === undefined) {
+      return [];
+    }
+    byDay.set(day, formatHourSlot(match[2]));
+  }
+
+  if (byDay.size !== 7) {
+    return [];
+  }
+
+  const ordered = DAY_LABELS.map((_day, index) => byDay.get(index) ?? '');
+  if (ordered.every((hours) => hours === ordered[0])) {
+    return [`Daily ${ordered[0]}`];
+  }
+
+  const groups: string[] = [];
+  let start = 0;
+  for (let index = 1; index <= ordered.length; index += 1) {
+    if (ordered[index] === ordered[start]) {
+      continue;
+    }
+    const dayLabel = start === index - 1 ? DAY_LABELS[start] : `${DAY_LABELS[start]}-${DAY_LABELS[index - 1]}`;
+    groups.push(`${dayLabel} ${ordered[start]}`);
+    start = index;
+  }
+  return groups;
+}
+
 function compactOpeningHours(value: string, fallback = 'Not listed', maxLines = 3, maxLength = 180) {
   const lines = value
     .replace(/\r/g, '\n')
+    .split(/[;\n]/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const groupedHours = groupDailyOpeningHours(lines);
+  const sourceLines = groupedHours.length > 0 ? groupedHours : lines;
+
+  const scheduleLines = sourceLines
+    .join('\n')
     .split('\n')
     .map((line) => line.trim())
     .filter(Boolean);
 
-  const scheduleLines: string[] = [];
-  for (const line of lines) {
+  const visibleLines: string[] = [];
+  for (const line of scheduleLines) {
     const lower = line.toLowerCase();
     const isNote =
       lower.startsWith('note:') ||
@@ -821,17 +1006,17 @@ function compactOpeningHours(value: string, fallback = 'Not listed', maxLines = 
       break;
     }
 
-    if (line.length > 180 && scheduleLines.length > 0) {
+    if (line.length > 180 && visibleLines.length > 0) {
       break;
     }
 
-    scheduleLines.push(line);
-    if (scheduleLines.length >= maxLines) {
+    visibleLines.push(formatHourSlot(line));
+    if (visibleLines.length >= maxLines) {
       break;
     }
   }
 
-  const schedule = scheduleLines.join(' · ');
+  const schedule = visibleLines.join(' · ');
   if (!schedule) {
     return fallback;
   }
@@ -1697,7 +1882,7 @@ function CompareTray({
                     </div>
                     <div>
                       <dt>Facilities</dt>
-                      <dd>{joinOrFallback(feature.properties.facilities, 'Not listed', showExpandedMetrics ? 4 : 2)}</dd>
+                      <dd>{joinFacilitiesWithEmoji(feature.properties.facilities, 'Not listed', showExpandedMetrics ? 4 : 2)}</dd>
                     </div>
                     {showExpandedMetrics ? (
                       <div>
@@ -1893,7 +2078,7 @@ function ResultsList({
                 <span>{locationLabel(feature)}</span>
                 <span>{compactOpeningHours(feature.properties.openingHours, 'Details', 2, 110)}</span>
               </div>
-              <small>{joinOrFallback(feature.properties.facilities, 'Not listed', 3)}</small>
+              <small>{joinFacilitiesWithEmoji(feature.properties.facilities, 'Not listed', 3)}</small>
             </button>
             <div className="result-card-actions">
               <button
@@ -1987,16 +2172,23 @@ function DetailPanel({
   const compared = comparedIds.has(selectedFeature.properties.id);
   const brandAsset = getFeatureBrandAsset(selectedFeature);
   const brandName = getFeatureBrandName(selectedFeature);
+  const selectedSource = sourceForFeature(selectedFeature);
 
   return (
     <aside className="detail-panel detail-panel-overlay">
       <div className="detail-panel-head">
         <div>
-          <p>Selected</p>
           <h3>{selectedFeature.properties.name}</h3>
           <span>{detailLocation(selectedFeature)}</span>
         </div>
-        <button type="button" className="ghost-action" onClick={onClose}>
+        <button
+          type="button"
+          className="ghost-action"
+          onClick={(event) => {
+            event.stopPropagation();
+            onClose();
+          }}
+        >
           Close
         </button>
       </div>
@@ -2022,7 +2214,13 @@ function DetailPanel({
             {compared ? 'Remove from compare' : 'Add to compare'}
           </button>
           {selectedFeature.properties.url ? (
-            <a className="ghost-link" href={selectedFeature.properties.url} target="_blank" rel="noreferrer">
+            <a
+              className="ghost-link"
+              href={selectedFeature.properties.url}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Open source: ${sourceForFeature(selectedFeature)?.publisher ?? selectedFeature.properties.name}`}
+            >
               Source
             </a>
           ) : null}
@@ -2031,7 +2229,7 @@ function DetailPanel({
         <dl className="detail-grid">
           <div>
             <dt>Location</dt>
-            <dd>{locationLabel(selectedFeature)}</dd>
+            <dd>{detailLoungeLocation(selectedFeature)}</dd>
           </div>
           <div>
             <dt>Opening hours</dt>
@@ -2043,7 +2241,7 @@ function DetailPanel({
           </div>
           <div>
             <dt>Facilities</dt>
-            <dd>{joinOrFallback(selectedFeature.properties.facilities, 'Not listed')}</dd>
+            <dd>{joinFacilitiesWithEmoji(selectedFeature.properties.facilities, 'Not listed')}</dd>
           </div>
           <div>
             <dt>Programs</dt>
@@ -2056,7 +2254,9 @@ function DetailPanel({
           </div>
           <div>
             <dt>Source</dt>
-            <dd>{selectedFeature.properties.canonical?.sources[0]?.publisher ?? 'Priority Pass'}</dd>
+            <dd>
+              <SourceTextLink source={selectedSource} />
+            </dd>
           </div>
         </dl>
 
@@ -2203,7 +2403,7 @@ function MobileDetailsView({
   const compared = comparedIds.has(selectedFeature.properties.id);
   const brandAsset = getFeatureBrandAsset(selectedFeature);
   const brandName = getFeatureBrandName(selectedFeature);
-  const selectedSource = selectedFeature.properties.canonical?.sources[0] ?? selectedFeature.properties.sources?.[0];
+  const selectedSource = sourceForFeature(selectedFeature);
   const selectedQuality = selectedFeature.properties.canonical?.quality ?? selectedFeature.properties.quality;
 
   return (
@@ -2237,7 +2437,13 @@ function MobileDetailsView({
           {compared ? 'Remove from compare' : 'Add to compare'}
         </button>
         {selectedFeature.properties.url ? (
-          <a className="ghost-link" href={selectedFeature.properties.url} target="_blank" rel="noreferrer">
+          <a
+            className="ghost-link"
+            href={selectedFeature.properties.url}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`Open source: ${selectedSource?.publisher ?? selectedFeature.properties.name}`}
+          >
             Source
           </a>
         ) : null}
@@ -2250,7 +2456,7 @@ function MobileDetailsView({
 
       <details className="mobile-detail-accordion" open>
         <summary>Location</summary>
-        <p>{locationLabel(selectedFeature)}</p>
+        <p>{detailLoungeLocation(selectedFeature)}</p>
       </details>
 
       <details className="mobile-detail-accordion">
@@ -2270,7 +2476,14 @@ function MobileDetailsView({
 
       <details className="mobile-detail-accordion">
         <summary>Facilities</summary>
-        <p>{joinOrFallback(selectedFeature.properties.facilities, 'Not listed')}</p>
+        <p>{joinFacilitiesWithEmoji(selectedFeature.properties.facilities, 'Not listed')}</p>
+      </details>
+
+      <details className="mobile-detail-accordion">
+        <summary>Source</summary>
+        <p>
+          <SourceTextLink source={selectedSource} />
+        </p>
       </details>
 
       <SameSpotList
@@ -3345,6 +3558,7 @@ function App() {
   );
 
   const [selectedId, setSelectedId] = useState<string | null>(initialUrlState.selectedId);
+  const [autoSelectDismissedQuery, setAutoSelectDismissedQuery] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [compareIds, setCompareIds] = useState<string[]>([]);
 
@@ -3717,7 +3931,7 @@ function App() {
   }, [filteredFeatures, loading, selectedId]);
 
   useEffect(() => {
-    if (!query || selectedId) {
+    if (!query || selectedId || autoSelectDismissedQuery === query) {
       return;
     }
 
@@ -3728,7 +3942,7 @@ function App() {
     if (exactIata) {
       setSelectedId(exactIata.properties.id);
     }
-  }, [query, filteredFeatures, selectedId]);
+  }, [autoSelectDismissedQuery, query, filteredFeatures, selectedId]);
 
   const filterSignature = useMemo(
     () =>
@@ -3850,6 +4064,7 @@ function App() {
 
   const selectFeature = useCallback(
     (id: string) => {
+      setAutoSelectDismissedQuery(null);
       setSelectedId(id);
 
       if (isMobile) {
@@ -3862,6 +4077,11 @@ function App() {
     },
     [isMobile],
   );
+
+  const closeSelectedFeature = useCallback(() => {
+    setAutoSelectDismissedQuery(query || null);
+    setSelectedId(null);
+  }, [query]);
 
   const toggleCompare = useCallback((id: string) => {
     setCompareIds((current) => {
@@ -4222,7 +4442,7 @@ function App() {
               brands={brands}
               onSelect={(id) => selectFeature(id)}
               onToggleCompare={toggleCompare}
-              onClose={() => setSelectedId(null)}
+              onClose={closeSelectedFeature}
             />
           ) : null}
 
