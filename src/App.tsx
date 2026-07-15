@@ -1449,10 +1449,10 @@ function buildHierarchicalSearchSuggestions({
 
 function searchSuggestionCategoryLabel(suggestion: SearchCommandSuggestion) {
   if (suggestion.source === 'airport') {
-    return '— Airport';
+    return 'Airport';
   }
   if (suggestion.source === 'lounge') {
-    return '—— Lounge';
+    return 'Lounge';
   }
   return suggestion.source === 'city' ? 'City' : 'Brand';
 }
@@ -1773,11 +1773,13 @@ function SearchCommandCombobox({
               }}
               onMouseEnter={() => setActiveIndex(index)}
             >
-              {suggestion.source === 'brand' ? (
-                <BrandMark asset={suggestion.asset} label={suggestion.label} compact />
-              ) : (
-                <span className="suggestion-category">{searchSuggestionCategoryLabel(suggestion)}</span>
-              )}
+              <span className="suggestion-type-cell">
+                {suggestion.source === 'brand' ? (
+                  <BrandMark asset={suggestion.asset} label={suggestion.label} compact />
+                ) : (
+                  <span className="suggestion-category">{searchSuggestionCategoryLabel(suggestion)}</span>
+                )}
+              </span>
               <span className="suggestion-copy">
                 <span>{suggestion.label}</span>
                 <small>{suggestion.detail}</small>
@@ -2016,7 +2018,10 @@ function CompareTray({
   onRemove: (id: string) => void;
   compact?: boolean;
 }) {
-  const showExpandedMetrics = comparedFeatures.length > 1 && !compact;
+  const compareSlots: Array<LoungeFeature | null> = Array.from(
+    { length: COMPARE_LIMIT },
+    (_, index) => comparedFeatures[index] ?? null,
+  );
 
   return (
     <section
@@ -2031,56 +2036,46 @@ function CompareTray({
         <span className="compare-count">{comparedFeatures.length} / {COMPARE_LIMIT}</span>
       </div>
 
-      {comparedFeatures.length === 0 ? (
-        <div className="compare-empty">No compare records</div>
-      ) : (
-        <>
-          <div className="compare-card-grid">
-            {comparedFeatures.map((feature) => {
-              const active = selectedId === feature.properties.id;
-              return (
-                <article key={feature.properties.id} className={`compare-card ${active ? 'is-active' : ''}`}>
-                  <div className="compare-card-head">
-                    <span className="badge">{feature.properties.type}</span>
-                    <span className="code">{feature.properties.airportCode}</span>
-                  </div>
-                  <button
-                    type="button"
-                    className="compare-select"
-                    onClick={() => onSelect(feature.properties.id)}
-                  >
-                    <strong>{feature.properties.name}</strong>
-                    <span>{locationLabel(feature)}</span>
-                  </button>
-                  <dl className="compare-metrics">
-                    <div>
-                      <dt>Hours</dt>
-                        <dd>{compactOpeningHours(feature.properties.openingHours, 'Details', 2, 120)}</dd>
-                    </div>
-                    <div>
-                      <dt>Facilities</dt>
-                      <dd>{joinFacilitiesWithEmoji(feature.properties.facilities, 'Not listed', showExpandedMetrics ? 4 : 2)}</dd>
-                    </div>
-                    {showExpandedMetrics ? (
-                      <div>
-                        <dt>Conditions</dt>
-                        <dd>{compactList(feature.properties.conditions, 'Not listed', 2, 110)}</dd>
-                      </div>
-                    ) : null}
-                  </dl>
-                  <button
-                    type="button"
-                    className="secondary-action"
-                    onClick={() => onRemove(feature.properties.id)}
-                  >
-                    Remove
-                  </button>
-                </article>
-              );
-            })}
-          </div>
-        </>
-      )}
+      <div className="compare-card-grid" aria-label="Compare selection">
+        {compareSlots.map((feature, index) => {
+          if (!feature) {
+            return (
+              <div
+                key={`empty-${index}`}
+                className="compare-card compare-slot-empty"
+                aria-label={`Empty compare slot ${index + 1}`}
+              >
+                <span>{index + 1}</span>
+              </div>
+            );
+          }
+
+          const active = selectedId === feature.properties.id;
+          const brandAsset = getFeatureBrandAsset(feature);
+          const brandName = getFeatureBrandName(feature);
+          return (
+            <article key={feature.properties.id} className={`compare-card ${active ? 'is-active' : ''}`}>
+              <button
+                type="button"
+                className="compare-select"
+                aria-label={`Open ${feature.properties.name}`}
+                onClick={() => onSelect(feature.properties.id)}
+              >
+                <BrandIconMark asset={brandAsset} label={brandName} />
+                <strong>{feature.properties.name}</strong>
+              </button>
+              <button
+                type="button"
+                className="compare-remove"
+                aria-label={`Remove ${feature.properties.name}`}
+                onClick={() => onRemove(feature.properties.id)}
+              >
+                ×
+              </button>
+            </article>
+          );
+        })}
+      </div>
     </section>
   );
 }
