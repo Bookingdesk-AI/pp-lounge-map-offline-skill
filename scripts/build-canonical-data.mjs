@@ -415,6 +415,7 @@ async function main() {
   }
 
   await fs.mkdir(path.dirname(outputCatalogPath), { recursive: true });
+  await fs.rm(outputBrandLogoDir, { recursive: true, force: true });
   await fs.mkdir(outputBrandLogoDir, { recursive: true });
   await fs.writeFile(outputCatalogPath, `${JSON.stringify(catalog, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputFieldCoveragePath, `${JSON.stringify(fieldCoverageReport, null, 2)}\n`, 'utf8');
@@ -428,9 +429,9 @@ async function main() {
   await fs.writeFile(outputBrandImportPath, `${JSON.stringify(catalog.deskTravelBrandImport, null, 2)}\n`, 'utf8');
   await fs.writeFile(outputBrandAssetContractPath, `${JSON.stringify(brandAssetContract, null, 2)}\n`, 'utf8');
   await Promise.all(
-    catalog.brands.map((brand) =>
-      fs.writeFile(path.join(outputBrandLogoDir, `${brand.id}.svg`), createBrandLogoSvg(brand), 'utf8'),
-    ),
+    catalog.brands
+      .filter((brand) => brand.logoUrl.startsWith('/data/brand-logos/'))
+      .map((brand) => fs.writeFile(path.join(outputBrandLogoDir, `${brand.id}.svg`), createBrandLogoSvg(brand), 'utf8')),
   );
   await fs.writeFile(
     outputQualityPath,

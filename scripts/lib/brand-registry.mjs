@@ -1,6 +1,23 @@
 export const BRAND_REGISTRY_VERSION = '2026-06-14';
 
 const ALL_ROUTES_AIRLINE_LOGOS = {
+  airFrance: 'https://src.desk.travel/brand-logos/airlines/af/cbeb6be04f34804fab3ef70f693e327a89e585f5d5cac71d46d440b025f64b45.png',
+  klm: 'https://src.desk.travel/brand-logos/airlines/kl/9705f0a54ada349772d4273c5410ddfc4169368d0200ee12405aaa1f95e42239.png',
+  britishAirways: 'https://src.desk.travel/brand-logos/airlines/ba/dc888a2fd20ec9a13b1b351b80ba6a15fc5ee594be3aa7989eff853b9c223c0c.png',
+  alaskaAirlines: 'https://src.desk.travel/brand-logos/airlines/as/d56df15f3de2cc403df2cd362dd2aa493fe9b1ebc0bba7df7287c35c3bbebd90.png',
+  turkishAirlines: 'https://src.desk.travel/brand-logos/airlines/tk/d918bc77b041b60237f344baec32c0079315f80ee7aaab9502223aed6ab0267f.png',
+  etihad: 'https://src.desk.travel/brand-logos/airlines/ey/c4a5a0c77c7912407527681a323eae8a33dd5d42cb2769f58eeb95ec496de318.png',
+  virginAtlantic: 'https://src.desk.travel/brand-logos/airlines/vs/dfa73a5ce0af91e4549d01ce9e744bd206c12304ba24b3116005fd160b84d002.png',
+  americanAirlines: 'https://src.desk.travel/brand-logos/airlines/aa/c3439801cc68a08ffc86a37114a0c0ad6dfb107013efb1118f07c63916da3fb0.png',
+  airCanada: 'https://src.desk.travel/brand-logos/airlines/ac/948862caca0e382379b723f702a61af52127e077e0f945e66010ffb61215a4aa.png',
+  united: 'https://src.desk.travel/brand-logos/airlines/ua/cb08c08144d7cf0a87a88705e8605f9e15ff834cdca073f084a4e4a909fc874a.png',
+  delta: 'https://src.desk.travel/brand-logos/airlines/dl/1334164f829a738ea8d1155e6e16d90916eb2a40c690d303e3a23f945f47dd24.png',
+  singaporeAirlines: 'https://src.desk.travel/brand-logos/airlines/sq/dfc1c24153712b5206ddbb6604836162388ffc9e72ee5d318259730da920daf8.png',
+  qatarAirways: 'https://src.desk.travel/brand-logos/airlines/qr/5a8f23f6e472cb2e0f716fda8e8ee975843cd971068c2cb69d0183d001424471.png',
+  qantas: 'https://src.desk.travel/brand-logos/airlines/qf/10278afc63bc5ad3192ecfae966fa2072c1a5a0f0f4be38b27fdf818bd20a9ea.png',
+};
+
+const ALL_ROUTES_AIRLINE_LOGO_BACKUPS = {
   airFrance: 'https://src.desk.travel/brand-logos/airlines-transparent/af/a2207f1e1e6089f19602ce21b442c82e2ac3232ecb66758c3f0b1f9d84511f5f.png',
   klm: 'https://src.desk.travel/brand-logos/airlines-transparent/kl/a0220679b77ebc1a9eb4dea1b5dbbc0f3aec7487fcc9a83e89f8e67f66f596d8.png',
   britishAirways: 'https://src.desk.travel/brand-logos/airlines-transparent/ba/46b341955ba41a1246b1fafa9cfaf2fc1330d365c5da49a1e3ff0160642c4f72.png',
@@ -15,6 +32,21 @@ const ALL_ROUTES_AIRLINE_LOGOS = {
   singaporeAirlines: 'https://src.desk.travel/brand-logos/airlines-transparent/sq/64e86a3a01ed310445daec5d4b51350350513b65a4cf1705277bd2724887d403.png',
   qatarAirways: 'https://src.desk.travel/brand-logos/airlines-transparent/qr/bb207913044d70cce632574255bacef97abbb243b1380453e0c189715f4c32be.png',
   qantas: 'https://src.desk.travel/brand-logos/airlines-transparent/qf/7668c520fe78b8dba00927e04958b4ca10e45395c72ac7191e92b518fed08d90.png',
+};
+
+const ALL_ROUTES_ALLIANCE_LOGOS = {
+  oneworld: 'https://all-routes.desk.travel/brand-logos/alliances/oneworld.svg',
+  starAlliance: 'https://all-routes.desk.travel/brand-logos/alliances/star-alliance.svg',
+  skyteam: 'https://all-routes.desk.travel/brand-logos/alliances/skyteam.png',
+};
+
+const ALL_ROUTES_ALLIANCE_LOGO_BACKUPS = {
+  oneworld:
+    'https://src.desk.travel/brand-logos/alliances/oneworld/ff4596a65981298ac5a6c9ed065c43299428210e7f6ef68e280ccf78b8183121.svg',
+  starAlliance:
+    'https://src.desk.travel/brand-logos/alliances/star/8a13ff8d1353d8282c0cbda10940cc48b07bd630cdd0f58e8878602fdb698145.svg',
+  skyteam:
+    'https://src.desk.travel/brand-logos/alliances/skyteam/275760f605bc9da86179525da787ba856c99015845de9e800ab777276e91fe3a.png',
 };
 
 export const BRAND_REGISTRY = [
@@ -172,6 +204,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'desk-travel:brand/united',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.united,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.united,
     logoText: 'UA',
     color: '#214f9f',
     background: '#eaf1fb',
@@ -189,6 +222,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'desk-travel:brand/delta',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.delta,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.delta,
     logoText: 'DL',
     color: '#8c2633',
     background: '#fff0f2',
@@ -206,6 +240,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'desk-travel:brand/american-airlines',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.americanAirlines,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.americanAirlines,
     logoText: 'AA',
     color: '#2d5c87',
     background: '#eaf2f8',
@@ -223,6 +258,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'desk-travel:brand/air-canada',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.airCanada,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.airCanada,
     logoText: 'AC',
     color: '#3f4650',
     background: '#eef1f4',
@@ -240,6 +276,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/air-france-klm',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.airFrance,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.airFrance,
     logoText: 'AF',
     color: '#1f4c84',
     background: '#edf3fb',
@@ -257,6 +294,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/british-airways',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.britishAirways,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.britishAirways,
     logoText: 'BA',
     color: '#2e5c99',
     background: '#edf3fb',
@@ -274,6 +312,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/alaska-airlines',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.alaskaAirlines,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.alaskaAirlines,
     logoText: 'AS',
     color: '#245a7e',
     background: '#edf5f8',
@@ -291,6 +330,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/singapore-airlines',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.singaporeAirlines,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.singaporeAirlines,
     logoText: 'SQ',
     color: '#24446f',
     background: '#edf2f8',
@@ -308,6 +348,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/qatar-airways',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.qatarAirways,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.qatarAirways,
     logoText: 'QR',
     color: '#662046',
     background: '#f7edf2',
@@ -325,6 +366,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/qantas',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.qantas,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.qantas,
     logoText: 'QF',
     color: '#a81e22',
     background: '#fff0f0',
@@ -340,14 +382,15 @@ export const BRAND_REGISTRY = [
     sourceIds: ['oneworld'],
     sourceUrl: 'https://www.oneworld.com/airport-lounges',
     assetSource: 'desk_travel_database',
-    deskTravelAssetKey: 'desk-travel:brand/oneworld',
-    logoUrl: '/data/brand-logos/oneworld.svg',
+    deskTravelAssetKey: 'all-routes:brand/oneworld',
+    logoUrl: ALL_ROUTES_ALLIANCE_LOGOS.oneworld,
+    fallbackLogoUrl: ALL_ROUTES_ALLIANCE_LOGO_BACKUPS.oneworld,
     logoText: 'OW',
     color: '#1f5d8f',
     background: '#edf4fb',
     foreground: '#1b4f78',
     status: 'review',
-    rightsNote: 'Desk.Travel managed alliance mark; official public oneworld lounge page supplies source context.',
+    rightsNote: 'Alliance logo served from all-routes centralized Cloudflare brand asset registry; official public oneworld lounge page supplies source context.',
   },
   {
     id: 'star-alliance',
@@ -357,14 +400,15 @@ export const BRAND_REGISTRY = [
     sourceIds: ['star-alliance'],
     sourceUrl: 'https://www.staralliance.com/en/lounge-finder',
     assetSource: 'desk_travel_database',
-    deskTravelAssetKey: 'desk-travel:brand/star-alliance',
-    logoUrl: '/data/brand-logos/star-alliance.svg',
+    deskTravelAssetKey: 'all-routes:brand/star-alliance',
+    logoUrl: ALL_ROUTES_ALLIANCE_LOGOS.starAlliance,
+    fallbackLogoUrl: ALL_ROUTES_ALLIANCE_LOGO_BACKUPS.starAlliance,
     logoText: 'SA',
     color: '#2e343b',
     background: '#f1f3f5',
     foreground: '#2e343b',
     status: 'review',
-    rightsNote: 'Desk.Travel managed alliance mark; official public Star Alliance lounge finder supplies source context.',
+    rightsNote: 'Alliance logo served from all-routes centralized Cloudflare brand asset registry; official public Star Alliance lounge finder supplies source context.',
   },
   {
     id: 'skyteam',
@@ -374,14 +418,15 @@ export const BRAND_REGISTRY = [
     sourceIds: ['skyteam'],
     sourceUrl: 'https://www.skyteam.com/en/lounges',
     assetSource: 'desk_travel_database',
-    deskTravelAssetKey: 'desk-travel:brand/skyteam',
-    logoUrl: '/data/brand-logos/skyteam.svg',
+    deskTravelAssetKey: 'all-routes:brand/skyteam',
+    logoUrl: ALL_ROUTES_ALLIANCE_LOGOS.skyteam,
+    fallbackLogoUrl: ALL_ROUTES_ALLIANCE_LOGO_BACKUPS.skyteam,
     logoText: 'ST',
     color: '#315a93',
     background: '#edf2fb',
     foreground: '#244c82',
     status: 'review',
-    rightsNote: 'Desk.Travel managed alliance mark; official public SkyTeam lounge page supplies source context.',
+    rightsNote: 'Alliance logo served from all-routes centralized Cloudflare brand asset registry; official public SkyTeam lounge page supplies source context.',
   },
   {
     id: 'turkish-airlines',
@@ -393,6 +438,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/turkish-airlines',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.turkishAirlines,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.turkishAirlines,
     logoText: 'TK',
     color: '#b0182b',
     background: '#fff0f2',
@@ -410,6 +456,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/etihad',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.etihad,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.etihad,
     logoText: 'EY',
     color: '#806744',
     background: '#f7f1e7',
@@ -427,6 +474,7 @@ export const BRAND_REGISTRY = [
     assetSource: 'desk_travel_database',
     deskTravelAssetKey: 'all-routes:brand/virgin-atlantic',
     logoUrl: ALL_ROUTES_AIRLINE_LOGOS.virginAtlantic,
+    fallbackLogoUrl: ALL_ROUTES_AIRLINE_LOGO_BACKUPS.virginAtlantic,
     logoText: 'VS',
     color: '#b52635',
     background: '#fff0f2',
@@ -558,8 +606,7 @@ function normalize(value) {
 
 function normalizeEntry(entry) {
   const logoUrl = entry.logoUrl ?? `/data/brand-logos/${entry.id}.svg`;
-  const fallbackLogoUrl =
-    entry.fallbackLogoUrl ?? (logoUrl.startsWith('https://src.desk.travel/') ? `/data/brand-logos/${entry.id}.svg` : undefined);
+  const fallbackLogoUrl = entry.fallbackLogoUrl;
 
   return {
     ...entry,

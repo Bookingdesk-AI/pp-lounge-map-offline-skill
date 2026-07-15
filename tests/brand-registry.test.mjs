@@ -21,7 +21,10 @@ test('brand registry exports Desk.Travel asset mappings with provenance', () => 
   for (const brand of brands) {
     assert.ok(brand.id);
     assert.ok(brand.name);
-    assert.match(brand.logoUrl, /^(\/data\/brand-logos\/|https:\/\/src\.desk\.travel\/brand-logos\/)/);
+    assert.match(
+      brand.logoUrl,
+      /^(\/data\/brand-logos\/|https:\/\/src\.desk\.travel\/brand-logos\/|https:\/\/all-routes\.desk\.travel\/brand-logos\/)/,
+    );
     assert.match(brand.deskTravelAssetKey, /^(desk-travel|all-routes):brand\//);
     assert.ok(brand.sourceUrl.startsWith('https://'));
     assert.match(brand.rightsNote, /(Desk\.Travel|all-routes)/);
@@ -85,9 +88,27 @@ test('all-routes airline logos are served from centralized Desk.Travel brand sto
   for (const brandId of airlineBrandIds) {
     const brand = brands.find((candidate) => candidate.id === brandId);
     assert.ok(brand, `missing brand ${brandId}`);
-    assert.ok(brand.logoUrl.startsWith('https://src.desk.travel/brand-logos/'));
-    assert.equal(brand.fallbackLogoUrl, `/data/brand-logos/${brand.id}.svg`);
-    assert.ok(fs.existsSync(new URL(`../public${brand.fallbackLogoUrl}`, import.meta.url)));
+    assert.ok(brand.logoUrl.startsWith('https://src.desk.travel/brand-logos/airlines/'));
+    assert.ok(brand.fallbackLogoUrl.startsWith('https://src.desk.travel/brand-logos/airlines-transparent/'));
+    assert.equal(fs.existsSync(new URL(`../public/data/brand-logos/${brand.id}.svg`, import.meta.url)), false);
+    assert.ok(brand.rightsNote.includes('all-routes'));
+  }
+});
+
+test('alliance logos are served from centralized all-routes brand storage', () => {
+  const allianceBrands = [
+    ['oneworld', 'oneworld.svg'],
+    ['star-alliance', 'star-alliance.svg'],
+    ['skyteam', 'skyteam.png'],
+  ];
+
+  for (const [brandId, fileName] of allianceBrands) {
+    const brand = brands.find((candidate) => candidate.id === brandId);
+    assert.ok(brand, `missing brand ${brandId}`);
+    assert.equal(brand.logoUrl, `https://all-routes.desk.travel/brand-logos/alliances/${fileName}`);
+    assert.ok(brand.fallbackLogoUrl.startsWith('https://src.desk.travel/brand-logos/alliances/'));
+    assert.equal(brand.deskTravelAssetKey, `all-routes:brand/${brandId}`);
+    assert.equal(fs.existsSync(new URL(`../public/data/brand-logos/${brand.id}.svg`, import.meta.url)), false);
     assert.ok(brand.rightsNote.includes('all-routes'));
   }
 });
@@ -103,6 +124,7 @@ test('brand asset contract defines the approved Cloudflare storage path', () => 
   assert.equal(brandAssetContract.target.database, 'desk.travel.brand_assets');
   assert.equal(brandAssetContract.target.objectStorage, 'Cloudflare R2');
   assert.equal(brandAssetContract.target.publicOrigin, 'https://src.desk.travel');
+  assert.equal(brandAssetContract.target.allRoutesPublicOrigin, 'https://all-routes.desk.travel');
   assert.ok(brandAssetContract.allowedSourceClasses.some((sourceClass) => sourceClass.id === 'official_public_brand_source'));
   assert.ok(brandAssetContract.allowedSourceClasses.some((sourceClass) => sourceClass.id === 'generated_fallback_tile'));
   assert.ok(brandAssetContract.blockedSourceClasses.includes('unknown_rights_svg'));

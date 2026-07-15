@@ -9,7 +9,8 @@ export function createBrandAssetContract({ generatedAt = new Date().toISOString(
       database: 'desk.travel.brand_assets',
       objectStorage: 'Cloudflare R2',
       publicOrigin: 'https://src.desk.travel',
-      localFallbackPath: '/data/brand-logos/{brandId}.svg',
+      allRoutesPublicOrigin: 'https://all-routes.desk.travel',
+      generatedFallbackPath: '/data/brand-logos/{brandId}.svg',
     },
     entities: {
       brandAsset: {
@@ -86,12 +87,12 @@ export function createBrandAssetContract({ generatedAt = new Date().toISOString(
     displayContract: {
       resultRow: 'brandAsset.logoUrl before lounge.name',
       detailPanel: 'brandAsset mark before canonical brand label',
-      fallback: 'generated Lounge Guru SVG tile',
+      fallback: 'central backup URL; generated Lounge Guru SVG tile only for brands without approved central artwork',
       altText: 'decorative in repeated rows; brand name remains visible as text',
     },
     validation: {
       requiredChecks: [
-        'publicUrl uses https://src.desk.travel or local fallback',
+        'publicUrl uses https://src.desk.travel, https://all-routes.desk.travel, or generated fallback for non-central brands',
         'sha256 exists for uploaded binary assets',
         'rightsStatus is not blocked',
         'reviewStatus is approved before production promotion',

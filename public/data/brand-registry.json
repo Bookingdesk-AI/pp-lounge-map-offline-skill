@@ -220,14 +220,14 @@
     "sourceUrl": "https://www.united.com/en/us/fly/travel/airport/united-club-and-lounge-locations.html",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "desk-travel:brand/united",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ua/35f4283c767d3b2cafcc96d84c8fb988985a42734d2fc9905573c0c5721f7663.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/ua/cb08c08144d7cf0a87a88705e8605f9e15ff834cdca073f084a4e4a909fc874a.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ua/35f4283c767d3b2cafcc96d84c8fb988985a42734d2fc9905573c0c5721f7663.png",
     "logoText": "UA",
     "color": "#214f9f",
     "background": "#eaf1fb",
     "foreground": "#163f82",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public United page supplies source context.",
-    "fallbackLogoUrl": "/data/brand-logos/united.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public United page supplies source context."
   },
   {
     "id": "delta",
@@ -244,14 +244,14 @@
     "sourceUrl": "https://www.delta.com/us/en/delta-sky-club/locations",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "desk-travel:brand/delta",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/dl/59191feeac8d3d59f2cfafbe67fd71edf18c4294d345c80fa356856b930d5c66.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/dl/1334164f829a738ea8d1155e6e16d90916eb2a40c690d303e3a23f945f47dd24.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/dl/59191feeac8d3d59f2cfafbe67fd71edf18c4294d345c80fa356856b930d5c66.png",
     "logoText": "DL",
     "color": "#8c2633",
     "background": "#fff0f2",
     "foreground": "#75202b",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Delta page supplies source context.",
-    "fallbackLogoUrl": "/data/brand-logos/delta.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Delta page supplies source context."
   },
   {
     "id": "american-airlines",
@@ -268,14 +268,14 @@
     "sourceUrl": "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "desk-travel:brand/american-airlines",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/aa/4202b514fdd42c1095dcb893bd16561fff88f9fcec364ea125e42a7bb4fe37b7.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/aa/c3439801cc68a08ffc86a37114a0c0ad6dfb107013efb1118f07c63916da3fb0.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/aa/4202b514fdd42c1095dcb893bd16561fff88f9fcec364ea125e42a7bb4fe37b7.png",
     "logoText": "AA",
     "color": "#2d5c87",
     "background": "#eaf2f8",
     "foreground": "#214967",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context.",
-    "fallbackLogoUrl": "/data/brand-logos/american-airlines.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public American Airlines page supplies source context."
   },
   {
     "id": "air-canada",
@@ -292,14 +292,14 @@
     "sourceUrl": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "desk-travel:brand/air-canada",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ac/e431417f48b0f69a08bec2b65c0dcc2690b81df3aa6361162d94f426bdbc5286.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/ac/948862caca0e382379b723f702a61af52127e077e0f945e66010ffb61215a4aa.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ac/e431417f48b0f69a08bec2b65c0dcc2690b81df3aa6361162d94f426bdbc5286.png",
     "logoText": "AC",
     "color": "#3f4650",
     "background": "#eef1f4",
     "foreground": "#303741",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context.",
-    "fallbackLogoUrl": "/data/brand-logos/air-canada.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air Canada page supplies source context."
   },
   {
     "id": "air-france-klm",
@@ -319,14 +319,14 @@
     "sourceUrl": "https://wwws.airfrance.us/information/prepare/salons",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "all-routes:brand/air-france-klm",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/af/a2207f1e1e6089f19602ce21b442c82e2ac3232ecb66758c3f0b1f9d84511f5f.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/af/cbeb6be04f34804fab3ef70f693e327a89e585f5d5cac71d46d440b025f64b45.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/af/a2207f1e1e6089f19602ce21b442c82e2ac3232ecb66758c3f0b1f9d84511f5f.png",
     "logoText": "AF",
     "color": "#1f4c84",
     "background": "#edf3fb",
     "foreground": "#173b68",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context.",
-    "fallbackLogoUrl": "/data/brand-logos/air-france-klm.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Air France lounge page supplies source context."
   },
   {
     "id": "british-airways",
@@ -343,14 +343,14 @@
     "sourceUrl": "https://www.britishairways.com/content/information/airport-information/lounges",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "all-routes:brand/british-airways",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ba/46b341955ba41a1246b1fafa9cfaf2fc1330d365c5da49a1e3ff0160642c4f72.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/ba/dc888a2fd20ec9a13b1b351b80ba6a15fc5ee594be3aa7989eff853b9c223c0c.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ba/46b341955ba41a1246b1fafa9cfaf2fc1330d365c5da49a1e3ff0160642c4f72.png",
     "logoText": "BA",
     "color": "#2e5c99",
     "background": "#edf3fb",
     "foreground": "#243f6a",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context.",
-    "fallbackLogoUrl": "/data/brand-logos/british-airways.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public British Airways lounge page supplies source context."
   },
   {
     "id": "alaska-airlines",
@@ -367,14 +367,14 @@
     "sourceUrl": "https://www.alaskaair.com/content/airports/lounges",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "all-routes:brand/alaska-airlines",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/as/ca87b5a37b83fdb8160788a9f5fb5520c51f97deea59bff3a7ab137bbc3626ee.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/as/d56df15f3de2cc403df2cd362dd2aa493fe9b1ebc0bba7df7287c35c3bbebd90.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/as/ca87b5a37b83fdb8160788a9f5fb5520c51f97deea59bff3a7ab137bbc3626ee.png",
     "logoText": "AS",
     "color": "#245a7e",
     "background": "#edf5f8",
     "foreground": "#19435f",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context.",
-    "fallbackLogoUrl": "/data/brand-logos/alaska-airlines.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Alaska Lounge page supplies source context."
   },
   {
     "id": "singapore-airlines",
@@ -393,14 +393,14 @@
     "sourceUrl": "https://www.singaporeair.com/en_UK/sg/flying-withus/before-the-flight/lounges/silverkris/",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "all-routes:brand/singapore-airlines",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/sq/64e86a3a01ed310445daec5d4b51350350513b65a4cf1705277bd2724887d403.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/sq/dfc1c24153712b5206ddbb6604836162388ffc9e72ee5d318259730da920daf8.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/sq/64e86a3a01ed310445daec5d4b51350350513b65a4cf1705277bd2724887d403.png",
     "logoText": "SQ",
     "color": "#24446f",
     "background": "#edf2f8",
     "foreground": "#1f375f",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Singapore Airlines lounge page supplies source context.",
-    "fallbackLogoUrl": "/data/brand-logos/singapore-airlines.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Singapore Airlines lounge page supplies source context."
   },
   {
     "id": "qatar-airways",
@@ -419,14 +419,14 @@
     "sourceUrl": "https://www.qatarairways.com/en-us/lounges.html",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "all-routes:brand/qatar-airways",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/qr/bb207913044d70cce632574255bacef97abbb243b1380453e0c189715f4c32be.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/qr/5a8f23f6e472cb2e0f716fda8e8ee975843cd971068c2cb69d0183d001424471.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/qr/bb207913044d70cce632574255bacef97abbb243b1380453e0c189715f4c32be.png",
     "logoText": "QR",
     "color": "#662046",
     "background": "#f7edf2",
     "foreground": "#662046",
     "status": "candidate",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Qatar Airways lounge pages supply source context.",
-    "fallbackLogoUrl": "/data/brand-logos/qatar-airways.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Qatar Airways lounge pages supply source context."
   },
   {
     "id": "qantas",
@@ -446,14 +446,14 @@
     "sourceUrl": "https://www.qantas.com/en-us/at-the-airport/lounges/locations",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "all-routes:brand/qantas",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/qf/7668c520fe78b8dba00927e04958b4ca10e45395c72ac7191e92b518fed08d90.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/qf/10278afc63bc5ad3192ecfae966fa2072c1a5a0f0f4be38b27fdf818bd20a9ea.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/qf/7668c520fe78b8dba00927e04958b4ca10e45395c72ac7191e92b518fed08d90.png",
     "logoText": "QF",
     "color": "#a81e22",
     "background": "#fff0f0",
     "foreground": "#8f171b",
     "status": "candidate",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Qantas lounge pages supply source context.",
-    "fallbackLogoUrl": "/data/brand-logos/qantas.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Qantas lounge pages supply source context."
   },
   {
     "id": "oneworld",
@@ -468,14 +468,15 @@
     ],
     "sourceUrl": "https://www.oneworld.com/airport-lounges",
     "assetSource": "desk_travel_database",
-    "deskTravelAssetKey": "desk-travel:brand/oneworld",
-    "logoUrl": "/data/brand-logos/oneworld.svg",
+    "deskTravelAssetKey": "all-routes:brand/oneworld",
+    "logoUrl": "https://all-routes.desk.travel/brand-logos/alliances/oneworld.svg",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/alliances/oneworld/ff4596a65981298ac5a6c9ed065c43299428210e7f6ef68e280ccf78b8183121.svg",
     "logoText": "OW",
     "color": "#1f5d8f",
     "background": "#edf4fb",
     "foreground": "#1b4f78",
     "status": "review",
-    "rightsNote": "Desk.Travel managed alliance mark; official public oneworld lounge page supplies source context."
+    "rightsNote": "Alliance logo served from all-routes centralized Cloudflare brand asset registry; official public oneworld lounge page supplies source context."
   },
   {
     "id": "star-alliance",
@@ -492,14 +493,15 @@
     ],
     "sourceUrl": "https://www.staralliance.com/en/lounge-finder",
     "assetSource": "desk_travel_database",
-    "deskTravelAssetKey": "desk-travel:brand/star-alliance",
-    "logoUrl": "/data/brand-logos/star-alliance.svg",
+    "deskTravelAssetKey": "all-routes:brand/star-alliance",
+    "logoUrl": "https://all-routes.desk.travel/brand-logos/alliances/star-alliance.svg",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/alliances/star/8a13ff8d1353d8282c0cbda10940cc48b07bd630cdd0f58e8878602fdb698145.svg",
     "logoText": "SA",
     "color": "#2e343b",
     "background": "#f1f3f5",
     "foreground": "#2e343b",
     "status": "review",
-    "rightsNote": "Desk.Travel managed alliance mark; official public Star Alliance lounge finder supplies source context."
+    "rightsNote": "Alliance logo served from all-routes centralized Cloudflare brand asset registry; official public Star Alliance lounge finder supplies source context."
   },
   {
     "id": "skyteam",
@@ -516,14 +518,15 @@
     ],
     "sourceUrl": "https://www.skyteam.com/en/lounges",
     "assetSource": "desk_travel_database",
-    "deskTravelAssetKey": "desk-travel:brand/skyteam",
-    "logoUrl": "/data/brand-logos/skyteam.svg",
+    "deskTravelAssetKey": "all-routes:brand/skyteam",
+    "logoUrl": "https://all-routes.desk.travel/brand-logos/alliances/skyteam.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/alliances/skyteam/275760f605bc9da86179525da787ba856c99015845de9e800ab777276e91fe3a.png",
     "logoText": "ST",
     "color": "#315a93",
     "background": "#edf2fb",
     "foreground": "#244c82",
     "status": "review",
-    "rightsNote": "Desk.Travel managed alliance mark; official public SkyTeam lounge page supplies source context."
+    "rightsNote": "Alliance logo served from all-routes centralized Cloudflare brand asset registry; official public SkyTeam lounge page supplies source context."
   },
   {
     "id": "turkish-airlines",
@@ -542,14 +545,14 @@
     "sourceUrl": "https://www.turkishairlines.com/en-int/flights/fly-different/turkish-airlines-lounge/",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "all-routes:brand/turkish-airlines",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/tk/702869063e8f60647bd3522fc304df4d883a4e8e0aa4086119f52ee6d49efdc2.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/tk/d918bc77b041b60237f344baec32c0079315f80ee7aaab9502223aed6ab0267f.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/tk/702869063e8f60647bd3522fc304df4d883a4e8e0aa4086119f52ee6d49efdc2.png",
     "logoText": "TK",
     "color": "#b0182b",
     "background": "#fff0f2",
     "foreground": "#821626",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Turkish Airlines lounge page supplies source context.",
-    "fallbackLogoUrl": "/data/brand-logos/turkish-airlines.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Turkish Airlines lounge page supplies source context."
   },
   {
     "id": "etihad",
@@ -567,14 +570,14 @@
     "sourceUrl": "https://www.etihad.com/en/fly-etihad/lounges",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "all-routes:brand/etihad",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ey/b2bba6ed6cfc15e6175bbdf6f437bcbbefd58d53eb2b38986df4943d549945cd.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/ey/c4a5a0c77c7912407527681a323eae8a33dd5d42cb2769f58eeb95ec496de318.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/ey/b2bba6ed6cfc15e6175bbdf6f437bcbbefd58d53eb2b38986df4943d549945cd.png",
     "logoText": "EY",
     "color": "#806744",
     "background": "#f7f1e7",
     "foreground": "#5c4a31",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Etihad lounge page supplies source context.",
-    "fallbackLogoUrl": "/data/brand-logos/etihad.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Etihad lounge page supplies source context."
   },
   {
     "id": "virgin-atlantic",
@@ -592,14 +595,14 @@
     "sourceUrl": "https://flywith.virginatlantic.com/us/en/upper-class-cabin-and-seats/clubhouse-airport-lounge.html",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "all-routes:brand/virgin-atlantic",
-    "logoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/vs/a91132439095f49245fac26e4955b55e1f2c0929d67467b4c0181ebfd693dd2b.png",
+    "logoUrl": "https://src.desk.travel/brand-logos/airlines/vs/dfa73a5ce0af91e4549d01ce9e744bd206c12304ba24b3116005fd160b84d002.png",
+    "fallbackLogoUrl": "https://src.desk.travel/brand-logos/airlines-transparent/vs/a91132439095f49245fac26e4955b55e1f2c0929d67467b4c0181ebfd693dd2b.png",
     "logoText": "VS",
     "color": "#b52635",
     "background": "#fff0f2",
     "foreground": "#861b28",
     "status": "review",
-    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Virgin Atlantic Clubhouse page supplies source context.",
-    "fallbackLogoUrl": "/data/brand-logos/virgin-atlantic.svg"
+    "rightsNote": "Airline logo served from all-routes centralized Cloudflare brand asset registry; official public Virgin Atlantic Clubhouse page supplies source context."
   },
   {
     "id": "plaza-premium",
