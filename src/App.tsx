@@ -564,6 +564,9 @@ function findBrandAssetForText(value: string, brands: LoungeBrandAsset[]) {
 
   const matchesBrand = (brand: LoungeBrandAsset) => {
     const names = [brand.name, brand.id, ...(brand.aliases ?? [])].map(normalizeBrandLookup).filter(Boolean);
+    if (normalizedValue.length <= 2) {
+      return names.some((name) => normalizedValue === name);
+    }
     return names.some(
       (name) =>
         normalizedValue === name ||
@@ -856,22 +859,25 @@ function BrandMark({
     '--brand-mark-line': asset?.color ?? '#aebacc',
   } as CSSProperties;
   const logoUrl = [asset?.logoUrl, asset?.fallbackLogoUrl].find((url) => url && !failedLogoUrls.has(url));
+  const shouldRenderTile = Boolean(logoUrl || asset?.logoText);
 
   return (
-      <span className={`brand-mark ${compact ? 'is-compact' : ''}`} style={markStyle}>
+    <span className={`brand-mark ${compact ? 'is-compact' : ''}`} style={markStyle}>
+      {shouldRenderTile ? (
         <span className="brand-mark-tile" aria-hidden>
-        {logoUrl ? (
-          <img
-            className="brand-mark-img"
-            src={logoUrl}
-            alt=""
-            loading="lazy"
-            onError={() => setFailedLogoUrls((current) => new Set(current).add(logoUrl))}
-          />
-        ) : (
-          (asset?.logoText ?? fallbackLogoText(label))
-        )}
-      </span>
+          {logoUrl ? (
+            <img
+              className="brand-mark-img"
+              src={logoUrl}
+              alt=""
+              loading="lazy"
+              onError={() => setFailedLogoUrls((current) => new Set(current).add(logoUrl))}
+            />
+          ) : (
+            asset?.logoText
+          )}
+        </span>
+      ) : null}
       <span className="brand-mark-name">{label}</span>
     </span>
   );
@@ -2177,9 +2183,12 @@ function DetailPanel({
   return (
     <aside className="detail-panel detail-panel-overlay">
       <div className="detail-panel-head">
-        <div>
-          <h3>{selectedFeature.properties.name}</h3>
-          <span>{detailLocation(selectedFeature)}</span>
+        <div className="detail-title-row">
+          <BrandIconMark asset={brandAsset} label={brandName} />
+          <div>
+            <h3>{selectedFeature.properties.name}</h3>
+            <span>{detailLocation(selectedFeature)}</span>
+          </div>
         </div>
         <button
           type="button"
@@ -2195,7 +2204,7 @@ function DetailPanel({
 
       <div className="detail-panel-body">
         <div className="detail-meta-strip">
-          <BrandMark asset={brandAsset} label={brandName} />
+          <span className="brand-name-pill">{brandName}</span>
           <span className="badge">{selectedFeature.properties.type}</span>
           <span className="code">{locationLabel(selectedFeature)}</span>
           <QualityBadge
@@ -2409,23 +2418,28 @@ function MobileDetailsView({
   return (
     <div className="mobile-selected-view">
       <div className="mobile-selected-summary">
+        <div className="mobile-selected-title-row">
+          <BrandIconMark asset={brandAsset} label={brandName} />
+          <div>
+            <h3>{selectedFeature.properties.name}</h3>
+            <p>{selectedFeature.properties.airportName}</p>
+            <small>{locationLabel(selectedFeature)}</small>
+          </div>
+        </div>
         <div className="mobile-selected-meta">
-        <BrandMark asset={brandAsset} label={brandName} compact />
-        <span className="badge">{selectedFeature.properties.type}</span>
-        <span className="code">{selectedFeature.properties.airportCode}</span>
+          <span className="brand-name-pill">{brandName}</span>
+          <span className="badge">{selectedFeature.properties.type}</span>
+          <span className="code">{selectedFeature.properties.airportCode}</span>
+        </div>
+        <div className="quality-row">
+          <span>{selectedSource?.publisher ?? 'Unknown'}</span>
+          <span className="code">{selectedSource?.sourceId ?? 'unknown'}</span>
+          <span className="code">{formatSourceConfidence(selectedSource?.confidence)}</span>
+          <span className="code">{formatSourceDate(selectedSource?.retrievedAt)}</span>
+          <span className="code">{selectedQuality?.completeness ?? 0}%</span>
+          <span>{selectedQuality?.reviewStatus ?? 'approved'}</span>
+        </div>
       </div>
-      <h3>{selectedFeature.properties.name}</h3>
-      <p>{selectedFeature.properties.airportName}</p>
-      <small>{locationLabel(selectedFeature)}</small>
-      <div className="quality-row">
-        <span>{selectedSource?.publisher ?? 'Unknown'}</span>
-        <span className="code">{selectedSource?.sourceId ?? 'unknown'}</span>
-        <span className="code">{formatSourceConfidence(selectedSource?.confidence)}</span>
-        <span className="code">{formatSourceDate(selectedSource?.retrievedAt)}</span>
-        <span className="code">{selectedQuality?.completeness ?? 0}%</span>
-        <span>{selectedQuality?.reviewStatus ?? 'approved'}</span>
-      </div>
-    </div>
 
       <div className="detail-actions">
         <button

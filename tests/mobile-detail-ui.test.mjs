@@ -43,11 +43,14 @@ test('read-only facility lists use facility emojis', () => {
 });
 
 test('brand logos fill their allocated mark tiles', () => {
-  assert.match(appCss, /\.brand-mark-tile\s*{[^}]*width:\s*38px;[^}]*height:\s*34px;/s);
+  assert.match(appCss, /\.brand-mark-tile\s*{[^}]*width:\s*48px;[^}]*height:\s*40px;/s);
   assert.match(appCss, /\.brand-mark-img\s*{[^}]*width:\s*100%;[^}]*height:\s*100%;/s);
-  assert.match(appCss, /\.brand-icon-mark\s*{[^}]*width:\s*38px;[^}]*height:\s*38px;/s);
+  assert.match(appCss, /\.brand-icon-mark\s*{[^}]*width:\s*46px;[^}]*height:\s*46px;/s);
   assert.match(appCss, /\.brand-icon-mark-img\s*{[^}]*width:\s*100%;[^}]*height:\s*100%;/s);
-  assert.match(appCss, /\.app-shell\.is-mobile \.brand-icon-mark\s*{[^}]*width:\s*40px;[^}]*height:\s*40px;/s);
+  assert.match(appCss, /\.app-shell\.is-mobile \.brand-icon-mark\s*{[^}]*width:\s*46px;[^}]*height:\s*46px;/s);
+  assert.match(appCss, /\.detail-meta-strip\s*{[^}]*justify-content:\s*flex-start;/s);
+  assert.match(appCss, /\.program-family-mark\s*{[^}]*border:\s*1px solid var\(--line-soft\);/s);
+  assert.match(appCss, /\.program-family-mark \.brand-mark\s*{[^}]*border:\s*0;/s);
 });
 
 test('desktop detail close suppresses same-query auto selection', () => {

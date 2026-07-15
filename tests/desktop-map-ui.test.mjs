@@ -39,6 +39,8 @@ test('desktop rail uses command search with structured filters in one panel', ()
   assert.match(appSource, /function ProgramBrandMarks/);
   assert.match(appSource, /<ProgramBrandMarks/);
   assert.match(appSource, /function parseProgramFamily/);
+  assert.match(appSource, /normalizedValue\.length <= 2/);
+  assert.match(appSource, /return names\.some\(\(name\) => normalizedValue === name\)/);
   assert.match(appSource, /one\\s\*world\|oneworld\|star\\s\*alliance\|sky\\s\*team\|skyteam/);
   assert.match(appSource, /sapphireandhigher/);
   assert.match(appSource, /business\|premiumeconomy\|economy/);
