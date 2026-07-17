@@ -200,6 +200,7 @@ test('DFW official parser extracts embedded lounge gate and price evidence', () 
                       },
                     },
                     {
+                      updatedAt: '2026-07-01T00:00:00.000Z',
                       fields: {
                         title: 'Airline Lounges',
                         content: [
@@ -233,6 +234,61 @@ test('DFW official parser extracts embedded lounge gate and price evidence', () 
   assert.deepEqual(capitalOne?.price, { amount: 65, currencyCode: 'USD' });
   assert.ok(records.some((record) => record.name === 'American Airlines Admirals Club' && record.gate === 'Gate A24'));
   assert.ok(records.some((record) => record.name === 'Delta Sky Club' && record.gate === 'Gate E10'));
+});
+
+test('DFW official parser rejects a stale generic airline directory without dropping dedicated lounges', () => {
+  const payload = {
+    props: {
+      pageProps: {
+        page: {
+          fields: {
+            sections: [
+              {
+                contentType: 'tab-section',
+                fields: {
+                  items: [
+                    {
+                      updatedAt: '2025-08-01T00:00:00.000Z',
+                      fields: {
+                        title: 'Capital One Lounge',
+                        content: [
+                          {
+                            updatedAt: '2025-08-01T00:00:00.000Z',
+                            fields: { body: 'The lounge is located inside security in Terminal D near Gate D22.' },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      updatedAt: '2021-01-21T10:31:57.615Z',
+                      fields: {
+                        title: 'Airline Lounges',
+                        content: [
+                          {
+                            updatedAt: '2021-04-30T22:25:22.567Z',
+                            fields: {
+                              body:
+                                '- British Airways Lounge at Terminal D, D24\\n- Delta Sky Club at Terminal E, E10',
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  };
+
+  const records = parseDfwOfficialLoungeRecords(
+    `<script id="__NEXT_DATA__" type="application/json">${JSON.stringify(payload)}</script>`,
+  );
+
+  assert.deepEqual(records.map((record) => record.name), ['Capital One Lounge']);
 });
 
 test('SFO official lounge parser extracts terminal, near-gate text, and hours', () => {

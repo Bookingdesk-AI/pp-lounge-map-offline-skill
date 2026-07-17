@@ -26,6 +26,15 @@ test('The Club parser extracts official lounge hours and price from React Flight
   assert.equal(records[0].sourceUrl, 'https://www.theclubairportlounges.com/lounges/atl-the-club-concourse-f');
 });
 
+test('The Club parser treats SJC A15 as a gate within Terminal A', () => {
+  const html = String.raw`<script>self.__next_f.push([1,"1:{}\n2:{}\n3:{}\n4:[]\n5:{\"data\":\"$3\",\"marks\":\"$4\",\"value\":\"San Jose International Airport, Terminal A\",\"nodeType\":\"text\"}\n6:[\"$5\"]\n7:{\"data\":\"$2\",\"content\":\"$6\",\"nodeType\":\"paragraph\"}\n8:[\"$7\"]\n9:{\"data\":\"$1\",\"content\":\"$8\",\"nodeType\":\"document\"}\na:{\"json\":\"$9\"}\nb:{\"amount\":\"55.0\",\"currencyCode\":\"USD\"}\nc:{\"US\":\"$b\"}\nd:{\"id\":\"gid://shopify/Product/1\",\"title\":\"The Club SJC, Terminal A15\",\"prices\":\"$c\"}\ne:{\"__typename\":\"Club\",\"address\":\"$a\",\"title\":\"SJC  |  San Jose\",\"description\":\"Terminal A15\",\"slug\":\"sjc-the-club-terminal-a15\",\"shopifyProductData\":\"$d\"}\n"])</script>`;
+
+  const [record] = parseTheClubStructuredRecords(html);
+
+  assert.equal(record?.terminal, 'Terminal A');
+  assert.equal(record?.gate, 'Gate A15');
+});
+
 test('The Club detail merge preserves official gate directions', () => {
   const record = {
     name: 'The Club, SFO',
@@ -153,4 +162,51 @@ test('The Club candidate conversion treats official lounge levels as near-positi
   assert.equal(records.length, 1);
   assert.equal(records[0].location.gate, 'Mezzanine Level');
   assert.ok(records[0].sources[0].fieldCoverage.includes('location.gate'));
+});
+
+test('The Club candidate conversion rejects list entries redirected to another operator', () => {
+  const records = createNonPriorityCandidateRecords({
+    generatedAt: '2026-07-16T00:00:00.000Z',
+    features: [
+      {
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [-0.1821, 51.1537] },
+        properties: {
+          airportCode: 'LGW',
+          airportName: 'London Gatwick Airport',
+          city: 'London',
+          country: 'United Kingdom',
+        },
+      },
+    ],
+    report: {
+      generatedAt: '2026-07-16T00:00:00.000Z',
+      sources: [
+        {
+          sourceId: 'airport-dimensions',
+          status: 'fetched',
+          finalUrl: 'https://www.theclubairportlounges.com/lounges',
+          structuredApi: {
+            pages: [
+              {
+                url: 'https://www.theclubairportlounges.com/lounges/lgw-club-aspire-south-terminal',
+                finalUrl: 'https://no1lounges.com/locations/london-gatwick/',
+              },
+            ],
+          },
+          structuredRecords: [
+            {
+              sourceRecordId: 'LGW-lgw-club-aspire-south-terminal',
+              name: 'The Club LGW',
+              airportCode: 'LGW',
+              terminal: 'North & South Terminal',
+              sourceUrl: 'https://www.theclubairportlounges.com/lounges/lgw-club-aspire-south-terminal',
+            },
+          ],
+        },
+      ],
+    },
+  });
+
+  assert.equal(records.length, 0);
 });

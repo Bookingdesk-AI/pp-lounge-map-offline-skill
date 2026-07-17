@@ -33,7 +33,7 @@ It checks the site shell, catalog JSON, admin guard, `/healthz`, `/mcp`, `/sse`,
 For diagnosis, verify health:
 
 ```bash
-curl -i https://loungeguru.desk.travel/healthz
+curl -i https://lounge-guru-mcp.dev-4ee.workers.dev/healthz
 ```
 
 Verify the canonical MCP route is no longer serving HTML:
@@ -42,13 +42,13 @@ Verify the canonical MCP route is no longer serving HTML:
 curl -i \
   -H 'accept: application/json, text/event-stream' \
   -H 'content-type: application/json' \
-  https://loungeguru.desk.travel/mcp
+  https://lounge-guru-mcp.dev-4ee.workers.dev/mcp
 ```
 
 Verify legacy SSE transport:
 
 ```bash
-curl -i -H 'accept: text/event-stream' https://loungeguru.desk.travel/sse
+curl -i -H 'accept: text/event-stream' https://lounge-guru-mcp.dev-4ee.workers.dev/sse
 ```
 
 The response should advertise an `event: endpoint` pointing at `/messages?sessionId=...`.

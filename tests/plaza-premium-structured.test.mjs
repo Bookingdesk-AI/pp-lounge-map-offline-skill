@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 import {
   extractPlazaPremiumFindUrls,
+  mergePlazaPremiumDetailRecord,
   parsePlazaPremiumStructuredRecords,
 } from '../scripts/lib/plaza-premium-structured.mjs';
 
@@ -83,6 +84,7 @@ test('Plaza Premium parser extracts detail page price without inventing hours', 
           <span class="tag pink xs"><img alt="Bar"> Bar </span>
           <span class="tag pink xs"><img alt="Wi-Fi"> Wi-Fi </span>
         </div>
+        <p>Please verify your membership within 24 hours.</p>
       </body>
     </html>
   `;
@@ -99,6 +101,162 @@ test('Plaza Premium parser extracts detail page price without inventing hours', 
     currencyCode: 'USD',
   });
   assert.deepEqual(records[0].openHours, []);
+});
+
+test('Plaza Premium parser extracts published weekday operation times from detail pages', () => {
+  const records = parsePlazaPremiumStructuredRecords(`
+    <html>
+      <head>
+        <title>Lounge in Cleveland | Vino Volo | Plaza Premium Lounge</title>
+      </head>
+      <body>
+        <section class="pageTitle greyBg">
+          <h2 class="title text-start mb-0">
+            Vino Volo
+            <small>Concourse B, Gate B2, Cleveland Hopkins International Airport (CLE)</small>
+          </h2>
+        </section>
+        <p>
+          <strong>Operation Time</strong><br>
+          Sunday 9:00 AM - 20:30PM<br>
+          Monday to Wednesday: 5:30 AM - 19:30 PM<br>
+          Thursday to Friday: 9 AM - 19:30 PM<br>
+          Saturday: 9:00 AM - 18:00 PM
+        </p>
+        <p>Please verify your membership within 24 hours.</p>
+      </body>
+    </html>
+  `, {
+    url: 'https://www.plazapremiumlounge.com/en-uk/find/americas/united-states-of-america/cleveland-hopkins-international-airport-cle/cleveland-hopkins-international-airport-cle/vino-volo-terminal-b-gate-b2',
+  });
+
+  assert.equal(records.length, 1);
+  assert.deepEqual(records[0].openHours, [
+    { Day: 1, OpeningHour: '05:30', ClosingHour: '19:30' },
+    { Day: 2, OpeningHour: '05:30', ClosingHour: '19:30' },
+    { Day: 3, OpeningHour: '05:30', ClosingHour: '19:30' },
+    { Day: 4, OpeningHour: '09:00', ClosingHour: '19:30' },
+    { Day: 5, OpeningHour: '09:00', ClosingHour: '19:30' },
+    { Day: 6, OpeningHour: '09:00', ClosingHour: '18:00' },
+    { Day: 0, OpeningHour: '09:00', ClosingHour: '20:30' },
+  ]);
+  assert.equal(records[0].hoursText, '');
+});
+
+test('Plaza Premium parser accepts observed local currencies and comma-grouped detail prices', () => {
+  const html = `
+    <html>
+      <head>
+        <title>Lounge in Ambon | Concordia Lounge | Plaza Premium Lounge</title>
+      </head>
+      <body>
+        <div class="lounge-booking-price">
+          <span>from</span>
+          <b>IDR 150,000.00</b>
+        </div>
+        <section class="pageTitle greyBg">
+          <h2 class="title text-start mb-0">
+            Concordia Lounge Ambon by IAS Hospitality
+            <small>Domestic Departures, Pattimura Airport (AMQ)</small>
+          </h2>
+        </section>
+      </body>
+    </html>
+  `;
+
+  const records = parsePlazaPremiumStructuredRecords(html, {
+    url: 'https://www.plazapremiumlounge.com/en-uk/find/asia/indonesia/ambon/concordia-lounge',
+  });
+
+  assert.equal(records.length, 1);
+  assert.equal(records[0].airportCode, 'AMQ');
+  assert.deepEqual(records[0].price, {
+    amount: 150000,
+    currencyCode: 'IDR',
+  });
+});
+
+test('Plaza Premium parser rejects explicit zero-price placeholders', () => {
+  const html = `
+    <html>
+      <head>
+        <title>Lounge in Atlanta | Vino Volo | Plaza Premium Lounge</title>
+      </head>
+      <body>
+        <div class="lounge-booking-price"><span>from</span><b>USD 0.00</b></div>
+        <section class="pageTitle greyBg">
+          <h2 class="title text-start mb-0">
+            Vino Volo
+            <small>Terminal T, Gate 24, Hartsfield-Jackson Atlanta International Airport (ATL)</small>
+          </h2>
+        </section>
+      </body>
+    </html>
+  `;
+
+  const records = parsePlazaPremiumStructuredRecords(html, {
+    url: 'https://www.plazapremiumlounge.com/en-uk/find/americas/united-states/atlanta/vino-volo',
+  });
+
+  assert.equal(records.length, 1);
+  assert.equal(records[0].price, null);
+});
+
+test('Plaza Premium detail merge adds price without dropping list-page hours', () => {
+  const merged = mergePlazaPremiumDetailRecord(
+    {
+      sourceRecordId: 'CLE-vino-volo-terminal-b',
+      name: 'Vino Volo',
+      airportCode: 'CLE',
+      terminal: 'Terminal B',
+      openHours: [{ Day: 1, OpeningHour: '05:00', ClosingHour: '21:00' }],
+      hoursText: '',
+      amenities: { WiFi: true },
+      sourceUrl: 'https://www.plazapremiumlounge.com/en-uk/find/cle/vino-volo',
+    },
+    {
+      sourceRecordId: 'CLE-vino-volo-detail',
+      name: 'Vino Volo',
+      airportCode: 'CLE',
+      terminal: 'Terminal B',
+      openHours: [],
+      hoursText: '',
+      amenities: { Bar: true },
+      price: { amount: 35, currencyCode: 'USD' },
+      sourceUrl: 'https://www.plazapremiumlounge.com/en-uk/find/cle/vino-volo',
+    },
+  );
+
+  assert.equal(merged.sourceRecordId, 'CLE-vino-volo-terminal-b');
+  assert.equal(merged.openHours.length, 1);
+  assert.deepEqual(merged.price, { amount: 35, currencyCode: 'USD' });
+  assert.deepEqual(merged.amenities, { WiFi: true, Bar: true });
+});
+
+test('Plaza Premium detail merge adds official hours without requiring a price', () => {
+  const merged = mergePlazaPremiumDetailRecord(
+    {
+      sourceRecordId: 'CLE-vino-volo-concourse-b',
+      name: 'Vino Volo',
+      airportCode: 'CLE',
+      openHours: [],
+      hoursText: '',
+      price: null,
+      sourceUrl: 'https://www.plazapremiumlounge.com/en-uk/find/cle/vino-volo',
+    },
+    {
+      sourceRecordId: 'CLE-vino-volo-detail',
+      name: 'Vino Volo',
+      airportCode: 'CLE',
+      openHours: [{ Day: 1, OpeningHour: '05:30', ClosingHour: '19:30' }],
+      hoursText: '',
+      price: null,
+      sourceUrl: 'https://www.plazapremiumlounge.com/en-uk/find/cle/vino-volo',
+    },
+  );
+
+  assert.deepEqual(merged.openHours, [{ Day: 1, OpeningHour: '05:30', ClosingHour: '19:30' }]);
+  assert.equal(merged.price, null);
 });
 
 test('Plaza Premium parser extracts list-page hours and excludes non-lounge services', () => {

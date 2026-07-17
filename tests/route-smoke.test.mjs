@@ -20,8 +20,8 @@ function jsonResponse(body, init = {}) {
 }
 
 test('route smoke parses HTTPS base URL and thresholds', () => {
-  assert.deepEqual(parseRouteSmokeArgs(['--base-url=https://loungeguru.desk.travel/path', '--min-records=2000']), {
-    baseUrl: 'https://loungeguru.desk.travel',
+  assert.deepEqual(parseRouteSmokeArgs(['--base-url=https://lounge-guru-mcp.dev-4ee.workers.dev/path', '--min-records=2000']), {
+    baseUrl: 'https://lounge-guru-mcp.dev-4ee.workers.dev',
     minRecords: 2000,
     timeoutMs: 12000,
   });
@@ -35,7 +35,7 @@ test('route smoke verifies health, MCP guard, and SSE endpoint event', async () 
   const calls = [];
   const logs = [];
   const summary = await runRouteSmoke({
-    args: ['--base-url=https://loungeguru.desk.travel', '--min-records=2600'],
+    args: ['--base-url=https://lounge-guru-mcp.dev-4ee.workers.dev', '--min-records=2600'],
     fetchImpl: async (url) => {
       calls.push(String(url));
       if (String(url).endsWith('/healthz')) {
@@ -70,9 +70,9 @@ test('route smoke verifies health, MCP guard, and SSE endpoint event', async () 
   });
 
   assert.deepEqual(calls, [
-    'https://loungeguru.desk.travel/healthz',
-    'https://loungeguru.desk.travel/mcp',
-    'https://loungeguru.desk.travel/sse',
+    'https://lounge-guru-mcp.dev-4ee.workers.dev/healthz',
+    'https://lounge-guru-mcp.dev-4ee.workers.dev/mcp',
+    'https://lounge-guru-mcp.dev-4ee.workers.dev/sse',
   ]);
   assert.equal(summary.ok, true);
   assert.equal(summary.totalFeatures, 2644);
@@ -112,8 +112,11 @@ test('route smoke fails when MCP route serves HTML', async () => {
 
 test('package exposes route smoke command', () => {
   assert.equal(packageJson.scripts['smoke:routes'], 'node scripts/smoke-routes.mjs');
-  assert.match(packageJson.scripts['smoke:production'], /smoke:deploy/);
-  assert.match(packageJson.scripts['smoke:production'], /smoke:routes/);
-  assert.match(packageJson.scripts['smoke:production'], /smoke:ui/);
-  assert.match(packageJson.scripts['smoke:production'], /loungeguru\.desk\.travel/);
+  assert.match(packageJson.scripts['smoke:production'], /smoke:production:web/);
+  assert.match(packageJson.scripts['smoke:production'], /smoke:production:worker/);
+  assert.match(packageJson.scripts['smoke:production:web'], /smoke:deploy/);
+  assert.match(packageJson.scripts['smoke:production:web'], /smoke:ui/);
+  assert.match(packageJson.scripts['smoke:production:worker'], /smoke:routes/);
+  assert.match(packageJson.scripts['smoke:production:web'], /loungeguru-desk-travel\.pages\.dev/);
+  assert.match(packageJson.scripts['smoke:production:worker'], /lounge-guru-mcp\.dev-4ee\.workers\.dev/);
 });

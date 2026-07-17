@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T00:31:42.825Z",
+  "generatedAt": "2026-07-17T06:45:08.000Z",
   "coverageGoalId": "lounge-guru-worldwide-coverage",
   "sourceRunId": "cloudflare-report-2026-07-13T10-52-38-985Z",
   "policy": {
@@ -10,7 +10,7 @@
   },
   "summary": {
     "missingFamilies": 0,
-    "memberGaps": 10,
+    "memberGaps": 8,
     "tasks": 0,
     "readyTasks": 0,
     "blockedTasks": 0,
@@ -57,27 +57,6 @@
         "https://www.collinsongroup.com/"
       ],
       "rightsNote": "Official Collinson corporate surface; use as network evidence and licensing path, not a raw scrape target.",
-      "familyPresent": true,
-      "terminalFamilyBlocked": false
-    },
-    {
-      "familyId": "bank-issuer-programs",
-      "familyLabel": "Bank issuer lounge programs",
-      "sourceId": "amex-global-lounge-collection",
-      "publisher": "American Express Global Lounge Collection",
-      "adapter": "official_page",
-      "sourceStatus": "manual_review",
-      "runStatus": "not_run",
-      "runRecords": 0,
-      "cloudflareSnapshot": false,
-      "action": "cloudflare_snapshot",
-      "status": "ready",
-      "next": "Snapshot",
-      "url": "https://global.americanexpress.com/lounge-access/the-platinum-card",
-      "fetchUrls": [
-        "https://global.americanexpress.com/lounge-access/the-platinum-card"
-      ],
-      "rightsNote": "Official public Amex page; treat partner eligibility as source evidence, not canonical operator data.",
       "familyPresent": true,
       "terminalFamilyBlocked": false
     },
@@ -178,30 +157,6 @@
         "https://www.united.com/en/us/fly/travel/airport/lounge-access.html"
       ],
       "rightsNote": "Official public airline and official United for Business lounge pages.",
-      "familyPresent": true,
-      "terminalFamilyBlocked": false
-    },
-    {
-      "familyId": "operator-operated-lounges",
-      "familyLabel": "Independent and contract lounge operators",
-      "sourceId": "aspire-lounges",
-      "publisher": "Aspire Lounges",
-      "adapter": "official_page",
-      "sourceStatus": "candidate",
-      "runStatus": "fetched",
-      "runRecords": 9,
-      "cloudflareSnapshot": true,
-      "action": "review_import",
-      "status": "ready",
-      "next": "Review",
-      "url": "https://www.executivelounges.com/airport-lounges",
-      "fetchUrls": [
-        "https://www.executivelounges.com/airport-lounges",
-        "https://www.aspirelounges.com/airport-lounges/",
-        "https://www.aspirelounges.com/",
-        "https://no1lounges.com/partner-lounges/aspire-lounges/"
-      ],
-      "rightsNote": "Official Aspire and official operator partner location surfaces; retain URL provenance for every imported field.",
       "familyPresent": true,
       "terminalFamilyBlocked": false
     },

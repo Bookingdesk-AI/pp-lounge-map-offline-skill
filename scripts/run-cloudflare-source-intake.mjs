@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const DEFAULT_BASE_URL = 'https://loungeguru.desk.travel';
+const DEFAULT_BASE_URL = 'https://lounge-guru-mcp.dev-4ee.workers.dev';
 const DEFAULT_TIMEOUT_MS = 60000;
 
 export function parseSourceIds(value) {

@@ -76,6 +76,10 @@ function airportCodeFromLocation(location, fallbackCode) {
   if (/railway\s+station/i.test(text)) {
     return '';
   }
+  const explicitCode = text.match(/\(([A-Z0-9]{3})\)\s*$/)?.[1];
+  if (explicitCode) {
+    return explicitCode;
+  }
   const airportNameCodes = [
     [/london\s+heathrow\s+airport/i, 'LHR'],
     [/london\s+gatwick\s+airport/i, 'LGW'],
@@ -131,11 +135,13 @@ function concourseFromLocation(location) {
 
 function parsePrice(value) {
   const text = clean(value);
-  const match = text.match(/\b(USD|GBP|EUR|CAD|AUD|HKD|SGD|MYR|AED|SAR|TWD|JPY|CNY)\s*([0-9]+(?:\.[0-9]{1,2})?)/i);
+  const match = text.match(
+    /\b(USD|GBP|EUR|CAD|AUD|HKD|SGD|MYR|AED|SAR|TWD|JPY|CNY|IDR|SEK|THB|INR|NZD|DKK|ZAR|BRL|MOP)\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]{1,2})?|[0-9]+(?:\.[0-9]{1,2})?)/i,
+  );
   if (!match) {
     return null;
   }
-  const amount = Number(match[2]);
+  const amount = Number(match[2].replace(/,/g, ''));
   if (!Number.isFinite(amount) || amount <= 0) {
     return null;
   }
@@ -173,13 +179,64 @@ function dailyHours(opening, closing) {
   }));
 }
 
+const DAY_INDEX = new Map([
+  ['monday', 1],
+  ['tuesday', 2],
+  ['wednesday', 3],
+  ['thursday', 4],
+  ['friday', 5],
+  ['saturday', 6],
+  ['sunday', 0],
+]);
+
+const ORDERED_DAY_NAMES = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+function dayRange(firstDay, lastDay = firstDay) {
+  const first = ORDERED_DAY_NAMES.indexOf(clean(firstDay).toLowerCase());
+  const last = ORDERED_DAY_NAMES.indexOf(clean(lastDay).toLowerCase());
+  if (first < 0 || last < first) {
+    return [];
+  }
+  return ORDERED_DAY_NAMES.slice(first, last + 1).map((day) => DAY_INDEX.get(day));
+}
+
+function parseWeekdayHours(value) {
+  const text = stripHtml(value);
+  const time = '\\d{1,2}(?::?\\d{2})?\\s*(?:am|pm)?';
+  const pattern = new RegExp(
+    `\\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)(?:\\s+(?:to|-)\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))?\\s*:?\\s*(${time})\\s*-\\s*(${time})`,
+    'gi',
+  );
+  const byDay = new Map();
+
+  for (const match of text.matchAll(pattern)) {
+    const opening = parseTime(match[3]);
+    const closing = parseTime(match[4]);
+    if (!opening || !closing) {
+      continue;
+    }
+    for (const day of dayRange(match[1], match[2] || match[1])) {
+      byDay.set(day, { Day: day, OpeningHour: opening, ClosingHour: closing });
+    }
+  }
+
+  return [1, 2, 3, 4, 5, 6, 0].map((day) => byDay.get(day)).filter(Boolean);
+}
+
 function parseOpenHours(value) {
-  const text = clean(value);
+  const text = stripHtml(value);
   if (/\b24\s*(?:hours?|hrs?)\b|\b24\s*\/\s*7\b/i.test(text)) {
     return [1, 2, 3, 4, 5, 6, 0].map((day) => ({ Day: day, OpenAllDay: true }));
   }
 
-  const match = text.match(/\b(\d{1,2}:?\d{2}\s*(?:am|pm)?)\s*-\s*(\d{1,2}:?\d{2}\s*(?:am|pm)?)\s*(?:daily|every\s+day)?\b/i);
+  const weekdayHours = parseWeekdayHours(text);
+  if (weekdayHours.length > 0) {
+    return weekdayHours;
+  }
+
+  const match = text.match(
+    /\b(\d{1,2}(?::?\d{2})?\s*(?:am|pm)?)\s*-\s*(\d{1,2}(?::?\d{2})?\s*(?:am|pm)?)\s*(?:daily|every\s+day)?\b/i,
+  );
   const opening = parseTime(match?.[1]);
   const closing = parseTime(match?.[2]);
   return opening && closing ? dailyHours(opening, closing) : [];
@@ -193,6 +250,13 @@ function rawHoursText(cardHtml) {
     return '';
   }
   return text;
+}
+
+function operationHoursText(value) {
+  const match = String(value ?? '').match(
+    /Operation\s*Time(?:&nbsp;|\s|<[^>]+>)*([\s\S]*?)(?=<\/p>|<div[^>]*class=["'][^"']*\baccordion-item\b|<h[1-6]\b|$)/i,
+  );
+  return stripHtml(match?.[1]);
 }
 
 function amenitiesFromCard(cardHtml) {
@@ -279,8 +343,9 @@ function recordFromBlock(block, { code, sourceUrl }) {
   const terminal = terminalFromLocation(block.location);
   const amenities = amenitiesFromCard(block.html);
   const price = parsePrice(block.html);
-  const openHours = parseOpenHours(block.html);
-  const hoursText = openHours.length > 0 ? '' : rawHoursText(block.html);
+  const publishedHoursText = operationHoursText(block.html) || rawHoursText(block.html);
+  const openHours = parseOpenHours(publishedHoursText);
+  const hoursText = openHours.length > 0 ? '' : publishedHoursText;
 
   return {
     sourceRecordId: `${airportCode}-${slugify(block.name)}-${slugify(terminal || block.location)}`,
@@ -318,4 +383,30 @@ export function parsePlazaPremiumStructuredRecords(html, { url = '' } = {}) {
   return [...byId.values()].sort((first, second) =>
     `${first.airportCode}-${first.name}`.localeCompare(`${second.airportCode}-${second.name}`),
   );
+}
+
+export function mergePlazaPremiumDetailRecord(base, detail) {
+  if (!base || !detail) {
+    return base ?? detail ?? null;
+  }
+  return {
+    ...base,
+    ...detail,
+    sourceRecordId: base.sourceRecordId,
+    name: base.name || detail.name,
+    airportCode: base.airportCode || detail.airportCode,
+    airportName: base.airportName || detail.airportName,
+    terminal: detail.terminal || base.terminal,
+    concourse: detail.concourse || base.concourse,
+    near: detail.near || base.near,
+    amenities: {
+      ...(base.amenities ?? {}),
+      ...(detail.amenities ?? {}),
+    },
+    openHours: detail.openHours?.length ? detail.openHours : base.openHours,
+    hoursText: detail.hoursText || base.hoursText,
+    price: detail.price ?? base.price,
+    currencyCode: detail.currencyCode || base.currencyCode,
+    sourceUrl: base.sourceUrl || detail.sourceUrl,
+  };
 }

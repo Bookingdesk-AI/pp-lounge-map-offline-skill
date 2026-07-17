@@ -1344,6 +1344,22 @@ function dfwAirlineRecords(body, url) {
   return records;
 }
 
+function dfwItemUpdatedAt(item) {
+  const timestamps = [item?.updatedAt, ...(item?.fields?.content ?? []).map((entry) => entry?.updatedAt)]
+    .map((value) => Date.parse(value))
+    .filter(Number.isFinite);
+  return timestamps.length > 0 ? Math.max(...timestamps) : null;
+}
+
+function staleDfwAirlineDirectory(item, items) {
+  const updatedAt = dfwItemUpdatedAt(item);
+  const latestUpdatedAt = Math.max(...items.map(dfwItemUpdatedAt).filter(Number.isFinite));
+  if (!Number.isFinite(updatedAt) || !Number.isFinite(latestUpdatedAt)) {
+    return false;
+  }
+  return latestUpdatedAt - updatedAt > 365 * 24 * 60 * 60 * 1000;
+}
+
 export function parseDfwOfficialLoungeRecords(html, { url = 'https://www.dfwairport.com/explore/lounges/' } = {}) {
   const payload = nextDataPayload(html);
   const tabSection = payload?.props?.pageProps?.page?.fields?.sections?.find((section) => section?.contentType === 'tab-section');
@@ -1356,6 +1372,9 @@ export function parseDfwOfficialLoungeRecords(html, { url = 'https://www.dfwairp
       continue;
     }
     if (title === 'Airline Lounges') {
+      if (staleDfwAirlineDirectory(item, items)) {
+        continue;
+      }
       records.push(...dfwAirlineRecords(body, url));
       continue;
     }

@@ -18,6 +18,17 @@ function stripHtml(value) {
   return clean(String(value ?? '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, ' '));
 }
 
+function loungeContentText(html) {
+  const source = String(html ?? '');
+  const main = source.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1] ?? source;
+  return stripHtml(
+    main
+      .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
+      .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<noscript\b[\s\S]*?<\/noscript>/gi, ' '),
+  );
+}
+
 function slugify(value) {
   return clean(value)
     .toLowerCase()
@@ -168,7 +179,10 @@ function dailyHours(opening, closing) {
 
 function parseHours(text) {
   const value = clean(text);
-  if (/\b24\s*hours?\b/i.test(value)) {
+  if (
+    /\b(?:open(?:ing)?\s*hours?\s*(?::|are)?\s*|open\s+|operates?\s+)(?:daily\s+)?24\s*hours?\b/i.test(value) ||
+    /\b24\s*hours?\s*(?:daily|a\s+day)\b/i.test(value)
+  ) {
     return dailyHours('00:00', '23:59');
   }
 
@@ -204,7 +218,7 @@ function sourceRecordId(record) {
 
 export function parseQatarAirwaysLoungeRecord(html, { url = '' } = {}) {
   const hint = hintForUrl(url);
-  const text = stripHtml(html);
+  const text = loungeContentText(html);
   const title = titleFromHtml(html);
   const airportCode =
     hint?.airportCode ||

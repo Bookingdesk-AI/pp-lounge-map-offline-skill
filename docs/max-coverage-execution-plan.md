@@ -1,6 +1,6 @@
 # Lounge Guru Max Coverage Plan
 
-Updated: 2026-07-14
+Updated: 2026-07-16
 
 Objective: make Cloudflare D1 the canonical worldwide Lounge Guru catalog, with maximum official/public lounge coverage, field-level evidence, deterministic dedupe, and zero review debt.
 
@@ -10,21 +10,21 @@ Source of truth for this section: `public/data/coverage-gap-report.json`, `publi
 
 | Metric | Current | Terminal target | Gap |
 | --- | ---: | ---: | ---: |
-| Approved records | 3,445 | >= 3,000 | 0 |
-| Non-Priority Pass records | 2,021 | >= 1,300 | 0 |
+| Approved records | 3,197 | >= 3,000 | 0 |
+| Non-Priority Pass records | 1,872 | >= 1,300 | 0 |
 | Review records | 0 | 0 | 0 |
 | Unknown airport records | 0 | 0 | 0 |
 | Records without sources | 0 | 0 | 0 |
 | Records without field evidence | 0 | 0 | 0 |
-| Hours coverage | 3,336 / 3,445 = 96.84% | >= 97% | 6 fields |
-| Gate / near-gate coverage | 1,561 / 3,445 = 45.31% | >= 45% | 0 |
-| Price coverage | 948 / 3,445 = 27.52% | >= 25% | 0 |
+| Hours coverage | 3,127 / 3,197 = 97.81% | >= 99% | 39 fields |
+| Gate / near-gate coverage | 1,977 / 3,197 = 61.84% | >= 60% | 0 |
+| Price coverage | 904 / 3,197 = 28.28% | >= 40% | 375 fields |
 | Source-family coverage | 100% | 100% | 0 |
-| Cloudflare source evidence | 16 / 16 fetched sources | 100% | 0 |
+| Cloudflare source evidence | 5 / 5 source-proof lanes | 100% | 0 |
 
-Terminal status: blocked only by `hours_coverage_below_target`.
+Phase 3 terminal status: blocked by hours and price/access coverage.
 
-Immediate target: add or merge six official hours fields, then pass `npm run goal:coverage`.
+Immediate target: add 39 official hours fields and 375 official price/access offers at the current catalog size without weakening identity or provenance rules.
 
 ## Max Coverage Definition
 
@@ -115,17 +115,17 @@ Issuer and pass pages can prove access. They cannot overwrite stronger operator,
 
 ## Execution Plan
 
-### Phase 0: Close Current Terminal Blocker
+### Phase 0: Preserve Terminal Gate
 
-Goal: make the existing catalog pass strict validation.
+Goal: keep the existing catalog passing strict validation while enrichment continues.
 
 Actions:
 
 1. Rebuild current reports: `npm run build:canonical-data`.
-2. Inspect missing hours by physical lounge identity, not source-candidate count.
+2. Inspect missing fields by physical lounge identity, not source-candidate count.
 3. Exclude non-physical access-pass products from Plaza Premium and similar operator pages.
 4. Merge official candidates into stronger existing records when the same physical lounge is proven by airport, terminal, normalized name, and compatible gate/location.
-5. Add official hours evidence only from operator, airline, airport, or approved source data.
+5. Add official hours, gate, and price evidence only from operator, airline, airport, or approved source data.
 6. Rebuild canonical, MCP, and offline artifacts.
 7. Run terminal validation.
 
@@ -150,7 +150,7 @@ Actions:
 
 Acceptance:
 
-- D1 has 3,445 or more approved records.
+- D1 has the current approved publication run, starting from 3,197 records.
 - D1 has zero review records.
 - D1 has zero unknown-airport records.
 - D1 latest validation row matches `coverage-gap-report.json`.
@@ -183,13 +183,13 @@ Acceptance per lane:
 
 Goal: move from terminal v1 coverage to production-grade depth.
 
-Targets after Phase 0:
+Current validated baseline:
 
 | Metric | Current | Next quality target |
 | --- | ---: | ---: |
-| Hours coverage | 96.84% | 99% |
-| Gate / near-gate coverage | 45.31% | 60% |
-| Price coverage | 27.52% | 40% |
+| Hours coverage | 97.81% | 99% |
+| Gate / near-gate coverage | 61.84% | 60% maintained |
+| Price coverage | 28.28% | 40% |
 | Official source families | 100% | 100% maintained |
 | Review queue | 0 | 0 maintained |
 
@@ -296,4 +296,4 @@ Max coverage v1 is done when:
 - records without field evidence are zero;
 - production UI hides dev-only proof panels.
 
-Max coverage remains an ongoing crawl-and-review program after v1. The monthly maintenance gate is: rerun source probes, refresh official snapshots, diff field changes, resolve conflicts, publish a new D1 catalog run, and smoke `loungeguru.desk.travel`.
+Max coverage remains an ongoing crawl-and-review program after v1. The monthly maintenance gate is: rerun source probes, refresh official snapshots, diff field changes, resolve conflicts, publish a new D1 catalog run, and smoke `loungeguru-desk-travel.pages.dev`.

@@ -16,7 +16,35 @@ function clean(value) {
 }
 
 function stripHtml(value) {
-  return clean(String(value ?? '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, ' '));
+  return clean(
+    String(value ?? '')
+      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<br\s*\/?>/gi, ' ')
+      .replace(/<[^>]+>/g, ' '),
+  );
+}
+
+export function parseAdmiralsClubOneDayPass(html, { url = '' } = {}) {
+  const text = stripHtml(html);
+  const amount = Number(
+    text.match(/\bOne-Day Pass\b[\s\S]{0,500}?\bfor\s+\$([0-9]+(?:\.[0-9]{1,2})?)/i)?.[1],
+  );
+  const eligibility = text.match(
+    /Domestic and international Admirals Club[^.]*\(based on lounge capacity\)/i,
+  )?.[0];
+  const excludesClosed = /Excludes clubs that are currently closed/i.test(text);
+  if (!Number.isFinite(amount) || amount <= 0 || !eligibility || !excludesClosed) {
+    return null;
+  }
+  return {
+    amount,
+    currencyCode: 'USD',
+    label: `USD ${amount} One-Day Pass`,
+    sourceUrl: url,
+    eligibility,
+    excludesClosed: true,
+  };
 }
 
 function slugify(value) {

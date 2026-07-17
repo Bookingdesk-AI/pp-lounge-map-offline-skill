@@ -22,15 +22,42 @@ function hasExplicitPriceOffer(record) {
   return (record.accessOffers ?? []).some((offer) => Number.isFinite(Number(offer.amount)) && hasText(offer.currency));
 }
 
+function hasSourceFieldCoverage(record, field) {
+  return (record.sources ?? []).some((source) => (source.fieldCoverage ?? []).includes(field));
+}
+
+function hasSourceForAccessOffer(record, offer) {
+  const offerSourceId = String(offer?.sourceId ?? '').trim();
+  const offerUrl = String(offer?.url ?? '').trim();
+  return (record.sources ?? []).some((source) => {
+    if (source.sourceId !== offerSourceId || !(source.fieldCoverage ?? []).includes('access.accessOffers')) {
+      return false;
+    }
+    const sourceUrl = String(source.url ?? '').trim();
+    return !offerUrl || !sourceUrl || sourceUrl === offerUrl;
+  });
+}
+
+function hasProvenAccessOffer(record) {
+  return (record.accessOffers ?? []).some(
+    (offer) => Number.isFinite(Number(offer.amount)) && hasText(offer.currency) && hasSourceForAccessOffer(record, offer),
+  );
+}
+
 function fieldCoverageStats(records) {
   const totals = records.reduce(
     (stats, record) => {
-      stats.hours += hasText(record.operations?.hours) ? 1 : 0;
-      stats.gates += hasText(record.location?.gate) ? 1 : 0;
-      stats.prices += hasExplicitPriceOffer(record) ? 1 : 0;
-      stats.recordsWithoutFieldEvidence += (record.sources ?? []).some(
-        (source) => Array.isArray(source.fieldCoverage) && source.fieldCoverage.length > 0,
-      )
+      const hasHours = hasText(record.operations?.hours);
+      const hasGate = hasText(record.location?.gate);
+      const hasPrice = hasExplicitPriceOffer(record);
+      const hasProvenHours = hasHours && hasSourceFieldCoverage(record, 'operations.hours');
+      const hasProvenGate = hasGate && hasSourceFieldCoverage(record, 'location.gate');
+      const hasProvenPrice = hasPrice && hasProvenAccessOffer(record);
+      stats.hours += hasProvenHours ? 1 : 0;
+      stats.gates += hasProvenGate ? 1 : 0;
+      stats.prices += hasProvenPrice ? 1 : 0;
+      stats.recordsWithoutFieldEvidence +=
+        (!hasHours || hasProvenHours) && (!hasGate || hasProvenGate) && (!hasPrice || hasProvenPrice)
         ? 0
         : 1;
       return stats;

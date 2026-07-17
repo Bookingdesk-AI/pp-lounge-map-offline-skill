@@ -39,7 +39,7 @@
       {
         "type": "mcp",
         "name": "Lounge Guru",
-        "url": "https://loungeguru.desk.travel/mcp",
+        "url": "https://lounge-guru-mcp.dev-4ee.workers.dev/mcp",
         "transport": "streamable-http",
         "authentication": "none",
         "shareWithUsers": false,
@@ -89,7 +89,7 @@
     ],
     "manualFlow": [
       "Run npx poke@latest login.",
-      "Run npx poke@latest mcp add https://loungeguru.desk.travel/mcp -n \"Lounge Guru\".",
+      "Run npx poke@latest mcp add https://lounge-guru-mcp.dev-4ee.workers.dev/mcp -n \"Lounge Guru\".",
       "Open https://poke.com/kitchen and create a new recipe draft.",
       "Copy the fields from this recipe draft into Kitchen.",
       "Test the draft in Sandbox before publishing."

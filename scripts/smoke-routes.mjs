@@ -1,6 +1,6 @@
 import { pathToFileURL } from 'node:url';
 
-const DEFAULT_BASE_URL = 'https://loungeguru.desk.travel';
+const DEFAULT_BASE_URL = 'https://lounge-guru-mcp.dev-4ee.workers.dev';
 const DEFAULT_MIN_RECORDS = 2600;
 const DEFAULT_TIMEOUT_MS = 12000;
 

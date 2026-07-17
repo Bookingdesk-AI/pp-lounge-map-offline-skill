@@ -52,6 +52,9 @@ test('canonical gate evidence parser keeps explicit gate text only', () => {
   assert.equal(extractGateEvidence({ name: 'Sky Hub Lounge', terminal: 'Terminal 1 Concourse', location: 'Seoul Incheon Intl, Terminal 1 Concourse' }), 'Terminal 1 Concourse');
   assert.equal(extractGateEvidence({ name: 'Transpa (Departure Transit Area)', terminal: 'Terminal 2' }), 'Departure Transit Area');
   assert.equal(extractGateEvidence({ name: 'VIP Area V18', terminal: 'Terminal 2' }), 'VIP Area V18');
+  assert.equal(extractGateEvidence({ name: 'Platinum Lounge (Schengen)', terminal: 'Terminal 2A' }), 'Schengen Area');
+  assert.equal(extractGateEvidence({ name: 'Platinum Lounge (Non-Schengen)', terminal: 'Terminal 2B' }), 'Non-Schengen Area');
+  assert.equal(extractGateEvidence({ name: 'Non-Schengen Lounge Zone', terminal: 'Terminal 1' }), 'Non-Schengen Zone');
   assert.equal(extractGateEvidence({ name: 'Elysian lounge - PNQ - First Floor', terminal: 'New Integrated Terminal Bldg' }), 'Level 1');
   assert.equal(
     extractGateEvidence({
@@ -121,6 +124,32 @@ test('canonical Priority Pass records extract explicit access-credit offers only
   }, { generatedAt: '2026-07-14T00:00:00.000Z' });
 
   assert.deepEqual(noOffer.accessOffers, []);
+});
+
+test('canonical access offers ignore illustrative multi-guest totals', () => {
+  const record = createCanonicalRecord({
+    properties: {
+      id: 'test-pp-example-total',
+      name: 'The Globe Pub & Kitchen',
+      airportCode: 'LHR',
+      airportName: 'Heathrow Airport',
+      city: 'London',
+      country: 'United Kingdom',
+      terminal: 'Terminal 5',
+      openingHours: 'Daily 05:00 - 22:00',
+      conditions: [
+        'Cardholders can use their lounge visit entitlement to receive £18 off the bill.',
+        'Each £18 deduction represents one visit. For example, a Cardholder with 1 Guest receives £36 off the bill.',
+      ],
+      url: 'https://www.prioritypass.com/en-GB/lounges/example',
+      sourceRetrievedAt: '2026-07-16T00:00:00.000Z',
+    },
+  });
+
+  assert.deepEqual(
+    record.accessOffers.map((offer) => ({ amount: offer.amount, currency: offer.currency })),
+    [{ amount: 18, currency: 'GBP' }],
+  );
 });
 
 test('canonical Priority Pass records extract official non-USD access values', () => {
@@ -357,7 +386,12 @@ test('canonical Priority Pass records extract explicit paid access rates', () =>
 });
 
 test('canonical reports use the latest source-run timestamp without refreshing PP provenance', () => {
-  assert.equal(catalog.generatedAt, report.generatedAt);
+  const latestCatalogEvidenceAt = catalog.records
+    .flatMap((record) => record.sources.map((source) => source.retrievedAt))
+    .sort()
+    .at(-1);
+  assert.equal(catalog.generatedAt, latestCatalogEvidenceAt);
+  assert.notEqual(catalog.generatedAt, report.generatedAt);
 
   const priorityPassRecord = catalog.records.find((record) =>
     record.sources.some((source) => source.sourceId === 'priority-pass'),
@@ -367,13 +401,18 @@ test('canonical reports use the latest source-run timestamp without refreshing P
   );
   const priorityPassSource = sourceRegistry.find((source) => source.id === 'priority-pass');
   const oneworldSource = sourceRegistry.find((source) => source.id === 'oneworld');
+  const nonPriorityEvidence = nonPriorityRecord?.sources.find(
+    (source) => source.sourceId !== 'priority-pass' && source.sourceId !== 'ourairports',
+  );
+  const nonPriorityRun = report.sources.find((source) => source.sourceId === nonPriorityEvidence?.sourceId);
+  const oneworldRun = report.sources.find((source) => source.sourceId === 'oneworld');
 
   assert.ok(priorityPassRecord);
   assert.ok(nonPriorityRecord);
   assert.notEqual(priorityPassRecord.sources[0].retrievedAt, catalog.generatedAt);
-  assert.equal(nonPriorityRecord.sources[0].retrievedAt, report.generatedAt);
+  assert.equal(nonPriorityEvidence?.retrievedAt, nonPriorityRun?.retrievedAt);
   assert.equal(priorityPassSource.lastRunAt, priorityPassRecord.sources[0].retrievedAt);
-  assert.equal(oneworldSource.lastRunAt, report.generatedAt);
+  assert.equal(oneworldSource.lastRunAt, oneworldRun?.retrievedAt);
 });
 
 test('source intake report records guarded public-source fetch policy', () => {
@@ -403,6 +442,12 @@ test('source snapshot script blocks intake without Playwright proof env', () => 
 
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /Playwright-approved runner/);
+});
+
+test('Qantas detail intake retries transient Playwright transport failures', () => {
+  const script = fs.readFileSync(new URL('../scripts/scrape-source-snapshots.mjs', import.meta.url), 'utf8');
+  assert.match(script, /SOURCE_STRUCTURED_DETAIL_FETCH_ATTEMPTS/);
+  assert.match(script, /isTransportFetchError/);
 });
 
 test('Visa source intake has Cloudflare fetch repair candidates', () => {
@@ -840,6 +885,70 @@ test('structured location intake preserves closest gate evidence', () => {
   const cptIconsRestaurant = candidates.find((record) => record.lounge.id === 'candidate-oneworld-cpt-1882');
   const vvoDomesticArea = candidates.find((record) => record.lounge.id === 'candidate-oneworld-vvo-1296');
   const vvoInternationalArea = candidates.find((record) => record.lounge.id === 'candidate-oneworld-vvo-1392');
+  const yyzDomesticDepartures = candidates.find(
+    (record) =>
+      record.sources.some((source) => source.sourceId === 'air-canada') &&
+      record.airport.iata === 'YYZ' &&
+      record.lounge.name === 'Air Canada Café',
+  );
+  const yyzTransborderDepartures = candidates.find(
+    (record) =>
+      record.sources.some((source) => source.sourceId === 'air-canada') &&
+      record.airport.iata === 'YYZ' &&
+      record.lounge.name === 'Air Canada Maple Leaf Lounge' &&
+      /Transborder/i.test(record.location.terminal),
+  );
+  const yyzInternationalDepartures = candidates.find(
+    (record) =>
+      record.sources.some((source) => source.sourceId === 'air-canada') &&
+      record.airport.iata === 'YYZ' &&
+      record.lounge.name === 'Air Canada Maple Leaf Lounge' &&
+      /International/i.test(record.location.terminal),
+  );
+  const dlcDomesticDepartures = candidates.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-plaza-premium-dlc-dlc-china-southern-first-business-class-lounge-terminal-1',
+  );
+  const dlcInternationalDepartures = candidates.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-plaza-premium-dlc-dlc-china-southern-gold-silver-elite-plus-lounge-terminal-1',
+  );
+  const bomArrivalHall = candidates.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-plaza-premium-bom-bom-aviserv-lounge-west-arrival-hall-chhatrapati-shivaji-maharaj-international-a',
+  );
+  const lgaEasternConcourse = candidates.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-air-canada-lga-air-canada-lga-air-canada-maple-leaf-lounge-terminal-b-eastern-concourse',
+  );
+  const dcaSouthTsaEntrance = candidates.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-plaza-premium-dca-dca-vino-volo-national-hall-south-tsa-entrance-ronald-reagan-washington-national',
+  );
+  const iadSecurityCheckpoints = candidates.find(
+    (record) => record.lounge.id === 'candidate-capital-one-iad-capital-one-iad-capital-one-lounge',
+  );
+  const csxOutsideTerminal = candidates.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-plaza-premium-csx-csx-xiamen-airline-vip-center-outside-the-terminal-changsha-huanghua-internation',
+  );
+  const hhrRailwayDeparture = candidates.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-plaza-premium-hhr-hhr-haramain-lounge-railway-departure-haramain-high-speed-railway',
+  );
+  const busArrivalTerminal = candidates.find(
+    (record) => record.lounge.id === 'candidate-primeclass-bus-bus-primeclass-lounge-batumi-international-airport-arrival',
+  );
+  const sinLandsideArea = candidates.find(
+    (record) => record.lounge.id === 'candidate-plaza-premium-sin-sin-terrace-chinese-kitchen-terminal-1',
+  );
   const scqSouthDam = candidates.find((record) => record.lounge.id === 'candidate-oneworld-scq-1465');
 
   assert.equal(alaskaSea?.location.gate, 'Gate C-16');
@@ -907,6 +1016,19 @@ test('structured location intake preserves closest gate evidence', () => {
   assert.equal(cptIconsRestaurant?.location.gate, 'Icons Restaurant');
   assert.equal(vvoDomesticArea?.location.gate, 'Domestic Area');
   assert.equal(vvoInternationalArea?.location.gate, 'International Area');
+  assert.equal(yyzDomesticDepartures?.location.gate, 'Gate D20');
+  assert.equal(yyzTransborderDepartures?.location.gate, 'Level 4');
+  assert.equal(yyzInternationalDepartures?.location.gate, 'Level 3');
+  assert.equal(dlcDomesticDepartures?.location.gate, 'Domestic Departures');
+  assert.equal(dlcInternationalDepartures?.location.gate, 'International Departures');
+  assert.equal(bomArrivalHall?.location.gate, 'Arrivals Hall');
+  assert.equal(lgaEasternConcourse?.location.gate, 'Eastern Concourse');
+  assert.equal(dcaSouthTsaEntrance?.location.gate, 'South TSA Entrance');
+  assert.equal(iadSecurityCheckpoints?.location.gate, 'TSA PreCheck & Clear Security Checkpoints');
+  assert.equal(csxOutsideTerminal?.location.gate, 'Outside Terminal');
+  assert.equal(hhrRailwayDeparture?.location.gate, 'Railway Departure');
+  assert.equal(busArrivalTerminal?.location.gate, 'Arrivals Terminal');
+  assert.equal(sinLandsideArea?.location.gate, 'Landside Area');
   assert.equal(scqSouthDam?.location.gate, 'South Dam');
   assert.ok(alaskaSea?.sources[0].fieldCoverage.includes('location.gate'));
   assert.ok(clubDfw?.sources[0].fieldCoverage.includes('location.gate'));
@@ -970,6 +1092,19 @@ test('structured location intake preserves closest gate evidence', () => {
   assert.ok(pmiModuleC?.sources[0].fieldCoverage.includes('location.gate'));
   assert.ok(sinTransferC?.sources[0].fieldCoverage.includes('location.gate'));
   assert.ok(bcnAirShuttleLobby?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(yyzDomesticDepartures?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(yyzTransborderDepartures?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(yyzInternationalDepartures?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(dlcDomesticDepartures?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(dlcInternationalDepartures?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(bomArrivalHall?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(lgaEasternConcourse?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(dcaSouthTsaEntrance?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(iadSecurityCheckpoints?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(csxOutsideTerminal?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(hhrRailwayDeparture?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(busArrivalTerminal?.sources[0].fieldCoverage.includes('location.gate'));
+  assert.ok(sinLandsideArea?.sources[0].fieldCoverage.includes('location.gate'));
   assert.ok(cptIconsRestaurant?.sources[0].fieldCoverage.includes('location.gate'));
   assert.ok(vvoDomesticArea?.sources[0].fieldCoverage.includes('location.gate'));
   assert.ok(vvoInternationalArea?.sources[0].fieldCoverage.includes('location.gate'));
@@ -1135,10 +1270,11 @@ test('official airport lounge pages add terminal, hours, and gate evidence', () 
   );
 
   assert.equal(airportOfficialSource?.status, 'fetched');
-  assert.equal(airportOfficialSource?.records, 250);
+  assert.ok((airportOfficialSource?.records ?? 0) >= 240);
   assert.deepEqual(airportOfficialSource?.airportCodes, ['BCN', 'BIO', 'BKK', 'DFW', 'DOH', 'DXB', 'EWR', 'FCO', 'FUE', 'GRU', 'HKG', 'HND', 'IBZ', 'JFK', 'LCG', 'LGA', 'LGW', 'LHR', 'LPA', 'MAD', 'MAH', 'MAN', 'MEL', 'MIA', 'PHL', 'PMI', 'PRG', 'SCQ', 'SEA', 'SFO', 'SIN', 'SVQ', 'SYD', 'TFN', 'TFS', 'VGO', 'VLC']);
-  assert.equal(airportOfficialSource?.structuredRecords.length, 250);
+  assert.equal(airportOfficialSource?.structuredRecords.length, airportOfficialSource?.records);
   assert.equal(airportOfficialSource?.structuredApi.pages.length, 92);
+  assert.ok(airportOfficialSource?.structuredApi.pages.some((page) => page.status === 'reused'));
   assert.ok(bcnJoanMiro);
   assert.equal(bcnJoanMiro.location.gate, 'D & E Gates');
   assert.equal(bcnJoanMiro.operations.hours, '05:00 to last flight');
@@ -1263,6 +1399,281 @@ test('official airport location-only evidence does not claim hours', () => {
   assert.equal(officialSource?.fieldCoverage.includes('operations.hours'), false);
 });
 
+test('official airport rows inherit airline hours only at the exact published position', () => {
+  const silverKrisBkk = catalog.records.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-airport-official-pages-bkk-airport-official-pages-bkk-the-silverkris-lounge-floor-3-concourse-d-opposite-ga',
+  );
+  const airportSource = silverKrisBkk?.sources.find((source) => source.sourceId === 'airport-official-pages');
+  const airlineSource = silverKrisBkk?.sources.find((source) => source.sourceId === 'singapore-airlines');
+
+  assert.equal(silverKrisBkk?.location.gate, 'Gate D7');
+  assert.match(silverKrisBkk?.operations.hours ?? '', /Mon 06:30-23:00/);
+  assert.ok(airportSource?.fieldCoverage.includes('location.gate'));
+  assert.equal(airportSource?.fieldCoverage.includes('operations.hours'), false);
+  assert.deepEqual(airlineSource?.fieldCoverage, [
+    'lounge.name',
+    'airport.iata',
+    'airport.name',
+    'location.terminal',
+    'operations.hours',
+  ]);
+});
+
+test('official cross-source hours require approved identity aliases and exact position', () => {
+  const cfsRegional = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-cfs-1105');
+  const kgiRegional = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-kgi-1110');
+  const sydQantasClub = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-syd-1123');
+  const sydBusiness = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-syd-1124');
+  const seaTerraces = catalog.records.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-airport-official-pages-sea-airport-official-pages-sea-british-airways-terraces-lounge-s-concourse-s-concour',
+  );
+
+  assert.match(cfsRegional?.operations.hours ?? '', /One hour prior to each Qantas operated service/);
+  assert.ok(cfsRegional?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'));
+  assert.match(kgiRegional?.operations.hours ?? '', /One hour prior to each Qantas operated service/);
+  assert.ok(kgiRegional?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'));
+
+  assert.match(sydQantasClub?.operations.hours ?? '', /One hour before each Qantas operated service/);
+  assert.ok(sydQantasClub?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'));
+  assert.match(sydBusiness?.operations.hours ?? '', /One hour before each Qantas operated service/);
+  assert.ok(sydBusiness?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'));
+
+  assert.match(seaTerraces?.operations.hours ?? '', /Sun 10:00-20:00/);
+  assert.ok(seaTerraces?.sources.find((source) => source.sourceId === 'oneworld')?.fieldCoverage.includes('operations.hours'));
+});
+
+test('Aena lounge identities consolidate without losing official hours or position evidence', () => {
+  const mergedAena = catalog.records.filter((record) =>
+    record.notes.some((note) => note.includes('Merged Aena lounge evidence')),
+  );
+  const joanMiro = catalog.records.filter(
+    (record) => record.airport.iata === 'BCN' && /(?:Joan\s+)?Mir[oó]/i.test(record.lounge.name),
+  );
+  const pauCasals = catalog.records.filter(
+    (record) => record.airport.iata === 'BCN' && /Pau\s+Casals/i.test(record.lounge.name),
+  );
+  const aCoruna = catalog.records.filter(
+    (record) =>
+      record.airport.iata === 'LCG' &&
+      record.sources.some((source) => source.sourceId === 'airport-official-pages'),
+  );
+
+  assert.equal(mergedAena.length, 21);
+  for (const record of mergedAena) {
+    assert.ok(record.operations.hours);
+    assert.ok(record.sources.some((source) => source.sourceId === 'airport-official-pages'));
+  }
+
+  for (const records of [joanMiro, pauCasals, aCoruna]) {
+    assert.equal(records.length, 1);
+    assert.ok(records[0].operations.hours);
+    assert.ok(records[0].sources.some((source) => source.sourceId === 'oneworld'));
+  }
+
+  assert.ok(joanMiro[0].sources.some((source) => source.sourceId === 'airport-official-pages'));
+  assert.equal(joanMiro[0].location.terminal, 'Terminal 1');
+  assert.equal(joanMiro[0].operations.hours, '05:00 to last flight');
+  assert.ok(pauCasals[0].sources.some((source) => source.sourceId === 'airport-official-pages'));
+  assert.ok(aCoruna[0].sources.some((source) => source.sourceId === 'priority-pass'));
+});
+
+test('planned Gameway locations retain opening state without fabricated operating hours', () => {
+  for (const airportCode of ['IAD', 'PIT']) {
+    const record = catalog.records.find(
+      (candidate) => candidate.airport.iata === airportCode && candidate.lounge.name.startsWith('Gameway'),
+    );
+    const source = record?.sources.find((candidate) => candidate.sourceId === 'gameway');
+
+    assert.equal(record?.lounge.status, 'planned');
+    assert.equal(record?.operations.hours, '');
+    assert.equal(record?.operations.plannedOpening, 'Coming Soon');
+    assert.ok(source?.fieldCoverage.includes('operations.plannedOpening'));
+    assert.equal(source?.fieldCoverage.includes('operations.hours'), false);
+  }
+});
+
+test('airline-owned hours enrich bijective identities without importing conflicting positions', () => {
+  const bneBusiness = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-bne-1100');
+  const cbrBusiness = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-cbr-1104');
+  const drwQantasClubs = catalog.records.filter(
+    (record) => record.airport.iata === 'DRW' && record.lounge.name === 'The Qantas Club',
+  );
+  const ktaRegional = catalog.records.filter(
+    (record) => record.airport.iata === 'KTA' && /Regional Lounge/i.test(record.lounge.name),
+  );
+  const lstRegional = catalog.records.filter(
+    (record) => record.airport.iata === 'LST' && /Regional Lounge/i.test(record.lounge.name),
+  );
+  const melBusiness = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-mel-1115');
+  const melFirst = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-mel-1117');
+  const perBusiness = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-per-1118');
+  const emeraldRegional = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-emd-1108');
+  const portHedlandRegional = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-phe-1121');
+  const dohAirport = catalog.records.find(
+    (record) =>
+      record.airport.iata === 'DOH' &&
+      /Al Mourjan Business Lounge.*South/i.test(record.lounge.name),
+  );
+
+  assert.match(bneBusiness?.operations.hours ?? '', /One hour before each Qantas operated service/);
+  assert.ok(bneBusiness?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'));
+  assert.match(cbrBusiness?.operations.hours ?? '', /One hour before each Qantas operated service/);
+  assert.ok(cbrBusiness?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'));
+
+  assert.equal(drwQantasClubs.length, 1);
+  assert.equal(drwQantasClubs[0]?.lounge.id, 'candidate-oneworld-drw-1106');
+  assert.equal(drwQantasClubs[0]?.location.gate, 'Gate 1');
+  assert.match(drwQantasClubs[0]?.operations.hours ?? '', /One hour before each Qantas operated service/);
+  assert.ok(
+    drwQantasClubs[0]?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'),
+  );
+  assert.equal(
+    drwQantasClubs[0]?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('location.gate'),
+    false,
+  );
+  assert.ok(drwQantasClubs[0]?.sources.some((source) => source.sourceId === 'qantas'));
+  assert.ok(drwQantasClubs[0]?.sources.some((source) => source.sourceId === 'oneworld'));
+  assert.equal(ktaRegional.length, 1);
+  assert.match(ktaRegional[0]?.operations.hours ?? '', /One hour prior to each Qantas operated service/);
+  assert.ok(
+    ktaRegional[0]?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'),
+  );
+  assert.equal(
+    ktaRegional[0]?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('location.gate'),
+    false,
+  );
+  assert.equal(lstRegional.length, 1);
+  assert.match(lstRegional[0]?.operations.hours ?? '', /One hour prior to each Qantas operated service/);
+  assert.match(melBusiness?.operations.hours ?? '', /One hour before each Qantas operated service/);
+  assert.match(melFirst?.operations.hours ?? '', /Mon 04:45-23:00/);
+  assert.match(perBusiness?.operations.hours ?? '', /One hour before each Qantas operated service/);
+  assert.equal(emeraldRegional?.lounge.status, 'temporarily_closed');
+  assert.equal(emeraldRegional?.operations.hours, '');
+  assert.match(emeraldRegional?.operations.exceptions[0] ?? '', /temporarily closed until \d{1,2} July 2026/i);
+  assert.equal(portHedlandRegional?.lounge.status, 'temporarily_closed');
+  assert.equal(portHedlandRegional?.operations.hours, '');
+  assert.match(dohAirport?.operations.hours ?? '', /Sun 24 hours/);
+  assert.equal(dohAirport?.location.gate, 'Level 1');
+  assert.ok(dohAirport?.sources.some((source) => source.sourceId === 'airport-official-pages'));
+  assert.ok(dohAirport?.sources.some((source) => source.sourceId === 'oneworld'));
+  assert.ok(dohAirport?.sources.some((source) => source.sourceId === 'qatar-airways'));
+});
+
+test('SCL LATAM partner identity merges without collapsing distinct lounge tiers', () => {
+  const latamVip = catalog.records.filter(
+    (record) => record.airport.iata === 'SCL' && /Latam VIP Lounge(?: \(Partner\))?/i.test(record.lounge.name),
+  );
+  const signature = catalog.records.find(
+    (record) => record.airport.iata === 'SCL' && record.lounge.name === 'LATAM Signature Lounge',
+  );
+  const santiago = catalog.records.find(
+    (record) => record.airport.iata === 'SCL' && record.lounge.name === 'LATAM Lounge Santiago',
+  );
+
+  assert.equal(latamVip.length, 1);
+  assert.equal(latamVip[0]?.lounge.id, 'candidate-oneworld-scl-1731');
+  assert.match(latamVip[0]?.operations.hours ?? '', /Three hours before Qantas operated departures/);
+  assert.ok(latamVip[0]?.sources.some((source) => source.sourceId === 'oneworld'));
+  assert.ok(latamVip[0]?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'));
+  assert.ok(signature);
+  assert.ok(santiago);
+});
+
+test('Air Canada detail pages add lounge-specific hours with separate guest-fee provenance', () => {
+  const detailUrlPrefix =
+    'https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges/maple-leaf-lounge-details.html';
+  const guestFeeUrl = 'https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html#/';
+  const records = catalog.records.filter((record) =>
+    record.sources.some(
+      (source) => source.sourceId === 'air-canada' && source.url.startsWith(detailUrlPrefix),
+    ),
+  );
+
+  assert.equal(records.length, 7);
+  assert.deepEqual(
+    [...new Set(records.map((record) => record.airport.iata))].sort(),
+    ['LAX', 'YVR', 'YYZ'],
+  );
+  for (const record of records) {
+    assert.ok(record.operations.hours);
+    assert.ok(
+      record.sources.some(
+        (source) =>
+          source.sourceId === 'air-canada' &&
+          source.url.startsWith(detailUrlPrefix) &&
+          source.fieldCoverage.includes('operations.hours'),
+      ),
+    );
+    const offer = record.accessOffers.find((candidate) => candidate.sourceId === 'air-canada');
+    assert.ok(offer);
+    assert.equal(offer.url, guestFeeUrl);
+    assert.ok(
+      record.sources.some(
+        (source) =>
+          source.sourceId === 'air-canada' &&
+          source.url === guestFeeUrl &&
+          source.fieldCoverage.includes('access.accessOffers'),
+      ),
+    );
+  }
+
+  const lax = records.find((record) => record.airport.iata === 'LAX');
+  const yyzCafe = records.find((record) => record.airport.iata === 'YYZ' && record.lounge.name === 'Air Canada Café');
+  assert.equal(lax?.operations.hours, 'Daily: 5:00 - 22:00');
+  assert.equal(yyzCafe?.location.gate, 'Gate D20');
+  assert.equal(yyzCafe?.operations.hours, '5:00 - 21:30');
+});
+
+test('Alaska and Centurion official hours merge without duplicate physical lounges', () => {
+  const alaskaRecords = catalog.records.filter((record) =>
+    record.sources.some((source) => source.sourceId === 'alaska-airlines'),
+  );
+  const alaskaPassUrl = 'https://www.alaskaair.com/content/airport-lounge/day-pass';
+  const alaskaSource = report.sources.find((source) => source.sourceId === 'alaska-airlines');
+  const seaAlaska = alaskaRecords.filter((record) => record.airport.iata === 'SEA');
+  const seaCenturion = catalog.records.filter(
+    (record) =>
+      record.airport.iata === 'SEA' &&
+      record.lounge.name === 'The American Express Centurion Lounge' &&
+      record.sources.some((source) => source.sourceId === 'amex-global-lounge-collection'),
+  );
+
+  assert.equal(alaskaRecords.length, 7);
+  assert.equal(alaskaSource?.structuredApi.pages.length, 2);
+  assert.equal(alaskaSource?.structuredApi.pages.at(-1)?.url, alaskaPassUrl);
+  assert.equal(alaskaSource?.structuredApi.pages.at(-1)?.recordCount, 1);
+  assert.equal(seaAlaska.length, 3);
+  assert.deepEqual(
+    seaAlaska.map((record) => record.location.terminal).sort(),
+    ['Concourse C', 'Concourse D', 'N Concourse'],
+  );
+  for (const record of alaskaRecords) {
+    assert.match(record.operations.hours, /Mon \d{2}:\d{2}-\d{2}:\d{2}/);
+    assert.ok(
+      record.sources.find((source) => source.sourceId === 'alaska-airlines')?.fieldCoverage.includes('operations.hours'),
+    );
+    const offer = record.accessOffers.find((candidate) => candidate.sourceId === 'alaska-airlines');
+    const offerSource = record.sources.find(
+      (source) =>
+        source.sourceId === 'alaska-airlines' &&
+        source.url === alaskaPassUrl &&
+        source.fieldCoverage.includes('access.accessOffers'),
+    );
+    assert.equal(offer?.amount, 65);
+    assert.equal(offer?.currency, 'USD');
+    assert.equal(offer?.url, alaskaPassUrl);
+    assert.ok(offerSource);
+  }
+
+  assert.equal(seaCenturion.length, 1);
+  assert.match(seaCenturion[0]?.operations.hours ?? '', /Mon 05:00-22:00/);
+  assert.match(seaCenturion[0]?.lounge.id ?? '', /^candidate-airport-official-pages-sea-/);
+});
+
 test('official airport price evidence enriches matched existing lounge records', () => {
   const heathrowPlazaT3 = catalog.records.find(
     (record) =>
@@ -1285,24 +1696,37 @@ test('official airport price evidence can enrich records that already have airpo
   const gatwickNo1North = catalog.records.find((record) => record.lounge.id === 'LGW-lgw15-no1-lounge-gatwick-908');
   const gatwickNo1South = catalog.records.find((record) => record.lounge.id === 'LGW-lgw17-no1-lounge-gatwick-914');
   const clubroomsNorth = catalog.records.find((record) =>
-    record.lounge.id === 'candidate-airport-official-pages-lgw-airport-official-pages-lgw-clubrooms-north-terminal'
+    record.lounge.id === 'LGW-lgw18-clubrooms-gatwick-north-additional-fee-applies-910'
+  );
+  const gatwickNo1NorthAirportOffer = gatwickNo1North?.accessOffers.find(
+    (offer) => offer.sourceId === 'airport-official-pages',
+  );
+  const gatwickNo1SouthAirportOffer = gatwickNo1South?.accessOffers.find(
+    (offer) => offer.sourceId === 'airport-official-pages',
+  );
+  const clubroomsNorthAirportOffer = clubroomsNorth?.accessOffers.find(
+    (offer) => offer.sourceId === 'airport-official-pages',
   );
 
   assert.equal(gatwickNo1North?.location.terminal, 'North Terminal');
-  assert.equal(gatwickNo1North?.location.gate, 'Upper Level');
-  assert.equal(gatwickNo1North?.accessOffers[0]?.currency, 'GBP');
-  assert.equal(gatwickNo1North?.accessOffers[0]?.amount, 38);
-  assert.ok(gatwickNo1North?.accessOffers[0]?.url.includes('gatwickairport.com/premium-services/lounge-airport/lounge-no1'));
+  assert.equal(gatwickNo1North?.location.gate, '');
+  assert.equal(gatwickNo1NorthAirportOffer?.currency, 'GBP');
+  assert.equal(gatwickNo1NorthAirportOffer?.amount, 38);
+  assert.ok(gatwickNo1NorthAirportOffer?.url.includes('gatwickairport.com/premium-services/lounge-airport/lounge-no1'));
+  assert.equal(
+    gatwickNo1North?.sources.some((source) => source.fieldCoverage.includes('location.gate')),
+    false,
+  );
 
   assert.equal(gatwickNo1South?.location.terminal, 'South Terminal');
-  assert.equal(gatwickNo1South?.accessOffers[0]?.currency, 'GBP');
-  assert.equal(gatwickNo1South?.accessOffers[0]?.amount, 38);
-  assert.ok(gatwickNo1South?.accessOffers[0]?.url.includes('gatwickairport.com/premium-services/lounge-airport/lounge-no1'));
+  assert.equal(gatwickNo1SouthAirportOffer?.currency, 'GBP');
+  assert.equal(gatwickNo1SouthAirportOffer?.amount, 38);
+  assert.ok(gatwickNo1SouthAirportOffer?.url.includes('gatwickairport.com/premium-services/lounge-airport/lounge-no1'));
 
   assert.equal(clubroomsNorth?.location.terminal, 'North Terminal');
-  assert.equal(clubroomsNorth?.accessOffers[0]?.currency, 'GBP');
-  assert.equal(clubroomsNorth?.accessOffers[0]?.amount, 44);
-  assert.ok(clubroomsNorth?.accessOffers[0]?.url.includes('gatwickairport.com/premium-services/lounge-airport/lounge-clubrooms'));
+  assert.equal(clubroomsNorthAirportOffer?.currency, 'GBP');
+  assert.equal(clubroomsNorthAirportOffer?.amount, 44);
+  assert.ok(clubroomsNorthAirportOffer?.url.includes('gatwickairport.com/premium-services/lounge-airport/lounge-clubrooms'));
 });
 
 test('official partner booking pages enrich only one-to-one same-family price evidence', () => {
@@ -1354,6 +1778,13 @@ test('official alliance pages enrich only bijective gate and hours evidence', ()
   const dfwClub = catalog.records.find((record) => record.lounge.id === 'DFW-dfw7-the-club-dfw-409');
   const oakEscape = catalog.records.find((record) => record.lounge.id === 'OAK-oak-escape-lounges-1187');
   const kixLounge = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-kix-1792');
+  const perAspire = catalog.records.find(
+    (record) =>
+      record.airport.iata === 'PER' &&
+      /aspire/i.test(record.lounge.name) &&
+      record.sources.some((source) => source.sourceId === 'oneworld') &&
+      record.sources.some((source) => source.sourceId === 'aspire-lounges'),
+  );
   const jfkPrimeclass = catalog.records.find(
     (record) =>
       record.airport.iata === 'JFK' &&
@@ -1370,6 +1801,36 @@ test('official alliance pages enrich only bijective gate and hours evidence', ()
     (record) =>
       record.airport.iata === 'BKK' &&
       record.lounge.name === 'Japan Airlines JAL Sakura Lounge' &&
+      record.sources.some((source) => source.sourceId === 'airport-official-pages'),
+  );
+  const dohSafwaAirport = catalog.records.find(
+    (record) =>
+      record.airport.iata === 'DOH' &&
+      /Al Safwa First Lounge/i.test(record.lounge.name) &&
+      record.sources.some((source) => source.sourceId === 'airport-official-pages'),
+  );
+  const dohMourjanSouthAirport = catalog.records.find(
+    (record) =>
+      record.airport.iata === 'DOH' &&
+      /Al Mourjan Business Lounge.*South/i.test(record.lounge.name) &&
+      record.sources.some((source) => source.sourceId === 'airport-official-pages'),
+  );
+  const dohGoldSouthAirport = catalog.records.find(
+    (record) =>
+      record.airport.iata === 'DOH' &&
+      /Gold Lounge - South$/.test(record.lounge.name) &&
+      record.sources.some((source) => source.sourceId === 'airport-official-pages'),
+  );
+  const dohSilverSouthAirport = catalog.records.find(
+    (record) =>
+      record.airport.iata === 'DOH' &&
+      /Silver Lounge - South$/.test(record.lounge.name) &&
+      record.sources.some((source) => source.sourceId === 'airport-official-pages'),
+  );
+  const dohPlatinumSouthAirport = catalog.records.find(
+    (record) =>
+      record.airport.iata === 'DOH' &&
+      /Platinum Lounge - South$/.test(record.lounge.name) &&
       record.sources.some((source) => source.sourceId === 'airport-official-pages'),
   );
   const adlPlazaFirst = catalog.records.find((record) => record.lounge.id === 'ADL-adl4-plaza-premium-lounge-14');
@@ -1389,6 +1850,10 @@ test('official alliance pages enrich only bijective gate and hours evidence', ()
   assert.match(kixLounge?.operations.hours ?? '', /Sun 06:00-02:15/);
   assert.ok(kixLounge?.sources.find((source) => source.sourceId === 'oneworld')?.fieldCoverage.includes('operations.hours'));
 
+  assert.equal(perAspire?.location.gate, 'Gates 53 & 54');
+  assert.match(perAspire?.operations.hours ?? '', /Sun 04:00-02:00/);
+  assert.ok(perAspire?.sources.find((source) => source.sourceId === 'oneworld')?.fieldCoverage.includes('operations.hours'));
+
   assert.equal(jfkPrimeclass?.location.gate, 'Gates 8 & 9');
   assert.match(jfkPrimeclass?.operations.hours ?? '', /Monday: 11:00 - 21:00/);
   assert.ok(jfkPrimeclass?.sources.find((source) => source.sourceId === 'oneworld')?.fieldCoverage.includes('operations.hours'));
@@ -1399,8 +1864,33 @@ test('official alliance pages enrich only bijective gate and hours evidence', ()
   assert.match(bkkJal?.operations.hours ?? '', /Mon 05:35-08:05/);
   assert.ok(bkkJal?.sources.find((source) => source.sourceId === 'oneworld')?.fieldCoverage.includes('operations.hours'));
 
-  assert.equal(adlPlazaFirst?.location.gate, '');
-  assert.equal(adlPlazaSecond?.location.gate, '');
+  assert.equal(dohSafwaAirport?.location.terminal, 'Passenger Terminal');
+  assert.equal(dohSafwaAirport?.location.gate, 'Lounge Level');
+  assert.match(dohSafwaAirport?.operations.hours ?? '', /Sun 24 hours/);
+  assert.ok(dohSafwaAirport?.sources.find((source) => source.sourceId === 'oneworld')?.fieldCoverage.includes('operations.hours'));
+  assert.ok(dohSafwaAirport?.sources.find((source) => source.sourceId === 'airport-official-pages')?.fieldCoverage.includes('location.gate'));
+  assert.ok(dohSafwaAirport?.sources.some((source) => source.sourceId === 'qatar-airways'));
+
+  assert.equal(dohMourjanSouthAirport?.location.gate, 'Level 1');
+  assert.match(dohMourjanSouthAirport?.operations.hours ?? '', /Sun 24 hours/);
+  assert.ok(dohMourjanSouthAirport?.sources.some((source) => source.sourceId === 'oneworld'));
+  assert.ok(dohMourjanSouthAirport?.sources.some((source) => source.sourceId === 'qatar-airways'));
+
+  assert.equal(dohGoldSouthAirport?.location.gate, 'Gate A1');
+  assert.match(dohGoldSouthAirport?.operations.hours ?? '', /Sun 24 hours/);
+  assert.ok(dohGoldSouthAirport?.sources.find((source) => source.sourceId === 'oneworld')?.fieldCoverage.includes('operations.hours'));
+
+  assert.equal(dohSilverSouthAirport?.location.gate, 'Gate B1');
+  assert.match(dohSilverSouthAirport?.operations.hours ?? '', /Sun 24 hours/);
+  assert.ok(dohSilverSouthAirport?.sources.find((source) => source.sourceId === 'oneworld')?.fieldCoverage.includes('operations.hours'));
+
+  assert.equal(dohPlatinumSouthAirport?.location.gate, 'Gate A1');
+  assert.match(dohPlatinumSouthAirport?.operations.hours ?? '', /Sun 24 hours/);
+  assert.ok(dohPlatinumSouthAirport?.sources.find((source) => source.sourceId === 'oneworld')?.fieldCoverage.includes('operations.hours'));
+
+  assert.equal(adlPlazaFirst?.location.gate, 'International Departures');
+  assert.equal(adlPlazaSecond?.location.gate, 'Domestic Departures');
+  assert.ok(adlPlazaFirst?.sources.find((source) => source.sourceId === 'plaza-premium')?.fieldCoverage.includes('location.gate'));
   assert.equal(adlPlazaFirst?.sources.some((source) => source.sourceId === 'oneworld'), false);
   assert.equal(adlPlazaSecond?.sources.some((source) => source.sourceId === 'oneworld'), false);
 });
@@ -1433,11 +1923,11 @@ test('official price pages enrich only bijective paid access evidence with sourc
       currency: 'GBP',
       sourceId: 'plaza-premium',
       url: 'https://www.plazapremiumlounge.com/en-uk/find/europe/united-kingdom/manchester-man/manchester-international-airport-man/escapet1?propertycode=PRPRTY983&currency=GBP&date=2026-07-15&time=0300',
-      retrievedAt: report.generatedAt,
+      retrievedAt: report.sources.find((source) => source.sourceId === 'plaza-premium')?.retrievedAt,
     },
   ]);
-  assert.ok(manchesterAirportSource?.fieldCoverage.includes('location.gate'));
-  assert.equal(manchesterAirportSource?.fieldCoverage.includes('access.accessOffers'), false);
+  assert.equal(manchesterAirportSource?.fieldCoverage.includes('location.gate') ?? false, false);
+  assert.equal(manchesterAirportSource?.fieldCoverage.includes('access.accessOffers') ?? false, false);
   assert.equal(manchesterEscapeT1?.sources.some((source) => source.sourceId === 'escape-lounges'), false);
 
   assert.equal(birminghamNo1?.location.terminal, 'Unknown');
@@ -1450,8 +1940,240 @@ test('official price pages enrich only bijective paid access evidence with sourc
   assert.equal(dubaiMarhabaDwc?.accessOffers[0]?.amount, 194.5);
   assert.equal(dubaiMarhabaDwc?.accessOffers[0]?.sourceId, 'marhaba');
 
-  assert.deepEqual(bostonChaseTerminalB?.accessOffers, []);
-  assert.deepEqual(closedDubaiConcourseC?.accessOffers, []);
+  assert.equal(
+    bostonChaseTerminalB?.accessOffers.some((offer) => offer.sourceId === 'chase-sapphire'),
+    false,
+  );
+  assert.equal(
+    closedDubaiConcourseC?.accessOffers.some((offer) => offer.sourceId === 'marhaba'),
+    false,
+  );
+});
+
+test('Plaza Premium official names preserve alphanumeric concourse and satellite position evidence', () => {
+  const satelliteBusiness = catalog.records.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-plaza-premium-bkk-bkk-miracle-business-class-lounge-satellite-1-building-international-departures-',
+  );
+  const concourseA1 = catalog.records.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-plaza-premium-bkk-bkk-miracle-first-and-business-class-lounge-concourse-a1-international-departure',
+  );
+  const satelliteFirst = catalog.records.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-plaza-premium-bkk-bkk-miracle-first-class-lounge-satellite-1-building-international-departures-suv',
+  );
+
+  assert.equal(satelliteBusiness?.location.gate, 'Satellite 1');
+  assert.equal(concourseA1?.location.gate, 'Concourse A1');
+  assert.equal(satelliteFirst?.location.gate, 'Satellite 1');
+  for (const record of [satelliteBusiness, concourseA1, satelliteFirst]) {
+    assert.ok(record?.sources.find((source) => source.sourceId === 'plaza-premium')?.fieldCoverage.includes('location.gate'));
+  }
+});
+
+test('Plaza Premium official URL slugs preserve exact gate evidence only when unambiguous', () => {
+  const brisbaneGate77 = catalog.records.find((record) => record.lounge.id === 'BNE-bne1-plaza-premium-lounge-11');
+  const medanGate9 = catalog.records.find(
+    (record) =>
+      record.lounge.id === 'candidate-plaza-premium-kno-kno-plaza-premium-lounge-departures-kualanamu-international-airport',
+  );
+  const bangaloreGateZName = catalog.records.find((record) => record.lounge.id === 'BLR-blr18-z-lounge-267');
+  const makassarMismatchedSlug = catalog.records.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-plaza-premium-upg-upg-prayana-lounge-makassar-by-ias-hospitality-domestic-departure-sultan-hasanud',
+  );
+
+  assert.equal(brisbaneGate77?.location.gate, 'Gate 77');
+  assert.equal(medanGate9?.location.gate, 'Gate 9');
+  for (const record of [brisbaneGate77, medanGate9]) {
+    assert.ok(record?.sources.find((source) => source.sourceId === 'plaza-premium')?.fieldCoverage.includes('location.gate'));
+  }
+  assert.equal(bangaloreGateZName?.location.gate, 'International Departures');
+  assert.ok(bangaloreGateZName?.sources.find((source) => source.sourceId === 'plaza-premium')?.fieldCoverage.includes('location.gate'));
+  assert.equal(makassarMismatchedSlug?.location.gate, 'Domestic Departures');
+  assert.ok(makassarMismatchedSlug?.sources.find((source) => source.sourceId === 'plaza-premium')?.fieldCoverage.includes('location.gate'));
+});
+
+test('Plaza Premium structured position labels preserve anchored departures, arrivals, and landside evidence', () => {
+  const ammanDepartures = catalog.records.find((record) => record.lounge.id === 'AMM-amm4-plaza-premium-lounge-143');
+  const bangaloreLandside = catalog.records.find((record) => record.lounge.id === 'BLR-blr12-080-arrival-lounge-270');
+  const bangaloreArrivals = catalog.records.find(
+    (record) => record.lounge.id === 'candidate-plaza-premium-blr-blr-t1-lounge-terminal-1',
+  );
+
+  assert.equal(ammanDepartures?.location.gate, 'Departures Area');
+  assert.equal(bangaloreLandside?.location.gate, 'Landside Area');
+  assert.equal(bangaloreArrivals?.location.gate, 'Arrivals Area');
+  for (const record of [ammanDepartures, bangaloreLandside, bangaloreArrivals]) {
+    assert.ok(record?.sources.find((source) => source.sourceId === 'plaza-premium')?.fieldCoverage.includes('location.gate'));
+  }
+});
+
+test('Primeclass official location text preserves explicit named area evidence', () => {
+  const almatyVip = catalog.records.find(
+    (record) =>
+      record.lounge.id === 'candidate-primeclass-ala-ala-primeclass-vip-lounge-almaty-international-airport-south-terminal',
+  );
+  const ohridVip = catalog.records.find(
+    (record) => record.airport.iata === 'OHD' && record.sources.some((source) => source.sourceId === 'primeclass'),
+  );
+  const skopjeDeparture = catalog.records.find(
+    (record) =>
+      record.lounge.id === 'candidate-primeclass-skp-skp-skopje-international-airport-primeclass-lounge-vip-departure',
+  );
+  const skopjeArrival = catalog.records.find(
+    (record) =>
+      record.lounge.id === 'candidate-primeclass-skp-skp-skopje-international-airport-primeclass-lounge-vip-arrival',
+  );
+
+  assert.equal(almatyVip?.location.gate, 'Separate Building');
+  assert.equal(ohridVip?.location.gate, 'VIP Area');
+  assert.equal(skopjeDeparture?.location.gate, 'VIP Terminal');
+  assert.equal(skopjeArrival?.location.gate, 'VIP Terminal');
+  for (const record of [almatyVip, ohridVip, skopjeDeparture, skopjeArrival]) {
+    assert.ok(record?.sources.find((source) => source.sourceId === 'primeclass')?.fieldCoverage.includes('location.gate'));
+  }
+});
+
+test('Plaza Premium price evidence promotes only single-offer exact matches', () => {
+  const kulContactPier = catalog.records.find((record) => record.lounge.id === 'KUL-kul27-plaza-premium-lounge-863');
+  const kulFirst = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-kul-1796');
+  const ckgChinaSouthernFirst = catalog.records.find(
+    (record) => record.lounge.id === 'CKG-ckg20-china-southern-first-business-class-lounge-136',
+  );
+  const sgnLeSaigonnais = catalog.records.find((record) => record.lounge.id === 'SGN-sgn2-le-saigonnais-business-lounge-1398');
+  const sgnShPremium = catalog.records.find((record) => record.lounge.id === 'SGN-sgn9-sh-premium-lounge-tan-son-nhat-1399');
+  const sgnSens = catalog.records.find((record) => record.lounge.id === 'SGN-sgn8-the-sens-business-lounge-1401');
+  const pvgVip135 = catalog.records.find((record) => record.lounge.id === 'PVG-pvg8-vip-lounge-135-1307');
+  const pvgJuneyao72 = catalog.records.find((record) => record.lounge.id === 'PVG-pvg20-juneyao-air-lounge-no-72-1309');
+  const pvgChinaEastern36 = catalog.records.find(
+    (record) => record.lounge.id === 'PVG-pvg16-china-eastern-airlines-no-36-lounge-1312',
+  );
+  const pvgChinaEastern137 = catalog.records.find(
+    (record) => record.lounge.id === 'PVG-pvg18-china-eastern-airlines-no-137-lounge-1319',
+  );
+  const dmkTerminalOne = catalog.records.find((record) => record.lounge.id === 'DMK-dmk1-the-coral-executive-lounge-448');
+  const blrTerminalOne = catalog.records.find((record) => record.lounge.id === 'BLR-blr11-080-domestic-lounge-266');
+  const adelaideAmbiguous = catalog.records.find((record) => record.lounge.id === 'ADL-adl5-plaza-premium-lounge-16');
+  const icnMatinaWestWing = catalog.records.find((record) => record.lounge.id === 'ICN-icn3-matina-741');
+  const icnOtherTerminalOne = catalog.records.find((record) => record.lounge.id === 'ICN-icn2-matina-736');
+  const icnSkyhubEastConcourse = catalog.records.find((record) =>
+    record.lounge.id.startsWith('candidate-plaza-premium-icn-icn-skyhub-lounge-east-concourse'),
+  );
+  const icnSkyhubWestWing = catalog.records.find(
+    (record) => record.lounge.id === 'candidate-plaza-premium-icn-icn-skyhub-lounge-terminal-1',
+  );
+  const icnSkyhubEastWing = catalog.records.find(
+    (record) => record.lounge.id === 'candidate-plaza-premium-icn-icn-skyhub-lounge-terminal-2',
+  );
+  const budNonSchengen = catalog.records.find((record) => record.lounge.id === 'BUD-bud9-plaza-premium-lounge-non-schengen-244');
+  const sinSatsT2Official = catalog.records.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-airport-official-pages-sin-airport-official-pages-sin-sats-premier-lounge-t2-transit-level-3-map-facilities',
+  );
+  const sinSatsT3Official = catalog.records.find(
+    (record) =>
+      record.lounge.id ===
+      'candidate-airport-official-pages-sin-airport-official-pages-sin-sats-premier-lounge-t3-transit-level-3-map-facilities',
+  );
+
+  assert.equal(kulContactPier?.accessOffers[0]?.currency, 'MYR');
+  assert.equal(kulContactPier?.accessOffers[0]?.amount, 40);
+  assert.equal(kulContactPier?.accessOffers[0]?.sourceId, 'plaza-premium');
+  assert.ok(kulContactPier?.accessOffers[0]?.url.includes('plazapremiumlounge.com/en-uk/find/asia/malaysia/kuala-lumpur'));
+  assert.ok(kulContactPier?.sources.find((source) => source.sourceId === 'plaza-premium')?.fieldCoverage.includes('access.accessOffers'));
+
+  assert.equal(kulFirst?.accessOffers[0]?.currency, 'MYR');
+  assert.equal(kulFirst?.accessOffers[0]?.amount, 40);
+  assert.equal(kulFirst?.accessOffers[0]?.sourceId, 'plaza-premium');
+
+  assert.equal(ckgChinaSouthernFirst?.accessOffers[0]?.currency, 'CNY');
+  assert.equal(ckgChinaSouthernFirst?.accessOffers[0]?.amount, 200);
+  assert.equal(ckgChinaSouthernFirst?.accessOffers[0]?.sourceId, 'plaza-premium');
+
+  assert.equal(sgnLeSaigonnais?.location.terminal, 'Domestic Terminal 1');
+  assert.equal(sgnLeSaigonnais?.accessOffers[0]?.currency, 'USD');
+  assert.equal(sgnLeSaigonnais?.accessOffers[0]?.amount, 20);
+  assert.equal(sgnLeSaigonnais?.accessOffers[0]?.sourceId, 'plaza-premium');
+
+  assert.equal(sgnShPremium?.location.terminal, 'Domestic Terminal 3');
+  assert.equal(sgnShPremium?.accessOffers[0]?.currency, 'USD');
+  assert.equal(sgnShPremium?.accessOffers[0]?.amount, 20);
+  assert.equal(sgnShPremium?.accessOffers[0]?.sourceId, 'plaza-premium');
+
+  assert.equal(sgnSens?.location.terminal, 'Domestic Terminal 3');
+  assert.equal(sgnSens?.accessOffers[0]?.currency, 'USD');
+  assert.equal(sgnSens?.accessOffers[0]?.amount, 20);
+  assert.equal(sgnSens?.accessOffers[0]?.sourceId, 'plaza-premium');
+
+  assert.equal(pvgVip135?.location.gate, 'Satellite TERMINAL');
+  assert.equal(pvgVip135?.accessOffers[0]?.currency, 'CNY');
+  assert.equal(pvgVip135?.accessOffers[0]?.amount, 300);
+  assert.equal(pvgVip135?.accessOffers[0]?.sourceId, 'plaza-premium');
+  assert.ok(pvgVip135?.sources.find((source) => source.sourceId === 'plaza-premium')?.fieldCoverage.includes('access.accessOffers'));
+
+  assert.equal(pvgJuneyao72?.accessOffers[0]?.currency, 'CNY');
+  assert.equal(pvgJuneyao72?.accessOffers[0]?.amount, 260);
+  assert.equal(pvgJuneyao72?.accessOffers[0]?.sourceId, 'plaza-premium');
+
+  assert.equal(pvgChinaEastern36?.accessOffers[0]?.currency, 'CNY');
+  assert.equal(pvgChinaEastern36?.accessOffers[0]?.amount, 260);
+  assert.equal(pvgChinaEastern36?.accessOffers[0]?.sourceId, 'plaza-premium');
+
+  assert.equal(budNonSchengen?.accessOffers[0]?.currency, 'EUR');
+  assert.equal(budNonSchengen?.accessOffers[0]?.amount, 46);
+  assert.equal(budNonSchengen?.accessOffers[0]?.sourceId, 'plaza-premium');
+  assert.ok(budNonSchengen?.accessOffers[0]?.url.includes('departures-mezzanine-floor-terminal-two-b'));
+
+  assert.equal(sinSatsT2Official?.accessOffers[0]?.currency, 'USD');
+  assert.equal(sinSatsT2Official?.accessOffers[0]?.amount, 75.43);
+  assert.equal(sinSatsT2Official?.accessOffers[0]?.sourceId, 'plaza-premium');
+  assert.ok(sinSatsT2Official?.accessOffers[0]?.url.includes('sats-premier-lounge-departures-terminal-two'));
+
+  assert.equal(sinSatsT3Official?.accessOffers[0]?.currency, 'USD');
+  assert.equal(sinSatsT3Official?.accessOffers[0]?.amount, 75);
+  assert.equal(sinSatsT3Official?.accessOffers[0]?.sourceId, 'plaza-premium');
+  assert.ok(sinSatsT3Official?.accessOffers[0]?.url.includes('sats-premier-lounge-departures-terminal-three'));
+
+  assert.equal(pvgChinaEastern137?.accessOffers.some((offer) => offer.sourceId === 'plaza-premium'), false);
+  assert.equal(dmkTerminalOne?.accessOffers.some((offer) => offer.sourceId === 'plaza-premium'), false);
+  assert.equal(blrTerminalOne?.accessOffers.some((offer) => offer.sourceId === 'plaza-premium'), false);
+  assert.equal(adelaideAmbiguous?.accessOffers[0]?.currency, 'AUD');
+  assert.equal(adelaideAmbiguous?.accessOffers[0]?.amount, 29);
+  assert.equal(adelaideAmbiguous?.accessOffers[0]?.sourceId, 'plaza-premium');
+  assert.equal(icnMatinaWestWing?.location.gate, 'Gate 43');
+  assert.match(icnMatinaWestWing?.location.directions ?? '', /West Wing/);
+  assert.equal(icnMatinaWestWing?.accessOffers[0]?.url.includes('matina-lounge-west-wing'), true);
+  assert.equal(icnMatinaWestWing?.sources.some((source) => source.url.includes('skyhub-lounge')), false);
+  assert.equal(icnOtherTerminalOne?.accessOffers.some((offer) => offer.sourceId === 'plaza-premium'), false);
+  assert.equal(icnOtherTerminalOne?.sources.some((source) => source.sourceId === 'plaza-premium'), false);
+  assert.equal(icnOtherTerminalOne?.sources.some((source) => source.url.includes('skyhub-lounge')), false);
+  assert.ok(!icnOtherTerminalOne?.notes.includes('Official Plaza Premium page supplied one-to-one paid access evidence.'));
+  assert.equal(icnSkyhubEastConcourse?.location.gate, 'East Concourse');
+  assert.equal(icnSkyhubEastConcourse?.accessOffers[0]?.url.includes('skyhub-lounge-east-concourse'), true);
+  assert.equal(icnSkyhubWestWing?.location.gate, 'West Wing');
+  assert.equal(icnSkyhubWestWing?.accessOffers[0]?.url.includes('skyhub-lounge-west-wing'), true);
+  assert.equal(icnSkyhubEastWing?.location.gate, 'East Wing');
+  assert.equal(icnSkyhubEastWing?.accessOffers[0]?.url.includes('skyhub-lounge-terminal-2'), true);
+});
+
+test('single-offer operator price evidence promotes only source-specific exact matches', () => {
+  const jerseyNo1 = catalog.records.find((record) => record.lounge.id === 'JER-jer3-no-1-lounge-781');
+  const genevaEastWing = catalog.records.find((record) => record.lounge.id === 'GVA-gva3-marhaba-lounge-615');
+
+  assert.equal(jerseyNo1?.accessOffers[0]?.currency, 'GBP');
+  assert.equal(jerseyNo1?.accessOffers[0]?.amount, 28);
+  assert.equal(jerseyNo1?.accessOffers[0]?.sourceId, 'no1-lounges');
+  assert.ok(jerseyNo1?.accessOffers[0]?.url.includes('no1lounges.com/lounges-by-location/no1-lounge-at-jersey-airport'));
+  assert.ok(jerseyNo1?.sources.find((source) => source.sourceId === 'no1-lounges')?.fieldCoverage.includes('access.accessOffers'));
+
+  assert.equal(genevaEastWing?.accessOffers.some((offer) => offer.sourceId === 'marhaba'), false);
 });
 
 test('official location pages enrich only bijective name-brand family fields', () => {
@@ -1460,13 +2182,26 @@ test('official location pages enrich only bijective name-brand family fields', (
     record.lounge.id === 'candidate-qatar-airways-sin-qatar-airways-sin-qatar-airways-premium-lounge-singapore-changi-airport'
   );
   const jfkChelsea = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-jfk-1399');
-  const esbPrimeclass = catalog.records.find((record) => record.lounge.id === 'ESB-esb1-primeclass-lounge-525');
-  const fcoPrimeclass = catalog.records.find((record) => record.lounge.id === 'FCO-fco3-tav-primeclass-fco-539');
+  const esbPrimeclass = catalog.records.find(
+    (record) =>
+      record.airport.iata === 'ESB' &&
+      /domestic/i.test(record.location.terminal) &&
+      record.sources.some((source) => source.sourceId === 'primeclass'),
+  );
+  const fcoPrimeclass = catalog.records.find(
+    (record) =>
+      record.airport.iata === 'FCO' && record.sources.some((source) => source.sourceId === 'primeclass'),
+  );
   const jfkPrimeclass = catalog.records.find((record) => record.lounge.id === 'JFK-jfk14-primeclass-lounge-789');
-  const manEscape = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-man-1618');
-  const sofPrimeclass = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-sof-1891');
+  const manEscape = catalog.records.find((record) => record.lounge.id === 'MAN-man4-escape-lounges-1009');
+  const sofPrimeclass = catalog.records.find(
+    (record) =>
+      record.airport.iata === 'SOF' && record.sources.some((source) => source.sourceId === 'primeclass'),
+  );
   const oryExtime = catalog.records.find((record) =>
-    record.lounge.id === 'candidate-primeclass-ory-ory-extime-lounge-terminal-4-orly-international-airport'
+    record.airport.iata === 'ORY' &&
+    /extime/i.test(record.lounge.name) &&
+    record.sources.some((source) => source.sourceId === 'primeclass')
   );
   const cfsQantasRegional = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-cfs-1105');
   const kgiQantasRegional = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-kgi-1110');
@@ -1500,12 +2235,23 @@ test('official location pages enrich only bijective name-brand family fields', (
   assert.ok(cfsQantasRegional?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'));
   assert.equal(kgiQantasRegional?.operations.hours, 'One hour prior to each Qantas operated service until last Qantas departure.');
   assert.ok(kgiQantasRegional?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'));
-  assert.equal(adlQantasClubDomestic?.operations.hours, '');
+  assert.equal(adlQantasClubDomestic?.operations.hours, 'One hour before each Qantas operated service until 9.15pm');
+  assert.ok(adlQantasClubDomestic?.sources.find((source) => source.sourceId === 'qantas')?.fieldCoverage.includes('operations.hours'));
 });
 
 test('official operator price evidence enriches same-family existing records', () => {
   const clubCvg = catalog.records.find((record) => record.lounge.id === 'CVG-cvg2-the-club-cvg-429');
+  const clubBuf = catalog.records.find((record) => record.lounge.id === 'BUF-buf1-the-club-375');
+  const clubChs = catalog.records.find((record) => record.lounge.id === 'CHS-chs-the-club-chs-401');
+  const clubSjcA15 = catalog.records.find((record) => record.lounge.id === 'SJC-sjc-the-club-sjc-a15-1439');
+  const clubSjcA8 = catalog.records.find((record) => record.lounge.id === 'SJC-sjc1-the-club-sjc-a8-1440');
+  const dwcMarhaba = catalog.records.find((record) => record.lounge.id === 'DWC-dwc-marhaba-lounge-486');
+  const khiMarhaba = catalog.records.find((record) => record.lounge.id === 'KHI-khi3-marhaba-karachi-lounge-832');
   const airportDimensionsSource = clubCvg?.sources.find((source) => source.sourceId === 'airport-dimensions');
+  const airportDimensionsBufSource = clubBuf?.sources.find((source) => source.sourceId === 'airport-dimensions');
+  const airportDimensionsChsSource = clubChs?.sources.find((source) => source.sourceId === 'airport-dimensions');
+  const dwcMarhabaSource = dwcMarhaba?.sources.find((source) => source.sourceId === 'marhaba');
+  const khiMarhabaSource = khiMarhaba?.sources.find((source) => source.sourceId === 'marhaba');
 
   assert.equal(clubCvg?.location.terminal, 'Concourse A');
   assert.equal(clubCvg?.accessOffers[0]?.currency, 'GBP');
@@ -1513,25 +2259,81 @@ test('official operator price evidence enriches same-family existing records', (
   assert.equal(clubCvg?.accessOffers[0]?.sourceId, 'airport-dimensions');
   assert.ok(airportDimensionsSource?.url.includes('theclubairportlounges.com/lounges/cvg-the-club-concourse-a'));
   assert.ok(airportDimensionsSource?.fieldCoverage.includes('access.accessOffers'));
+
+  assert.equal(clubBuf?.location.gate, 'Gates 6 & 7');
+  assert.equal(clubBuf?.accessOffers[0]?.sourceId, 'airport-dimensions');
+  assert.ok(airportDimensionsBufSource?.fieldCoverage.includes('location.gate'));
+  assert.ok(airportDimensionsBufSource?.fieldCoverage.includes('access.accessOffers'));
+
+  assert.equal(clubChs?.location.gate, 'Second Level');
+  assert.equal(clubChs?.accessOffers[0]?.sourceId, 'airport-dimensions');
+  assert.ok(airportDimensionsChsSource?.fieldCoverage.includes('location.gate'));
+  assert.ok(airportDimensionsChsSource?.fieldCoverage.includes('access.accessOffers'));
+
+  assert.equal(clubSjcA15?.accessOffers.find((offer) => offer.currency === 'USD')?.amount, 55);
+  assert.equal(clubSjcA15?.location.gate, 'Gate A15');
+  assert.ok(clubSjcA15?.sources.some((source) => source.url.endsWith('/sjc-the-club-terminal-a15')));
+  assert.equal(clubSjcA8?.accessOffers.find((offer) => offer.currency === 'USD')?.amount, 55);
+  assert.equal(clubSjcA8?.location.gate, 'Gate A8');
+  assert.ok(clubSjcA8?.sources.some((source) => source.url.endsWith('/sjc-the-club-terminal-a8')));
+
+  assert.equal(dwcMarhaba?.location.gate, 'Mezzanine Level');
+  assert.equal(dwcMarhaba?.accessOffers[0]?.sourceId, 'marhaba');
+  assert.ok(dwcMarhabaSource?.fieldCoverage.includes('location.gate'));
+  assert.ok(dwcMarhabaSource?.fieldCoverage.includes('access.accessOffers'));
+
+  assert.equal(khiMarhaba?.location.gate, 'Mezzanine Level');
+  assert.equal(khiMarhaba?.accessOffers[0]?.sourceId, 'marhaba');
+  assert.ok(khiMarhabaSource?.fieldCoverage.includes('location.gate'));
+  assert.ok(khiMarhabaSource?.fieldCoverage.includes('access.accessOffers'));
 });
 
 test('operator enrichment keeps Manchester Aspire terminal prices separated', () => {
-  const aspireTerminal13 = catalog.records.find((record) => record.lounge.id === 'MAN-man6-aspire-lounge-1010');
-  const aspireTerminal2 = catalog.records.find((record) => record.lounge.id === 'MAN-man3-aspire-lounge-1011');
+  const aspireRows = catalog.records.filter(
+    (record) => record.airport.iata === 'MAN' && record.sources.some((source) => source.sourceId === 'aspire-lounges'),
+  );
+  const cGates = aspireRows.find((record) => record.location.gate === 'C Gates');
+  const dGates = aspireRows.find((record) => record.location.gate === 'D Gates');
+  const terminal3 = aspireRows.find((record) => record.location.terminal === 'Terminal 3');
 
-  assert.equal(aspireTerminal13?.location.terminal, 'Terminal 1 \\u0026 3');
-  assert.equal(aspireTerminal13?.accessOffers[0]?.currency, 'GBP');
-  assert.equal(aspireTerminal13?.accessOffers[0]?.amount, 38);
-  assert.ok(aspireTerminal13?.accessOffers[0]?.url.includes('aspire-at-manchester-terminal-1'));
+  assert.equal(aspireRows.length, 3);
+  assert.equal(cGates?.accessOffers[0]?.amount, 46);
+  assert.ok(cGates?.accessOffers[0]?.url.includes('terminal-2-c-gates'));
+  assert.equal(dGates?.accessOffers[0]?.amount, 46);
+  assert.ok(dGates?.accessOffers[0]?.url.includes('terminal-2-d-gates'));
+  assert.equal(terminal3?.accessOffers[0]?.amount, 37);
+  assert.ok(terminal3?.accessOffers[0]?.url.includes('terminal-3'));
+  assert.equal(terminal3?.accessOffers.some((offer) => offer.url.includes('terminal-1')), false);
+});
 
-  assert.equal(aspireTerminal2?.location.terminal, 'Terminal 2');
-  assert.equal(aspireTerminal2?.accessOffers[0]?.currency, 'GBP');
-  assert.equal(aspireTerminal2?.accessOffers[0]?.amount, 46);
-  assert.ok(aspireTerminal2?.accessOffers[0]?.url.includes('aspire-at-manchester-terminal-2'));
+test('operator access offers keep distinct official offer URL provenance', () => {
+  const minuteSuitesBna = catalog.records.find(
+    (record) => record.lounge.id === 'candidate-minute-suites-bna-minute-suites-bna-concourse-d-near-gate-d3',
+  );
+  const minuteSuitesClt = catalog.records.find(
+    (record) => record.lounge.id === 'candidate-minute-suites-clt-minute-suites-clt-d-e-connector-between-concourses-d-e',
+  );
+  const minuteSuitesBnaLocationSource = minuteSuitesBna?.sources.find((source) =>
+    source.url.includes('/locations/nashville-airport/concourse-d/'),
+  );
+  const minuteSuitesBnaOfferSource = minuteSuitesBna?.sources.find((source) =>
+    source.url === 'https://minutesuites.com/priority-pass/',
+  );
+
+  assert.equal(minuteSuitesBna?.accessOffers[0]?.currency, 'USD');
+  assert.equal(minuteSuitesBna?.accessOffers[0]?.amount, 40);
+  assert.equal(minuteSuitesBna?.accessOffers[0]?.url, 'https://minutesuites.com/priority-pass/');
+  assert.equal(minuteSuitesBnaLocationSource?.fieldCoverage.includes('access.accessOffers'), false);
+  assert.ok(minuteSuitesBnaOfferSource?.fieldCoverage.includes('access.accessOffers'));
+
+  assert.equal(minuteSuitesClt?.accessOffers[0]?.currency, 'USD');
+  assert.equal(minuteSuitesClt?.accessOffers[0]?.amount, 40);
+  assert.equal(minuteSuitesClt?.accessOffers[0]?.url, 'https://minutesuites.com/priority-pass/');
 });
 
 test('American official club pages add airline-operated gate and hours evidence', () => {
   const americanSource = report.sources.find((source) => source.sourceId === 'american');
+  const membershipUrl = 'https://www.aa.com/i18n/travel-info/clubs/admirals-club-membership.jsp';
   const dfwTerminalA = candidates.find((record) =>
     record.sources.some((source) => source.sourceId === 'american') &&
     record.airport.iata === 'DFW' &&
@@ -1547,17 +2349,86 @@ test('American official club pages add airline-operated gate and hours evidence'
   assert.equal(americanSource?.records, 13);
   assert.deepEqual(americanSource?.airportCodes, ['CLT', 'DFW', 'JFK', 'LAX', 'ORD']);
   assert.equal(americanSource?.structuredRecords.length, 13);
-  assert.equal(americanSource?.structuredApi.pages.length, 5);
+  assert.equal(americanSource?.structuredApi.pages.length, 6);
+  assert.equal(americanSource?.structuredApi.pages.at(-1)?.url, membershipUrl);
+  assert.equal(americanSource?.structuredApi.pages.at(-1)?.recordCount, 1);
   assert.equal(dfwTerminalA?.location.gate, 'Gate A24');
   assert.match(dfwTerminalA?.operations.hours ?? '', /04:00-22:15/);
   assert.equal(ordConcourseL?.location.gate, 'Gate L1');
   assert.match(ordConcourseL?.operations.hours ?? '', /05:00-21:45/);
 });
 
+test('American One-Day Pass reaches active Admirals Clubs with membership-page provenance only', () => {
+  const membershipUrl = 'https://www.aa.com/i18n/travel-info/clubs/admirals-club-membership.jsp';
+  const offerRows = catalog.records.filter((record) =>
+    record.accessOffers.some((offer) => offer.label === 'USD 79 One-Day Pass'),
+  );
+  const provisionsRows = catalog.records.filter((record) => /provisions/i.test(record.lounge.name));
+  const partnerRows = catalog.records.filter(
+    (record) => /admirals club/i.test(record.lounge.name) && /partner/i.test(record.lounge.name),
+  );
+  const closedRows = catalog.records.filter(
+    (record) =>
+      /admirals club/i.test(record.lounge.name) &&
+      (record.lounge.status === 'temporarily_closed' || /temporarily closed|\bclosed\b/i.test(record.lounge.name)),
+  );
+
+  assert.ok(offerRows.length > 12);
+  for (const record of offerRows) {
+    const offer = record.accessOffers.find((candidate) => candidate.label === 'USD 79 One-Day Pass');
+    const source = record.sources.find(
+      (candidate) =>
+        candidate.sourceId === 'american' &&
+        candidate.url === membershipUrl &&
+        candidate.fieldCoverage.includes('access.accessOffers'),
+    );
+    assert.equal(offer?.url, membershipUrl, record.lounge.id);
+    assert.ok(source, record.lounge.id);
+  }
+
+  for (const record of [...provisionsRows, ...partnerRows, ...closedRows]) {
+    assert.equal(
+      record.accessOffers.some((offer) => offer.label === 'USD 79 One-Day Pass'),
+      false,
+      record.lounge.id,
+    );
+  }
+});
+
+test('DFW Admirals Club identities consolidate by terminal and published gate', () => {
+  const admirals = catalog.records.filter(
+    (record) =>
+      record.airport.iata === 'DFW' &&
+      /admirals club/i.test([record.lounge.name, record.lounge.brand, record.lounge.operator].join(' ')),
+  );
+  const byTerminal = (terminal) =>
+    admirals.filter((record) => record.location.terminal === `Terminal ${terminal}`);
+
+  for (const terminal of ['A', 'B', 'C']) {
+    const rows = byTerminal(terminal);
+    assert.equal(rows.length, 1, `expected one DFW Terminal ${terminal} Admirals Club identity`);
+    assert.ok(rows[0].operations.hours);
+    assert.ok(rows[0].sources.some((source) => source.sourceId === 'american'));
+    assert.ok(rows[0].sources.some((source) => source.sourceId === 'oneworld'));
+    assert.equal(rows[0].sources.some((source) => source.sourceId === 'airport-official-pages'), false);
+  }
+
+  const terminalD = byTerminal('D');
+  assert.equal(terminalD.length, 2);
+  assert.ok(terminalD.some((record) => /D24/i.test(record.location.gate)));
+  assert.ok(terminalD.some((record) => /D21|D22/i.test(record.location.gate)));
+});
+
 test('Delta official locations page adds structured lounge rows', () => {
   const deltaSource = report.sources.find((source) => source.sourceId === 'delta');
   const deltaRows = candidates.filter((record) => record.sources.some((source) => source.sourceId === 'delta'));
   const gateRows = fieldCoverageReport.rows.filter((record) => record.sourceId === 'delta' && record.hasGate);
+  const sfoClubhouse = catalog.records.find((record) => record.lounge.id === 'SFO-sfo14-virgin-atlantic-clubhouse-1395');
+  const sclSkyTeam = catalog.records.find((record) => record.lounge.id === 'SCL-scl8-skyteam-lounge-1368');
+  const napPearl = catalog.records.find((record) => record.lounge.id === 'candidate-oneworld-nap-1650');
+  const gigDomestic = catalog.records.find((record) => record.lounge.id === 'GIG-gig7-plaza-premium-lounge-569');
+  const gigInternational = catalog.records.find((record) => record.lounge.id === 'GIG-gig6-plaza-premium-lounge-572');
+  const gigLandside = catalog.records.find((record) => record.lounge.id === 'GIG-gig8-plaza-premium-lounge-576');
 
   assert.equal(deltaSource?.status, 'fetched');
   assert.equal(deltaSource?.structuredApi.parser, 'delta-sky-club-structured');
@@ -1566,6 +2437,18 @@ test('Delta official locations page adds structured lounge rows', () => {
   assert.ok(gateRows.length >= 40);
   assert.ok(deltaRows.every((record) => record.operations.hours));
   assert.ok(deltaRows.every((record) => record.sources[0].url.startsWith('https://www.delta.com/')));
+
+  assert.equal(sfoClubhouse?.location.gate, 'Level 5');
+  assert.ok(sfoClubhouse?.sources.find((source) => source.sourceId === 'delta')?.fieldCoverage.includes('location.gate'));
+  assert.equal(sclSkyTeam?.location.gate, 'Level -1');
+  assert.equal(napPearl?.location.gate, 'Gate C16');
+
+  assert.equal(gigDomestic?.location.gate, 'Gates B27-B28');
+  assert.ok(gigDomestic?.sources.find((source) => source.sourceId === 'priority-pass')?.fieldCoverage.includes('location.gate'));
+  assert.equal(gigInternational?.location.gate, 'Gate B43');
+  assert.ok(gigInternational?.sources.find((source) => source.sourceId === 'delta')?.fieldCoverage.includes('location.gate'));
+  assert.equal(gigLandside?.location.gate, 'Level 2');
+  assert.ok(gigLandside?.sources.find((source) => source.sourceId === 'priority-pass')?.fieldCoverage.includes('location.gate'));
 });
 
 test('lounge field coverage report tracks hours, gate, and price review gaps one by one', () => {
@@ -1580,15 +2463,57 @@ test('lounge field coverage report tracks hours, gate, and price review gaps one
   );
   assert.match(fieldCoverageReport.policy.priceRule, /explicit structured amount and ISO currency/);
 
-  const seaClub = fieldCoverageReport.rows.find((row) => row.recordId === 'candidate-oneworld-sea-1595');
+  const seaClub = fieldCoverageReport.rows.find((row) => row.recordId === 'SEA-sea6-the-club-sea-1385');
   assert.equal(seaClub.hasHours, true);
   assert.equal(seaClub.hasGate, true);
-  assert.equal(seaClub.hasAccessOffer, false);
+  assert.equal(seaClub.hasAccessOffer, true);
 
   const escapeCvg = fieldCoverageReport.rows.find((row) => row.recordId === 'CVG-cvg7-escape-lounges-431');
   assert.equal(escapeCvg.hasHours, true);
   assert.equal(escapeCvg.hasGate, true);
   assert.equal(escapeCvg.hasAccessOffer, true);
+});
+
+test('published field values require matching source provenance', () => {
+  const unprovenHours = catalog.records.filter(
+    (record) =>
+      record.operations.hours &&
+      !record.sources.some((source) => source.fieldCoverage?.includes('operations.hours')),
+  );
+  const unprovenGates = catalog.records.filter(
+    (record) =>
+      record.location.gate &&
+      !record.sources.some((source) => source.fieldCoverage?.includes('location.gate')),
+  );
+  const unprovenOffers = catalog.records.flatMap((record) =>
+    (record.accessOffers ?? [])
+      .filter((offer) => {
+        const offerUrl = String(offer.url ?? '').trim();
+        return !record.sources.some((source) => {
+          if (source.sourceId !== offer.sourceId || !source.fieldCoverage?.includes('access.accessOffers')) {
+            return false;
+          }
+          const sourceUrl = String(source.url ?? '').trim();
+          return !offerUrl || !sourceUrl || sourceUrl === offerUrl;
+        });
+      })
+      .map((offer) => ({
+        recordId: record.lounge.id,
+        name: record.lounge.name,
+        airportCode: record.airport.iata,
+        offer,
+      })),
+  );
+
+  assert.deepEqual(
+    unprovenHours.map((record) => record.lounge.id),
+    [],
+  );
+  assert.deepEqual(
+    unprovenGates.map((record) => record.lounge.id),
+    [],
+  );
+  assert.deepEqual(unprovenOffers, []);
 });
 
 test('official Priority Pass detail pages enrich missing hours, fee, and position evidence', () => {
@@ -1616,6 +2541,11 @@ test('official Priority Pass detail pages enrich missing hours, fee, and positio
   const kulTravellers = catalog.records.find(
     (record) => record.lounge.id === 'KUL-kul14d-travellers-bar-and-grill-sama-sama-hotel-865',
   );
+  const cvgJabbrrbox = catalog.records.find((record) => record.lounge.id === 'CVG-cvg5w-jabbrrbox-430');
+  const heathrowGlobe = catalog.records.find(
+    (record) => record.lounge.id === 'LHR-lhr27d-the-globe-pub-and-kitchen-927',
+  );
+  const changiNatureland = catalog.records.find((record) => record.lounge.id === 'SIN-sin42s-natureland-1433');
 
   assert.equal(ambaarCnf?.operations.hours, '00:00 - 23:59 daily');
   assert.equal(ambaarCnf?.location.gate, '');
@@ -1702,4 +2632,17 @@ test('official Priority Pass detail pages enrich missing hours, fee, and positio
   assert.equal(kulTravellers?.operations.hours, '16:00 - 01:00 daily');
   assert.equal(kulTravellers?.location.gate, 'Level 2');
   assert.equal(kulTravellers?.accessOffers.length, 0);
+
+  assert.deepEqual(
+    cvgJabbrrbox?.accessOffers.map((offer) => [offer.currency, offer.amount]),
+    [['USD', 37.5]],
+  );
+  assert.deepEqual(
+    heathrowGlobe?.accessOffers.map((offer) => [offer.currency, offer.amount]),
+    [['GBP', 18]],
+  );
+  assert.deepEqual(
+    changiNatureland?.accessOffers.map((offer) => [offer.currency, offer.amount]),
+    [['SGD', 55.23]],
+  );
 });

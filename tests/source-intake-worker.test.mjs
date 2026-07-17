@@ -63,7 +63,7 @@ function createD1Mock() {
 
 test('Cloudflare source intake probe requires token auth', async () => {
   const response = await createSourceIntakeProbeResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe', { method: 'POST' }),
+    new Request('https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/probe', { method: 'POST' }),
     {
       LOUNGE_GURU_INTAKE_TOKEN: 'secret',
       LOUNGE_GURU_DB: createD1Mock(),
@@ -82,7 +82,7 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
   const fetchedUrls = [];
   const fetchedHeaders = [];
   const response = await createSourceIntakeProbeResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=collinson-international', {
+    new Request('https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/probe?sourceId=collinson-international', {
       method: 'POST',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -141,7 +141,7 @@ test('Cloudflare source intake probe writes bounded source run evidence', async 
 test('Cloudflare source intake probe supports ready airline HTML lanes', async () => {
   const d1 = createD1Mock();
   const response = await createSourceIntakeProbeResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=united', {
+    new Request('https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/probe?sourceId=united', {
       method: 'POST',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -173,7 +173,7 @@ test('Cloudflare source intake probe can fall back to Cloudflare browser renderi
   const d1 = createD1Mock();
   const browserRenderedUrls = [];
   const response = await createSourceIntakeProbeResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=united', {
+    new Request('https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/probe?sourceId=united', {
       method: 'POST',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -197,7 +197,7 @@ test('Cloudflare source intake probe can fall back to Cloudflare browser renderi
           ok: true,
           status: 200,
           statusText: 'OK',
-          finalUrl: String(url),
+          finalUrl: `${String(url)}?application_key=do-not-persist&airport=EWR`,
           contentType: 'text/html; charset=utf-8',
           text: '<html><body>Newark Liberty International Airport (EWR)<a href="/en/us/fly/travel/airport/united-club-and-lounge-locations.html">United Club locations</a></body></html>',
         };
@@ -224,6 +224,9 @@ test('Cloudflare source intake probe can fall back to Cloudflare browser renderi
   assert.equal(sources[0].fetchAttempts[0].fetchDriver, 'cloudflare_fetch');
   assert.equal(sources[0].fetchAttempts[1].status, 'fetched');
   assert.equal(sources[0].fetchAttempts[1].fetchDriver, 'cloudflare_browser');
+  assert.equal(sources[0].finalUrl.endsWith('?airport=EWR'), true);
+  assert.equal(sources[0].fetchAttempts[1].finalUrl.endsWith('?airport=EWR'), true);
+  assert.doesNotMatch(sourcesJson, /do-not-persist|application_key/);
   assert.ok(!Object.hasOwn(sources[0], 'text'));
   assert.ok(!Object.hasOwn(sources[0], 'html'));
 });
@@ -232,7 +235,7 @@ test('Cloudflare source intake probe aggregates bounded official source URLs', a
   const d1 = createD1Mock();
   const fetchedUrls = [];
   const response = await createSourceIntakeProbeResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe?sourceId=united', {
+    new Request('https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/probe?sourceId=united', {
       method: 'POST',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -280,7 +283,7 @@ test('Cloudflare source intake probe aggregates bounded official source URLs', a
 test('Cloudflare source intake batch probes ready public lanes only', async () => {
   const d1 = createD1Mock();
   const response = await createSourceIntakeBatchResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe-batch', {
+    new Request('https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/probe-batch', {
       method: 'POST',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -304,14 +307,12 @@ test('Cloudflare source intake batch probes ready public lanes only', async () =
   const body = await response.json();
   assert.equal(body.ok, true);
   assert.equal(body.mode, 'batch');
-  assert.equal(body.totalTasks, 8);
-  assert.equal(body.fetched, 8);
-  assert.equal(d1.calls.length, 8);
+  assert.equal(body.totalTasks, 6);
+  assert.equal(body.fetched, 6);
+  assert.equal(d1.calls.length, 6);
   assert.deepEqual(
     body.results.map((result) => result.sourceId).sort(),
     [
-      'amex-global-lounge-collection',
-      'aspire-lounges',
       'citi-travel',
       'collinson-international',
       'openstreetmap',
@@ -331,7 +332,7 @@ test('Cloudflare source intake status returns compact D1 evidence', async () => 
     LOUNGE_GURU_DB: d1,
   };
   await createSourceIntakeBatchResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe-batch?sourceIds=collinson-international', {
+    new Request('https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/probe-batch?sourceIds=collinson-international', {
       method: 'POST',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -349,7 +350,7 @@ test('Cloudflare source intake status returns compact D1 evidence', async () => 
   );
 
   const response = await createSourceIntakeStatusResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/status', {
+    new Request('https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/status', {
       method: 'GET',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -363,7 +364,7 @@ test('Cloudflare source intake status returns compact D1 evidence', async () => 
   assert.equal(body.ok, true);
   assert.equal(body.policy.localScrawl, 'blocked');
   assert.equal(body.policy.rawPageContentCommitted, false);
-  assert.equal(body.stats.readyTasks, 8);
+  assert.equal(body.stats.readyTasks, 6);
   assert.equal(body.stats.readyTasksWithCloudflareEvidence, 1);
   assert.deepEqual(body.sources.map((source) => source.sourceId), ['collinson-international']);
   assert.ok(body.sources[0].sha256);
@@ -378,7 +379,7 @@ test('Cloudflare source intake report returns D1-derived source report without r
     LOUNGE_GURU_DB: d1,
   };
   await createSourceIntakeBatchResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/probe-batch', {
+    new Request('https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/probe-batch', {
       method: 'POST',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -398,7 +399,7 @@ test('Cloudflare source intake report returns D1-derived source report without r
   );
 
   const response = await createSourceIntakeReportResponse(
-    new Request('https://loungeguru.desk.travel/admin/source-intake/report', {
+    new Request('https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/report', {
       method: 'GET',
       headers: {
         'x-lounge-guru-intake-token': 'secret',
@@ -415,19 +416,17 @@ test('Cloudflare source intake report returns D1-derived source report without r
   assert.equal(body.policy.execution.runtime, 'cloudflare');
   assert.equal(body.policy.execution.localScrawl, 'blocked');
   assert.equal(body.policy.rawPageContentCommitted, false);
-  assert.equal(body.stats.totalSources, 8);
-  assert.equal(body.stats.fetched, 8);
-  assert.equal(body.stats.readyTasks, 8);
-  assert.equal(body.stats.readyTasksWithCloudflareEvidence, 8);
-  assert.equal(body.stats.discoveredAirportCodes, 8);
+  assert.equal(body.stats.totalSources, 6);
+  assert.equal(body.stats.fetched, 6);
+  assert.equal(body.stats.readyTasks, 6);
+  assert.equal(body.stats.readyTasksWithCloudflareEvidence, 6);
+  assert.equal(body.stats.discoveredAirportCodes, 6);
   assert.ok(body.stats.discoveredLoungeLinks >= 5);
   assert.equal(body.terminalImpact.fullCatalogIntakeReport, false);
   assert.equal(body.terminalImpact.coverageGateStillRequiresFullCloudflareReport, true);
   assert.deepEqual(
     body.sources.map((source) => source.sourceId).sort(),
     [
-      'amex-global-lounge-collection',
-      'aspire-lounges',
       'citi-travel',
       'collinson-international',
       'openstreetmap',

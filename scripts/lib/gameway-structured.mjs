@@ -152,6 +152,7 @@ function summaryRecord(block) {
   const airportName = firstClassText(block.html, 'location--left--airport');
   const code = firstClassText(block.html, 'location--left--location').toUpperCase();
   const hoursText = firstClassText(block.html, 'location--left--time');
+  const plannedOpening = /\bcoming\s+soon\b/i.test(hoursText) ? 'Coming Soon' : '';
   const terminalRaw = firstClassText(block.html, 'location--right--terminal');
   const near = firstClassText(block.html, 'location--right--location');
   if (!/^[A-Z0-9]{3}$/.test(code) || !airportName || !near) {
@@ -170,7 +171,11 @@ function summaryRecord(block) {
     concourse: clean(near).match(/\bConcourse\s+[A-Z0-9]+\b/i)?.[0] || '',
     near,
     openHours: openHoursFromText(hoursText),
-    accessNotes: 'Published terminal, gate, and hours from the official Gameway locations page.',
+    status: plannedOpening ? 'planned' : 'active',
+    plannedOpening,
+    accessNotes: plannedOpening
+      ? 'Official Gameway locations page lists this lounge as coming soon.'
+      : 'Published terminal, gate, and hours from the official Gameway locations page.',
   };
 }
 

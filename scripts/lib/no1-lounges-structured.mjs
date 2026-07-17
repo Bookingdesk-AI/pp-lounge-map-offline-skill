@@ -119,6 +119,11 @@ function terminalFromText(value) {
   return terminal.replace(/^T(\d)/i, 'Terminal $1').replace(/\s+/g, ' ');
 }
 
+function directionalTerminalFromText(value) {
+  const direction = clean(value).match(/\b(?:Gatwick\s+)?(North|South)(?:\s+Terminal)?\b/i)?.[1];
+  return direction ? `${direction[0].toUpperCase()}${direction.slice(1).toLowerCase()} Terminal` : '';
+}
+
 function concourseFromText(value) {
   return clean(value).match(/\bConcourse\s+[A-Z0-9]+\b/i)?.[0] ?? '';
 }
@@ -227,7 +232,11 @@ export function parseNo1StructuredRecords(html, { url = '' } = {}) {
     }
 
     const brand = brandFromName(name);
-    const terminal = terminalFromText([name, locationLabel, description].join(' ')) || clean(locationLabel);
+    const terminalContext = [name, description, sourceUrl].join(' ');
+    const terminal =
+      terminalFromText(terminalContext) ||
+      directionalTerminalFromText(terminalContext) ||
+      terminalFromText(locationLabel);
     const concourse = concourseFromText(description);
     const hours = openHours(lounge.openingTimesInformation);
     const officialHoursText = hoursText(lounge.openingTimesInformation);

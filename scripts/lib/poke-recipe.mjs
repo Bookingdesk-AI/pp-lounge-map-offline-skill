@@ -2,7 +2,7 @@ import path from 'node:path';
 import { z } from 'zod';
 
 export const POKE_KITCHEN_URL = 'https://poke.com/kitchen';
-export const POKE_MCP_ENDPOINT = 'https://loungeguru.desk.travel/mcp';
+export const POKE_MCP_ENDPOINT = 'https://lounge-guru-mcp.dev-4ee.workers.dev/mcp';
 export const POKE_INTEGRATION_NAME = 'Lounge Guru';
 export const POKE_RECIPE_PATH = ['recipes', 'poke', 'lounge-guru.hosted.recipe.json'];
 

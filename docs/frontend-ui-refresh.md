@@ -52,7 +52,7 @@ Removed or suppressed copy:
 
 ## Review Surface
 
-- Production URL: `https://loungeguru.desk.travel/`
+- Production URL: `https://loungeguru-desk-travel.pages.dev/`
 - Desktop: results rail, filters, compare, map, and detail overlay.
 - Mobile sheet modes: `Results`, `Filters`, `Details`, `Compare`, `Review`.
 - Dev-only intake views remain hidden from production navigation.

@@ -1,6 +1,6 @@
 {
   "id": "lounge-guru-worldwide-coverage",
-  "version": "2026-07-11",
+  "version": "2026-07-16",
   "title": "Worldwide lounge coverage in Cloudflare D1",
   "status": "active",
   "targetScope": "all_known_official_public_airport_lounges_worldwide",
@@ -33,9 +33,9 @@
     "minApprovedRecords": 3000,
     "minNonPriorityRecords": 1300,
     "minApprovedRatio": 0.98,
-    "minHoursCoverageRatio": 0.97,
-    "minGateCoverageRatio": 0.45,
-    "minPriceCoverageRatio": 0.25,
+    "minHoursCoverageRatio": 0.99,
+    "minGateCoverageRatio": 0.6,
+    "minPriceCoverageRatio": 0.4,
     "minSourceFamilyCoverageRatio": 1,
     "minReadyMemberGapCoverageRatio": 1,
     "maxUnknownAirportRecords": 0,
@@ -95,7 +95,7 @@
       "label": "Airline-operated lounges",
       "mode": "official_public_playwright",
       "requiredForTerminal": true,
-      "members": ["united", "delta", "american", "air-canada", "singapore-airlines"],
+      "members": ["united", "delta", "american", "air-canada", "alaska-airlines", "singapore-airlines"],
       "benchmark": "Airline pages are the preferred source for operator-owned clubs, hours, restrictions, and temporary closures.",
       "acquisition": "Bounded official page intake through Playwright plus manual review for conflict resolution."
     },
@@ -138,7 +138,7 @@
     "Cloudflare D1 is the canonical publish target for approved worldwide coverage."
   ],
   "benchmark": {
-    "reason": "Max coverage v1 requires at least 3,000 deduped approved physical records, 1,300 approved non-Priority Pass records, stronger hours/gate/price coverage, and D1 field-level evidence for every canonical record while licensed/commercial global lounge inventory remains excluded.",
-    "reviewedAt": "2026-07-13"
+    "reason": "Phase 3 requires at least 3,000 deduped approved physical records, 1,300 approved non-Priority Pass records, 99% hours, 60% published gate or decision-useful location, 40% explicit price or lounge-specific access offers, and D1 field-level evidence for every canonical record while licensed/commercial global lounge inventory remains excluded.",
+    "reviewedAt": "2026-07-16"
   }
 }

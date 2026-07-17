@@ -59,7 +59,10 @@ test('airline-operated lounge records prefer airline brand assets over source fa
     ['IAD-iad17-the-etihad-lounge-722', 'etihad'],
     ['IAD-iad11-turkish-airlines-lounge-washington-723', 'turkish-airlines'],
     ['candidate-oneworld-iad-836', 'british-airways'],
-    ['candidate-oneworld-sea-1583', 'alaska-airlines'],
+    [
+      'candidate-airport-official-pages-sea-airport-official-pages-sea-alaska-lounge-concourse-c-near-gate-c16a',
+      'alaska-airlines',
+    ],
     ['candidate-oneworld-sea-833', 'british-airways'],
     ['candidate-oneworld-hkg-885', 'cathay-pacific'],
     ['candidate-oneworld-bkk-1017', 'japan-airlines'],
@@ -237,7 +240,12 @@ test('Chase Sapphire source overlap is merged into one physical lounge per airpo
   assert.ok(bos.lounge.programs.includes('Chase Sapphire Reserve'));
   assert.deepEqual(
     bos.sources.map((source) => source.sourceId),
-    ['chase-sapphire', 'priority-pass', 'ourairports'],
+    ['chase-sapphire', 'priority-pass', 'priority-pass', 'ourairports'],
+  );
+  assert.ok(
+    bos.sources.some(
+      (source) => source.sourceId === 'priority-pass' && source.fieldCoverage.includes('access.accessOffers'),
+    ),
   );
   assert.equal(bos.location.terminal, 'Terminal B');
   assert.match(bos.operations.hours, /05:00/);

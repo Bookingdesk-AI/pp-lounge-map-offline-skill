@@ -5,7 +5,7 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
-const DEFAULT_BASE_URL = 'https://loungeguru.desk.travel';
+const DEFAULT_BASE_URL = 'https://loungeguru-desk-travel.pages.dev';
 const DEFAULT_SELECTED_ID = 'BOS-bos19-chase-sapphire-lounge-by-the-club-357';
 const DEFAULT_EXPECTED_LOGO = 'chase-sapphire-lounge-reviewed.png';
 const CATALOG_PATH = new URL('../public/data/lounge-guru-catalog.json', import.meta.url);

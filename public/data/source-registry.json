@@ -8,7 +8,7 @@
     "freshnessDays": 7,
     "url": "https://desk.travel/",
     "rightsNote": "Internal Desk.Travel brand asset registry; use only approved logo assets and source mappings.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
+    "lastRunAt": "2026-07-17T06:45:08.000Z",
     "records": 43,
     "issues": 0,
     "brandIds": [
@@ -65,9 +65,10 @@
     "status": "active",
     "freshnessDays": 30,
     "url": "https://www.prioritypass.com/en-GB/airport-lounges",
+    "accessPolicyUrl": "https://www.prioritypass.com/en-GB/join-prioritypass",
     "rightsNote": "Use only the approved source workbook or public official pages; do not bypass account controls.",
     "lastRunAt": "2026-03-11T13:05:33.139Z",
-    "records": 1723,
+    "records": 1712,
     "issues": 653,
     "brandIds": [
       "priority-pass",
@@ -90,7 +91,7 @@
     "freshnessDays": 14,
     "url": "https://account.chase.com/sapphire-airport-lounge",
     "rightsNote": "Official public Chase page; parse only public location and policy text.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
+    "lastRunAt": "2026-07-14T23:13:21.013Z",
     "records": 8,
     "issues": 0,
     "brandIds": [
@@ -105,9 +106,13 @@
     "status": "manual_review",
     "freshnessDays": 14,
     "url": "https://global.americanexpress.com/lounge-access/the-platinum-card",
-    "rightsNote": "Official public Amex page; treat partner eligibility as source evidence, not canonical operator data.",
-    "lastRunAt": null,
-    "records": 0,
+    "accessPolicyUrls": [
+      "https://www.thecenturionlounge.com/info/access/",
+      "https://global.americanexpress.com/card-benefits/detail/delta-sky-club-access/delta-reserve-business"
+    ],
+    "rightsNote": "Official public Amex pages; treat partner eligibility as source evidence, not canonical operator data.",
+    "lastRunAt": "2026-07-17T02:37:02.577Z",
+    "records": 60,
     "issues": 0,
     "brandIds": [
       "american-express"
@@ -116,13 +121,14 @@
   {
     "id": "capital-one",
     "publisher": "Capital One Lounges",
-    "coverage": "Capital One Lounge and Landing locations",
+    "coverage": "Capital One Lounge and Landing locations and public access policy",
     "adapter": "official_page",
     "status": "manual_review",
     "freshnessDays": 14,
     "url": "https://www.capitalone.com/learn-grow/more-than-money/capital-one-lounges-arriving-in-airports/",
-    "rightsNote": "Official public Capital One page; retain URL provenance for every imported location.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
+    "accessPolicyUrl": "https://capitalonetravel.com/airport-lounges/lounge-access-guide/",
+    "rightsNote": "Official public Capital One pages; retain URL provenance for every imported location and access offer.",
+    "lastRunAt": "2026-07-17T01:43:01.605Z",
     "records": 7,
     "issues": 0,
     "brandIds": [
@@ -304,8 +310,8 @@
     "freshnessDays": 14,
     "url": "https://www.delta.com/us/en/delta-sky-club/locations",
     "rightsNote": "Official public airline location page.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 90,
+    "lastRunAt": "2026-07-17T02:58:34.377Z",
+    "records": 95,
     "issues": 0,
     "brandIds": [
       "delta"
@@ -329,11 +335,12 @@
       "https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp",
       "https://www.aa.com/i18n/travel-info/clubs/admirals-club-locations.jsp",
       "https://www.aa.com/i18n/travel-info/clubs/admirals-club.jsp",
-      "https://www.aa.com/i18n/travel-info/clubs/admirals-club-access.jsp"
+      "https://www.aa.com/i18n/travel-info/clubs/admirals-club-access.jsp",
+      "https://www.aa.com/i18n/travel-info/clubs/admirals-club-membership.jsp"
     ],
     "rightsNote": "Official public airline location pages, including regional American Airlines-owned surfaces.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 14,
+    "lastRunAt": "2026-07-16T21:55:08.353Z",
+    "records": 57,
     "issues": 0,
     "brandIds": [
       "american-airlines"
@@ -348,11 +355,27 @@
     "freshnessDays": 14,
     "url": "https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges.html",
     "rightsNote": "Official public airline location page.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
+    "lastRunAt": "2026-07-16T22:42:19.035Z",
     "records": 9,
     "issues": 0,
     "brandIds": [
       "air-canada"
+    ]
+  },
+  {
+    "id": "alaska-airlines",
+    "publisher": "Alaska Airlines Lounges",
+    "coverage": "Alaska-operated lounge locations, daily hours, and official single-entry lounge-pass pricing",
+    "adapter": "official_html",
+    "status": "manual_review",
+    "freshnessDays": 14,
+    "url": "https://www.alaskaair.com/content/airport-lounge/location-and-hours",
+    "rightsNote": "Official public Alaska Airlines lounge page; retain URL provenance for every imported field.",
+    "lastRunAt": "2026-07-16T22:15:25.320Z",
+    "records": 7,
+    "issues": 0,
+    "brandIds": [
+      "alaska-airlines"
     ]
   },
   {
@@ -364,12 +387,110 @@
     "freshnessDays": 14,
     "url": "https://www.singaporeair.com/en_UK/sg/flying-withus/before-the-flight/lounges/silverkris/",
     "rightsNote": "Official public Singapore Airlines lounge page; retain URL provenance for every imported field.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
+    "lastRunAt": "2026-07-13T17:01:51.110Z",
     "records": 13,
     "issues": 0,
     "brandIds": [
       "singapore-airlines"
     ]
+  },
+  {
+    "id": "bangkok-airways",
+    "publisher": "Bangkok Airways",
+    "coverage": "Bangkok Airways operated lounge locations and operating hours",
+    "adapter": "manual_review",
+    "status": "active",
+    "freshnessDays": 14,
+    "url": "https://www.bangkokair.com/lounge",
+    "rightsNote": "Official public Bangkok Airways lounge pages; retain URL provenance for every imported field.",
+    "lastRunAt": "2026-07-17T06:45:08.000Z",
+    "records": 2,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "china-airlines",
+    "publisher": "China Airlines",
+    "coverage": "China Airlines operated and published partner lounge locations and operating hours",
+    "adapter": "manual_review",
+    "status": "active",
+    "freshnessDays": 14,
+    "url": "https://www.china-airlines.com/uk/en/prepare-for-the-fly/information/airport-and-vip-lounge",
+    "rightsNote": "Official public China Airlines airport and VIP lounge page; retain URL provenance for every imported field.",
+    "lastRunAt": "2026-07-17T06:45:08.000Z",
+    "records": 2,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "thai-airways",
+    "publisher": "Thai Airways",
+    "coverage": "Thai Airways operated lounge locations and operating hours",
+    "adapter": "manual_review",
+    "status": "active",
+    "freshnessDays": 14,
+    "url": "https://www.thaiairways.com/en-ae/content/airport-information/bangkok/",
+    "rightsNote": "Official public Thai Airways airport page; retain URL provenance for every imported field.",
+    "lastRunAt": "2026-07-17T06:45:08.000Z",
+    "records": 2,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "eva-air",
+    "publisher": "EVA Air",
+    "coverage": "EVA Air operated lounge locations and operating hours",
+    "adapter": "manual_review",
+    "status": "active",
+    "freshnessDays": 14,
+    "url": "https://www.evaair.com/en-us/fly-prepare/at-the-airport/worldwide-airports/?countryCode=BKK",
+    "rightsNote": "Official public EVA Air airport page; retain URL provenance for every imported field.",
+    "lastRunAt": "2026-07-17T06:45:08.000Z",
+    "records": 1,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "turkish-airlines",
+    "publisher": "Turkish Airlines",
+    "coverage": "Turkish Airlines operated lounge locations and operating hours",
+    "adapter": "manual_review",
+    "status": "active",
+    "freshnessDays": 14,
+    "url": "https://www.turkishairlines.com/en-int/istanbul-airport/turkish-airlines-lounge/",
+    "rightsNote": "Official public Turkish Airlines lounge page; retain URL provenance for every imported field.",
+    "lastRunAt": "2026-07-17T06:45:08.000Z",
+    "records": 1,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "cathay-pacific",
+    "publisher": "Cathay Pacific",
+    "coverage": "Cathay Pacific operated lounge locations and operating hours",
+    "adapter": "manual_review",
+    "status": "active",
+    "freshnessDays": 14,
+    "url": "https://www.cathaypacific.com/cx/en_US/destinations/lounges.html",
+    "rightsNote": "Official public Cathay Pacific lounge pages; retain URL provenance for every imported field.",
+    "lastRunAt": "2026-07-17T06:45:08.000Z",
+    "records": 1,
+    "issues": 0,
+    "brandIds": []
+  },
+  {
+    "id": "air-china",
+    "publisher": "Air China",
+    "coverage": "Air China published airport lounge locations and operating hours",
+    "adapter": "manual_review",
+    "status": "active",
+    "freshnessDays": 14,
+    "url": "https://www.airchina.de/DE/GB/info/airport-information/shanghai.html",
+    "rightsNote": "Official public Air China airport service page; retain URL provenance for every imported field.",
+    "lastRunAt": "2026-07-17T06:45:08.000Z",
+    "records": 1,
+    "issues": 0,
+    "brandIds": []
   },
   {
     "id": "qatar-airways",
@@ -384,8 +505,8 @@
       "https://www.qatarairways.com/en-us/lounges/worldwide.html"
     ],
     "rightsNote": "Official public Qatar Airways lounge pages; retain URL provenance for every imported field and do not infer unpublished gate or price data.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 12,
+    "lastRunAt": "2026-07-16T21:02:19.001Z",
+    "records": 9,
     "issues": 0,
     "brandIds": [
       "qatar-airways"
@@ -404,8 +525,8 @@
       "https://www.qantas.com/us/en/qantas-experience/at-the-airport/airport-lounges/all-qantas-airport-lounges.html"
     ],
     "rightsNote": "Official public Qantas lounge pages; retain URL provenance for every imported field and do not infer unpublished gate or price data.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 44,
+    "lastRunAt": "2026-07-17T03:12:17.234Z",
+    "records": 75,
     "issues": 0,
     "brandIds": [
       "qantas"
@@ -441,8 +562,8 @@
     "freshnessDays": 14,
     "url": "https://www.oneworld.com/airport-lounges",
     "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 820,
+    "lastRunAt": "2026-07-12T02:28:25.729Z",
+    "records": 801,
     "issues": 0,
     "brandIds": [
       "british-airways",
@@ -506,8 +627,8 @@
       "https://www.plazapremiumlounge.com/en-uk/find/india-middle-east-south-africa/jordan/amman/queen-alia-international-airport/plaza-premium-lounge-departures"
     ],
     "rightsNote": "Official public operator page.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 467,
+    "lastRunAt": "2026-07-17T05:50:12.903Z",
+    "records": 491,
     "issues": 0,
     "brandIds": [
       "plaza-premium"
@@ -522,8 +643,8 @@
     "freshnessDays": 14,
     "url": "https://escapelounges.com/",
     "rightsNote": "Official public operator page.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 33,
+    "lastRunAt": "2026-07-14T22:21:09.802Z",
+    "records": 32,
     "issues": 0,
     "brandIds": [
       "escape-lounges"
@@ -538,8 +659,8 @@
     "freshnessDays": 14,
     "url": "https://www.airportdimensions.com/locations",
     "rightsNote": "Official public operator page.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 34,
+    "lastRunAt": "2026-07-16T22:21:43.229Z",
+    "records": 19,
     "issues": 0,
     "brandIds": [
       "airport-dimensions"
@@ -560,8 +681,8 @@
       "https://no1lounges.com/partner-lounges/aspire-lounges/"
     ],
     "rightsNote": "Official Aspire and official operator partner location surfaces; retain URL provenance for every imported field.",
-    "lastRunAt": null,
-    "records": 0,
+    "lastRunAt": "2026-07-16T23:36:54.096Z",
+    "records": 70,
     "issues": 0,
     "brandIds": []
   },
@@ -574,8 +695,8 @@
     "freshnessDays": 14,
     "url": "https://www.marhabaservices.com/ae/english/airport-lounges/",
     "rightsNote": "Official Marhaba location surface; retain URL provenance for every imported field.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 54,
+    "lastRunAt": "2026-07-14T19:31:42.226Z",
+    "records": 49,
     "issues": 0,
     "brandIds": []
   },
@@ -591,8 +712,8 @@
       "https://www.primeclass.com.tr/en/lounge"
     ],
     "rightsNote": "Official Primeclass location surface; retain URL provenance for every imported field.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 49,
+    "lastRunAt": "2026-07-14T18:51:10.976Z",
+    "records": 45,
     "issues": 0,
     "brandIds": []
   },
@@ -605,8 +726,8 @@
     "freshnessDays": 14,
     "url": "https://no1lounges.com/airport-lounges/",
     "rightsNote": "Official No1 Lounges location surface; retain URL provenance for every imported field.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 41,
+    "lastRunAt": "2026-07-16T23:16:54.337Z",
+    "records": 26,
     "issues": 0,
     "brandIds": []
   },
@@ -619,8 +740,8 @@
     "freshnessDays": 14,
     "url": "https://berelax.com/find-us/",
     "rightsNote": "Official Be Relax location surface; classify spa-only records separately from lounge access.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 37,
+    "lastRunAt": "2026-07-13T23:59:29.038Z",
+    "records": 39,
     "issues": 0,
     "brandIds": []
   },
@@ -633,7 +754,7 @@
     "freshnessDays": 14,
     "url": "https://gameway.gg/locations/",
     "rightsNote": "Official Gameway locations and location detail pages; retain URL provenance for every imported field.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
+    "lastRunAt": "2026-07-16T20:56:19.029Z",
     "records": 13,
     "issues": 0,
     "brandIds": []
@@ -647,8 +768,8 @@
     "freshnessDays": 14,
     "url": "https://www.airport-sleepover.com/en",
     "rightsNote": "Official Sleepover terminal pages; retain URL provenance for every imported field.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 10,
+    "lastRunAt": "2026-07-13T14:10:11.810Z",
+    "records": 9,
     "issues": 0,
     "brandIds": []
   },
@@ -661,7 +782,7 @@
     "freshnessDays": 14,
     "url": "https://minutesuites.com/locations/",
     "rightsNote": "Official Minute Suites public location and Priority Pass pages; honor robots crawl delay and retain URL provenance for every imported field.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
+    "lastRunAt": "2026-07-13T17:53:39.535Z",
     "records": 15,
     "issues": 0,
     "brandIds": []
@@ -752,8 +873,8 @@
       "https://dohahamadairport.com/lounge/silver-lounge-south"
     ],
     "rightsNote": "Official airport public pages; use for field evidence and candidate discovery only, without inferred map proximity.",
-    "lastRunAt": "2026-07-15T00:31:42.825Z",
-    "records": 317,
+    "lastRunAt": "2026-07-17T05:57:32.907Z",
+    "records": 281,
     "issues": 0,
     "brandIds": []
   },

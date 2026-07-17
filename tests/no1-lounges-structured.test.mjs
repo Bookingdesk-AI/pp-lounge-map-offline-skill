@@ -126,4 +126,37 @@ test('No1 parser preserves official opening-only hours text', () => {
   assert.equal(records[0].airportCode, 'BHD');
   assert.deepEqual(records[0].openHours, []);
   assert.equal(records[0].hoursText, 'Open daily from 05:00');
+  assert.equal(records[0].terminal, '');
+});
+
+test('No1 parser derives Gatwick direction from the product name before section labels', () => {
+  const page = {
+    components: [
+      {
+        locations: [
+          {
+            label: 'Terminal A',
+            lounges: [
+              {
+                loungeName: 'Club Aspire at Gatwick South',
+                url: '/lounges-by-location/club-aspire-at-gatwick-south/',
+                priceInformation: 'Prices from: £34',
+                openingTimesInformation: 'Open daily from 04:00 to 20:00',
+                description: 'Gatwick Airport lounge.',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  const html = `<script id="__NEXT_DATA__" type="application/json">${JSON.stringify({
+    props: { pageProps: { page } },
+  })}</script>`;
+
+  const [record] = parseNo1StructuredRecords(html, {
+    url: 'https://no1lounges.com/locations/london-gatwick/',
+  });
+
+  assert.equal(record.terminal, 'South Terminal');
 });

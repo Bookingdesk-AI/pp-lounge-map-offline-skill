@@ -10,6 +10,7 @@ const projectRoot = path.resolve(__dirname, '..');
 const goalPath = path.resolve(projectRoot, 'public', 'data', 'worldwide-coverage-goal.json');
 const catalogPath = path.resolve(projectRoot, 'public', 'data', 'lounge-guru-catalog.json');
 const sourceReportPath = path.resolve(projectRoot, 'public', 'data', 'source-intake-report.json');
+const cloudflareSourceReportPath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-intake-report.json');
 const sourceRunEvidencePath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-run-evidence.json');
 const nonPriorityCandidatesPath = path.resolve(projectRoot, 'public', 'data', 'non-priority-lounge-candidates.json');
 const airportAuthorityPath = path.resolve(projectRoot, 'public', 'data', 'airport-authority.json');
@@ -106,13 +107,14 @@ async function writeFileAtomic(filePath, contents) {
   }
 }
 
-function summarize(catalog, goal, migrationSql, sourceReport, sourceRunEvidence) {
+function summarize(catalog, goal, migrationSql, sourceReport, cloudflareSourceReport, sourceRunEvidence) {
   const gapReport = createCoverageGapReport({
     goal,
     catalog,
     sourceRegistry: catalog.sources ?? [],
     migrationSql,
     sourceIntakeReport: sourceReport,
+    cloudflareSourceIntakeReport: cloudflareSourceReport,
     sourceRunEvidence,
   });
   const records = catalog.records ?? [];
@@ -216,6 +218,7 @@ function upsertCoverageGoal(goal) {
     sourceFamilies: goal.sourceFamilies,
     guardrails: goal.guardrails,
     benchmark: goal.benchmark,
+    maxCoverageTargets: goal.terminalGoal,
     minReadyMemberGapCoverageRatio: goal.terminalGoal.minReadyMemberGapCoverageRatio,
   }))},
   CURRENT_TIMESTAMP
@@ -382,10 +385,31 @@ function hasExplicitPriceOffer(offers) {
   return offers.some((offer) => Number.isFinite(Number(offer.amount)) && hasText(offer.currency));
 }
 
+function hasSourceFieldCoverage(record, field) {
+  return (record.sources ?? []).some((source) => (source.fieldCoverage ?? []).includes(field));
+}
+
+function hasSourceForAccessOffer(record, offer) {
+  const offerSourceId = String(offer?.sourceId ?? '').trim();
+  const offerUrl = String(offer?.url ?? '').trim();
+  return (record.sources ?? []).some((source) => {
+    if (source.sourceId !== offerSourceId || !(source.fieldCoverage ?? []).includes('access.accessOffers')) {
+      return false;
+    }
+    const sourceUrl = String(source.url ?? '').trim();
+    return !offerUrl || !sourceUrl || sourceUrl === offerUrl;
+  });
+}
+
 function insertLoungeFieldCoverage(runId, record) {
   const primarySource = record.sources[0] ?? {};
   const accessOffers = Array.isArray(record.accessOffers) ? record.accessOffers : [];
-  const priceOffers = accessOffers.filter((offer) => Number.isFinite(Number(offer.amount)) && hasText(offer.currency));
+  const priceOffers = accessOffers.filter(
+    (offer) => Number.isFinite(Number(offer.amount)) && hasText(offer.currency) && hasSourceForAccessOffer(record, offer),
+  );
+  const hasHours = hasText(record.operations.hours) && hasSourceFieldCoverage(record, 'operations.hours');
+  const hasGate = hasText(record.location.gate) && hasSourceFieldCoverage(record, 'location.gate');
+  const hasPrice = hasExplicitPriceOffer(priceOffers);
 
   return `INSERT INTO lounge_field_coverage (
   lounge_id, catalog_run_id, name, brand, airport_iata, airport_name, city, country,
@@ -396,9 +420,9 @@ function insertLoungeFieldCoverage(runId, record) {
   ${sql(record.airport.iata)}, ${sql(record.airport.name)}, ${sql(record.airport.city)}, ${sql(record.airport.country)},
   ${sql(primarySource.sourceId ?? 'unknown')}, ${sql(primarySource.publisher ?? 'Unknown')},
   ${sql(primarySource.url ?? '')}, ${sql(primarySource.retrievedAt ?? '')}, ${sql(record.quality.reviewStatus)},
-  ${hasText(record.operations.hours) ? 1 : 0}, ${hasText(record.location.gate) ? 1 : 0},
-  ${hasExplicitPriceOffer(accessOffers) ? 1 : 0}, ${sql(record.operations.hours ?? '')},
-  ${sql(record.location.gate ?? '')}, ${sql(json(priceOffers))}, ${sql(json(primarySource.fieldCoverage ?? []))}
+  ${hasHours ? 1 : 0}, ${hasGate ? 1 : 0},
+  ${hasPrice ? 1 : 0}, ${sql(hasHours ? record.operations.hours : '')},
+  ${sql(hasGate ? record.location.gate : '')}, ${sql(json(priceOffers))}, ${sql(json(primarySource.fieldCoverage ?? []))}
 );`;
 }
 
@@ -420,7 +444,7 @@ function insertIdentityLinks(runId, record) {
   const sources = record.sources?.length > 0 ? record.sources : [{ sourceId: 'unknown', confidence: 0 }];
 
   return sources.map((source) => `(
-  ${sql(stableId(['lounge_identity_links', runId, record.lounge.id, source.sourceId]))},
+  ${sql(stableId(['lounge_identity_links', runId, record.lounge.id, source.sourceId, source.url]))},
   ${sql(runId)}, ${sql(record.lounge.id)}, ${sql(record.lounge.id)}, ${sql(source.sourceId ?? 'unknown')},
   ${sql(sources.length > 1 ? 'merged_source_overlay' : 'canonical_identity')},
   ${Number(source.confidence ?? 0)}, ${Number(record.quality?.conflicts?.length ?? 0)},
@@ -589,10 +613,20 @@ function insertValidationRun(goal, runId, summary) {
 }
 
 async function main() {
-  const [goal, catalog, sourceReport, sourceRunEvidence, nonPriorityCandidates, airportAuthority, migrationSql] = await Promise.all([
+  const [
+    goal,
+    catalog,
+    sourceReport,
+    cloudflareSourceReport,
+    sourceRunEvidence,
+    nonPriorityCandidates,
+    airportAuthority,
+    migrationSql,
+  ] = await Promise.all([
     readJson(goalPath),
     readJson(catalogPath),
     readJson(sourceReportPath),
+    readJson(cloudflareSourceReportPath),
     readJson(sourceRunEvidencePath),
     readJson(nonPriorityCandidatesPath),
     readOptionalJson(airportAuthorityPath, { airports: [] }),
@@ -600,7 +634,7 @@ async function main() {
   ]);
   const catalogHash = sha256(JSON.stringify(catalog));
   const runId = `catalog-${catalogHash.slice(0, 16)}`;
-  const summary = summarize(catalog, goal, migrationSql, sourceReport, sourceRunEvidence);
+  const summary = summarize(catalog, goal, migrationSql, sourceReport, cloudflareSourceReport, sourceRunEvidence);
   const fieldCoverageStats = catalog.records.reduce(
     (stats, record) => {
       const accessOffers = Array.isArray(record.accessOffers) ? record.accessOffers : [];

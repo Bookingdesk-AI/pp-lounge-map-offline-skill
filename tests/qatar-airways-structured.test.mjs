@@ -35,6 +35,24 @@ test('Qatar Airways parser extracts official lounge detail fields', () => {
   assert.match(record.sourceRecordId, /^qatar-airways-doh-/);
 });
 
+test('Qatar Airways parser ignores unrelated 24-hour account messages outside lounge content', () => {
+  const record = parseQatarAirwaysLoungeRecord(`
+    <html>
+      <head><title>First and Business Class Arrival Lounges | Qatar Airways</title></head>
+      <body>
+        <main id="main">
+          <h1>First and Business Class Arrival Lounges</h1>
+          <p>They are located in two areas: before immigration and after baggage claim.</p>
+        </main>
+        <form class="hidden"><p>Your account can be reset after 24 hours.</p></form>
+      </body>
+    </html>
+  `, { url: 'https://www.qatarairways.com/en-us/lounges/first-and-business-class-arrival-lounges.html' });
+
+  assert.deepEqual(record.openHours, []);
+  assert.match(record.near, /located in two areas/i);
+});
+
 test('Qatar Airways parser keeps official known lounge links only', () => {
   const links = parseQatarAirwaysLoungeLinks(`
     <a href="/en-us/lounges/al-safwa-lounge.html">Al Safwa</a>

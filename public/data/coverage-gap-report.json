@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-07-15T00:31:42.825Z",
+  "generatedAt": "2026-07-17T06:45:08.000Z",
   "goalId": "lounge-guru-worldwide-coverage",
-  "goalVersion": "2026-07-11",
-  "catalogHash": "b32c6c0d30cee14bf21edd3cb7e43a985c5a2a1ed53c6c15e4125e225d908823",
+  "goalVersion": "2026-07-16",
+  "catalogHash": "68d49ed7261ee177f982a5e6f95cf06f6c18ea38b3ada4e79dee2b7041ca6703",
   "terminalPassed": true,
   "blockers": [],
   "targets": {
     "minApprovedRecords": 3000,
     "minNonPriorityRecords": 1300,
     "minApprovedRatio": 0.98,
-    "minHoursCoverageRatio": 0.97,
-    "minGateCoverageRatio": 0.45,
-    "minPriceCoverageRatio": 0.25,
+    "minHoursCoverageRatio": 0.99,
+    "minGateCoverageRatio": 0.6,
+    "minPriceCoverageRatio": 0.4,
     "minSourceFamilyCoverageRatio": 1,
     "minReadyMemberGapCoverageRatio": 1,
     "maxReviewRecords": 0,
@@ -19,20 +19,20 @@
     "maxRecordsWithoutFieldEvidence": 0
   },
   "current": {
-    "totalRecords": 3227,
-    "approvedRecords": 3227,
-    "nonPriorityRecords": 1869,
+    "totalRecords": 3080,
+    "approvedRecords": 3080,
+    "nonPriorityRecords": 1807,
     "reviewRecords": 0,
     "approvedRatio": 1,
     "fieldCoverage": {
-      "total": 3227,
-      "hours": 3132,
-      "gates": 1491,
-      "prices": 879,
+      "total": 3080,
+      "hours": 3050,
+      "gates": 1919,
+      "prices": 2192,
       "recordsWithoutFieldEvidence": 0,
-      "hoursRatio": 0.9706,
-      "gateRatio": 0.462,
-      "priceRatio": 0.2724
+      "hoursRatio": 0.9903,
+      "gateRatio": 0.6231,
+      "priceRatio": 0.7117
     },
     "sourceFamilyCoverageRatio": 1,
     "unknownAirportRecords": 0,
@@ -77,12 +77,10 @@
     "readySourceIds": [
       "loungekey",
       "collinson-international",
-      "amex-global-lounge-collection",
       "citi-travel",
       "star-alliance",
       "skyteam",
       "united",
-      "aspire-lounges",
       "openstreetmap"
     ],
     "accessBlockedSourceIds": [],
@@ -92,8 +90,8 @@
     ],
     "missingSourceProofIds": [],
     "commands": {
-      "probe": "LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare -- --source-ids=loungekey,collinson-international,amex-global-lounge-collection,citi-travel,star-alliance,skyteam,united,aspire-lounges,openstreetmap",
-      "proofRepair": "LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare -- --source-ids=loungekey,collinson-international,amex-global-lounge-collection,citi-travel,star-alliance,skyteam,united,aspire-lounges,openstreetmap",
+      "probe": "LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare -- --source-ids=loungekey,collinson-international,citi-travel,star-alliance,skyteam,united,openstreetmap",
+      "proofRepair": "LOUNGE_GURU_INTAKE_TOKEN=<redacted> LOUNGE_GURU_INTAKE_TIMEOUT_MS=240000 npm run intake:cloudflare -- --source-ids=loungekey,collinson-international,citi-travel,star-alliance,skyteam,united,openstreetmap",
       "evidence": "npm run intake:evidence",
       "report": "public/data/source-intake-report.json",
       "promote": "npm run build:canonical-data",
@@ -122,7 +120,7 @@
           "registered": true,
           "status": "active",
           "adapter": "csv_file",
-          "records": 1723,
+          "records": 3118,
           "rightsNote": "Use only the approved source workbook or public official pages; do not bypass account controls."
         },
         {
@@ -150,11 +148,11 @@
       "acquisition": "Official pages first; partner APIs or manual review for eligibility and guest policy.",
       "present": true,
       "presentMembers": [
+        "amex-global-lounge-collection",
         "chase-sapphire",
         "capital-one"
       ],
       "missingMembers": [
-        "amex-global-lounge-collection",
         "citi-travel"
       ],
       "members": [
@@ -163,8 +161,8 @@
           "registered": true,
           "status": "manual_review",
           "adapter": "official_page",
-          "records": 0,
-          "rightsNote": "Official public Amex page; treat partner eligibility as source evidence, not canonical operator data."
+          "records": 80,
+          "rightsNote": "Official public Amex pages; treat partner eligibility as source evidence, not canonical operator data."
         },
         {
           "sourceId": "chase-sapphire",
@@ -179,8 +177,8 @@
           "registered": true,
           "status": "manual_review",
           "adapter": "official_page",
-          "records": 7,
-          "rightsNote": "Official public Capital One page; retain URL provenance for every imported location."
+          "records": 14,
+          "rightsNote": "Official public Capital One pages; retain URL provenance for every imported location and access offer."
         },
         {
           "sourceId": "citi-travel",
@@ -219,7 +217,7 @@
           "registered": true,
           "status": "candidate",
           "adapter": "official_page",
-          "records": 820,
+          "records": 801,
           "rightsNote": "Official alliance finder; use for cross-checking access and location evidence before review."
         },
         {
@@ -242,6 +240,7 @@
         "delta",
         "american",
         "air-canada",
+        "alaska-airlines",
         "singapore-airlines"
       ],
       "missingMembers": [
@@ -261,7 +260,7 @@
           "registered": true,
           "status": "manual_review",
           "adapter": "official_html",
-          "records": 90,
+          "records": 95,
           "rightsNote": "Official public airline location page."
         },
         {
@@ -269,7 +268,7 @@
           "registered": true,
           "status": "manual_review",
           "adapter": "official_html",
-          "records": 14,
+          "records": 69,
           "rightsNote": "Official public airline location pages, including regional American Airlines-owned surfaces."
         },
         {
@@ -277,8 +276,16 @@
           "registered": true,
           "status": "manual_review",
           "adapter": "official_html",
-          "records": 9,
+          "records": 16,
           "rightsNote": "Official public airline location page."
+        },
+        {
+          "sourceId": "alaska-airlines",
+          "registered": true,
+          "status": "manual_review",
+          "adapter": "official_html",
+          "records": 14,
+          "rightsNote": "Official public Alaska Airlines lounge page; retain URL provenance for every imported field."
         },
         {
           "sourceId": "singapore-airlines",
@@ -300,22 +307,21 @@
         "plaza-premium",
         "escape-lounges",
         "airport-dimensions",
+        "aspire-lounges",
         "marhaba",
         "primeclass",
         "no1-lounges",
         "be-relax",
         "minute-suites"
       ],
-      "missingMembers": [
-        "aspire-lounges"
-      ],
+      "missingMembers": [],
       "members": [
         {
           "sourceId": "plaza-premium",
           "registered": true,
           "status": "manual_review",
           "adapter": "official_page",
-          "records": 467,
+          "records": 511,
           "rightsNote": "Official public operator page."
         },
         {
@@ -323,7 +329,7 @@
           "registered": true,
           "status": "manual_review",
           "adapter": "official_page",
-          "records": 33,
+          "records": 34,
           "rightsNote": "Official public operator page."
         },
         {
@@ -331,7 +337,7 @@
           "registered": true,
           "status": "manual_review",
           "adapter": "official_page",
-          "records": 34,
+          "records": 19,
           "rightsNote": "Official public operator page."
         },
         {
@@ -339,7 +345,7 @@
           "registered": true,
           "status": "candidate",
           "adapter": "official_page",
-          "records": 0,
+          "records": 74,
           "rightsNote": "Official Aspire and official operator partner location surfaces; retain URL provenance for every imported field."
         },
         {
@@ -347,7 +353,7 @@
           "registered": true,
           "status": "candidate",
           "adapter": "official_page",
-          "records": 54,
+          "records": 49,
           "rightsNote": "Official Marhaba location surface; retain URL provenance for every imported field."
         },
         {
@@ -355,7 +361,7 @@
           "registered": true,
           "status": "candidate",
           "adapter": "official_page",
-          "records": 49,
+          "records": 45,
           "rightsNote": "Official Primeclass location surface; retain URL provenance for every imported field."
         },
         {
@@ -363,7 +369,7 @@
           "registered": true,
           "status": "candidate",
           "adapter": "official_page",
-          "records": 41,
+          "records": 26,
           "rightsNote": "Official No1 Lounges location surface; retain URL provenance for every imported field."
         },
         {
@@ -371,7 +377,7 @@
           "registered": true,
           "status": "candidate",
           "adapter": "official_page",
-          "records": 37,
+          "records": 39,
           "rightsNote": "Official Be Relax location surface; classify spa-only records separately from lounge access."
         },
         {
@@ -379,7 +385,7 @@
           "registered": true,
           "status": "candidate",
           "adapter": "official_page",
-          "records": 15,
+          "records": 30,
           "rightsNote": "Official Minute Suites public location and Priority Pass pages; honor robots crawl delay and retain URL provenance for every imported field."
         }
       ]
@@ -404,7 +410,7 @@
           "registered": true,
           "status": "active",
           "adapter": "csv_file",
-          "records": 1723,
+          "records": 1712,
           "rightsNote": "Open airport reference data; use for normalization only."
         },
         {
@@ -412,7 +418,7 @@
           "registered": true,
           "status": "candidate",
           "adapter": "official_page",
-          "records": 317,
+          "records": 284,
           "rightsNote": "Official airport public pages; use for field evidence and candidate discovery only, without inferred map proximity."
         },
         {

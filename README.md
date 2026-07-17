@@ -29,10 +29,11 @@ See `docs/worldwide-coverage-cloudflare-goal.md` for the Cloudflare D1 worldwide
 
 ## Production MCP endpoints
 
-- Streamable HTTP: `https://loungeguru.desk.travel/mcp`
-- Legacy SSE stream: `https://loungeguru.desk.travel/sse`
-- Legacy SSE message POST: `https://loungeguru.desk.travel/messages`
-- Health check: `https://loungeguru.desk.travel/healthz`
+- Web app: `https://loungeguru-desk-travel.pages.dev`
+- Streamable HTTP: `https://lounge-guru-mcp.dev-4ee.workers.dev/mcp`
+- Legacy SSE stream: `https://lounge-guru-mcp.dev-4ee.workers.dev/sse`
+- Legacy SSE message POST: `https://lounge-guru-mcp.dev-4ee.workers.dev/messages`
+- Health check: `https://lounge-guru-mcp.dev-4ee.workers.dev/healthz`
 
 `/mcp` is the canonical endpoint and should be configured with `transport: "streamable-http"`.
 `/sse` and `/messages` exist only for older clients that still require the deprecated SSE transport.

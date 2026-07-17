@@ -40,9 +40,9 @@ Terminal criteria:
 - Approved deduped physical lounge records: `>= 3,000`
 - Approved non-Priority Pass records: `>= 1,300`
 - Approved ratio: `>= 98%`
-- Hours coverage: `>= 97%`
-- Gate or near-gate coverage: `>= 45%`
-- Price/access offer coverage: `>= 25%` when official booking/payment pages publish amount and currency
+- Hours coverage: `>= 99%`
+- Gate or decision-useful location coverage: `>= 60%`
+- Price/access offer coverage: `>= 40%` when official booking/payment pages publish amount and currency
 - Required source family coverage: `100%`
 - Review records: `0`
 - Unknown airport records: `0`
@@ -56,16 +56,16 @@ Terminal criteria:
 ## Current Local Gate
 
 ```text
-Catalog: 3083 records, 3083 approved, 0 review
-Non-PP: 1442 records
+Catalog: 3197 records, 3197 approved, 0 review
+Non-PP: 1872 records
 Approved ratio: 100.00%
-Hours: 2862 / 3083 = 92.83%
-Gate: 1293 / 3083 = 41.94%
-Price: 428 / 3083 = 13.88%
+Hours: 3127 / 3197 = 97.81%
+Gate: 1977 / 3197 = 61.84%
+Price: 904 / 3197 = 28.28%
 Source families: 100.00%
 Source intake: playwright
 Source proof: 16 fetched Cloudflare snapshots; 5/5 ready member gaps covered
-Terminal goal: blocked by hours, gates, and prices
+Terminal goal: blocked by hours and prices
 ```
 
 Current deltas:
@@ -73,9 +73,9 @@ Current deltas:
 ```text
 Approved records remaining: 0
 Non-PP records remaining: 0
-Hours fields remaining: 129
-Gate fields remaining: 95
-Price fields remaining: 343
+Hours fields remaining: 42
+Gate fields remaining: 0
+Price fields remaining: 375
 Open review records: 0
 ```
 
@@ -255,9 +255,9 @@ SELECT total_records, approved_records, review_records, non_priority_records
 FROM catalog_runs
 ORDER BY created_at DESC
 LIMIT 1;
--- expected after push: 3083, 3083, 0, 1442
+-- current published run: 3197, 3197, 0, 1869
 
 SELECT COUNT(*) AS total, SUM(has_hours) AS hours, SUM(has_gate) AS gates, SUM(has_price) AS prices
 FROM lounge_field_coverage;
--- expected after push: 3083, 2862, 1293, 428
+-- current published run: 3197, 3127, 1977, 904
 ```

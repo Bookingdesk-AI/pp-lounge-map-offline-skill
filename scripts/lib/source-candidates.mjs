@@ -31,8 +31,82 @@ function hasValue(value) {
   return clean(value) !== '' && clean(value) !== 'Unknown';
 }
 
+function gateNumberFromWords(value) {
+  const normalized = clean(value).toLowerCase().replace(/_/g, '-');
+  if (/^[0-9]{1,3}[a-z]?$/i.test(normalized)) {
+    return normalized.toUpperCase();
+  }
+
+  const ones = new Map([
+    ['one', 1],
+    ['two', 2],
+    ['three', 3],
+    ['four', 4],
+    ['five', 5],
+    ['six', 6],
+    ['seven', 7],
+    ['eight', 8],
+    ['nine', 9],
+  ]);
+  const teens = new Map([
+    ['ten', 10],
+    ['eleven', 11],
+    ['twelve', 12],
+    ['thirteen', 13],
+    ['fourteen', 14],
+    ['fifteen', 15],
+    ['sixteen', 16],
+    ['seventeen', 17],
+    ['eighteen', 18],
+    ['nineteen', 19],
+  ]);
+  const tens = new Map([
+    ['twenty', 20],
+    ['thirty', 30],
+    ['forty', 40],
+    ['fifty', 50],
+    ['sixty', 60],
+    ['seventy', 70],
+    ['eighty', 80],
+    ['ninety', 90],
+  ]);
+  const parts = normalized.split('-').filter(Boolean);
+  if (parts.length === 1) {
+    return String(ones.get(parts[0]) ?? teens.get(parts[0]) ?? tens.get(parts[0]) ?? '');
+  }
+  if (parts.length === 2 && tens.has(parts[0]) && ones.has(parts[1])) {
+    return String(tens.get(parts[0]) + ones.get(parts[1]));
+  }
+  return '';
+}
+
 function sourceById() {
   return new Map(cloneSourceRegistry().map((source) => [source.id, source]));
+}
+
+function normalizedHost(value) {
+  try {
+    return new URL(clean(value)).hostname.toLowerCase().replace(/^www\./, '');
+  } catch {
+    return '';
+  }
+}
+
+function structuredRecordRedirectedOutsideOperator(source, record) {
+  if (source.sourceId !== 'airport-dimensions' || !record.sourceUrl) {
+    return false;
+  }
+
+  const page = (source.structuredApi?.pages ?? []).find(
+    (candidate) => clean(candidate.url).replace(/^https?:\/\/www\./i, 'https://') === clean(record.sourceUrl).replace(/^https?:\/\/www\./i, 'https://'),
+  );
+  if (!page?.finalUrl) {
+    return false;
+  }
+
+  const sourceHost = normalizedHost(record.sourceUrl);
+  const finalHost = normalizedHost(page.finalUrl);
+  return sourceHost === 'theclubairportlounges.com' && finalHost !== sourceHost;
 }
 
 function codesFromLinks(sourceId, links) {
@@ -192,6 +266,7 @@ function programsForSource(sourceId) {
     qantas: ['Qantas', 'oneworld Emerald', 'oneworld Sapphire', 'Premium cabin'],
     delta: ['Delta Sky Club', 'SkyTeam Elite Plus', 'Premium cabin'],
     american: ['Admirals Club', 'Flagship Lounge'],
+    'alaska-airlines': ['Alaska Lounge'],
     'airport-dimensions': ['The Club', 'Priority Pass'],
     'escape-lounges': ['Escape Lounges'],
     oneworld: ['oneworld Emerald', 'oneworld Sapphire', 'Premium cabin'],
@@ -220,6 +295,7 @@ function accessMethodsForSource(sourceId) {
     qantas: ['airline status', 'alliance status', 'premium cabin', 'membership'],
     delta: ['airline status', 'premium cabin', 'membership'],
     american: ['airline status', 'premium cabin', 'membership'],
+    'alaska-airlines': ['paid access', 'airline status', 'membership'],
     'airport-dimensions': ['membership', 'partner access'],
     'escape-lounges': ['cardholder', 'paid access'],
     oneworld: ['alliance status', 'premium cabin'],
@@ -568,6 +644,10 @@ function closestGateAreaFromStructuredRecord(record) {
       format: (match) => formatNamedArea('Satellite', match[1]),
     },
     {
+      pattern: /\b(north|south|east|west)\s+(concourse|wing)\b/i,
+      format: (match) => formatReversedNamedArea(titleArea(match[2]), match[1]),
+    },
+    {
       pattern: /\bsatellite\s+([A-Z]|terminal|building)\b/i,
       format: (match) => formatNamedArea('Satellite', match[1]),
     },
@@ -634,8 +714,14 @@ function closestGateAreaFromStructuredRecord(record) {
 
 function closestOfficialPositionFromStructuredRecord(record) {
   const text = clean([record.name, record.near, record.location, record.directions, record.concourse, record.terminal].filter(Boolean).join(' '));
+  const locationText = clean([record.near, record.location, record.directions, record.concourse, record.terminal].filter(Boolean).join(' '));
   if (!text) {
     return '';
+  }
+
+  const urlGate = closestGateFromOfficialUrl(record);
+  if (urlGate) {
+    return urlGate;
   }
 
   const mapUnit = text.match(/\bMap\s+(?:shop|facilities|dine)\/(?:[^,\s/_]+[\/_])?([0-9][A-Z0-9/-]*)\b/i)?.[1];
@@ -677,6 +763,23 @@ function closestOfficialPositionFromStructuredRecord(record) {
 
   if (/\bAirline\s+Lounges\b/i.test(text)) {
     return 'Airline Lounges';
+  }
+
+  const namedSatellite = text.match(/\bSatellite\s+([A-Z0-9]+)(?:\s+Building)?\b/i)?.[1];
+  if (namedSatellite) {
+    return `Satellite ${namedSatellite.toUpperCase()}`;
+  }
+
+  if (/\bVIP\s+Terminal\b/i.test(text)) {
+    return 'VIP Terminal';
+  }
+
+  if (/\bVIP\s+Area\b/i.test(text)) {
+    return 'VIP Area';
+  }
+
+  if (/\bSeparate\s+Building\b/i.test(text)) {
+    return 'Separate Building';
   }
 
   if (/\bAir\s+Shuttle\s+Lobby\b/i.test(text)) {
@@ -819,7 +922,7 @@ function closestOfficialPositionFromStructuredRecord(record) {
   }
 
   const concourse =
-    text.match(/\bConcourses?\s+([A-Z0-9](?:\s*(?:\/|-|&|and)\s*[A-Z0-9])*)\b/i)?.[1] ||
+    text.match(/\bConcourses?\s+([A-Z][0-9]?(?:\s*(?:\/|-|&|and)\s*[A-Z][0-9]?)*)\b/i)?.[1] ||
     text.match(/\b([A-Z])\s+Concourse\b/i)?.[1] ||
     '';
   if (concourse) {
@@ -833,6 +936,11 @@ function closestOfficialPositionFromStructuredRecord(record) {
       .trim();
     const prefix = /[/&-]/.test(normalizedConcourse) ? 'Concourses' : 'Concourse';
     return `${prefix} ${normalizedConcourse}`;
+  }
+
+  const directionalConcourse = locationText.match(/\b(Eastern|Western|Northern|Southern)\s+Concourse\b/i)?.[1];
+  if (directionalConcourse) {
+    return `${directionalConcourse[0].toUpperCase()}${directionalConcourse.slice(1).toLowerCase()} Concourse`;
   }
 
   if (/\bGround\s+Floor\b/i.test(text)) {
@@ -855,6 +963,31 @@ function closestOfficialPositionFromStructuredRecord(record) {
     return 'Domestic Departures Area';
   }
 
+  const tsaEntrance = locationText.match(/\b(North|South|East|West)\s+TSA\s+Entrance\b/i)?.[1];
+  if (tsaEntrance) {
+    return `${tsaEntrance[0].toUpperCase()}${tsaEntrance.slice(1).toLowerCase()} TSA Entrance`;
+  }
+
+  if (/\bNational\s+Hall\b/i.test(locationText)) {
+    return 'National Hall';
+  }
+
+  if (/\bTSA\s+PreCheck\s+(?:and|&)\s+Clear\s+Security\s+Checkpoints?\b/i.test(locationText)) {
+    return 'TSA PreCheck & Clear Security Checkpoints';
+  }
+
+  if (/\bSecurity\s+Checkpoints?\b/i.test(locationText)) {
+    return 'Security Checkpoint';
+  }
+
+  if (/\bRailway\s*,?\s+Departures?\b/i.test(locationText)) {
+    return 'Railway Departure';
+  }
+
+  if (/\bUS\s+Departures?\b/i.test(locationText)) {
+    return 'US Departures';
+  }
+
   if (/\bDepartures?\s+Hall\b/i.test(text)) {
     return 'Departure Hall';
   }
@@ -871,8 +1004,16 @@ function closestOfficialPositionFromStructuredRecord(record) {
     return 'Check-in & Arrivals';
   }
 
+  if (/\bArrivals?\s+Hall\b/i.test(text)) {
+    return 'Arrivals Hall';
+  }
+
   if (/\bArrivals?\s+Areas?\b/i.test(text)) {
     return 'Arrivals Area';
+  }
+
+  if (/\bArrivals?\s+Terminal\b/i.test(locationText)) {
+    return 'Arrivals Terminal';
   }
 
   if (/\bCentral\s+Area\b/i.test(text)) {
@@ -929,12 +1070,48 @@ function closestOfficialPositionFromStructuredRecord(record) {
   }
 
   const checkIn = text.match(/\bCheck-?in\s+([A-Z0-9]+)\b/i)?.[1];
-  if (checkIn) {
+  if (checkIn && !new Set(['MAP', 'UNKNOWN', 'VIEW']).has(checkIn.toUpperCase())) {
     return `Check-in ${checkIn.toUpperCase()}`;
+  }
+
+  if (/\b(?:next\s+to|near|at|beside|opposite)?\s*(?:the\s+)?check-?in\b/i.test(text)) {
+    return 'Check-in Area';
   }
 
   if (/\b(?:boarding|departure)\s+gates?\s+area\b/i.test(text) || /\bopposite\s+departure\s+gates?\b/i.test(text)) {
     return 'Gate Area';
+  }
+
+  if (/\bLandside\s+Area\b/i.test(locationText)) {
+    return 'Landside Area';
+  }
+
+  if (/^Landside(?:\s*,|$)/i.test(locationText)) {
+    return 'Landside Area';
+  }
+
+  if (/\bOutside\s+the\s+Terminal\b/i.test(locationText)) {
+    return 'Outside Terminal';
+  }
+
+  if (/\bInternational\s+Departures?\b/i.test(text)) {
+    return 'International Departures';
+  }
+
+  if (/\bDomestic\s+Departures?\b/i.test(text)) {
+    return 'Domestic Departures';
+  }
+
+  if (/\bTransborder\s+Departures?\b/i.test(text)) {
+    return 'Transborder Departures';
+  }
+
+  if (/^Departures?(?:\s*,|$)/i.test(locationText)) {
+    return 'Departures Area';
+  }
+
+  if (/^Arrivals?(?:\s*,|$)/i.test(locationText)) {
+    return 'Arrivals Area';
   }
 
   const loungeLetter = text.match(/\bLounge\s+([A-Z])\b/i)?.[1];
@@ -962,12 +1139,44 @@ function closestOfficialPositionFromStructuredRecord(record) {
   return '';
 }
 
+function closestGateFromOfficialUrl(record) {
+  if (!record.sourceUrl) {
+    return '';
+  }
+
+  let slug = '';
+  try {
+    const url = new URL(record.sourceUrl);
+    slug = decodeURIComponent(url.pathname.split('/').filter(Boolean).at(-1) ?? '').toLowerCase();
+  } catch {
+    return '';
+  }
+
+  const nearGate = slug.match(/\bnear-gate-([a-z0-9-]+)$/i)?.[1];
+  if (nearGate) {
+    return formatExactGate(gateNumberFromWords(nearGate));
+  }
+
+  const loungeGate = slug.match(/^(.+)-gate-([a-z0-9-]+)$/i);
+  if (!loungeGate) {
+    return '';
+  }
+
+  const recordNameSlug = slugify(record.name);
+  const slugName = loungeGate[1];
+  if (!recordNameSlug || slugName !== recordNameSlug) {
+    return '';
+  }
+
+  return formatExactGate(gateNumberFromWords(loungeGate[2]));
+}
+
 function priceAmount(value) {
   const amount = Number(String(value ?? '').replace(/[^0-9.]+/g, ''));
   return Number.isFinite(amount) && amount > 0 ? amount : null;
 }
 
-function pushAccessOffer(offers, { amount, currency, source, url, retrievedAt }) {
+function pushAccessOffer(offers, { amount, currency, source, url, retrievedAt, label = '', type = 'paid_entry' }) {
   const normalizedAmount = priceAmount(amount);
   const normalizedCurrency = clean(currency).toUpperCase();
   if (!normalizedAmount || !/^[A-Z]{3}$/.test(normalizedCurrency)) {
@@ -975,10 +1184,10 @@ function pushAccessOffer(offers, { amount, currency, source, url, retrievedAt })
   }
 
   const sourceUrl = url || source.structuredApi?.loungeUrlTemplate || source.finalUrl || source.url;
-  const label = `${normalizedCurrency} ${normalizedAmount.toFixed(2).replace(/\.00$/, '')}`;
+  const normalizedLabel = clean(label) || `${normalizedCurrency} ${normalizedAmount.toFixed(2).replace(/\.00$/, '')}`;
   const offer = {
-    type: 'paid_entry',
-    label,
+    type: clean(type) || 'paid_entry',
+    label: normalizedLabel,
     amount: normalizedAmount,
     currency: normalizedCurrency,
     sourceId: source.sourceId,
@@ -1042,7 +1251,9 @@ function accessOffersFromStructuredRecord({ record, source, retrievedAt }) {
     record.shopifyProductData?.prices,
     ...variantPriceEntries(record.shopifyProductData),
     record.prices,
-  ].filter(Boolean);
+  ]
+    .filter(Boolean)
+    .flatMap((price) => (Array.isArray(price) ? price : [price]));
 
   for (const price of directPrices) {
     if (typeof price === 'number' || typeof price === 'string') {
@@ -1061,8 +1272,10 @@ function accessOffersFromStructuredRecord({ record, source, retrievedAt }) {
         amount: price.amount ?? price.value,
         currency: price.currencyCode ?? price.currency,
         source,
-        url: price.url || record.sourceUrl,
+        url: price.url || price.sourceUrl || record.sourceUrl,
         retrievedAt,
+        label: price.label,
+        type: price.type,
       });
     }
 
@@ -1072,8 +1285,9 @@ function accessOffersFromStructuredRecord({ record, source, retrievedAt }) {
           amount: value.amount ?? value.value,
           currency: value.currencyCode ?? value.currency,
           source,
-          url: value.url || price.url || record.sourceUrl,
+          url: value.url || value.sourceUrl || price.url || price.sourceUrl || record.sourceUrl,
           retrievedAt,
+          type: value.type || price.type,
         });
       }
     }
@@ -1103,11 +1317,21 @@ function makeStructuredCandidateRecord({ source, registryEntry, record, airport,
   const exceptions = unique(record.exceptions ?? []);
   const amenities = amenitiesFromStructuredRecord(record);
   const hours = cleanHours(record.openHours, record.hoursText);
+  const plannedOpening = clean(record.plannedOpening);
   const accessOffers = accessOffersFromStructuredRecord({ record, source, retrievedAt });
   const conflicts = ['manual_review_required'];
   const sourceHasAmenityBooleans = Object.keys(record.amenities ?? {}).length > 0;
+  const primarySourceUrl = record.sourceUrl
+    ? record.sourceUrl
+    : source.structuredApi?.loungeUrlTemplate
+    ? `${source.structuredApi.loungeUrlTemplate.replace('{airportCode}', code)}`
+    : source.finalUrl || source.url;
+  const primarySourceCoversOffers = accessOffers.some((offer) => !clean(offer.url) || clean(offer.url) === clean(primarySourceUrl));
+  const offerSourceUrls = unique(
+    accessOffers.map((offer) => clean(offer.url)).filter((url) => url && url !== clean(primarySourceUrl)),
+  );
 
-  if (!hours) {
+  if (!hours && !plannedOpening) {
     conflicts.push('missing_hours');
   }
   if (terminal === 'Unknown') {
@@ -1126,7 +1350,7 @@ function makeStructuredCandidateRecord({ source, registryEntry, record, airport,
       brandAsset,
       operator: clean(record.operator) || registryEntry.publisher,
       category: 'lounge',
-      status: 'candidate',
+      status: clean(record.status) || 'candidate',
       programs: accessPrograms,
       accessMethods: accessMethodsForSource(source.sourceId),
     },
@@ -1149,7 +1373,7 @@ function makeStructuredCandidateRecord({ source, registryEntry, record, airport,
     operations: {
       hours,
       exceptions,
-      plannedOpening: '',
+      plannedOpening,
       lastVerifiedAt: retrievedAt,
     },
     accessOffers,
@@ -1161,11 +1385,7 @@ function makeStructuredCandidateRecord({ source, registryEntry, record, airport,
       {
         sourceId: source.sourceId,
         publisher: registryEntry.publisher,
-        url: record.sourceUrl
-          ? record.sourceUrl
-          : source.structuredApi?.loungeUrlTemplate
-          ? `${source.structuredApi.loungeUrlTemplate.replace('{airportCode}', code)}`
-          : source.finalUrl || source.url,
+        url: primarySourceUrl,
         retrievedAt,
         fieldCoverage: [
           'lounge.name',
@@ -1174,14 +1394,24 @@ function makeStructuredCandidateRecord({ source, registryEntry, record, airport,
           ...(terminal !== 'Unknown' ? ['location.terminal'] : []),
           ...(closestGate ? ['location.gate'] : []),
           ...(hours ? ['operations.hours'] : []),
+          ...(plannedOpening ? ['operations.plannedOpening'] : []),
           ...(exceptions.length > 0 ? ['operations.exceptions'] : []),
-          ...(accessOffers.length > 0 ? ['access.accessOffers'] : []),
+          ...(primarySourceCoversOffers ? ['access.accessOffers'] : []),
           'amenities',
           'restrictions',
         ],
         confidence: canApprove ? 0.82 : 0.68,
         rightsNote: registryEntry.rightsNote,
       },
+      ...offerSourceUrls.map((url) => ({
+        sourceId: source.sourceId,
+        publisher: registryEntry.publisher,
+        url,
+        retrievedAt,
+        fieldCoverage: ['access.accessOffers'],
+        confidence: canApprove ? 0.82 : 0.68,
+        rightsNote: registryEntry.rightsNote,
+      })),
     ],
     quality: {
       completeness: canApprove ? 86 : 68,
@@ -1211,8 +1441,12 @@ export function createNonPriorityCandidateRecords({ report, features, generatedA
     }
 
     const structuredAirportCodes = new Set();
+    const sourceRetrievedAt = source.retrievedAt ?? report.generatedAt ?? generatedAt;
 
     for (const structuredRecord of source.structuredRecords ?? []) {
+      if (structuredRecordRedirectedOutsideOperator(source, structuredRecord)) {
+        continue;
+      }
       const code = clean(structuredRecord.airportCode).toUpperCase();
       const fallbackAirport = airportLookup.get(code);
       const coordinates = coordinatesFromStructuredRecord(structuredRecord, fallbackAirport);
@@ -1220,13 +1454,14 @@ export function createNonPriorityCandidateRecords({ report, features, generatedA
         continue;
       }
       structuredAirportCodes.add(code);
+      const recordRetrievedAt = structuredRecord.retrievedAt ?? sourceRetrievedAt;
       records.push(
         makeStructuredCandidateRecord({
           source,
           registryEntry,
           record: structuredRecord,
           airport: fallbackAirport,
-          retrievedAt: report.generatedAt ?? generatedAt,
+          retrievedAt: recordRetrievedAt,
         }),
       );
     }
@@ -1259,7 +1494,7 @@ export function createNonPriorityCandidateRecords({ report, features, generatedA
           airport: airportLookup.get(candidate.code),
           code: candidate.code,
           url: candidate.url || source.finalUrl || source.url,
-          retrievedAt: report.generatedAt ?? generatedAt,
+          retrievedAt: sourceRetrievedAt,
           fromLink: candidate.fromLink,
         }),
       );

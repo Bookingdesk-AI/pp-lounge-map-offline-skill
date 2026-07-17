@@ -125,3 +125,24 @@ test('Gameway parser matches detail links by airport and gate rather than raw or
   assert.equal(records.find((record) => record.airportCode === 'CLT').sourceUrl, 'https://gameway.gg/location/clt/');
   assert.equal(records.find((record) => record.near === 'Near Gate 65B').sourceUrl, 'https://gameway.gg/location/laxt6/');
 });
+
+test('Gameway parser preserves coming-soon locations as planned openings without fabricated hours', () => {
+  const [record] = parseGamewayStructuredRecords(`
+    <div class="location" data-location-id="1014">
+      <div class="location--left">
+        <div class="location--left--airport">Washington Dulles International Airport</div>
+        <div class="location--left--location text-location-header">IAD</div>
+        <div class="location--left--time"><span>Coming Soon</span></div>
+      </div>
+      <div class="location--right">
+        <div class="location--right--terminal text-location-header">&nbsp;</div>
+        <div class="location--right--location">Between Gates 8 and 10</div>
+      </div>
+    </div>
+    <a href="https://gameway.gg/location/iad/">IAD</a>
+  `, { url: 'https://gameway.gg/locations/' });
+
+  assert.equal(record.status, 'planned');
+  assert.equal(record.plannedOpening, 'Coming Soon');
+  assert.deepEqual(record.openHours, []);
+});

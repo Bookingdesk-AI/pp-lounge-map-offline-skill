@@ -23,10 +23,10 @@ export interface LoungeBrandAsset {
   name: string;
   category: 'program' | 'issuer' | 'airline' | 'operator' | 'card_network' | 'aggregator' | 'alliance';
   aliases?: string[];
-  sourceIds: string[];
-  sourceUrl: string;
-  assetSource: 'desk_travel_database' | 'official_public_source' | 'generated_fallback';
-  deskTravelAssetKey: string;
+  sourceIds?: string[];
+  sourceUrl?: string;
+  assetSource?: 'desk_travel_database' | 'official_public_source' | 'generated_fallback';
+  deskTravelAssetKey?: string;
   logoUrl: string;
   fallbackLogoUrl?: string;
   upstreamLogoUrl?: string;
@@ -34,8 +34,8 @@ export interface LoungeBrandAsset {
   color: string;
   background: string;
   foreground: string;
-  status: 'approved' | 'review' | 'candidate';
-  rightsNote: string;
+  status?: 'approved' | 'review' | 'candidate';
+  rightsNote?: string;
 }
 
 export interface LoungeSourceEvidence {
@@ -43,9 +43,9 @@ export interface LoungeSourceEvidence {
   publisher: string;
   url: string;
   retrievedAt: string;
-  fieldCoverage: string[];
+  fieldCoverage?: string[];
   confidence: number;
-  rightsNote: string;
+  rightsNote?: string;
 }
 
 export interface LoungeQuality {
@@ -60,6 +60,7 @@ export interface CanonicalLounge {
   name: string;
   brand: string;
   brandAsset?: LoungeBrandAsset;
+  brandAssetId?: string;
   operator: string;
   category: string;
   status: string;
@@ -90,9 +91,9 @@ export interface CanonicalLocation {
 
 export interface CanonicalOperations {
   hours: string;
-  exceptions: string[];
-  plannedOpening: string;
-  lastVerifiedAt: string;
+  exceptions?: string[];
+  plannedOpening?: string;
+  lastVerifiedAt?: string;
 }
 
 export interface CanonicalAccessOffer {
@@ -110,11 +111,11 @@ export interface CanonicalLoungeRecord {
   airport: CanonicalAirport;
   location: CanonicalLocation;
   operations: CanonicalOperations;
-  accessOffers: CanonicalAccessOffer[];
+  accessOffers?: CanonicalAccessOffer[];
   amenities: string[];
   restrictions: string[];
-  guestPolicy: string;
-  notes: string[];
+  guestPolicy?: string;
+  notes?: string[];
   sources: LoungeSourceEvidence[];
   quality: LoungeQuality;
 }
@@ -154,6 +155,14 @@ export interface LoungeFeature {
 export interface LoungeFeatureCollection {
   type: 'FeatureCollection';
   features: LoungeFeature[];
+}
+
+export interface LoungeMapPayload {
+  version: number;
+  generatedAt: string;
+  meta: LoungeMeta;
+  brands: LoungeBrandAsset[];
+  records: CanonicalLoungeRecord[];
 }
 
 export interface LoungeMeta {

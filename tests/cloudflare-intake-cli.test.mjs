@@ -51,7 +51,7 @@ test('Cloudflare intake CLI dry run does not require token or fetch', async () =
   });
 
   assert.equal(summary.dryRun, true);
-  assert.equal(summary.endpoint, 'https://loungeguru.desk.travel/admin/source-intake/probe-batch');
+  assert.equal(summary.endpoint, 'https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/probe-batch');
   assert.deepEqual(summary.sourceIds, ['visa-airport-companion']);
   assert.doesNotMatch(lines.join('\n'), /token|secret/i);
 });
@@ -98,7 +98,7 @@ test('Cloudflare intake CLI posts only to the Worker batch endpoint', async () =
   assert.equal(calls.length, 1);
   assert.equal(
     calls[0].url,
-    'https://loungeguru.desk.travel/admin/source-intake/probe-batch?sourceIds=visa-airport-companion%2Cdragonpass',
+    'https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/probe-batch?sourceIds=visa-airport-companion%2Cdragonpass',
   );
   assert.equal(calls[0].init.method, 'POST');
   assert.equal(calls[0].init.headers['x-lounge-guru-intake-token'], 'secret-token');
@@ -140,7 +140,7 @@ test('Cloudflare intake flow preserves source ID args before evidence export', a
 
   assert.equal(
     calls[0].url,
-    'https://loungeguru.desk.travel/admin/source-intake/probe-batch?sourceIds=visa-airport-companion%2Cdragonpass',
+    'https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/probe-batch?sourceIds=visa-airport-companion%2Cdragonpass',
   );
   assert.equal(summary.fetched, 2);
   assert.equal(evidenceCalls.length, 1);
@@ -225,7 +225,7 @@ test('Cloudflare intake CLI can request D1-derived report endpoint', async () =>
   });
 
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].url, 'https://loungeguru.desk.travel/admin/source-intake/report');
+  assert.equal(calls[0].url, 'https://lounge-guru-mcp.dev-4ee.workers.dev/admin/source-intake/report');
   assert.equal(calls[0].init.method, 'GET');
   assert.equal(calls[0].init.headers['x-lounge-guru-intake-token'], 'secret-token');
   assert.equal(summary.totalSources, 3);

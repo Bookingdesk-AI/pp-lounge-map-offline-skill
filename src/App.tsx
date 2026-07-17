@@ -12,6 +12,7 @@ import type {
   LoungeFeature,
   LoungeFeatureCollection,
   LoungeFeatureProperties,
+  LoungeMapPayload,
   LoungeMeta,
   LoungeSourceEvidence,
   LoungeSourceRegistryEntry,
@@ -292,6 +293,49 @@ function readInitialUrlState(): InitialUrlState {
     sort: normalizeSort(params.get('sort')),
     view: normalizeView(params.get('view')),
   };
+}
+
+function featureFromCanonicalRecord(record: CanonicalLoungeRecord): LoungeFeature {
+  return {
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [record.airport.coordinates.lon, record.airport.coordinates.lat],
+    },
+    properties: {
+      id: record.lounge.id,
+      airportCode: record.airport.iata,
+      airportName: record.airport.name,
+      country: record.airport.country,
+      city: record.airport.city,
+      type: record.lounge.category.toUpperCase(),
+      terminal: record.location.terminal || 'Unknown',
+      name: record.lounge.name,
+      openingHours: record.operations.hours,
+      conditions: record.restrictions,
+      facilities: record.amenities,
+      url: record.sources[0]?.url ?? '',
+      location: record.location.directions,
+      slug: record.lounge.id,
+      provider: record.lounge.brand,
+      programs: record.lounge.programs,
+      accessMethods: record.lounge.accessMethods,
+      sources: record.sources,
+      quality: record.quality,
+      canonical: record,
+    },
+  };
+}
+
+function hydratePublicRecordBrands(records: CanonicalLoungeRecord[], brands: LoungeBrandAsset[]) {
+  const brandsById = new Map(brands.map((brand) => [brand.id, brand]));
+  return records.map((record) => ({
+    ...record,
+    lounge: {
+      ...record.lounge,
+      brandAsset: record.lounge.brandAssetId ? brandsById.get(record.lounge.brandAssetId) : undefined,
+    },
+  }));
 }
 
 function baseSortKey(feature: LoungeFeature) {
@@ -3784,6 +3828,35 @@ function App() {
 
     async function loadData() {
       try {
+        if (!INTERNAL_VIEWS_ENABLED) {
+          const response = await fetch('/data/lounge-map.json');
+          if (!response.ok) {
+            throw new Error('Lounge data is unavailable.');
+          }
+
+          const payload = (await response.json()) as LoungeMapPayload;
+          const publicRecords = hydratePublicRecordBrands(payload.records ?? [], payload.brands ?? []);
+          if (publicRecords.length === 0) {
+            throw new Error('Lounge data is unavailable.');
+          }
+
+          if (!alive) {
+            return;
+          }
+
+          setFeatures(publicRecords.map(featureFromCanonicalRecord));
+          setMeta(payload.meta);
+          setCanonicalRecords(publicRecords);
+          setSources([]);
+          setBrands(payload.brands ?? []);
+          setCoverageGap(null);
+          setIntakePlan(null);
+          setCloudflareEvidence(null);
+          setNonPriorityValidation(null);
+          setLoading(false);
+          return;
+        }
+
         const [
           geoJsonResponse,
           metaResponse,
@@ -3866,35 +3939,7 @@ function App() {
             (record) =>
               Number.isFinite(record.airport.coordinates.lat) && Number.isFinite(record.airport.coordinates.lon),
           )
-          .map((record) => ({
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [record.airport.coordinates.lon, record.airport.coordinates.lat],
-            },
-            properties: {
-              id: record.lounge.id,
-              airportCode: record.airport.iata,
-              airportName: record.airport.name,
-              country: record.airport.country,
-              city: record.airport.city,
-              type: record.lounge.category.toUpperCase(),
-              terminal: record.location.terminal || 'Unknown',
-              name: record.lounge.name,
-              openingHours: record.operations.hours,
-              conditions: record.restrictions,
-              facilities: record.amenities,
-              url: record.sources[0]?.url ?? '',
-              location: record.location.directions,
-              slug: record.lounge.id,
-              provider: record.lounge.brand,
-              programs: record.lounge.programs,
-              accessMethods: record.lounge.accessMethods,
-              sources: record.sources,
-              quality: record.quality,
-              canonical: record,
-            },
-          }));
+          .map(featureFromCanonicalRecord);
         nextFeatures.push(...candidateFeatures);
 
         const mergedMeta: LoungeMeta = canonical

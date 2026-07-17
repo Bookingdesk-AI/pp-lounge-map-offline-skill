@@ -149,6 +149,17 @@ function concourseFromDescription(description) {
   return clean(description).match(/\bConcourse\s+[A-Z0-9]+/i)?.[0] ?? '';
 }
 
+function normalizeTerminalGate(name, terminal) {
+  const gateLabel = clean([name, terminal].join(' ')).match(/\bTerminal\s+([A-Z])(\d{1,3}[A-Z]?)\b/i);
+  if (!gateLabel) {
+    return { terminal, gate: '' };
+  }
+  return {
+    terminal: `Terminal ${gateLabel[1].toUpperCase()}`,
+    gate: `Gate ${gateLabel[1].toUpperCase()}${gateLabel[2].toUpperCase()}`,
+  };
+}
+
 function detailLocationText(html) {
   const text = stripHtml(html);
   const match = text.match(/\bLocated\b\s+(.+?)\s+Address:/i);
@@ -188,7 +199,8 @@ export function parseTheClubStructuredRecords(html) {
     const sourceUrl = `https://www.theclubairportlounges.com/lounges/${clean(club.slug)}`;
     const addressText = richTextValue(club.address);
     const airportName = clean(addressText.split(',')[0]);
-    const terminal = terminalFromDescription(club.description) || terminalFromDescription(addressText) || clean(club.description);
+    const parsedTerminal = terminalFromDescription(club.description) || terminalFromDescription(addressText) || clean(club.description);
+    const { terminal, gate } = normalizeTerminalGate(name, parsedTerminal);
 
     records.push({
       sourceRecordId: `${code}-${slugify(club.slug || name)}`,
@@ -196,6 +208,7 @@ export function parseTheClubStructuredRecords(html) {
       airportCode: code,
       airportName,
       terminal,
+      gate,
       concourse: concourseFromDescription(club.description) || concourseFromDescription(addressText),
       near: clean(club.description),
       operator: 'Airport Dimensions / The Club',

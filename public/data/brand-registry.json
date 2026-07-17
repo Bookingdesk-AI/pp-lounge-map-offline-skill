@@ -367,9 +367,10 @@
       "alaska lounge"
     ],
     "sourceIds": [
-      "oneworld"
+      "oneworld",
+      "alaska-airlines"
     ],
-    "sourceUrl": "https://www.alaskaair.com/content/airports/lounges",
+    "sourceUrl": "https://www.alaskaair.com/content/airport-lounge/location-and-hours",
     "assetSource": "desk_travel_database",
     "deskTravelAssetKey": "all-routes:brand/alaska-airlines",
     "logoUrl": "https://src.desk.travel/brand-logos/airlines/as/d56df15f3de2cc403df2cd362dd2aa493fe9b1ebc0bba7df7287c35c3bbebd90.png",

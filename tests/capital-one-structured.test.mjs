@@ -1,7 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { parseCapitalOneLoungeRecords } from '../scripts/lib/capital-one-structured.mjs';
+import {
+  applyCapitalOneGuestPolicy,
+  parseCapitalOneGuestPolicy,
+  parseCapitalOneLoungeRecords,
+} from '../scripts/lib/capital-one-structured.mjs';
 
 const overviewHtml = `
   <h2>Which airports have a Capital One Lounge?</h2>
@@ -54,4 +58,44 @@ test('Capital One parser extracts active Lounge and Landing locations from offic
 
 test('Capital One parser ignores pages without the official location sections', () => {
   assert.deepEqual(parseCapitalOneLoungeRecords('<p>Capital One Travel</p>'), []);
+});
+
+test('Capital One parser scopes official guest fees to current Lounge and Landing locations', () => {
+  const policyUrl = 'https://capitalonetravel.com/airport-lounges/lounge-access-guide/';
+  const policy = parseCapitalOneGuestPolicy(`
+    <h2>Capital One Lounges &amp; Landings</h2>
+    <h3>Pay-per-visit</h3>
+    <p>Venture X cardholders can purchase passes for guests to Capital One Lounges and Landings at discounted rates of $45 per visit per guest 18 and older, and $25 per visit per guest 17 and under. Children under two are free.</p>
+    <p>Capital One Lounge and Landing locations are open to all guests at the standard rate of $90 per guest per visit.</p>
+  `, { url: policyUrl });
+
+  assert.equal(policy?.offers[0].amount, 45);
+  assert.equal(policy?.offers[1].label, 'Child guest fee (ages 2-17)');
+  assert.equal(policy?.offers[1].sourceUrl, policyUrl);
+  assert.deepEqual(policy?.offers[2], {
+    type: 'paid_entry',
+    label: 'Standard visit',
+    amount: 90,
+    currency: 'USD',
+    sourceUrl: policyUrl,
+  });
+
+  const records = applyCapitalOneGuestPolicy(parseCapitalOneLoungeRecords(overviewHtml), policy);
+  assert.equal(records.length, 7);
+  assert.ok(records.every((record) => record.prices?.length === 3));
+  assert.ok(records.every((record) => record.prices[0].type === 'guest_fee'));
+
+  const unrelated = applyCapitalOneGuestPolicy([
+    { airportCode: 'CLT', name: 'Capital One Lounge', brand: 'Capital One Lounge' },
+    { airportCode: 'DFW', name: 'Partner Lounge', brand: 'Partner Lounge' },
+  ], policy);
+  assert.ok(unrelated.every((record) => record.prices === undefined));
+});
+
+test('Capital One policy parser rejects incomplete or ambiguous fee text', () => {
+  assert.equal(parseCapitalOneGuestPolicy('<p>Capital One Lounges &amp; Landings</p>'), null);
+  assert.equal(
+    parseCapitalOneGuestPolicy('<h2>Capital One Lounges &amp; Landings</h2><h3>Pay-per-visit</h3><p>Fees may apply.</p>'),
+    null,
+  );
 });

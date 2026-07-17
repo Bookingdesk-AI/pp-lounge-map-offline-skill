@@ -2,6 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { redactSensitiveData } from '../shared/security-redaction.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const projectRoot = path.resolve(path.dirname(__filename), '..');
 
@@ -126,7 +128,7 @@ export async function promoteCloudflareSourceIntakeReport({ input = DEFAULT_INPU
     throw error;
   }
 
-  const serialized = `${JSON.stringify(report, null, 2)}\n`;
+  const serialized = `${JSON.stringify(redactSensitiveData(report), null, 2)}\n`;
   await fs.mkdir(path.dirname(output), { recursive: true });
   await fs.writeFile(output, serialized, 'utf8');
   return {

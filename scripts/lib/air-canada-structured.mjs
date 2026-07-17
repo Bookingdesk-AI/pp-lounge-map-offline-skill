@@ -19,6 +19,19 @@ function stripHtml(value) {
   return clean(String(value ?? '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, ' '));
 }
 
+function stripHtmlLines(value) {
+  return decodeEntities(
+    String(value ?? '')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<\/(?:p|div|h[1-6]|li)>/gi, '\n')
+      .replace(/<[^>]+>/g, ' '),
+  )
+    .split(/\n/)
+    .map((line) => line.replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .join('\n');
+}
+
 function slugify(value) {
   return clean(value)
     .toLowerCase()
@@ -76,6 +89,123 @@ function normalizeName(value) {
   return text;
 }
 
+function tabLabels(html) {
+  const labels = new Map();
+  const tabPattern = /<([a-z0-9]+)\b([^>]*\brole=["']tab["'][^>]*)>([\s\S]*?)<\/\1>/gi;
+  for (const match of String(html ?? '').matchAll(tabPattern)) {
+    const id = match[2].match(/\bid=["']([^"']+)["']/i)?.[1];
+    if (id) {
+      labels.set(id, stripHtml(match[3]));
+    }
+  }
+  return labels;
+}
+
+function panelSlices(html) {
+  const text = String(html ?? '');
+  const starts = [...text.matchAll(/<section\b[^>]*\brole=["']tabpanel["'][^>]*>/gi)];
+  return starts.map((match, index) => text.slice(match.index, starts[index + 1]?.index ?? text.length));
+}
+
+function detailTerminal(label, location) {
+  const mode = clean(label);
+  if (/^transborder$/i.test(mode)) return 'Transborder departures';
+  if (/^caf[eé]|domestic caf[eé]s?$/i.test(mode)) return 'Domestic departures';
+  if (/^international$/i.test(mode)) return 'International departures';
+  if (/^domestic$/i.test(mode)) return 'Domestic departures';
+
+  const explicitTerminal = terminalFromText(location);
+  if (explicitTerminal) {
+    return explicitTerminal;
+  }
+
+  const text = clean(`${label} ${location}`);
+  if (/transborder|u\.s\./i.test(text)) return 'Transborder departures';
+  if (/caf[eé]/i.test(text) && /domestic/i.test(text)) return 'Domestic departures';
+  if (/international/i.test(text)) return 'International departures';
+  if (/domestic/i.test(text)) return 'Domestic departures';
+  return clean(location);
+}
+
+function terminalFamily(value) {
+  const text = clean(value);
+  if (/transborder|u\.s\./i.test(text)) return 'transborder';
+  if (/international/i.test(text)) return 'international';
+  if (/domestic/i.test(text)) return 'domestic';
+  return terminalFromText(text).toLowerCase();
+}
+
+export function parseAirCanadaLoungeDetailRecords(
+  html,
+  { airportCode = '', airportCity = '', url = '' } = {},
+) {
+  const code = clean(airportCode).toUpperCase();
+  if (!/^[A-Z0-9]{3}$/.test(code)) {
+    return [];
+  }
+
+  const renderedHtml = String(html ?? '').replace(/<!--[\s\S]*?-->/g, '');
+  const labels = tabLabels(renderedHtml);
+  const records = [];
+
+  for (const panel of panelSlices(renderedHtml)) {
+    const labelledBy = panel.match(/\baria-labelledby=["']([^"']+)["']/i)?.[1] ?? '';
+    const label = labels.get(labelledBy) ?? '';
+    const headings = [...panel.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/gi)].map((match) => stripHtml(match[1]));
+    const location = headings[1] ?? '';
+    const hoursSection = panel.match(/<section\b[^>]*class=["'][^"']*\bhours\b[^"']*["'][^>]*>([\s\S]*?)<\/section>/i)?.[1];
+    const hoursText = stripHtmlLines(hoursSection).replace(/^Hours of operation:\s*/i, '').trim();
+    if (!location || !hoursText) {
+      continue;
+    }
+
+    const name = /caf[eé]/i.test(`${label} ${panel}`) ? 'Air Canada Café' : 'Air Canada Maple Leaf Lounge';
+    const terminal = detailTerminal(label, location);
+    records.push({
+      sourceRecordId: `air-canada-${code.toLowerCase()}-${slugify(label || terminal)}-details`,
+      name,
+      brand: name,
+      operator: 'Air Canada',
+      airportCode: code,
+      airportCity: clean(airportCity),
+      terminal,
+      near: location,
+      hoursText,
+      sourceUrl: url,
+      status: 'active',
+    });
+  }
+
+  return records;
+}
+
+export function mergeAirCanadaLoungeDetailRecords(records, details) {
+  return records.map((record) => {
+    const detail = details.find(
+      (candidate) =>
+        candidate.airportCode === record.airportCode &&
+        candidate.name === record.name &&
+        terminalFamily(candidate.terminal) === terminalFamily(record.terminal),
+    );
+    if (!detail) {
+      return record;
+    }
+
+    const priceSourceUrl = record.sourceUrl;
+    return {
+      ...record,
+      near: detail.near || record.near,
+      hoursText: detail.hoursText,
+      sourceUrl: detail.sourceUrl || record.sourceUrl,
+      prices: (record.prices ?? []).map((price) => ({
+        ...price,
+        label: price.label || 'Additional guest fee',
+        sourceUrl: price.sourceUrl || priceSourceUrl,
+      })),
+    };
+  });
+}
+
 function recordForLine({ line, region, parentAirport, sourceUrl }) {
   const item = clean(line.replace(/^ITEM:\s*/i, ''));
   const direct = item.match(/^(.+?)\s+\(([A-Z0-9]{3})\)\s*(?:-\s*(.+))?$/);
@@ -111,7 +241,14 @@ function recordForLine({ line, region, parentAirport, sourceUrl }) {
         status: /temporarily closed/i.test(detail) ? 'temporarily_closed' : 'active',
         programs: ['Air Canada', 'Star Alliance Gold', 'Premium cabin', 'Chase Sapphire Reserve'],
         accessNotes: 'Official Air Canada Chase Sapphire Reserve participating location and additional guest fee evidence.',
-        prices: [{ amount: 59, currency: regionCurrency(region, airportCode) }],
+        prices: [
+          {
+            amount: 59,
+            currency: regionCurrency(region, airportCode),
+            label: 'Additional guest fee',
+            sourceUrl,
+          },
+        ],
         amenities: { Lounge: true },
       },
     };
@@ -143,7 +280,14 @@ function recordForLine({ line, region, parentAirport, sourceUrl }) {
       status: 'active',
       programs: ['Air Canada', 'Star Alliance Gold', 'Premium cabin', 'Chase Sapphire Reserve'],
       accessNotes: 'Official Air Canada Chase Sapphire Reserve participating location and additional guest fee evidence.',
-      prices: [{ amount: 59, currency: regionCurrency(parentAirport.region, parentAirport.code) }],
+      prices: [
+        {
+          amount: 59,
+          currency: regionCurrency(parentAirport.region, parentAirport.code),
+          label: 'Additional guest fee',
+          sourceUrl,
+        },
+      ],
       amenities: { Lounge: true },
     },
   };

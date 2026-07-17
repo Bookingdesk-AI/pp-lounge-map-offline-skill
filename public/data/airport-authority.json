@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T09:33:52.867Z",
+  "generatedAt": "2026-07-16T17:27:35.457Z",
   "source": {
     "id": "all-routes-airport-authority",
     "publisher": "All Routes / OurAirports",
@@ -7,8 +7,8 @@
     "rightsNote": "Centralized Desk.Travel airport authority backed by all-routes and OurAirports; used for airport identity normalization only."
   },
   "stats": {
-    "airports": 4573,
-    "withIcao": 4573,
+    "airports": 4574,
+    "withIcao": 4574,
     "withTimezone": 0,
     "countries": 236
   },
@@ -33659,6 +33659,21 @@
       "sourceAirportId": "LSF"
     },
     {
+      "iata": "LSG",
+      "icao": "CN-0249",
+      "name": "Leshan Airport",
+      "city": "Leshan (Wutongqiao)",
+      "country": "China",
+      "countryCode": "CN",
+      "timezone": "",
+      "coordinates": {
+        "lat": 29.438627,
+        "lon": 103.749218
+      },
+      "sourceId": "all-routes",
+      "sourceAirportId": "LSG"
+    },
+    {
       "iata": "LSH",
       "icao": "VYLS",
       "name": "Lashio Airport",
@@ -63075,15 +63090,15 @@
     },
     {
       "iata": "WSI",
-      "icao": "YSWS",
-      "name": "Nancy Bird Walton, Western Sydney International Airport",
+      "icao": "AU-0539",
+      "name": "Western Sydney International (Nancy-Bird Walton) Airport",
       "city": "Sydney",
       "country": "Australia",
       "countryCode": "AU",
       "timezone": "",
       "coordinates": {
-        "lat": -33.88806,
-        "lon": 150.71472
+        "lat": -33.883461,
+        "lon": 150.712981
       },
       "sourceId": "all-routes",
       "sourceAirportId": "WSI"

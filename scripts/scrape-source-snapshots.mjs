@@ -4,16 +4,36 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Papa from 'papaparse';
 
+import { redactSensitiveData } from '../shared/security-redaction.js';
 import { cloneSourceRegistry } from './lib/source-registry.mjs';
-import { parseAirCanadaLoungeRecords } from './lib/air-canada-structured.mjs';
-import { parseAmericanAirlinesClubRecords } from './lib/american-airlines-structured.mjs';
+import { parseAlaskaLoungePass, parseAlaskaLoungeRecords } from './lib/alaska-lounges-structured.mjs';
+import {
+  mergeAirCanadaLoungeDetailRecords,
+  parseAirCanadaLoungeDetailRecords,
+  parseAirCanadaLoungeRecords,
+} from './lib/air-canada-structured.mjs';
+import {
+  parseAdmiralsClubOneDayPass,
+  parseAmericanAirlinesClubRecords,
+} from './lib/american-airlines-structured.mjs';
 import {
   parseAirportOfficialLoungeRecords,
   parsePanynjOfficialLoungeRecords,
 } from './lib/airport-official-lounges-structured.mjs';
+import { parseAspireAirportLinks, parseAspireAirportRecords } from './lib/aspire-lounges-structured.mjs';
+import { parseAmexDeltaSkyClubAccessPolicy } from './lib/amex-delta-sky-club-access.mjs';
 import { parseBeRelaxStructuredRecords } from './lib/be-relax-structured.mjs';
-import { parseCapitalOneLoungeRecords } from './lib/capital-one-structured.mjs';
+import {
+  applyCapitalOneGuestPolicy,
+  parseCapitalOneGuestPolicy,
+  parseCapitalOneLoungeRecords,
+} from './lib/capital-one-structured.mjs';
 import { parseChaseSapphireLoungeRecords } from './lib/chase-sapphire-structured.mjs';
+import {
+  applyCenturionGuestPolicy,
+  parseCenturionGuestPolicy,
+  parseCenturionLoungeRecord,
+} from './lib/centurion-lounges-structured.mjs';
 import { parseDeltaSkyClubRecords } from './lib/delta-sky-club-structured.mjs';
 import { parseEscapeLoungeStructuredRecord } from './lib/escape-lounges-structured.mjs';
 import { mergeGamewayDetailRecord, parseGamewayStructuredRecords } from './lib/gameway-structured.mjs';
@@ -22,8 +42,10 @@ import { parseMinuteSuitesStructuredRecords } from './lib/minute-suites-structur
 import { parseNo1StructuredRecords } from './lib/no1-lounges-structured.mjs';
 import {
   extractPlazaPremiumFindUrls,
+  mergePlazaPremiumDetailRecord,
   parsePlazaPremiumStructuredRecords,
 } from './lib/plaza-premium-structured.mjs';
+import { parsePriorityPassStandardAccessPolicy } from './lib/priority-pass-access.mjs';
 import {
   parsePrimeclassIndexLinks,
   parsePrimeclassStructuredRecord,
@@ -53,6 +75,9 @@ const childPageLimit = Number(process.env.SOURCE_CHILD_PAGE_LIMIT || 25);
 const repeatedFetchErrorLimit = Number(process.env.SOURCE_REPEATED_FETCH_ERROR_LIMIT || 3);
 const playwrightNetworkIdleMs = Number(process.env.SOURCE_PLAYWRIGHT_NETWORKIDLE_MS ?? 5000);
 const structuredDetailLimit = Number(process.env.SOURCE_STRUCTURED_DETAIL_LIMIT || 12);
+const structuredDetailFetchAttempts = Math.max(1, Number(process.env.SOURCE_STRUCTURED_DETAIL_FETCH_ATTEMPTS || 2));
+const plazaPriceDetailLimit = Math.max(0, Number(process.env.SOURCE_PLAZA_PRICE_DETAIL_LIMIT || 0));
+const plazaReuseStructuredRecords = process.env.SOURCE_PLAZA_REUSE_STRUCTURED_RECORDS === '1';
 const childCrawlSourceIds = new Set(
   String(process.env.SOURCE_CHILD_CRAWL_SOURCES || 'escape-lounges')
     .split(',')
@@ -128,6 +153,41 @@ const americanStructuredUrls = [
   'https://www.aa.com/i18n/travelInformation/airportAmenities/ord-club.jsp',
   'https://www.aa.com/i18n/travelInformation/airportAmenities/clt-club.jsp',
 ];
+const americanMembershipUrl = 'https://www.aa.com/i18n/travel-info/clubs/admirals-club-membership.jsp';
+const priorityPassAccessPolicyUrl = 'https://www.prioritypass.com/en-GB/join-prioritypass';
+const alaskaLoungePassUrl = 'https://www.alaskaair.com/content/airport-lounge/day-pass';
+const airCanadaDetailTargets = [
+  { airportCode: 'LAX', airportCity: 'Los Angeles', slug: 'losangeles' },
+  { airportCode: 'YYZ', airportCity: 'Toronto', slug: 'toronto' },
+  { airportCode: 'YVR', airportCity: 'Vancouver', slug: 'vancouver' },
+];
+const airCanadaDetailsBaseUrl =
+  'https://www.aircanada.com/ca/en/aco/home/fly/premium-services/maple-leaf-lounges/maple-leaf-lounge-details.html';
+const amexCenturionStructuredUrls = [
+  'https://www.thecenturionlounge.com/locations/atl/',
+  'https://www.thecenturionlounge.com/locations/clt/',
+  'https://www.thecenturionlounge.com/locations/dfw/',
+  'https://www.thecenturionlounge.com/locations/den/',
+  'https://www.thecenturionlounge.com/locations/iah/',
+  'https://www.thecenturionlounge.com/locations/las/',
+  'https://www.thecenturionlounge.com/locations/las-sidecar/',
+  'https://www.thecenturionlounge.com/locations/lax/',
+  'https://www.thecenturionlounge.com/locations/mia/',
+  'https://www.thecenturionlounge.com/locations/jfk/',
+  'https://www.thecenturionlounge.com/locations/lga/',
+  'https://www.thecenturionlounge.com/locations/phl/',
+  'https://www.thecenturionlounge.com/locations/phx/',
+  'https://www.thecenturionlounge.com/locations/slc/',
+  'https://thecenturionlounge.com/locations/sea/',
+  'https://www.thecenturionlounge.com/locations/sfo/',
+  'https://www.thecenturionlounge.com/locations/dca/',
+  'https://www.thecenturionlounge.com/locations/hkg/',
+  'https://www.thecenturionlounge.com/locations/hnd/',
+  'https://www.thecenturionlounge.com/locations/lhr/',
+];
+const amexCenturionAccessPolicyUrl = 'https://www.thecenturionlounge.com/info/access/';
+const amexDeltaSkyClubAccessPolicyUrl =
+  'https://global.americanexpress.com/card-benefits/detail/delta-sky-club-access/delta-reserve-business';
 const defaultAirportOfficialLoungeUrls = [
   'https://www.jfkairport.com/dine-shop-relax/lounge-and-rest',
   'https://www.laguardiaairport.com/dine-shop-relax/lounge-and-rest',
@@ -230,7 +290,7 @@ const intakeRuntime = process.env.LOUNGE_GURU_SOURCE_INTAKE_RUNTIME || '';
 const sourceFetchDriver = process.env.SOURCE_FETCH_DRIVER || 'playwright';
 const browserLikeUserAgent =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
-const intakeUserAgent = 'lounge-guru-source-intake/1.0 (+https://loungeguru.desk.travel)';
+const intakeUserAgent = 'lounge-guru-source-intake/1.0 (+https://loungeguru-desk-travel.pages.dev)';
 const userTriggeredAiUserAgent = 'ChatGPT-User';
 const browserLikeSourceIds = new Set(['singapore-airlines', 'qatar-airways', 'qantas']);
 const userTriggeredAiSourceIds = new Set(['plaza-premium']);
@@ -978,6 +1038,17 @@ async function fetchTheClubStructuredRecords(runDir) {
         continue;
       }
 
+      const finalHost = new URL(detailResponse.finalUrl).hostname.toLowerCase().replace(/^www\./, '');
+      if (finalHost !== 'theclubairportlounges.com') {
+        pages.push({
+          url: record.sourceUrl,
+          status: 'external_redirect',
+          httpStatus: detailResponse.status,
+          finalUrl: detailResponse.finalUrl,
+        });
+        continue;
+      }
+
       const detailSnapshotPath = path.join(runDir, `airport-dimensions-the-club-detail-${String(index + 1).padStart(2, '0')}.html`);
       await fs.writeFile(detailSnapshotPath, detailResponse.text, 'utf8');
       records.push(mergeTheClubDetailRecord(record, detailResponse.text));
@@ -1080,6 +1151,69 @@ async function fetchBeRelaxStructuredRecords(runDir, source) {
       parser: 'be-relax-structured',
     },
     records,
+  };
+}
+
+async function fetchAspireStructuredRecords(runDir, source, indexHtml, indexUrl) {
+  const links = parseAspireAirportLinks(indexHtml, { url: indexUrl });
+  const selectedLinks = links.slice(0, structuredDetailLimit);
+  const pages = [];
+  const records = [];
+
+  for (const [index, url] of selectedLinks.entries()) {
+    try {
+      const response = await fetchText(url, source);
+      if (!response.ok) {
+        pages.push({
+          url,
+          status: 'http_error',
+          httpStatus: response.status,
+          finalUrl: response.finalUrl,
+          recordCount: 0,
+        });
+        continue;
+      }
+
+      const snapshotPath = path.join(runDir, `aspire-airport-${String(index + 1).padStart(2, '0')}.html`);
+      await fs.writeFile(snapshotPath, response.text, 'utf8');
+      const parsed = parseAspireAirportRecords(response.text, {
+        url: response.finalUrl || url,
+      });
+      records.push(...parsed);
+      pages.push({
+        url,
+        status: 'fetched',
+        httpStatus: response.status,
+        finalUrl: response.finalUrl,
+        recordCount: parsed.length,
+        snapshotFile: path.relative(projectRoot, snapshotPath),
+      });
+    } catch (error) {
+      pages.push({
+        url,
+        status: 'fetch_error',
+        reason: error instanceof Error ? error.message : String(error),
+        recordCount: 0,
+      });
+    }
+    await sleep(delayMs);
+  }
+
+  const byId = new Map(records.map((record) => [record.sourceRecordId, record]));
+  return {
+    api: {
+      url: indexUrl,
+      discoveredLinks: links.length,
+      detailLimit: structuredDetailLimit,
+      pageCount: pages.length,
+      fetchedPages: pages.filter((page) => page.status === 'fetched').length,
+      recordCount: byId.size,
+      pages,
+      parser: 'aspire-airport-overview-structured',
+    },
+    records: [...byId.values()].sort((first, second) =>
+      `${first.airportCode}-${first.name}`.localeCompare(`${second.airportCode}-${second.name}`),
+    ),
   };
 }
 
@@ -1208,6 +1342,31 @@ async function fetchPlazaPremiumStructuredRecords(runDir, source) {
   const pages = [];
   const records = [];
   const discoveredUrls = [];
+  const reusedReportPath = path.relative(projectRoot, publicReportPath);
+  let reusedStructuredApi = null;
+
+  if (plazaReuseStructuredRecords) {
+    try {
+      const existingReport = JSON.parse(await fs.readFile(publicReportPath, 'utf8'));
+      const existingSource = existingReport.sources?.find((candidate) => candidate.sourceId === source.id);
+      records.push(...(existingSource?.structuredRecords ?? []));
+      reusedStructuredApi = existingSource?.structuredApi ?? null;
+      pages.push({
+        url: reusedReportPath,
+        status: 'reused',
+        recordCount: records.length,
+      });
+    } catch (error) {
+      pages.push({
+        url: reusedReportPath,
+        status: 'reuse_error',
+        reason: error instanceof Error ? error.message : String(error),
+        recordCount: 0,
+      });
+    }
+  }
+
+  if (!plazaReuseStructuredRecords || records.length === 0) {
   try {
     const response = await fetchText(source.url, source);
     const snapshotPath = path.join(runDir, `${safeName(source.id)}-structured-index.html`);
@@ -1277,11 +1436,88 @@ async function fetchPlazaPremiumStructuredRecords(runDir, source) {
 
     await sleep(delayMs);
   }
+  }
+
+  const detailUrls = [
+    ...new Set(
+      records
+        .filter(
+          (record) =>
+            (!record.price || (!record.openHours?.length && !cleanText(record.hoursText))) &&
+            cleanText(record.sourceUrl).startsWith('https://www.plazapremiumlounge.com/'),
+        )
+        .sort((first, second) => {
+          const firstMissingHours = !first.openHours?.length && !cleanText(first.hoursText);
+          const secondMissingHours = !second.openHours?.length && !cleanText(second.hoursText);
+          return Number(secondMissingHours) - Number(firstMissingHours);
+        })
+        .map((record) => record.sourceUrl),
+    ),
+  ].slice(0, plazaPriceDetailLimit);
+
+  for (const [index, url] of detailUrls.entries()) {
+    try {
+      const response = await fetchText(url, source);
+      const snapshotPath = path.join(
+        runDir,
+        `${safeName(source.id)}-price-detail-${String(index + 1).padStart(3, '0')}.html`,
+      );
+      await fs.writeFile(snapshotPath, response.text, 'utf8');
+      const detailRecords = parsePlazaPremiumStructuredRecords(response.text, {
+        url: response.finalUrl || url,
+      });
+      const detail = detailRecords.find((record) => cleanText(record.sourceUrl) === cleanText(url)) ?? detailRecords[0];
+      let priceAdded = false;
+      let hoursAdded = false;
+      if (detail && (detail.price || detail.openHours?.length || cleanText(detail.hoursText))) {
+        for (const [recordIndex, record] of records.entries()) {
+          if (cleanText(record.sourceUrl) !== cleanText(url)) {
+            continue;
+          }
+          const hadPrice = Boolean(record.price);
+          const hadHours = Boolean(record.openHours?.length || cleanText(record.hoursText));
+          const merged = mergePlazaPremiumDetailRecord(record, detail);
+          records[recordIndex] = merged;
+          priceAdded ||= !hadPrice && Boolean(merged.price);
+          hoursAdded ||= !hadHours && Boolean(merged.openHours?.length || cleanText(merged.hoursText));
+        }
+      }
+      pages.push({
+        url,
+        status: response.ok ? 'fetched' : 'http_error',
+        httpStatus: response.status,
+        finalUrl: response.finalUrl,
+        contentType: response.contentType,
+        bytes: Buffer.byteLength(response.text),
+        sha256: sha256(response.text),
+        title: pageTitle(response.text),
+        recordCount: detailRecords.length,
+        priceAdded,
+        hoursAdded,
+        snapshotFile: path.relative(projectRoot, snapshotPath),
+      });
+    } catch (error) {
+      pages.push({
+        url,
+        status: 'fetch_error',
+        reason: error instanceof Error ? error.message : String(error),
+        recordCount: 0,
+        priceAdded: false,
+        hoursAdded: false,
+      });
+    }
+    await sleep(delayMs);
+  }
 
   const byId = new Map(records.map((record) => [record.sourceRecordId, record]));
   return {
     api: {
-      urls,
+      urls: plazaReuseStructuredRecords ? reusedStructuredApi?.urls ?? [] : urls,
+      reusedStructuredRecords: plazaReuseStructuredRecords,
+      priceDetailLimit: plazaPriceDetailLimit,
+      priceDetailPages: detailUrls.length,
+      priceDetailPagesWithPrice: pages.filter((page) => page.priceAdded).length,
+      priceDetailPagesWithHours: pages.filter((page) => page.hoursAdded).length,
       pageCount: pages.length,
       fetchedPages: pages.filter((page) => page.status === 'fetched').length,
       recordCount: byId.size,
@@ -1424,7 +1660,24 @@ async function fetchQantasStructuredRecords(runDir, source, indexHtml = '', inde
 
   for (const [index, link] of detailLinks.entries()) {
     try {
-      const response = await fetchText(link.url, source);
+      let response;
+      let lastError;
+      for (let attempt = 1; attempt <= structuredDetailFetchAttempts; attempt += 1) {
+        try {
+          response = await fetchText(link.url, source);
+          break;
+        } catch (error) {
+          lastError = error;
+          if (attempt < structuredDetailFetchAttempts && isTransportFetchError(error instanceof Error ? error.message : error)) {
+            await sleep(delayMs);
+            continue;
+          }
+          throw error;
+        }
+      }
+      if (!response) {
+        throw lastError ?? new Error('Qantas detail fetch returned no response');
+      }
       if (!response.ok) {
         pages.push({
           url: link.url,
@@ -1580,6 +1833,41 @@ async function fetchAmericanStructuredRecords(runDir) {
     await sleep(delayMs);
   }
 
+  const membershipResponse = await fetchTextWithDefaultBrowser(americanMembershipUrl);
+  let oneDayPass = null;
+  if (membershipResponse.ok) {
+    const snapshotPath = path.join(runDir, 'american-admirals-club-one-day-pass.html');
+    await fs.writeFile(snapshotPath, membershipResponse.text, 'utf8');
+    oneDayPass = parseAdmiralsClubOneDayPass(membershipResponse.text, {
+      url: membershipResponse.finalUrl || americanMembershipUrl,
+    });
+    pages.push({
+      url: americanMembershipUrl,
+      status: 'fetched',
+      httpStatus: membershipResponse.status,
+      finalUrl: membershipResponse.finalUrl,
+      recordCount: oneDayPass ? 1 : 0,
+      snapshotFile: path.relative(projectRoot, snapshotPath),
+    });
+  } else {
+    pages.push({
+      url: americanMembershipUrl,
+      status: 'http_error',
+      httpStatus: membershipResponse.status,
+      finalUrl: membershipResponse.finalUrl,
+      recordCount: 0,
+    });
+  }
+
+  if (oneDayPass) {
+    for (const record of records) {
+      if (/Admirals Club/i.test(record.name) && !/Provisions|premium|Flagship/i.test(record.name)) {
+        record.price = oneDayPass;
+        record.accessNotes = `${record.accessNotes} Official One-Day Pass is available for domestic and international Admirals Club locations, capacity permitting, excluding closed clubs.`;
+      }
+    }
+  }
+
   const byId = new Map(records.map((record) => [record.sourceRecordId, record]));
   return {
     api: {
@@ -1592,6 +1880,247 @@ async function fetchAmericanStructuredRecords(runDir) {
     records: [...byId.values()].sort((first, second) =>
       `${first.airportCode}-${first.name}-${first.near}`.localeCompare(`${second.airportCode}-${second.name}-${second.near}`),
     ),
+  };
+}
+
+async function fetchAirCanadaStructuredRecords(runDir, source, indexHtml, indexUrl) {
+  const baseRecords = parseAirCanadaLoungeRecords(indexHtml, { url: indexUrl });
+  const detailRecords = [];
+  const pages = [
+    {
+      url: indexUrl,
+      status: 'fetched',
+      recordCount: baseRecords.length,
+    },
+  ];
+
+  for (const [index, target] of airCanadaDetailTargets.entries()) {
+    const url = `${airCanadaDetailsBaseUrl}#!lounge@${target.slug}`;
+    try {
+      const response = await fetchText(url, source);
+      if (!response.ok) {
+        pages.push({
+          url,
+          status: 'http_error',
+          httpStatus: response.status,
+          finalUrl: response.finalUrl,
+          recordCount: 0,
+        });
+        continue;
+      }
+
+      const snapshotPath = path.join(runDir, `air-canada-detail-${String(index + 1).padStart(2, '0')}-${target.airportCode.toLowerCase()}.html`);
+      await fs.writeFile(snapshotPath, response.text, 'utf8');
+      const parsed = parseAirCanadaLoungeDetailRecords(response.text, {
+        airportCode: target.airportCode,
+        airportCity: target.airportCity,
+        url,
+      });
+      detailRecords.push(...parsed);
+      pages.push({
+        url,
+        status: 'fetched',
+        httpStatus: response.status,
+        finalUrl: response.finalUrl,
+        recordCount: parsed.length,
+        snapshotFile: path.relative(projectRoot, snapshotPath),
+      });
+    } catch (error) {
+      pages.push({
+        url,
+        status: 'fetch_error',
+        reason: error instanceof Error ? error.message : String(error),
+        recordCount: 0,
+      });
+    }
+    await sleep(delayMs);
+  }
+
+  const records = mergeAirCanadaLoungeDetailRecords(baseRecords, detailRecords);
+  return {
+    api: {
+      type: 'official_html',
+      pages: pages.map((page) => page.url),
+      parser: 'air-canada-maple-leaf-structured',
+      pageCount: pages.length,
+      fetchedPages: pages.filter((page) => page.status === 'fetched').length,
+      detailRecordCount: detailRecords.length,
+      pagesStatus: pages,
+    },
+    records,
+  };
+}
+
+async function fetchAmexCenturionStructuredRecords(runDir, source) {
+  const pages = [];
+  const records = [];
+  const accessPolicies = [];
+
+  for (const [index, url] of amexCenturionStructuredUrls.entries()) {
+    try {
+      const response = await fetchText(url, source);
+      const snapshotPath = path.join(runDir, `amex-centurion-${String(index + 1).padStart(2, '0')}.html`);
+      await fs.writeFile(snapshotPath, response.text, 'utf8');
+      const record = response.ok
+        ? parseCenturionLoungeRecord(response.text, { url: response.finalUrl || url })
+        : null;
+      if (record) {
+        records.push(record);
+      }
+      pages.push({
+        url,
+        status: response.ok ? 'fetched' : 'http_error',
+        httpStatus: response.status,
+        finalUrl: response.finalUrl,
+        contentType: response.contentType,
+        bytes: Buffer.byteLength(response.text),
+        sha256: sha256(response.text),
+        title: pageTitle(response.text),
+        recordCount: record ? 1 : 0,
+        snapshotFile: path.relative(projectRoot, snapshotPath),
+      });
+    } catch (error) {
+      pages.push({
+        url,
+        status: 'fetch_error',
+        reason: error instanceof Error ? error.message : String(error),
+        recordCount: 0,
+      });
+    }
+    await sleep(delayMs);
+  }
+
+  try {
+    const response = await fetchText(amexCenturionAccessPolicyUrl, source);
+    const snapshotPath = path.join(runDir, 'amex-centurion-access-policy.html');
+    await fs.writeFile(snapshotPath, response.text, 'utf8');
+    const policy = response.ok
+      ? parseCenturionGuestPolicy(response.text, { url: response.finalUrl || amexCenturionAccessPolicyUrl })
+      : null;
+    if (policy) {
+      records.splice(0, records.length, ...applyCenturionGuestPolicy(records, policy));
+    }
+    pages.push({
+      url: amexCenturionAccessPolicyUrl,
+      status: response.ok ? 'fetched' : 'http_error',
+      httpStatus: response.status,
+      finalUrl: response.finalUrl,
+      contentType: response.contentType,
+      bytes: Buffer.byteLength(response.text),
+      sha256: sha256(response.text),
+      title: pageTitle(response.text),
+      recordCount: policy ? records.filter((record) => record.prices?.length > 0).length : 0,
+      snapshotFile: path.relative(projectRoot, snapshotPath),
+    });
+  } catch (error) {
+    pages.push({
+      url: amexCenturionAccessPolicyUrl,
+      status: 'fetch_error',
+      reason: error instanceof Error ? error.message : String(error),
+      recordCount: 0,
+    });
+  }
+
+  try {
+    const response = await fetchText(amexDeltaSkyClubAccessPolicyUrl, source);
+    const snapshotPath = path.join(runDir, 'amex-delta-sky-club-access-policy.html');
+    await fs.writeFile(snapshotPath, response.text, 'utf8');
+    const policy = response.ok
+      ? parseAmexDeltaSkyClubAccessPolicy(response.text, {
+          url: response.finalUrl || amexDeltaSkyClubAccessPolicyUrl,
+        })
+      : null;
+    if (policy) {
+      accessPolicies.push(policy);
+    }
+    pages.push({
+      url: amexDeltaSkyClubAccessPolicyUrl,
+      status: response.ok ? 'fetched' : 'http_error',
+      httpStatus: response.status,
+      finalUrl: response.finalUrl,
+      contentType: response.contentType,
+      bytes: Buffer.byteLength(response.text),
+      sha256: sha256(response.text),
+      title: pageTitle(response.text),
+      recordCount: policy ? 1 : 0,
+      snapshotFile: path.relative(projectRoot, snapshotPath),
+    });
+  } catch (error) {
+    pages.push({
+      url: amexDeltaSkyClubAccessPolicyUrl,
+      status: 'fetch_error',
+      reason: error instanceof Error ? error.message : String(error),
+      recordCount: 0,
+    });
+  }
+
+  return {
+    api: {
+      type: 'official_html',
+      pages,
+      parser: 'amex-centurion-lounges-structured',
+      accessPolicies,
+    },
+    records,
+  };
+}
+
+async function fetchPriorityPassAccessPolicy(runDir, source) {
+  const url = source.accessPolicyUrl || priorityPassAccessPolicyUrl;
+  const pages = [];
+  const accessPolicies = [];
+  const robots = await fetchRobots(url, source);
+  if (robots.checked && isDisallowedByRobots(url, robots.rules)) {
+    pages.push({
+      url,
+      status: 'skipped',
+      reason: 'robots_disallow',
+      recordCount: 0,
+      robots: summarizeRobots(robots),
+    });
+    return { api: { type: 'official_html', pages, parser: 'priority-pass-membership-access', accessPolicies } };
+  }
+
+  try {
+    const response = await fetchText(url, source);
+    const snapshotPath = path.join(runDir, 'priority-pass-access-policy.html');
+    await fs.writeFile(snapshotPath, response.text, 'utf8');
+    const policy = response.ok
+      ? parsePriorityPassStandardAccessPolicy(response.text, { url: response.finalUrl || url })
+      : null;
+    if (policy) {
+      accessPolicies.push(policy);
+    }
+    pages.push({
+      url,
+      status: response.ok ? 'fetched' : 'http_error',
+      httpStatus: response.status,
+      finalUrl: response.finalUrl,
+      contentType: response.contentType,
+      bytes: Buffer.byteLength(response.text),
+      sha256: sha256(response.text),
+      title: pageTitle(response.text),
+      recordCount: policy ? 1 : 0,
+      snapshotFile: path.relative(projectRoot, snapshotPath),
+      robots: summarizeRobots(robots),
+    });
+  } catch (error) {
+    pages.push({
+      url,
+      status: 'fetch_error',
+      reason: error instanceof Error ? error.message : String(error),
+      recordCount: 0,
+      robots: summarizeRobots(robots),
+    });
+  }
+
+  return {
+    api: {
+      type: 'official_html',
+      pages,
+      parser: 'priority-pass-membership-access',
+      accessPolicies,
+    },
   };
 }
 
@@ -1684,11 +2213,12 @@ async function fetchPanynjOfficialStructuredRecords(url, runDir, source, index) 
     };
     const snapshotPath = path.join(runDir, `airport-official-lounges-${String(index + 1).padStart(2, '0')}-panynj.json`);
     await fs.writeFile(snapshotPath, JSON.stringify(snapshot, null, 2), 'utf8');
+    const retrievedAt = sourceSnapshotRetrievedAt({ snapshotFile: path.relative(projectRoot, snapshotPath) });
     const pageRecords = parsePanynjOfficialLoungeRecords({
       pois: cards,
       detailsById,
       url,
-    });
+    }).map((record) => ({ ...record, retrievedAt }));
 
     return {
       page: {
@@ -1706,6 +2236,80 @@ async function fetchPanynjOfficialStructuredRecords(url, runDir, source, index) 
   }
 }
 
+async function priorAirportOfficialSnapshots(runDir, index, panynj) {
+  const filename = panynj
+    ? `airport-official-lounges-${String(index + 1).padStart(2, '0')}-panynj.json`
+    : `airport-official-lounges-${String(index + 1).padStart(2, '0')}.html`;
+  const currentRun = path.basename(runDir);
+  const entries = await fs.readdir(cacheRoot, { withFileTypes: true }).catch(() => []);
+  const runNames = entries
+    .filter((entry) => entry.isDirectory() && entry.name !== currentRun)
+    .map((entry) => entry.name)
+    .sort()
+    .reverse();
+
+  const snapshots = [];
+  for (const runName of runNames) {
+    const snapshotPath = path.join(cacheRoot, runName, filename);
+    try {
+      await fs.access(snapshotPath);
+      snapshots.push(snapshotPath);
+    } catch {
+      // Continue to the next older bounded source run.
+    }
+  }
+  return snapshots;
+}
+
+async function reusePriorAirportOfficialPage({ runDir, index, url, currentFailure }) {
+  const panynj = isPanynjAirportUrl(url);
+  const snapshotPaths = await priorAirportOfficialSnapshots(runDir, index, panynj);
+  if (snapshotPaths.length === 0) {
+    return null;
+  }
+
+  let emptyFallback = null;
+  for (const snapshotPath of snapshotPaths) {
+    const snapshotFile = path.relative(projectRoot, snapshotPath);
+    const retrievedAt = sourceSnapshotRetrievedAt({ snapshotFile });
+    try {
+      let pageRecords;
+      if (panynj) {
+        const snapshot = JSON.parse(await fs.readFile(snapshotPath, 'utf8'));
+        const cards = (snapshot.list?.results ?? []).filter((card) => /relax\.lounge/i.test(String(card.category ?? '')));
+        pageRecords = parsePanynjOfficialLoungeRecords({
+          pois: cards,
+          detailsById: snapshot.detailsById ?? {},
+          url,
+        });
+      } else {
+        const html = await fs.readFile(snapshotPath, 'utf8');
+        pageRecords = parseAirportOfficialLoungeRecords(html, { url });
+      }
+
+      const reused = {
+        page: {
+          url,
+          status: 'reused',
+          reason: 'current_fetch_failed_last_success_reused',
+          currentFailure,
+          recordCount: pageRecords.length,
+          snapshotFile,
+          retrievedAt,
+        },
+        records: pageRecords.map((record) => ({ ...record, retrievedAt })),
+      };
+      if (pageRecords.length > 0) {
+        return reused;
+      }
+      emptyFallback ??= reused;
+    } catch {
+      // Continue until a prior bounded snapshot parses successfully.
+    }
+  }
+  return emptyFallback;
+}
+
 async function fetchAirportOfficialStructuredRecords(runDir, source) {
   const pages = [];
   const records = [];
@@ -1714,15 +2318,29 @@ async function fetchAirportOfficialStructuredRecords(runDir, source) {
     if (isPanynjAirportUrl(url)) {
       try {
         const result = await fetchPanynjOfficialStructuredRecords(url, runDir, source, index);
-        pages.push(result.page);
-        records.push(...result.records);
+        if (result.page.status === 'fetched') {
+          pages.push(result.page);
+          records.push(...result.records);
+        } else {
+          const reused = await reusePriorAirportOfficialPage({
+            runDir,
+            index,
+            url,
+            currentFailure: result.page,
+          });
+          pages.push(reused?.page ?? result.page);
+          records.push(...(reused?.records ?? result.records));
+        }
       } catch (error) {
-        pages.push({
+        const currentFailure = {
           url,
           status: 'fetch_error',
           reason: error instanceof Error ? error.message : String(error),
           httpStatus: 0,
-        });
+        };
+        const reused = await reusePriorAirportOfficialPage({ runDir, index, url, currentFailure });
+        pages.push(reused?.page ?? currentFailure);
+        records.push(...(reused?.records ?? []));
       }
       await sleep(delayMs);
       continue;
@@ -1731,21 +2349,26 @@ async function fetchAirportOfficialStructuredRecords(runDir, source) {
     try {
       const response = await fetchText(url, source);
       if (!response.ok) {
-        pages.push({
+        const currentFailure = {
           url,
           status: 'http_error',
           httpStatus: response.status,
           finalUrl: response.finalUrl,
-        });
+        };
+        const reused = await reusePriorAirportOfficialPage({ runDir, index, url, currentFailure });
+        pages.push(reused?.page ?? currentFailure);
+        records.push(...(reused?.records ?? []));
         await sleep(delayMs);
         continue;
       }
 
       const snapshotPath = path.join(runDir, `airport-official-lounges-${String(index + 1).padStart(2, '0')}.html`);
       await fs.writeFile(snapshotPath, response.text, 'utf8');
+      const snapshotFile = path.relative(projectRoot, snapshotPath);
+      const retrievedAt = sourceSnapshotRetrievedAt({ snapshotFile });
       const pageRecords = parseAirportOfficialLoungeRecords(response.text, {
         url: response.finalUrl || url,
-      });
+      }).map((record) => ({ ...record, retrievedAt }));
       records.push(...pageRecords);
       pages.push({
         url,
@@ -1753,15 +2376,18 @@ async function fetchAirportOfficialStructuredRecords(runDir, source) {
         httpStatus: response.status,
         finalUrl: response.finalUrl,
         recordCount: pageRecords.length,
-        snapshotFile: path.relative(projectRoot, snapshotPath),
+        snapshotFile,
       });
     } catch (error) {
-      pages.push({
+      const currentFailure = {
         url,
         status: 'fetch_error',
         reason: error instanceof Error ? error.message : String(error),
         httpStatus: 0,
-      });
+      };
+      const reused = await reusePriorAirportOfficialPage({ runDir, index, url, currentFailure });
+      pages.push(reused?.page ?? currentFailure);
+      records.push(...(reused?.records ?? []));
     }
     await sleep(delayMs);
   }
@@ -1838,9 +2464,20 @@ async function mergeRequestedSourceResults(report, results, knownAirportCodes) {
     return report;
   }
 
-  const bySourceId = new Map((existing.sources ?? []).map((source) => [source.sourceId, source]));
+  const bySourceId = new Map(
+    (existing.sources ?? []).map((source) => [
+      source.sourceId,
+      {
+        ...source,
+        retrievedAt: sourceSnapshotRetrievedAt(source) ?? source.retrievedAt ?? existing.generatedAt,
+      },
+    ]),
+  );
   for (const result of results) {
-    bySourceId.set(result.sourceId, result);
+    bySourceId.set(result.sourceId, {
+      ...result,
+      retrievedAt: sourceSnapshotRetrievedAt(result) ?? report.generatedAt,
+    });
   }
   const registryOrder = cloneSourceRegistry().map((source) => source.id);
   const sources = [...bySourceId.values()].sort(
@@ -1857,6 +2494,24 @@ async function mergeRequestedSourceResults(report, results, knownAirportCodes) {
   };
 }
 
+function sourceSnapshotRetrievedAt(source) {
+  const snapshotFiles = [
+    source.snapshotFile,
+    ...(source.childPages ?? []).map((page) => page.snapshotFile),
+    ...(source.structuredApi?.pages ?? []).map((page) => page.snapshotFile),
+  ].filter(Boolean);
+  const timestamps = snapshotFiles
+    .map((file) =>
+      String(file).match(
+        /source-snapshots\/(\d{4})-(\d{2})-(\d{2})T(\d{2})-(\d{2})-(\d{2})-(\d{3})Z\//,
+      ),
+    )
+    .filter(Boolean)
+    .map((match) => `${match[1]}-${match[2]}-${match[3]}T${match[4]}:${match[5]}:${match[6]}.${match[7]}Z`)
+    .sort();
+  return timestamps.at(-1) ?? '';
+}
+
 async function scrapeSource(source, runDir, knownAirportCodes) {
   if (source.adapter === 'licensed_api' || source.status === 'blocked') {
     return {
@@ -1869,6 +2524,36 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
       records: 0,
       airportCodes: [],
       loungeLinks: [],
+    };
+  }
+
+  if (source.id === 'priority-pass') {
+    const structured = await fetchPriorityPassAccessPolicy(runDir, source);
+    const policyCount = structured.api.accessPolicies.length;
+    const page = structured.api.pages[0] ?? {};
+    return {
+      sourceId: source.id,
+      publisher: source.publisher,
+      url: source.url,
+      sourceUrl: source.url,
+      finalUrl: page.finalUrl || source.accessPolicyUrl || priorityPassAccessPolicyUrl,
+      adapter: source.adapter,
+      status: policyCount > 0 ? 'fetched' : 'fetch_error',
+      reason: policyCount > 0 ? undefined : page.reason || 'priority_pass_access_policy_not_parsed',
+      httpStatus: page.httpStatus,
+      contentType: page.contentType,
+      bytes: page.bytes ?? 0,
+      sha256: page.sha256 ?? '',
+      title: page.title || source.publisher,
+      airportCodes: [],
+      loungeLinks: [],
+      childPages: [],
+      structuredApi: structured.api,
+      structuredRecords: [],
+      records: 0,
+      snapshotFile: page.snapshotFile || '',
+      robots: page.robots ?? { checked: false, rules: [] },
+      fetchAttempts: [],
     };
   }
 
@@ -2084,6 +2769,22 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
       }
     }
 
+    if (source.id === 'aspire-lounges') {
+      structuredApi = await fetchAspireStructuredRecords(
+        runDir,
+        source,
+        fetched.text,
+        fetched.finalUrl || sourceUrl || source.url,
+      );
+      structuredRecords = structuredApi.records;
+      airportCodes.clear();
+      for (const record of structuredRecords) {
+        if (/^[A-Z0-9]{3}$/.test(record.airportCode)) {
+          airportCodes.add(record.airportCode);
+        }
+      }
+    }
+
     if (source.id === 'gameway') {
       structuredApi = await fetchGamewayStructuredRecords(runDir, source);
       structuredRecords = structuredApi.records;
@@ -2159,14 +2860,73 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
     }
 
     if (source.id === 'air-canada') {
-      structuredRecords = parseAirCanadaLoungeRecords(fetched.text, {
+      structuredApi = await fetchAirCanadaStructuredRecords(
+        runDir,
+        source,
+        fetched.text,
+        fetched.finalUrl || sourceUrl || source.url,
+      );
+      structuredRecords = structuredApi.records;
+      airportCodes.clear();
+      for (const record of structuredRecords) {
+        if (/^[A-Z0-9]{3}$/.test(record.airportCode)) {
+          airportCodes.add(record.airportCode);
+        }
+      }
+    }
+
+    if (source.id === 'alaska-airlines') {
+      structuredRecords = parseAlaskaLoungeRecords(fetched.text, {
         url: fetched.finalUrl || sourceUrl || source.url,
       });
+      const passResponse = await fetchText(alaskaLoungePassUrl, source);
+      let loungePass = null;
+      let passPage = {
+        url: alaskaLoungePassUrl,
+        status: 'http_error',
+        httpStatus: passResponse.status,
+        finalUrl: passResponse.finalUrl,
+        recordCount: 0,
+      };
+      if (passResponse.ok) {
+        const passSnapshotPath = path.join(runDir, 'alaska-airlines-lounge-pass.html');
+        await fs.writeFile(passSnapshotPath, passResponse.text, 'utf8');
+        loungePass = parseAlaskaLoungePass(passResponse.text, {
+          url: passResponse.finalUrl || alaskaLoungePassUrl,
+        });
+        passPage = {
+          url: alaskaLoungePassUrl,
+          status: 'fetched',
+          httpStatus: passResponse.status,
+          finalUrl: passResponse.finalUrl,
+          recordCount: loungePass ? 1 : 0,
+          snapshotFile: path.relative(projectRoot, passSnapshotPath),
+        };
+      }
+      if (loungePass) {
+        for (const record of structuredRecords) {
+          if (!record.loungePassAvailable) {
+            continue;
+          }
+          record.price = loungePass;
+          record.accessNotes = `${record.accessNotes} Single-entry passes require eligible same-day travel and remain subject to capacity.`;
+        }
+      }
       structuredApi = {
         api: {
           type: 'official_html',
-          pages: [fetched.finalUrl || sourceUrl || source.url],
-          parser: 'air-canada-maple-leaf-structured',
+          pages: [
+            {
+              url: sourceUrl || source.url,
+              status: fetched.ok ? 'fetched' : 'http_error',
+              httpStatus: fetched.status,
+              finalUrl: fetched.finalUrl,
+              recordCount: structuredRecords.length,
+              snapshotFile: path.relative(projectRoot, snapshotPath),
+            },
+            passPage,
+          ],
+          parser: 'alaska-lounges-structured',
         },
         records: structuredRecords,
       };
@@ -2182,10 +2942,61 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
       structuredRecords = parseCapitalOneLoungeRecords(fetched.text, {
         url: fetched.finalUrl || sourceUrl || source.url,
       });
+      const policyUrl = source.accessPolicyUrl;
+      let policyPage = {
+        url: policyUrl,
+        status: 'fetch_error',
+        reason: 'access_policy_url_missing',
+        recordCount: 0,
+      };
+      if (policyUrl) {
+        try {
+          const policyResponse = await fetchText(policyUrl, source);
+          const policySnapshotPath = path.join(runDir, 'capital-one-access-policy.html');
+          await fs.writeFile(policySnapshotPath, policyResponse.text, 'utf8');
+          const policy = policyResponse.ok
+            ? parseCapitalOneGuestPolicy(policyResponse.text, {
+                url: policyResponse.finalUrl || policyUrl,
+              })
+            : null;
+          if (policy) {
+            structuredRecords = applyCapitalOneGuestPolicy(structuredRecords, policy);
+          }
+          policyPage = {
+            url: policyUrl,
+            status: policyResponse.ok ? 'fetched' : 'http_error',
+            httpStatus: policyResponse.status,
+            finalUrl: policyResponse.finalUrl,
+            contentType: policyResponse.contentType,
+            bytes: Buffer.byteLength(policyResponse.text),
+            sha256: sha256(policyResponse.text),
+            title: pageTitle(policyResponse.text),
+            recordCount: policy ? structuredRecords.filter((record) => record.prices?.length > 0).length : 0,
+            snapshotFile: path.relative(projectRoot, policySnapshotPath),
+          };
+        } catch (error) {
+          policyPage = {
+            url: policyUrl,
+            status: 'fetch_error',
+            reason: error instanceof Error ? error.message : String(error),
+            recordCount: 0,
+          };
+        }
+      }
       structuredApi = {
         api: {
           type: 'official_html',
-          pages: [fetched.finalUrl || sourceUrl || source.url],
+          pages: [
+            {
+              url: sourceUrl || source.url,
+              status: fetched.ok ? 'fetched' : 'http_error',
+              httpStatus: fetched.status,
+              finalUrl: fetched.finalUrl,
+              recordCount: structuredRecords.length,
+              snapshotFile: path.relative(projectRoot, snapshotPath),
+            },
+            policyPage,
+          ],
           parser: 'capital-one-lounges-structured',
         },
         records: structuredRecords,
@@ -2210,6 +3021,17 @@ async function scrapeSource(source, runDir, knownAirportCodes) {
         },
         records: structuredRecords,
       };
+      airportCodes.clear();
+      for (const record of structuredRecords) {
+        if (/^[A-Z0-9]{3}$/.test(record.airportCode)) {
+          airportCodes.add(record.airportCode);
+        }
+      }
+    }
+
+    if (source.id === 'amex-global-lounge-collection') {
+      structuredApi = await fetchAmexCenturionStructuredRecords(runDir, source);
+      structuredRecords = structuredApi.records;
       airportCodes.clear();
       for (const record of structuredRecords) {
         if (/^[A-Z0-9]{3}$/.test(record.airportCode)) {
@@ -2332,8 +3154,9 @@ async function main() {
     await sleep(delayMs);
   }
 
+  const reportGeneratedAt = new Date().toISOString();
   const partialReport = {
-    generatedAt: new Date().toISOString(),
+    generatedAt: reportGeneratedAt,
     runId,
     policy: {
       fetchMode: 'single_public_source_url_per_registry_entry',
@@ -2356,13 +3179,17 @@ async function main() {
     stats: {
       ...createReportStats(results, knownAirportCodes),
     },
-    sources: results,
+    sources: results.map((result) => ({
+      ...result,
+      retrievedAt: sourceSnapshotRetrievedAt(result) ?? reportGeneratedAt,
+    })),
   };
   const report = await mergeRequestedSourceResults(partialReport, results, knownAirportCodes);
+  const sanitizedReport = redactSensitiveData(report);
 
   await fs.mkdir(path.dirname(publicReportPath), { recursive: true });
-  await fs.writeFile(latestReportPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
-  await fs.writeFile(publicReportPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+  await fs.writeFile(latestReportPath, `${JSON.stringify(sanitizedReport, null, 2)}\n`, 'utf8');
+  await fs.writeFile(publicReportPath, `${JSON.stringify(sanitizedReport, null, 2)}\n`, 'utf8');
 
   console.log(
     `Fetched ${report.stats.fetched}/${report.stats.totalSources} sources; ` +

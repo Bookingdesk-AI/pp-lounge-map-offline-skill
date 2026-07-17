@@ -69,6 +69,7 @@ async function main() {
   const steps = [
     ['npm', ['run', 'build:data']],
     ['npm', ['run', 'build:canonical-data']],
+    ['npm', ['run', 'build:public-data']],
     ['npm', ['run', 'build:mcp-data']],
     ['npm', ['run', 'build:offline-skill']],
     ['npm', ['test']],
@@ -76,6 +77,7 @@ async function main() {
     ['npm', ['run', 'validate:publish:offline']],
     ['npx', ['tsc', '-b']],
     ['npx', ['vite', 'build']],
+    ['npm', ['run', 'validate:browser-boundary']],
   ];
 
   for (const [cmd, args] of steps) {
@@ -84,6 +86,7 @@ async function main() {
 
   await verifyOutputExists(path.resolve(projectRoot, 'public', 'data', 'lounges.geojson'));
   await verifyOutputExists(path.resolve(projectRoot, 'public', 'data', 'meta.json'));
+  await verifyOutputExists(path.resolve(projectRoot, 'public', 'data', 'lounge-map.json'));
   await verifyOutputExists(path.resolve(projectRoot, 'mcp', 'data', 'catalog.json'));
   await verifyOutputExists(path.resolve(projectRoot, 'dist', 'index.html'));
 

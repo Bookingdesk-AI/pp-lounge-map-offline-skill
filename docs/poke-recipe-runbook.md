@@ -7,7 +7,7 @@ Create and publish the hosted Poke recipe for `lounge-guru` using the checked-in
 ## Source of truth
 
 - Recipe draft: `recipes/poke/lounge-guru.hosted.recipe.json`
-- MCP endpoint: `https://loungeguru.desk.travel/mcp`
+- MCP endpoint: `https://lounge-guru-mcp.dev-4ee.workers.dev/mcp`
 - Transport: `streamable-http`
 
 Validate the draft before editing Kitchen:
@@ -33,7 +33,7 @@ npx poke@latest login
 2. Add the hosted MCP integration to your Poke account:
 
 ```bash
-npx poke@latest mcp add https://loungeguru.desk.travel/mcp -n "Lounge Guru"
+npx poke@latest mcp add https://lounge-guru-mcp.dev-4ee.workers.dev/mcp -n "Lounge Guru"
 ```
 
 3. Open Kitchen at [poke.com/kitchen](https://poke.com/kitchen).

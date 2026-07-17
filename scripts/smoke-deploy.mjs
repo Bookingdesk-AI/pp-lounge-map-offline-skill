@@ -1,12 +1,12 @@
 import { pathToFileURL } from 'node:url';
 
-const DEFAULT_BASE_URL = 'https://loungeguru.desk.travel';
+const DEFAULT_BASE_URL = 'https://loungeguru-desk-travel.pages.dev';
 
 export function parseSmokeArgs(args, env = process.env) {
   const options = {
     baseUrl: env.LOUNGE_GURU_SMOKE_BASE_URL || DEFAULT_BASE_URL,
     minCatalogRecords: Number(env.LOUNGE_GURU_SMOKE_MIN_RECORDS || 1),
-    adminReport: env.LOUNGE_GURU_SMOKE_ADMIN_REPORT || 'forbidden',
+    adminReport: env.LOUNGE_GURU_SMOKE_ADMIN_REPORT || 'static-fallback',
   };
 
   for (const arg of args) {
@@ -34,8 +34,8 @@ export function parseSmokeArgs(args, env = process.env) {
     throw new Error('Minimum catalog records must be a positive number');
   }
 
-  if (!['forbidden', 'static-fallback'].includes(options.adminReport)) {
-    throw new Error('Admin report expectation must be forbidden or static-fallback');
+  if (!['forbidden', 'not-found', 'static-fallback'].includes(options.adminReport)) {
+    throw new Error('Admin report expectation must be forbidden, not-found, or static-fallback');
   }
 
   return {
@@ -72,7 +72,7 @@ export async function runDeploySmoke({
 } = {}) {
   const options = parseSmokeArgs(args, env);
   const rootUrl = new URL('/', options.baseUrl);
-  const catalogUrl = new URL('/data/lounge-guru-catalog.json', options.baseUrl);
+  const catalogUrl = new URL('/data/lounge-map.json', options.baseUrl);
   const adminReportUrl = new URL('/admin/source-intake/report', options.baseUrl);
 
   const rootResponse = await fetchImpl(rootUrl, {
@@ -89,7 +89,7 @@ export async function runDeploySmoke({
     throw new Error(`Deploy smoke failed: catalog ${catalog.response.status}`);
   }
 
-  const totalCatalogRecords = Number(catalog.body?.stats?.totalCatalogRecords ?? 0);
+  const totalCatalogRecords = Number(catalog.body?.records?.length ?? 0);
   if (totalCatalogRecords < options.minCatalogRecords) {
     throw new Error(`Deploy smoke failed: catalog records ${totalCatalogRecords}`);
   }
@@ -98,6 +98,10 @@ export async function runDeploySmoke({
   if (options.adminReport === 'forbidden') {
     if (adminReport.response.status !== 403 || adminReport.body?.error !== 'forbidden') {
       throw new Error(`Deploy smoke failed: admin guard ${adminReport.response.status}`);
+    }
+  } else if (options.adminReport === 'not-found') {
+    if (adminReport.response.status !== 404) {
+      throw new Error(`Deploy smoke failed: admin route ${adminReport.response.status}`);
     }
   } else if (adminReport.response.status !== 200) {
     throw new Error(`Deploy smoke failed: static admin fallback ${adminReport.response.status}`);

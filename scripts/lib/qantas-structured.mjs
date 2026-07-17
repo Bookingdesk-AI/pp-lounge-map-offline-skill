@@ -68,7 +68,7 @@ export function parseQantasLoungeLinks(html, { baseUrl = 'https://www.qantas.com
 function qantasPropsBlocks(html) {
   return [...String(html ?? '').matchAll(/<script[^>]+type=["']application\/json["'][^>]*>([\s\S]*?)<\/script>/gi)]
     .map((match) => match[1])
-    .filter((text) => /"loungeData"\s*:/i.test(text));
+    .filter((text) => /"(?:loungeData|tableData)"\s*:/i.test(text));
 }
 
 function parseJsonBlock(text) {
@@ -133,10 +133,74 @@ function dailyHours(opening, closing) {
   }));
 }
 
+const QANTAS_DAY_NUMBERS = new Map([
+  ['monday', 1],
+  ['tuesday', 2],
+  ['wednesday', 3],
+  ['thursday', 4],
+  ['friday', 5],
+  ['saturday', 6],
+  ['sunday', 0],
+]);
+
+function parseNamedDayHours(value) {
+  const dayName = '(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)';
+  const time = '(?:midnight|\\d{1,2}(?:(?::|\\.)\\d{2})?\\s*(?:a\\.?m\\.?|p\\.?m\\.?))';
+  const pattern = new RegExp(
+    `(${dayName}(?:(?:,\\s*|\\s+and\\s+|,\\s+and\\s+)${dayName})*)\\s*:\\s*(${time})\\s*(?:to|-|until)\\s*(${time})`,
+    'gi',
+  );
+  const byDay = new Map();
+
+  const rangePattern = new RegExp(
+    `(${dayName})\\s*(?:-|to)\\s*(${dayName})\\s*:\\s*(${time})\\s*(?:to|-|until)\\s*(${time})`,
+    'gi',
+  );
+  const orderedDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+  for (const match of clean(value).matchAll(rangePattern)) {
+    const opening = toTwentyFourHour(match[3]);
+    const closing = toTwentyFourHour(match[4]);
+    const firstIndex = orderedDays.indexOf(match[1].toLowerCase());
+    const lastIndex = orderedDays.indexOf(match[2].toLowerCase());
+    if (!opening || !closing || firstIndex < 0 || lastIndex < firstIndex) {
+      continue;
+    }
+    for (const dayNameValue of orderedDays.slice(firstIndex, lastIndex + 1)) {
+      const day = QANTAS_DAY_NUMBERS.get(dayNameValue);
+      byDay.set(day, { Day: day, OpeningHour: opening, ClosingHour: closing });
+    }
+  }
+
+  for (const match of clean(value).matchAll(pattern)) {
+    const opening = toTwentyFourHour(match[2]);
+    const closing = toTwentyFourHour(match[3]);
+    if (!opening || !closing) {
+      continue;
+    }
+    for (const dayMatch of match[1].matchAll(new RegExp(dayName, 'gi'))) {
+      const day = QANTAS_DAY_NUMBERS.get(dayMatch[0].toLowerCase());
+      if (day !== undefined) {
+        byDay.set(day, {
+          Day: day,
+          OpeningHour: opening,
+          ClosingHour: closing,
+        });
+      }
+    }
+  }
+
+  return [1, 2, 3, 4, 5, 6, 0].map((day) => byDay.get(day)).filter(Boolean);
+}
+
 function parseOpenHours(value) {
   const text = clean(value);
   if (/\b24\s*hours?\b/i.test(text)) {
     return dailyHours('00:00', '23:59');
+  }
+
+  const namedDayHours = parseNamedDayHours(text);
+  if (namedDayHours.length > 0) {
+    return namedDayHours;
   }
 
   const match = text.match(
@@ -151,6 +215,17 @@ function parseOpenHours(value) {
   return opening && closing ? dailyHours(opening, closing) : [];
 }
 
+function isHoursLikeText(value, parsedHours) {
+  const text = clean(value);
+  return (
+    parsedHours.length > 0 ||
+    /\b24\s*hours?\b/i.test(text) ||
+    /\b(?:\d+|one|two|three|four|ninety|90)\s+(?:hours?|minutes?)\s+(?:prior|before)\b/i.test(text) ||
+    /\b\d{1,2}(?:(?::|\.)\d{2})?\s*(?:a\.?m\.?|p\.?m\.?)\b/i.test(text) ||
+    /\bopening hours?\b/i.test(text)
+  );
+}
+
 function amenitiesFromData(data) {
   const facilities = unique([...(data.commonFeatures ?? []), ...(data.businessFeatures ?? [])]);
   const text = facilities.join(' ');
@@ -163,6 +238,83 @@ function amenitiesFromData(data) {
     RelaxationRoom: /\b(?:family zone|quiet|refresh|lounge)\b/i.test(text),
     WheelchairAccess: /\b(?:accessible|wheelchair)\b/i.test(text),
     TV: /\btelevision|tv\b/i.test(text),
+  };
+}
+
+const QANTAS_STANDALONE_AIRPORTS = new Map([
+  ['los-angeles-international-first-lounge.html', 'LAX'],
+  ['perth-international-lounge.html', 'PER'],
+  ['the-qantas-london-lounge.html', 'LHR'],
+]);
+
+function standaloneAirportCode(url) {
+  const pathname = (() => {
+    try {
+      return new URL(url).pathname.toLowerCase();
+    } catch {
+      return '';
+    }
+  })();
+  return [...QANTAS_STANDALONE_AIRPORTS].find(([suffix]) => pathname.endsWith(suffix))?.[1] ?? '';
+}
+
+function standalonePageName(html) {
+  return (
+    stripHtml(String(html ?? '').match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1]) ||
+    stripHtml(String(html ?? '').match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]).replace(/\s*\|\s*Qantas\s*$/i, '')
+  );
+}
+
+function tableLocationAndHours(html) {
+  for (const block of qantasPropsBlocks(html)) {
+    const tableData = parseJsonBlock(block)?.tableData;
+    if (!tableData || !/\bLocation\b/i.test(tableData) || !/\bHours|opening hours\b/i.test(tableData)) {
+      continue;
+    }
+    const rows = [...String(tableData).matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)];
+    for (const row of rows.slice(1)) {
+      const cells = [...row[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)].map((match) => stripHtml(match[1]));
+      if (cells.length >= 2 && cells[0] && cells[1]) {
+        return { location: cells[0], hours: cells[1] };
+      }
+    }
+  }
+  return null;
+}
+
+function parseStandaloneQantasLoungeRecord(html, url) {
+  const airportCode = standaloneAirportCode(url);
+  const name = standalonePageName(html);
+  const table = tableLocationAndHours(html);
+  if (!airportCode || !name || !table) {
+    return null;
+  }
+
+  const temporarilyClosed = /\btemporarily closed\b/i.test(table.hours);
+  const multipleDailyWindows = /\b(?:and|&)\s+\d{1,2}(?:(?::|\.)\d{2})?\s*(?:a\.?m\.?|p\.?m\.?)\b/i.test(table.hours);
+  const openHours = temporarilyClosed || multipleDailyWindows ? [] : parseOpenHours(table.hours);
+  const terminal =
+    table.location.match(/\bTerminal\s+\d[A-Z]?\b/i)?.[0] ||
+    table.location.match(/\bT\d[A-Z]?\b/i)?.[0]?.replace(/^T/i, 'Terminal ') ||
+    'Unknown';
+
+  return {
+    sourceRecordId: `qantas-${airportCode.toLowerCase()}-${slugify(name)}`,
+    name,
+    brand: 'Qantas',
+    operator: 'Qantas',
+    airportCode,
+    airportName: '',
+    terminal,
+    near: table.location,
+    sourceUrl: url,
+    programs: ['Qantas', 'oneworld Emerald', 'oneworld Sapphire', 'Premium cabin'],
+    status: temporarilyClosed ? 'temporarily_closed' : '',
+    openHours,
+    hoursText: temporarilyClosed || openHours.length > 0 ? '' : table.hours,
+    exceptions: temporarilyClosed ? [table.hours] : [],
+    amenities: amenitiesFromData({}),
+    accessNotes: table.hours,
   };
 }
 
@@ -185,6 +337,10 @@ export function parseQantasLoungeRecord(html, { url = '' } = {}) {
     const name = titleName(data.loungeTitle);
     const operator = clean(data.operator) || 'Qantas';
     const location = stripHtml(data.location);
+    const openingHoursText = stripHtml(data.openingHours);
+    const temporarilyClosed = /\btemporarily closed\b/i.test(openingHoursText);
+    const openHours = temporarilyClosed ? [] : parseOpenHours(data.openingHours);
+    const operationalNotice = !temporarilyClosed && Boolean(openingHoursText) && !isHoursLikeText(openingHoursText, openHours);
     const facilities = unique([...(data.commonFeatures ?? []), ...(data.businessFeatures ?? [])]);
 
     return {
@@ -199,12 +355,14 @@ export function parseQantasLoungeRecord(html, { url = '' } = {}) {
       near: location,
       sourceUrl: url,
       programs: ['Qantas', 'oneworld Emerald', 'oneworld Sapphire', 'Premium cabin'],
-      openHours: parseOpenHours(data.openingHours),
-      hoursText: stripHtml(data.openingHours),
+      status: temporarilyClosed ? 'temporarily_closed' : '',
+      openHours,
+      hoursText: temporarilyClosed || operationalNotice ? '' : openingHoursText,
+      exceptions: temporarilyClosed || operationalNotice ? [openingHoursText] : [],
       amenities: amenitiesFromData(data),
       accessNotes: clean([data.openingHours, ...facilities].join('; ')),
     };
   }
 
-  return null;
+  return parseStandaloneQantasLoungeRecord(html, url);
 }

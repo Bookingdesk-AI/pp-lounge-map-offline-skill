@@ -1,10 +1,1066 @@
 {
-  "generatedAt": "2026-07-14T00:00:00.000Z",
+  "generatedAt": "2026-07-17T06:17:42.915Z",
   "policy": {
     "sourceMode": "official public Priority Pass detail pages",
-    "guardrail": "Use exact public detail-page text only; do not infer hours, gates, or prices from neighboring lounge listings."
+    "guardrail": "Use exact public detail-page text only; do not infer hours, gates, or prices from neighboring lounge listings.",
+    "runtime": "playwright"
   },
+  "stats": {
+    "attempted": 3,
+    "fetched": 0,
+    "blocked": 3,
+    "activeBlockers": 26,
+    "blockerHistory": 30,
+    "totalEvidenceRecords": 267
+  },
+  "blockers": [
+    {
+      "recordId": "ACA-aca4-oma-premium-lounge-38",
+      "url": "https://my.prioritypass.com/en-GB/lounges/mexico/general-juan-n-alvarez-international/aca4-oma-premium-lounge",
+      "reason": "missing_target_fields_location",
+      "firstSeenAt": "2026-07-17T01:50:01.894Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "AKL-akl4d-best-ugly-bagels-125",
+      "url": "https://my.prioritypass.com/en-GB/lounges/new-zealand/auckland/akl4d-best-ugly-bagels",
+      "reason": "missing_target_fields_location",
+      "firstSeenAt": "2026-07-17T01:50:01.894Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "AKL-akl5d-best-ugly-bagels-123",
+      "url": "https://my.prioritypass.com/en-GB/lounges/new-zealand/auckland/akl5d-best-ugly-bagels",
+      "reason": "missing_target_fields_location",
+      "firstSeenAt": "2026-07-17T01:50:01.894Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "AOG-aog-first-class-lounge-151",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/anshan-tengao/aog-first-class-lounge",
+      "reason": "missing_target_fields_openingHours",
+      "firstSeenAt": "2026-07-16T17:00:59.576Z",
+      "lastSeenAt": "2026-07-17T06:17:42.915Z",
+      "attempts": 3
+    },
+    {
+      "recordId": "CAN-can3-air-china-premium-lounge-56",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can3-air-china-premium-lounge",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "CAN-can4-hainan-airlines-first-class-lounge-63",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can4-hainan-airlines-first-class-lounge",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "CAN-can6-shenzhen-airlines-king-lounge-58",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can6-shenzhen-airlines-king-lounge",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "CGK-cgk11-blue-sky-premier-lounge-246",
+      "url": "https://my.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk11-blue-sky-premier-lounge",
+      "reason": "missing_target_fields_location",
+      "firstSeenAt": "2026-07-16T17:00:59.576Z",
+      "lastSeenAt": "2026-07-16T17:00:59.576Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "CGK-cgk18-blue-sky-premier-lounge-251",
+      "url": "https://my.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk18-blue-sky-premier-lounge",
+      "reason": "missing_target_fields_openingHours",
+      "firstSeenAt": "2026-07-16T17:00:59.576Z",
+      "lastSeenAt": "2026-07-17T06:17:42.915Z",
+      "attempts": 3
+    },
+    {
+      "recordId": "DUB-dub4d-garden-terrace-478",
+      "url": "https://my.prioritypass.com/en-GB/lounges/ireland/dublin/dub4d-garden-terrace",
+      "reason": "missing_target_fields_openingHours",
+      "firstSeenAt": "2026-07-16T17:00:59.576Z",
+      "lastSeenAt": "2026-07-17T06:17:42.915Z",
+      "attempts": 3
+    },
+    {
+      "recordId": "GIG-gig12s-bluma-577",
+      "url": "https://my.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig12s-bluma",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "GIG-gig14d-palaphita-573",
+      "url": "https://my.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig14d-palaphita",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "GIG-gig6-plaza-premium-lounge-572",
+      "url": "https://my.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig6-plaza-premium-lounge",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "KHH-khh3d-homee-kitchen-828",
+      "url": "https://my.prioritypass.com/en-GB/lounges/taiwan/kaohsiung-international/khh3d-homee-kitchen",
+      "reason": "http_404",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "RMQ-rmq1d-homee-kitchen-1346",
+      "url": "https://my.prioritypass.com/en-GB/lounges/taiwan/taichung-taichung-ching-chuan-kang/rmq1d-homee-kitchen",
+      "reason": "http_404",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "SCL-scl10-primeclass-andes-1373",
+      "url": "https://my.prioritypass.com/en-GB/lounges/chile/arturo-merino-benitez-international/scl10-primeclass-andes",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "SIN-sin26d-chutney-mary-indian-fast-food-1419",
+      "url": "https://my.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin26d-chutney-mary-indian-fast-food",
+      "reason": "missing_target_fields_conditions",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "SYD-syd6d-mach2-1499",
+      "url": "https://my.prioritypass.com/en-GB/lounges/australia/sydney-kingsford-smith/syd6d-mach2",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "TPE-tpe10d-homee-kitchen-1551",
+      "url": "https://my.prioritypass.com/en-GB/lounges/taiwan/taiwan-taoyuan-international/tpe10d-homee-kitchen",
+      "reason": "http_404",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "TPE-tpe11d-homee-kitchen-1550",
+      "url": "https://my.prioritypass.com/en-GB/lounges/taiwan/taiwan-taoyuan-international/tpe11d-homee-kitchen",
+      "reason": "http_404",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "TSA-tsa2d-homee-kitchen-1566",
+      "url": "https://my.prioritypass.com/en-GB/lounges/taiwan/taipei-songshan/tsa2d-homee-kitchen",
+      "reason": "http_404",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "TSN-tsn6-first-class-lounge-no-17-1568",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/tianjin-binhai-international/tsn6-first-class-lounge-no-17",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "XIY-xiy10d-perch-coffee-restaurant-1686",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy10d-perch-coffee-restaurant",
+      "reason": "missing_target_fields_location_conditions",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "XIY-xiy11d-long-xing-lou-restaurant-1688",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy11d-long-xing-lou-restaurant",
+      "reason": "missing_target_fields_location_conditions",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "XIY-xiy12d-sing-tang-noodles-1684",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy12d-sing-tang-noodles",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "XIY-xiy9d-long-xing-lou-restaurant-1689",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy9d-long-xing-lou-restaurant",
+      "reason": "missing_target_fields_location_conditions",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    }
+  ],
+  "blockerHistory": [
+    {
+      "recordId": "ACA-aca4-oma-premium-lounge-38",
+      "url": "https://my.prioritypass.com/en-GB/lounges/mexico/general-juan-n-alvarez-international/aca4-oma-premium-lounge",
+      "reason": "missing_target_fields_location",
+      "firstSeenAt": "2026-07-17T01:50:01.894Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "AKL-akl4d-best-ugly-bagels-125",
+      "url": "https://my.prioritypass.com/en-GB/lounges/new-zealand/auckland/akl4d-best-ugly-bagels",
+      "reason": "missing_target_fields_location",
+      "firstSeenAt": "2026-07-17T01:50:01.894Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "AKL-akl5d-best-ugly-bagels-123",
+      "url": "https://my.prioritypass.com/en-GB/lounges/new-zealand/auckland/akl5d-best-ugly-bagels",
+      "reason": "missing_target_fields_location",
+      "firstSeenAt": "2026-07-17T01:50:01.894Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "AOG-aog-first-class-lounge-151",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/anshan-tengao/aog-first-class-lounge",
+      "reason": "missing_target_fields_openingHours",
+      "firstSeenAt": "2026-07-16T17:00:59.576Z",
+      "lastSeenAt": "2026-07-17T06:17:42.915Z",
+      "attempts": 3
+    },
+    {
+      "recordId": "CAN-can3-air-china-premium-lounge-56",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can3-air-china-premium-lounge",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "CAN-can4-hainan-airlines-first-class-lounge-63",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can4-hainan-airlines-first-class-lounge",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "CAN-can6-shenzhen-airlines-king-lounge-58",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can6-shenzhen-airlines-king-lounge",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "CGK-cgk11-blue-sky-premier-lounge-246",
+      "url": "https://my.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk11-blue-sky-premier-lounge",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T16:58:43.277Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "CGK-cgk11-blue-sky-premier-lounge-246",
+      "url": "https://my.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk11-blue-sky-premier-lounge",
+      "reason": "missing_target_fields_location",
+      "firstSeenAt": "2026-07-16T17:00:59.576Z",
+      "lastSeenAt": "2026-07-16T17:00:59.576Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "CGK-cgk18-blue-sky-premier-lounge-251",
+      "url": "https://my.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk18-blue-sky-premier-lounge",
+      "reason": "missing_target_fields_openingHours",
+      "firstSeenAt": "2026-07-16T17:00:59.576Z",
+      "lastSeenAt": "2026-07-17T06:17:42.915Z",
+      "attempts": 3
+    },
+    {
+      "recordId": "DUB-dub4d-garden-terrace-478",
+      "url": "https://my.prioritypass.com/en-GB/lounges/ireland/dublin/dub4d-garden-terrace",
+      "reason": "missing_target_fields_openingHours",
+      "firstSeenAt": "2026-07-16T17:00:59.576Z",
+      "lastSeenAt": "2026-07-17T06:17:42.915Z",
+      "attempts": 3
+    },
+    {
+      "recordId": "GIG-gig12s-bluma-577",
+      "url": "https://my.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig12s-bluma",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "GIG-gig14d-palaphita-573",
+      "url": "https://my.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig14d-palaphita",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "GIG-gig6-plaza-premium-lounge-572",
+      "url": "https://my.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig6-plaza-premium-lounge",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "KHH-khh3d-homee-kitchen-828",
+      "url": "https://my.prioritypass.com/en-GB/lounges/taiwan/kaohsiung-international/khh3d-homee-kitchen",
+      "reason": "http_404",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "RMQ-rmq1d-homee-kitchen-1346",
+      "url": "https://my.prioritypass.com/en-GB/lounges/taiwan/taichung-taichung-ching-chuan-kang/rmq1d-homee-kitchen",
+      "reason": "http_404",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "SCL-scl10-primeclass-andes-1373",
+      "url": "https://my.prioritypass.com/en-GB/lounges/chile/arturo-merino-benitez-international/scl10-primeclass-andes",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "SIN-sin26d-chutney-mary-indian-fast-food-1419",
+      "url": "https://my.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin26d-chutney-mary-indian-fast-food",
+      "reason": "missing_target_fields_conditions",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "SYD-syd6d-mach2-1499",
+      "url": "https://my.prioritypass.com/en-GB/lounges/australia/sydney-kingsford-smith/syd6d-mach2",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "TPE-tpe10d-homee-kitchen-1551",
+      "url": "https://my.prioritypass.com/en-GB/lounges/taiwan/taiwan-taoyuan-international/tpe10d-homee-kitchen",
+      "reason": "http_404",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "TPE-tpe11d-homee-kitchen-1550",
+      "url": "https://my.prioritypass.com/en-GB/lounges/taiwan/taiwan-taoyuan-international/tpe11d-homee-kitchen",
+      "reason": "http_404",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "TSA-tsa2d-homee-kitchen-1566",
+      "url": "https://my.prioritypass.com/en-GB/lounges/taiwan/taipei-songshan/tsa2d-homee-kitchen",
+      "reason": "http_404",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "TSN-tsn6-first-class-lounge-no-17-1568",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/tianjin-binhai-international/tsn6-first-class-lounge-no-17",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "XIY-xiy10d-perch-coffee-restaurant-1686",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy10d-perch-coffee-restaurant",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "XIY-xiy10d-perch-coffee-restaurant-1686",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy10d-perch-coffee-restaurant",
+      "reason": "missing_target_fields_location_conditions",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "XIY-xiy11d-long-xing-lou-restaurant-1688",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy11d-long-xing-lou-restaurant",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "XIY-xiy11d-long-xing-lou-restaurant-1688",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy11d-long-xing-lou-restaurant",
+      "reason": "missing_target_fields_location_conditions",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    },
+    {
+      "recordId": "XIY-xiy12d-sing-tang-noodles-1684",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy12d-sing-tang-noodles",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "XIY-xiy9d-long-xing-lou-restaurant-1689",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy9d-long-xing-lou-restaurant",
+      "reason": "missing_detail_fields",
+      "firstSeenAt": "2026-07-16T07:05:40.444Z",
+      "lastSeenAt": "2026-07-16T07:05:40.444Z",
+      "attempts": 1
+    },
+    {
+      "recordId": "XIY-xiy9d-long-xing-lou-restaurant-1689",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy9d-long-xing-lou-restaurant",
+      "reason": "missing_target_fields_location_conditions",
+      "firstSeenAt": "2026-07-16T19:54:27.208Z",
+      "lastSeenAt": "2026-07-17T01:50:01.894Z",
+      "attempts": 2
+    }
+  ],
   "records": [
+    {
+      "recordId": "AAL-aal-aalborg-airport-lounge-2",
+      "url": "https://www.prioritypass.com/en-GB/lounges/denmark/aalborg/aal-aalborg-airport-lounge",
+      "retrievedAt": "2026-07-17T01:49:22.204Z",
+      "location": "Departures After security checks After passport control After the Duty Free Follow signs to Level 1",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "Children under 2 years admitted free"
+      ]
+    },
+    {
+      "recordId": "AAP-aap1-blue-sky-premier-lounge-3",
+      "url": "https://www.prioritypass.com/en-GB/lounges/indonesia/aji-pangeran-tumenggung-pranoto-international/aap1-blue-sky-premier-lounge",
+      "retrievedAt": "2026-07-17T01:49:22.769Z",
+      "location": "Airside - Domestic Departures. The lounge is located after Security Checks, Ground Floor, next to the F&B shop 'Roti'O'.",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ABB-abb-vip-lounge-5",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/asaba-international/abb-vip-lounge",
+      "retrievedAt": "2026-07-17T01:49:24.291Z",
+      "location": "Airside - Ground Floor. After Security Control, near the Boarding Gates.",
+      "conditions": [
+        "Max stay: Unlimited hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ABV-abv2-lounge-one-34",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/nnamdi-azikiwe-international/abv2-lounge-one",
+      "retrievedAt": "2026-07-17T01:49:25.670Z",
+      "terminal": "Domestic Terminal",
+      "location": "Airside - Module B Wing. The lounge is located opposite the Boarding Gate, on the right hand side after Security Checks. Domestic flights only.",
+      "conditions": []
+    },
+    {
+      "recordId": "ABV-abv3-9tysix-lounge-33",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/nnamdi-azikiwe-international/abv3-9tysix-lounge",
+      "retrievedAt": "2026-07-17T01:49:26.963Z",
+      "terminal": "Domestic Terminal",
+      "location": "Airside - located on the 2nd Floor of the Departure Hall.",
+      "conditions": []
+    },
+    {
+      "recordId": "ABV-abv4-the-gabfol-lounge-36",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/nnamdi-azikiwe-international/abv4-the-gabfol-lounge",
+      "retrievedAt": "2026-07-17T01:49:29.050Z",
+      "terminal": "International Terminal",
+      "location": "Airside - Lounge 3, 2nd Floor, left of the Central Screening.",
+      "conditions": [
+        "Max stay: 3 hours"
+      ]
+    },
+    {
+      "recordId": "ABV-abv6-pearl-lounge-32",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/nnamdi-azikiwe-international/abv6-pearl-lounge",
+      "retrievedAt": "2026-07-17T01:49:29.043Z",
+      "terminal": "International Terminal",
+      "location": "Airside - Module F, Level 0. The lounge is located after the last Security Check before the Boarding Gates. International flights and in transit flights only.",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ABZ-abz-northern-lights-executive-lounge-37",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/aberdeen/abz-northern-lights-executive-lounge",
+      "retrievedAt": "2026-07-17T01:49:30.679Z",
+      "location": "Departures After security checks After passport control Proceed through the departure lounge towards International gate 1. Take the lift to the 1st floor where the lounge is located.",
+      "conditions": [
+        "No smoking (including vaping)",
+        "Dress code: Smart casual",
+        "Children under 4 years admitted free",
+        "All food and beverages must be consumed inside the lounge.",
+        "Payment for premium drinks are payable by credit card only.",
+        "Max stay: 3 hours"
+      ]
+    },
+    {
+      "recordId": "ACC-acc1-akwaaba-pearl-lounge-40",
+      "url": "https://www.prioritypass.com/en-GB/lounges/ghana/kotoka-international/acc1-akwaaba-pearl-lounge",
+      "retrievedAt": "2026-07-17T01:49:32.428Z",
+      "terminal": "Terminal 3",
+      "location": "Departures After security checks After passport control Level 5",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "Children under 2 years admitted free",
+        "Use of shower facilities in the lounge is subject to an extra charge of US$15 per usage",
+        "Max stay: 4 hours"
+      ]
+    },
+    {
+      "recordId": "ACE-ace-sala-guacimeta-44",
+      "url": "https://www.prioritypass.com/en-GB/lounges/spain/lanzarote/ace-sala-guacimeta",
+      "retrievedAt": "2026-07-17T01:49:33.518Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks 2nd Floor Near Gates 1-2",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "Children under 5 years admitted free",
+        "Children under 18 years must be accompanied by an adult",
+        "Access is permitted 3 hours prior to scheduled flight departure",
+        "All Cardholders are required to show a Boarding Pass with confirmed same-day travel for access to the lounge",
+        "Max stay: 3 hours"
+      ]
+    },
+    {
+      "recordId": "ACX-acx3-first-class-lounge-02-47",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/xingyi-wanfenglin/acx3-first-class-lounge-02",
+      "retrievedAt": "2026-07-17T01:49:34.298Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures, 2nd Floor, near Boarding Gate 7.",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ACX-acx4-first-class-lounge-01-48",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/xingyi-wanfenglin/acx4-first-class-lounge-01",
+      "retrievedAt": "2026-07-17T01:49:35.099Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures, 1st Floor, near Boarding Gate 3.",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ADL-adl-rex-lounge-17",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/adelaide/adl-rex-lounge",
+      "retrievedAt": "2026-07-17T01:49:36.013Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - Domestic Departures, near Gate 10.",
+      "conditions": []
+    },
+    {
+      "recordId": "ADL-adl2d-pantry-15",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/adelaide/adl2d-pantry",
+      "retrievedAt": "2026-07-17T01:49:36.873Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - Domestic Departures, next to 'Coopers Ale House', Gate 21. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ADL-adl3d-coopers-alehouse-18",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/adelaide/adl3d-coopers-alehouse",
+      "retrievedAt": "2026-07-17T01:49:38.498Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - Domestic Departures, Level 2, opposite Central Screening Point, Gate 19. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ADZ-adz-aeroprime-san-andres-54",
+      "url": "https://www.prioritypass.com/en-GB/lounges/colombia/gustavo-rojas-pinilla-international/adz-aeroprime-san-andres",
+      "retrievedAt": "2026-07-17T01:49:38.716Z",
+      "location": "Airside - Domestic Departures, near Gate 4.",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "AGA-aga3-agadir-aspire-lounge-70",
+      "url": "https://www.prioritypass.com/en-GB/lounges/morocco/agadir-al-massira/aga3-agadir-aspire-lounge",
+      "retrievedAt": "2026-07-17T01:49:40.671Z",
+      "location": "Departures After security checks After passport control Ground Floor Near the Boarding Gates",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "AGP-agp-sala-vip-t3-81",
+      "url": "https://www.prioritypass.com/en-GB/lounges/spain/malaga/agp-sala-vip-t3",
+      "retrievedAt": "2026-07-17T01:49:40.784Z",
+      "terminal": "Terminal 3",
+      "location": "Departures After security checks Before passport control Floor 2, via stairs or lift Near Gate D Passengers departing from Terminal 2 can also access the lounge since the two terminals are connected without restrictions",
+      "conditions": [
+        "No smoking (including vaping)",
+        "Dress code: Smart casual",
+        "Children under 5 years admitted free",
+        "Children under 18 years must be accompanied by an adult",
+        "Access is permitted 3 hours prior to a scheduled flight departure - Transit passengers, access is permitted 4 hours prior to scheduled flight departure",
+        "All Cardholders and guests are required to show a Boarding Pass with confirmed same-day travel for access to the lounge",
+        "Max stay: 3 hours"
+      ]
+    },
+    {
+      "recordId": "AGP-agp1d-la-boutique-heineken-bar-82",
+      "url": "https://www.prioritypass.com/en-GB/lounges/spain/malaga/agp1d-la-boutique-heineken-bar",
+      "retrievedAt": "2026-07-17T01:49:42.869Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - 1st Floor of the shopping plaza. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "AGU-agu-vip-lounge-aguascalientes-84",
+      "url": "https://www.prioritypass.com/en-GB/lounges/mexico/lic-jesus-teran-peredo-international/agu-vip-lounge-aguascalientes",
+      "retrievedAt": "2026-07-17T01:49:42.943Z",
+      "location": "Departures After security checks After passport control",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "Children under 7 years admitted free",
+        "Maximum 3 hour stay",
+        "Max stay: 3 hours"
+      ]
+    },
+    {
+      "recordId": "AKL-akl1d-oma-artisan-bakery-and-cafe-121",
+      "url": "https://www.prioritypass.com/en-GB/lounges/new-zealand/auckland/akl1d-oma-artisan-bakery-and-cafe",
+      "retrievedAt": "2026-07-17T01:49:45.256Z",
+      "terminal": "International Terminal",
+      "location": "Landside - International Departures. Level 2, opposite Security Screening Gates, next to the Food Court. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "AKL-akl2d-blue-marble-lane-124",
+      "url": "https://www.prioritypass.com/en-GB/lounges/new-zealand/auckland/akl2d-blue-marble-lane",
+      "retrievedAt": "2026-07-17T01:49:44.963Z",
+      "terminal": "International Terminal",
+      "location": "Landside - International Departures. Level 1, opposite Security Screening Gates, next to the Food Court. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "AKL-akl3d-orleans-chicken-and-waffles-120",
+      "url": "https://www.prioritypass.com/en-GB/lounges/new-zealand/auckland/akl3d-orleans-chicken-and-waffles",
+      "retrievedAt": "2026-07-17T01:49:46.821Z",
+      "terminal": "Domestic Terminal",
+      "location": "Landside - Domestic Departures. Ground Level, opposite the Security Screening. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ALC-alc-sala-vip-costa-blanca-128",
+      "url": "https://www.prioritypass.com/en-GB/lounges/spain/alicante-elche/alc-sala-vip-costa-blanca",
+      "retrievedAt": "2026-07-17T01:49:49.980Z",
+      "location": "Departures After security checks After passport control Ground Floor Near Gates C45-C46",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "Children under 5 years admitted free",
+        "Children under 18 years must be accompanied by an adult",
+        "Access is permitted 3 hours prior to a scheduled flight departure - Transit passengers, access is permitted 4 hours prior to scheduled flight departure",
+        "All Cardholders and guests are required to show a Boarding Pass with confirmed same-day travel for access to the lounge",
+        "Alcoholic drinks are available in the self service area",
+        "Max stay: 3 hours"
+      ]
+    },
+    {
+      "recordId": "ALC-alc1d-enrique-tomas-127",
+      "url": "https://www.prioritypass.com/en-GB/lounges/spain/alicante-elche/alc1d-enrique-tomas",
+      "retrievedAt": "2026-07-17T01:49:51.104Z",
+      "location": "Airside - near Gates C46 - C48. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "AMM-amm1-crown-lounge-144",
+      "url": "https://www.prioritypass.com/en-GB/lounges/jordan/queen-alia-international/amm1-crown-lounge",
+      "retrievedAt": "2026-07-17T01:49:52.118Z",
+      "location": "Airside - after clearing Immigration and x-ray machines, proceed past the Aldeasa Duty Free Shop. The dedicated lounge entrance lift is situated straight ahead and the lounge is located on Level 4. International flights only.",
+      "conditions": [
+        "Max 2 guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "AMQ-amq-concordia-lounge-145",
+      "url": "https://www.prioritypass.com/en-GB/lounges/indonesia/pattimura/amq-concordia-lounge",
+      "retrievedAt": "2026-07-17T01:49:53.379Z",
+      "location": "Airside - Domestic and in transit Departures. After Passport & Security Control, turn right and the lounge is located after the 'Indomaret' store between Gates 1 and 2.",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ANF-anf1-salones-vip-pacific-club-142",
+      "url": "https://www.prioritypass.com/en-GB/lounges/chile/cerro-moreno-international/anf1-salones-vip-pacific-club",
+      "retrievedAt": "2026-07-17T01:49:53.907Z",
+      "location": "Airside - Level 2, opposite Gate 3. Domestic flight only.",
+      "conditions": [
+        "Max stay: 2 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "AOG-aog-first-class-lounge-151",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/anshan-tengao/aog-first-class-lounge",
+      "retrievedAt": "2026-07-16T16:58:39.139Z",
+      "location": "Departures After security checks After passport control 2nd Floor, via stairs Turn right and the lounge is located 20 metres ahead"
+    },
+    {
+      "recordId": "AOJ-aoj2-airport-lounge-153",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/aomori/aoj2-airport-lounge",
+      "retrievedAt": "2026-07-17T01:49:55.187Z",
+      "location": "Landside - 2nd Floor, Departure Lobby. The lounge is located opposite the stairs, near the Domestic Ticket Counter.",
+      "conditions": []
+    },
+    {
+      "recordId": "AQJ-aqj2-pearl-lounge-158",
+      "url": "https://www.prioritypass.com/en-GB/lounges/jordan/king-hussein-international/aqj2-pearl-lounge",
+      "retrievedAt": "2026-07-17T01:49:55.690Z",
+      "location": "Airside - the lounge is located near Gate 3.",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "AQP-aqp1-andes-salon-vip-159",
+      "url": "https://www.prioritypass.com/en-GB/lounges/peru/rodriguez-ballon-international/aqp1-andes-salon-vip",
+      "retrievedAt": "2026-07-17T01:49:56.934Z",
+      "location": "Airside - after Security Checks proceed to the Domestic Departure Hall, turn right through the lounge access door, go down the stairs and continue to the lounge reception. The lounge is located on the 1st Floor in the Passenger Terminal Hall.",
+      "conditions": []
+    },
+    {
+      "recordId": "ARI-ari-salones-vip-pacific-club-83",
+      "url": "https://www.prioritypass.com/en-GB/lounges/chile/chacalluta-international/ari-salones-vip-pacific-club",
+      "retrievedAt": "2026-07-17T01:49:57.582Z",
+      "location": "Airside - 2nd Floor, between Gates 1 and 2. Domestic flights only.",
+      "conditions": [
+        "Max stay: 2 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ARN-arn2-pearl-lounge-168",
+      "url": "https://www.prioritypass.com/en-GB/lounges/sweden/stockholm-arlanda/arn2-pearl-lounge",
+      "retrievedAt": "2026-07-17T01:49:59.055Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks Before passport control After the Duty Free Proceed to the first (green) staircase The entrance is at the top of the stairs",
+      "conditions": [
+        "No smoking (including vaping)",
+        "Dress code: Smart casual. No shorts",
+        "Children under 3 years admitted free",
+        "Children admitted free only applies to Cardholders and registered guests own children",
+        "Alcoholic drinks (spirits) available from 11:00",
+        "Max stay: 3 hours"
+      ]
+    },
+    {
+      "recordId": "ARN-arn4-pearl-lounge-t5-167",
+      "url": "https://www.prioritypass.com/en-GB/lounges/sweden/stockholm-arlanda/arn4-pearl-lounge-t5",
+      "retrievedAt": "2026-07-17T01:49:59.496Z",
+      "terminal": "Terminal 5",
+      "location": "Departures After security checks After passport control Above Gate C37, Gate Area C. The lounge is also accessible for passengers departing from Gate Areas D (approx. 10 minutes), E (approx. 20 minutes), and F (approx. 30 minutes) If departing from these gates, please allow sufficient time to reach both the lounge and your departure gate",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "Children under 3 years admitted free",
+        "Hours may be subject to change",
+        "Children under 3 years are admitted free (only applies to Cardholders and registered guests own children)",
+        "Max stay: 2 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ARN-arn5d-upstairs-and-bar-164",
+      "url": "https://www.prioritypass.com/en-GB/lounges/sweden/stockholm-arlanda/arn5d-upstairs-and-bar",
+      "retrievedAt": "2026-07-17T01:50:01.555Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control 3rd Floor Near Gate 66",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "All children must be accompanied by an adult",
+        "Cardholders must order at the bar and present a valid Card and Boarding Pass with confirmed same-day travel before taking a seat at the table",
+        "Cardholders can use their lounge visit entitlement to receive SEK190 off the bill (valid on all menus) plus a complimentary hot drink or a soft drink (check in store for details)",
+        "Each SEK190 deduction represents a single lounge visit within the Cardholder’s existing lounge visit allocation for which the Cardholder will, where applicable, be charged. E.g. if a Cardholder registers 1 Guest they will receive SEK380 off their bill which will be charged as 1 Cardholder visit + 1 Guest visit on their account. Only 1 Card per visit per Cardholder will be accepted and at point of registration",
+        "The SEK190 cannot be used towards the purchase of souvenirs or shop products",
+        "SEK190 is non-transferable & cannot be exchanged for cash substitute or refund if the final bill is lower than SEK190 per person",
+        "Cardholder is responsible for the balance if total final bill exceeds SEK190 per person. Any remaining balance cannot be used towards gratuity",
+        "Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion",
+        "Priority Pass and its Affiliates Companies shall not be liable should the offer value be less than Customers lounge visit entitlement. Customers who pay for lounge and guest visits are advised to review programme Conditions of Use prior to accessing the offer",
+        "This location is offered as an alternative to a lounge visit and other airport experiences. Using entitlements repeatedly within a single airport trip may result in charges from your benefit provider",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ATQ-atq5d-costa-coffee-195",
+      "url": "https://www.prioritypass.com/en-GB/lounges/india/sri-guru-ram-dass-jee-international/atq5d-costa-coffee",
+      "retrievedAt": "2026-07-16T19:53:25.727Z",
+      "location": "Airside - International Departures, 1st Floor, near Gates 6 and 7. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "ATQ-atq6-the-airr-lounge-and-bar-194",
+      "url": "https://www.prioritypass.com/en-GB/lounges/india/sri-guru-ram-dass-jee-international/atq6-the-airr-lounge-and-bar",
+      "retrievedAt": "2026-07-16T19:53:24.720Z",
+      "location": "Departures After security checks After passport control 1st Floor Near Gate 6",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "Children under 5 years admitted free",
+        "Local calls only",
+        "Max stay: 4 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "AUH-auh13d-tgi-fridays-200",
+      "url": "https://my.prioritypass.com/en-GB/lounges/united-arab-emirates/abu-dhabi-international/auh13d-tgi-fridays",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Abu Dhabi Intl, Terminal A, departures, after security checks and after passport control, Level 5 Pier C.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to receive AED99 off the bill, valid on all menus.",
+        "AED99 is valid for the purchase of any meal and/or drinks.",
+        "Children are not admitted."
+      ]
+    },
+    {
+      "recordId": "AUS-aus1w-jabbrrbox-203",
+      "url": "https://my.prioritypass.com/en-GB/lounges/united-states-of-america/austin-bergstrom-international/aus1w-jabbrrbox",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Austin TX Bergstrom International, Barbara Jordan Terminal, departures, after security checks, near Gate 15.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to use a Jabbrrbox for a 1 hour 15-minute stay, a US$37.50 value.",
+        "No guests allowed.",
+        "Each subsequent hour of Jabbrrbox usage will be payable directly to Jabbrrbox."
+      ]
+    },
+    {
+      "recordId": "BAH-bah15r-bahrain-airport-hotel-12",
+      "url": "https://my.prioritypass.com/en-GB/lounges/bahrain/bahrain-international/bah15r-bahrain-airport-hotel",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Bahrain International, New Passenger Terminal Building, departures, after security checks and after passport control, opposite Gate 15.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to use a Sleep Pod for a 90 minute stay.",
+        "Cardholder is responsible for all additional charges incurred.",
+        "No explicit amount or currency is published on the official Priority Pass detail page."
+      ]
+    },
+    {
+      "recordId": "BAQ-baq4-sala-vip-lounge-las-americas-119",
+      "url": "https://my.prioritypass.com/en-GB/lounges/colombia/ernesto-cortissoz-international/baq4-sala-vip-lounge-las-americas",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "03:00 - 23:00 daily",
+      "terminal": "Domestic",
+      "location": "Barranquilla Ernesto Cortissoz Intl, domestic departures, after security checks and after passport control.",
+      "conditions": [
+        "Domestic flights only.",
+        "Maximum 3 hour stay.",
+        "Access requires a standard visit allocation and mandatory additional fee of US$10 per person, payable directly to the lounge upon entry."
+      ]
+    },
+    {
+      "recordId": "BOG-bog13-sleep-oasis-113",
+      "url": "https://www.prioritypass.com/en-GB/lounges/colombia/el-dorado-international/bog13-sleep-oasis",
+      "retrievedAt": "2026-07-16T19:54:13.160Z",
+      "terminal": "Terminal 1 Landside",
+      "location": "Landside - 2nd Floor, Public Hall. The Sleep Oasis is located between doors 8 and 9.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "BSB-bsb4-siesta-box-brasilia-80",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/brasilia-international-presidente-j-kubitschek-intl/bsb4-siesta-box-brasilia",
+      "retrievedAt": "2026-07-16T19:53:27.548Z",
+      "terminal": "Domestic Terminal 1",
+      "location": "Airside - South Pier Mezzanine Floor, between Gates 41 - 43. Domestic and in transit flights only.",
+      "conditions": [
+        "Max stay: 2 hours",
+        "Max 1 guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "CAN-can26-china-southern-first-business-class-lounge-60",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can26-china-southern-first-business-class-lounge",
+      "retrievedAt": "2026-07-16T07:03:41.473Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures, 3rd Floor. After Security Checks, turn left and the lounge is located straight ahead. Departure passengers only."
+    },
+    {
+      "recordId": "CAN-can27-china-southern-gold-silver-elite-plus-lounge-59",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can27-china-southern-gold-silver-elite-plus-lounge",
+      "retrievedAt": "2026-07-16T07:03:41.803Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - International Departures, 4th Floor. After Security Checks and Immigration, proceed for approximately 10 metres and turn left. The lounge is located straight ahead. Departure passengers only."
+    },
+    {
+      "recordId": "CAN-can28-china-southern-first-business-class-lounge-62",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can28-china-southern-first-business-class-lounge",
+      "retrievedAt": "2026-07-16T07:03:40.847Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - International Departures, 4th Floor. After Security Checks and Immigration, turn left and the lounge is located straight ahead. Departure passengers only."
+    },
+    {
+      "recordId": "CAN-can29-china-southern-gold-silver-elite-plus-lounge-57",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can29-china-southern-gold-silver-elite-plus-lounge",
+      "retrievedAt": "2026-07-16T07:03:43.285Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures, 3rd Floor. After Security Checks, turn left and the lounge is located straight ahead. Departure passengers only."
+    },
+    {
+      "recordId": "CAN-can8-premium-lounge-55",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can8-premium-lounge",
+      "retrievedAt": "2026-07-16T07:03:52.214Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - International Departures. After Security Checks, 3rd Floor, turn right and follow signs to the lounge."
+    },
+    {
+      "recordId": "CAN-can9-easy-boarding-lounge-61",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/guangzhou-baiyun-international/can9-easy-boarding-lounge",
+      "retrievedAt": "2026-07-16T07:03:54.712Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures. After Security Checks, 3rd Floor, turn left and follow signs to the lounge."
+    },
+    {
+      "recordId": "CGK-cgk12-blue-sky-premier-lounge-249",
+      "url": "https://www.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk12-blue-sky-premier-lounge",
+      "retrievedAt": "2026-07-16T07:03:55.991Z",
+      "terminal": "Terminal 2D",
+      "location": "Landside - the lounge is located on the right hand side of Check-in counters 1-24."
+    },
+    {
+      "recordId": "CGK-cgk13-saphire-blue-sky-premier-lounge-245",
+      "url": "https://www.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk13-saphire-blue-sky-premier-lounge",
+      "retrievedAt": "2026-07-16T07:03:58.585Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - Domestic Departures. The lounge is located near Boarding Gate 13."
+    },
+    {
+      "recordId": "CGK-cgk14-saphire-blue-sky-premier-lounge-247",
+      "url": "https://www.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk14-saphire-blue-sky-premier-lounge",
+      "retrievedAt": "2026-07-16T07:04:00.240Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - Domestic Departures. The lounge is located near Boarding Gate 18."
+    },
+    {
+      "recordId": "CGK-cgk15-saphire-lounge-248",
+      "url": "https://www.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk15-saphire-lounge",
+      "retrievedAt": "2026-07-16T07:03:59.265Z",
+      "terminal": "Terminal 2F",
+      "location": "Departures After security checks Enter the terminal building through Entrance No.5 on the 2nd Floor. The lounge can be found right after & facing the security check"
+    },
+    {
+      "recordId": "CGK-cgk16-saphire-plaza-premium-lounge-250",
+      "url": "https://www.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk16-saphire-plaza-premium-lounge",
+      "retrievedAt": "2026-07-16T07:04:01.598Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - International Departures, Level 2, near Gate 6."
+    },
+    {
+      "recordId": "CGK-cgk17-blue-sky-premier-lounge-252",
+      "url": "https://www.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk17-blue-sky-premier-lounge",
+      "retrievedAt": "2026-07-16T07:04:02.998Z",
+      "terminal": "Terminal 1B",
+      "location": "Airside - Domestic Departures, 2nd Floor, next to Kopi Wangi."
+    },
+    {
+      "recordId": "CGK-cgk18-blue-sky-premier-lounge-251",
+      "url": "https://www.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk18-blue-sky-premier-lounge",
+      "retrievedAt": "2026-07-16T16:58:42.758Z",
+      "location": "Departures After security checks Before passport control Upper Floor The lounge is located near 'Skechers'",
+      "conditions": [
+        "Maximum 3 hour stay.",
+        "Only coffee, tea, fresh juices and water available."
+      ],
+      "terminal": "Terminal 1C"
+    },
+    {
+      "recordId": "CJB-cjb1d-blackberry-restaurant-and-bar-261",
+      "url": "https://www.prioritypass.com/en-GB/lounges/india/coimbatore-peelamedu-international/cjb1d-blackberry-restaurant-and-bar",
+      "retrievedAt": "2026-07-16T19:53:28.723Z",
+      "location": "Airside - Domestic Departures, after Security Hold Area, 1st Floor. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
     {
       "recordId": "CNF-cnf1-ambaar-lounge-85",
       "url": "https://my.prioritypass.com/en-GB/lounges/brazil/belo-horizonte-confins-intl/cnf1-ambaar-lounge",
@@ -40,78 +1096,78 @@
       ]
     },
     {
-      "recordId": "BAQ-baq4-sala-vip-lounge-las-americas-119",
-      "url": "https://my.prioritypass.com/en-GB/lounges/colombia/ernesto-cortissoz-international/baq4-sala-vip-lounge-las-americas",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "openingHours": "03:00 - 23:00 daily",
-      "terminal": "Domestic",
-      "location": "Barranquilla Ernesto Cortissoz Intl, domestic departures, after security checks and after passport control.",
+      "recordId": "CTS-cts3-cafe-sky-library-360",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/sapporo-new-chitose/cts3-cafe-sky-library",
+      "retrievedAt": "2026-07-16T19:53:30.192Z",
+      "terminal": "International Terminal",
+      "location": "Departures Before security checks 4th Floor The lounge is located next to the international flight immigration gate area",
       "conditions": [
-        "Domestic flights only.",
-        "Maximum 3 hour stay.",
-        "Access requires a standard visit allocation and mandatory additional fee of US$10 per person, payable directly to the lounge upon entry."
+        "No smoking (including vaping)",
+        "No dress code",
+        "All children must be accompanied by an adult",
+        "Limited to two guests per cardholder, subject to a per person charge, where applicable",
+        "Access may be restricted due to space constraints",
+        "All Cardholders and guests are required to show a Boarding Pass with confirmed same-day departure travel for access to the lounge",
+        "Complimentary one set meal, soft drinks and one alcoholic drink per adult, subsequent drinks are subject to payment",
+        "Children under 6 years to share meal with adult",
+        "Max stay: 2 hours",
+        "Max Unlimited guests per cardholder"
       ]
     },
     {
-      "recordId": "BAH-bah15r-bahrain-airport-hotel-12",
-      "url": "https://my.prioritypass.com/en-GB/lounges/bahrain/bahrain-international/bah15r-bahrain-airport-hotel",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "openingHours": "00:00 - 23:59 daily",
-      "location": "Bahrain International, New Passenger Terminal Building, departures, after security checks and after passport control, opposite Gate 15.",
+      "recordId": "CVG-cvg5w-jabbrrbox-430",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/cincinnati-northern-kentucky-international/cvg5w-jabbrrbox",
+      "retrievedAt": "2026-07-16T19:54:12.998Z",
+      "terminal": "Concourse A",
+      "location": "Departures After security checks After passport control Near Gate A2 The Jabbrrbox is only accessible upon check-in directly on the exterior touch-screen and scanning of Boarding Pass and physical or digital Membership Card",
       "conditions": [
-        "Cardholders can use their lounge visit entitlement to use a Sleep Pod for a 90 minute stay.",
-        "Cardholder is responsible for all additional charges incurred.",
+        "No smoking (including vaping)",
+        "No dress code",
+        "Children are not admitted",
+        "Only members who have purchased a Priority Pass membership - Standard, Standard Plus or Prestige - are eligible for this Jabbrrbox location",
+        "Cardholders can use their lounge visit entitlement to use a Jabbrrbox for a 1 hour 15-minute stay (a US$37.50 value). 1 Jabbrrbox usage represents a single lounge visit within the Cardholder’s existing lounge visit allocation for which the Cardholder will, where applicable, be charged. Each subsequent hour of Jabbrrbox usage will be payable directly to Jabbrrbox. Only 1 card per visit per Cardholder will be accepted and at point of registration",
+        "No guests allowed",
+        "Each Jabbrrbox is equipped with a Camera, Speaker and Microphone for Video Calls, Power and USB outlets to charge your devices, Lighting Controls, Ventilation Fans and a user specific Wi-Fi session",
+        "Jabbrrbox usage is subject to availability"
+      ]
+    },
+    {
+      "recordId": "DFW-dfw15d-drew-pearsons-sports-88-413",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/dallas-fort-worth-international/dfw15d-drew-pearsons-sports-88",
+      "retrievedAt": "2026-07-16T07:00:27.822Z",
+      "terminal": "Terminal E",
+      "location": "Airside - near Gate 05. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion. IMPORTANT NOTE: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting."
+    },
+    {
+      "recordId": "DFW-dfw16s-xpresspa-408",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/dallas-fort-worth-international/dfw16s-xpresspa",
+      "retrievedAt": "2026-07-16T07:00:27.159Z",
+      "terminal": "Terminal A",
+      "location": "Airside - near Gate A24. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion."
+    },
+    {
+      "recordId": "DFW-dfw17s-the-chiroport-416",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/dallas-fort-worth-international/dfw17s-the-chiroport",
+      "retrievedAt": "2026-07-16T07:00:31.307Z",
+      "terminal": "Terminal A",
+      "location": "Airside - The Chiroport kiosk is located between Gate A29 and Californian Pizza Kitchen. Please note that The Chiroport kiosk may exceed their capacity at certain times of the day & access to The Chiroport kiosk is at their sole discretion."
+    },
+    {
+      "recordId": "DOH-doh7-al-maha-lounge-southeast-459",
+      "url": "https://www.prioritypass.com/en-GB/lounges/qatar/hamad-international/doh7-al-maha-lounge-southeast",
+      "retrievedAt": "2026-07-16T07:00:30.512Z",
+      "location": "Departures After security checks After passport control 1st Floor Near Gates C1-4 International and in-transit flights only."
+    },
+    {
+      "recordId": "DTW-dtw10g-gameway-477",
+      "url": "https://my.prioritypass.com/en-GB/lounges/united-states-of-america/detroit-metropolitan-wayne-county/dtw10g-gameway",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "08:00 - 21:00 daily",
+      "location": "Detroit Metropolitan Wayne County, McNamara Terminal, airside, Concourse A, near Gate A63.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement for 1 hour of gaming and 1 snack item and 1 non-alcoholic drink or 1 hour of gaming and 1 alcoholic drink.",
+        "Each subsequent hour of game station usage will be charged at a 10% discounted rate and payable directly to Gameway.",
         "No explicit amount or currency is published on the official Priority Pass detail page."
-      ]
-    },
-    {
-      "recordId": "AOG-aog-first-class-lounge-151",
-      "url": "https://my.prioritypass.com/en-GB/lounges/china/anshan-tengao/aog-first-class-lounge",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "location": "Anshan Teng'ao, departures, after security checks and after passport control, 2nd Floor via stairs. Turn right and the lounge is located 20 metres ahead."
-    },
-    {
-      "recordId": "AUH-auh13d-tgi-fridays-200",
-      "url": "https://my.prioritypass.com/en-GB/lounges/united-arab-emirates/abu-dhabi-international/auh13d-tgi-fridays",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "openingHours": "00:00 - 23:59 daily",
-      "location": "Abu Dhabi Intl, Terminal A, departures, after security checks and after passport control, Level 5 Pier C.",
-      "conditions": [
-        "Cardholders can use their lounge visit entitlement to receive AED99 off the bill, valid on all menus.",
-        "AED99 is valid for the purchase of any meal and/or drinks.",
-        "Children are not admitted."
-      ]
-    },
-    {
-      "recordId": "AUS-aus1w-jabbrrbox-203",
-      "url": "https://my.prioritypass.com/en-GB/lounges/united-states-of-america/austin-bergstrom-international/aus1w-jabbrrbox",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "openingHours": "00:00 - 23:59 daily",
-      "location": "Austin TX Bergstrom International, Barbara Jordan Terminal, departures, after security checks, near Gate 15.",
-      "conditions": [
-        "Cardholders can use their lounge visit entitlement to use a Jabbrrbox for a 1 hour 15-minute stay, a US$37.50 value.",
-        "No guests allowed.",
-        "Each subsequent hour of Jabbrrbox usage will be payable directly to Jabbrrbox."
-      ]
-    },
-    {
-      "recordId": "CGK-cgk18-blue-sky-premier-lounge-251",
-      "url": "https://my.prioritypass.com/en-GB/lounges/indonesia/jakarta-soekarno-hatta-intl/cgk18-blue-sky-premier-lounge",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "location": "Jakarta Soekarno-Hatta Intl, Terminal 1C, departures, after security checks and before passport control. Upper Floor, near Skechers.",
-      "conditions": [
-        "Maximum 3 hour stay.",
-        "Only coffee, tea, fresh juices and water available."
-      ]
-    },
-    {
-      "recordId": "DUB-dub4d-garden-terrace-478",
-      "url": "https://my.prioritypass.com/en-GB/lounges/ireland/dublin/dub4d-garden-terrace",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "location": "Dublin International, Terminal 1, departures, after security checks and after passport control, Mezzanine Level.",
-      "conditions": [
-        "Cardholders can use their lounge visit entitlement to receive EUR23 off the bill, valid on all menus.",
-        "Children are not admitted."
       ]
     },
     {
@@ -127,16 +1183,117 @@
       ]
     },
     {
-      "recordId": "DTW-dtw10g-gameway-477",
-      "url": "https://my.prioritypass.com/en-GB/lounges/united-states-of-america/detroit-metropolitan-wayne-county/dtw10g-gameway",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "openingHours": "08:00 - 21:00 daily",
-      "location": "Detroit Metropolitan Wayne County, McNamara Terminal, airside, Concourse A, near Gate A63.",
+      "recordId": "DUB-dub4d-garden-terrace-478",
+      "url": "https://www.prioritypass.com/en-GB/lounges/ireland/dublin/dub4d-garden-terrace",
+      "retrievedAt": "2026-07-16T16:58:42.354Z",
+      "location": "Departures After security checks After passport control Mezzanine Level The Garden Terrace offers a full bar, cafe and grill with table service, is open for breakfast and boasts an outdoor terrace",
       "conditions": [
-        "Cardholders can use their lounge visit entitlement for 1 hour of gaming and 1 snack item and 1 non-alcoholic drink or 1 hour of gaming and 1 alcoholic drink.",
-        "Each subsequent hour of game station usage will be charged at a 10% discounted rate and payable directly to Gameway.",
-        "No explicit amount or currency is published on the official Priority Pass detail page."
+        "Cardholders can use their lounge visit entitlement to receive EUR23 off the bill, valid on all menus.",
+        "Children are not admitted."
+      ],
+      "terminal": "Terminal 1"
+    },
+    {
+      "recordId": "GIG-gig13d-grand-cru-571",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig13d-grand-cru",
+      "retrievedAt": "2026-07-16T07:04:04.091Z",
+      "terminal": "Terminal 2 Domestic",
+      "location": "Airside - 2nd Floor, between Gates B34 and B35. Domestic flights only. Please note that the restaurant may exceed their capacity at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "GIG-gig15s-bluma-wellness-574",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig15s-bluma-wellness",
+      "retrievedAt": "2026-07-16T07:04:05.905Z",
+      "terminal": "Terminal 2 International",
+      "location": "Departures After security checks After passport control Floor 3 International flights only Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion"
+    },
+    {
+      "recordId": "GIG-gig2-lounge-gol-smiles-international-570",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig2-lounge-gol-smiles-international",
+      "retrievedAt": "2026-07-16T07:04:07.097Z",
+      "terminal": "Terminal 2 International",
+      "location": "Departures After security checks After passport control South Pier After the Duty Free 3rd Floor, via stairs or lift"
+    },
+    {
+      "recordId": "GIG-gig7-plaza-premium-lounge-569",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig7-plaza-premium-lounge",
+      "retrievedAt": "2026-07-16T07:04:08.719Z",
+      "terminal": "Terminal 2 Domestic",
+      "location": "Departures After security checks After passport control 1st Floor South Pier Near Gates B27-B28 Domestic flights only"
+    },
+    {
+      "recordId": "GIG-gig8-plaza-premium-lounge-576",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig8-plaza-premium-lounge",
+      "retrievedAt": "2026-07-16T07:04:09.779Z",
+      "terminal": "Terminal 2 Landside",
+      "location": "Departures Before security checks Before passport control Floor 2 Follow signs to the lounge"
+    },
+    {
+      "recordId": "GIG-gig9-lounge-gol-smiles-domestic-575",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/rio-de-janeiro-galeao-international/gig9-lounge-gol-smiles-domestic",
+      "retrievedAt": "2026-07-16T07:04:11.378Z",
+      "terminal": "Terminal 2 Domestic",
+      "location": "Departures After security checks After passport control 2nd Floor Opposite Gate B36 and B37"
+    },
+    {
+      "recordId": "GOI-goi2d-brew-house-584",
+      "url": "https://www.prioritypass.com/en-GB/lounges/india/dabolim/goi2d-brew-house",
+      "retrievedAt": "2026-07-16T19:53:31.132Z",
+      "terminal": "Domestic Terminal",
+      "location": "Airside - Domestic Departures, after Security Hold Area, Level 2, near Gate F. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
+      "conditions": [
+        "Max stay: 1 hours",
+        "Max Unlimited guests per cardholder"
       ]
+    },
+    {
+      "recordId": "GRU-gru13d-bleriot-bar-and-lounge-605",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/sao-paulo-guarulhos-governador-andre-franco-montoro-international/gru13d-bleriot-bar-and-lounge",
+      "retrievedAt": "2026-07-16T07:00:30.780Z",
+      "terminal": "Terminal 3",
+      "location": "Departures After security checks After passport control 2nd Level Near Gates 301-304"
+    },
+    {
+      "recordId": "GRU-gru18h-tryp-gru-airport-597",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/sao-paulo-guarulhos-governador-andre-franco-montoro-international/gru18h-tryp-gru-airport",
+      "retrievedAt": "2026-07-16T07:00:35.795Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - Cardholders must first register at the hotel reception desk. The hotel is located after Passport Control in the Transit Area, 1st Floor on the right hand side. Please note that restaurant area may exceed their seating limit at certain times of the day & access is at their sole discretion. Tryp by Wyndham Sao Paulo Guarulhos Airport is proud to offer Brazilian cuisine and international favourites."
+    },
+    {
+      "recordId": "GRU-gru22d-bleriot-bar-and-lounge-598",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/sao-paulo-guarulhos-governador-andre-franco-montoro-international/gru22d-bleriot-bar-and-lounge",
+      "retrievedAt": "2026-07-16T07:00:36.239Z",
+      "terminal": "Terminal 2 - Domestic",
+      "location": "Departures After security checks After passport control East Pier Near Gate 259"
+    },
+    {
+      "recordId": "GRU-gru25d-paris-6-603",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/sao-paulo-guarulhos-governador-andre-franco-montoro-international/gru25d-paris-6",
+      "retrievedAt": "2026-07-16T07:00:39.800Z",
+      "terminal": "Terminal 3",
+      "location": "Departures After security checks After passport control Near Gate 304 Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion Brazilian restaurant with French and Brazilian cuisine, referenced by its vast dessert menu, and a good variety of coffee, soft and alcoholic beverages"
+    },
+    {
+      "recordId": "GRU-gru33d-living-hnk-591",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/sao-paulo-guarulhos-governador-andre-franco-montoro-international/gru33d-living-hnk",
+      "retrievedAt": "2026-07-16T07:00:40.942Z",
+      "terminal": "Terminal 1",
+      "location": "Departures Before security checks Before passport control Turn right after Arrivals"
+    },
+    {
+      "recordId": "GRU-gru34d-living-hnk-593",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/sao-paulo-guarulhos-governador-andre-franco-montoro-international/gru34d-living-hnk",
+      "retrievedAt": "2026-07-16T07:00:42.775Z",
+      "terminal": "Terminal 3",
+      "location": "Departures After security checks After passport control Opposite the Duty Free"
+    },
+    {
+      "recordId": "GRU-gru35s-bluma-595",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/sao-paulo-guarulhos-governador-andre-franco-montoro-international/gru35s-bluma",
+      "retrievedAt": "2026-07-16T07:00:46.740Z",
+      "terminal": "Terminal 2 - Domestic",
+      "location": "Departures After security checks On the left-hand side"
     },
     {
       "recordId": "GUW-guw-cip-lounge-614",
@@ -148,6 +1305,65 @@
         "Priority Assistance, passport and customs control, baggage drop off available inside the lounge.",
         "Maximum 3 hour stay."
       ]
+    },
+    {
+      "recordId": "HKG-hkg17d-intervals-sky-bar-and-restaurant-675",
+      "url": "https://www.prioritypass.com/en-GB/lounges/hong-kong/hong-kong-international-chek-lap-kok/hkg17d-intervals-sky-bar-and-restaurant",
+      "retrievedAt": "2026-07-16T19:53:33.062Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - International Departures, Sky Bridge in the Restricted Area. Take the escalators between Gates 12 & 24 to Level 9. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "HND-hnd11-power-lounge-north-696",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/haneda/hnd11-power-lounge-north",
+      "retrievedAt": "2026-07-16T07:04:12.305Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control 2nd Floor Near Gate 16 North Wing"
+    },
+    {
+      "recordId": "HND-hnd12-power-lounge-central-687",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/haneda/hnd12-power-lounge-central",
+      "retrievedAt": "2026-07-16T07:04:12.631Z",
+      "terminal": "Terminal 1",
+      "location": "Arrivals After passport control (immigration) 1st Floor"
+    },
+    {
+      "recordId": "HND-hnd13-airport-lounge-south-686",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/haneda/hnd13-airport-lounge-south",
+      "retrievedAt": "2026-07-16T07:04:14.797Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control South Pier 2nd Floor Near Gate 65"
+    },
+    {
+      "recordId": "HND-hnd14-power-lounge-north-689",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/haneda/hnd14-power-lounge-north",
+      "retrievedAt": "2026-07-16T07:04:16.271Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control North Pier 3rd Floor Near Gate 52"
+    },
+    {
+      "recordId": "HND-hnd15-power-lounge-south-690",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/haneda/hnd15-power-lounge-south",
+      "retrievedAt": "2026-07-16T07:04:16.519Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control 2nd Floor Near Gate 9"
+    },
+    {
+      "recordId": "HND-hnd16-power-lounge-central-693",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/haneda/hnd16-power-lounge-central",
+      "retrievedAt": "2026-07-16T07:04:17.700Z",
+      "terminal": "Terminal 2",
+      "location": "Arrivals After passport control (immigration) 3rd Floor"
+    },
+    {
+      "recordId": "HND-hnd17s-foot-bath-cafe-and-body-care-luck-haneda-airport-688",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/haneda/hnd17s-foot-bath-cafe-and-body-care-luck-haneda-airport",
+      "retrievedAt": "2026-07-16T07:04:18.276Z",
+      "terminal": "Terminal 1",
+      "location": "Landside - South Wing, near the Security Gate. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion."
     },
     {
       "recordId": "HND-hnd19d-all-day-dining-grande-aile-694",
@@ -162,26 +1378,241 @@
       ]
     },
     {
-      "recordId": "LIM-lim15d-tgi-fridays-938",
-      "url": "https://my.prioritypass.com/en-GB/lounges/peru/jorge-chavez-international/lim15d-tgi-fridays",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "openingHours": "00:00 - 23:59 daily",
-      "location": "Jorge Chavez International, domestic departures, after security checks and after passport control, after the Duty Free, between Gates A3 and A4.",
+      "recordId": "HND-hnd20-power-lounge-premium-691",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/haneda/hnd20-power-lounge-premium",
+      "retrievedAt": "2026-07-16T07:04:18.558Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control Floor 3 The lounge is located next to the international flight immigration gate area"
+    },
+    {
+      "recordId": "HND-hnd21s-body-care-luck-692",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/haneda/hnd21s-body-care-luck",
+      "retrievedAt": "2026-07-16T07:04:19.812Z",
+      "terminal": "Terminal 2",
+      "location": "Departures Before security checks Before passport control 2nd Floor The outlet is located in the 'Haneda Airport Garden' building directly connected to Terminal 3"
+    },
+    {
+      "recordId": "ICN-icn14-sky-hub-lounge-742",
+      "url": "https://www.prioritypass.com/en-GB/lounges/south-korea/incheon-international/icn14-sky-hub-lounge",
+      "retrievedAt": "2026-07-16T07:00:46.759Z",
+      "terminal": "Terminal 2",
+      "location": "East Wing"
+    },
+    {
+      "recordId": "ICN-icn16-asiana-business-lounge-central-735",
+      "url": "https://www.prioritypass.com/en-GB/lounges/south-korea/incheon-international/icn16-asiana-business-lounge-central",
+      "retrievedAt": "2026-07-16T07:00:48.791Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control Level 4 Near Gate 26"
+    },
+    {
+      "recordId": "ICN-icn17-asiana-business-lounge-west-733",
+      "url": "https://www.prioritypass.com/en-GB/lounges/south-korea/incheon-international/icn17-asiana-business-lounge-west",
+      "retrievedAt": "2026-07-16T07:00:52.098Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control Level 4 Near Gate 42"
+    },
+    {
+      "recordId": "ICN-icn18-sky-hub-lounge-738",
+      "url": "https://www.prioritypass.com/en-GB/lounges/south-korea/incheon-international/icn18-sky-hub-lounge",
+      "retrievedAt": "2026-07-16T07:00:51.740Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control 4th Floor Near Gate 247"
+    },
+    {
+      "recordId": "ICN-icn3-matina-741",
+      "url": "https://www.prioritypass.com/en-GB/lounges/south-korea/incheon-international/icn3-matina",
+      "retrievedAt": "2026-07-16T07:00:52.375Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control West Wing., take the escalator opposite Gate 43 to the 4th Floor"
+    },
+    {
+      "recordId": "ICN-icn7-asiana-business-lounge-east-739",
+      "url": "https://www.prioritypass.com/en-GB/lounges/south-korea/incheon-international/icn7-asiana-business-lounge-east",
+      "retrievedAt": "2026-07-16T07:00:57.941Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control Near Gate 11"
+    },
+    {
+      "recordId": "ICN-icn8-sky-hub-lounge-740",
+      "url": "https://www.prioritypass.com/en-GB/lounges/south-korea/incheon-international/icn8-sky-hub-lounge",
+      "retrievedAt": "2026-07-16T07:00:57.501Z",
+      "terminal": "Terminal 1",
+      "location": "East Wing"
+    },
+    {
+      "recordId": "ICN-icn9-sky-hub-lounge-737",
+      "url": "https://www.prioritypass.com/en-GB/lounges/south-korea/incheon-international/icn9-sky-hub-lounge",
+      "retrievedAt": "2026-07-16T07:00:57.269Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control 4th Floor Near Gate 29 The lounge is located in the West Wing"
+    },
+    {
+      "recordId": "IXB-ixb1d-take-off-bar-768",
+      "url": "https://www.prioritypass.com/en-GB/lounges/india/bagdogra/ixb1d-take-off-bar",
+      "retrievedAt": "2026-07-16T19:53:34.262Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - Domestic Departures. After Security Hold Area, 1st Floor, near Gate 5. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion.",
       "conditions": [
-        "Cardholders can use their lounge visit entitlement to receive US$27 off the bill.",
-        "The US$27 is valid for the purchase of any meal and/or drinks.",
-        "Cardholder is responsible for the balance if total final bill exceeds US$27 per person."
+        "Max Unlimited guests per cardholder"
       ]
     },
     {
-      "recordId": "MAD-mad10r-gettsleep-998",
-      "url": "https://my.prioritypass.com/en-GB/lounges/spain/adolfo-suarez-madrid-barajas/mad10r-gettsleep",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "openingHours": "24 hours daily",
-      "location": "Adolfo Suarez Madrid-Barajas, departures, after security checks and after passport control, 1st Floor. GettSleep is located next to the pharmacy and entrance to Duty Free.",
+      "recordId": "IXJ-ixj-paahun-lounge-and-restaurant-772",
+      "url": "https://www.prioritypass.com/en-GB/lounges/india/jammu-satwari/ixj-paahun-lounge-and-restaurant",
+      "retrievedAt": "2026-07-16T19:53:35.727Z",
+      "location": "Airside - Domestic Departures. The lounge is located on the 1st Floor, near Gate 5.",
       "conditions": [
-        "Cardholders can use their lounge visit entitlement to use a capsule for a 1 hour stay or a shower cabin for a 30 minute stay.",
+        "Max stay: 2 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "IXR-ixr2-the-airr-lounge-and-bar-774",
+      "url": "https://www.prioritypass.com/en-GB/lounges/india/birsa-munda/ixr2-the-airr-lounge-and-bar",
+      "retrievedAt": "2026-07-16T19:53:37.346Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - Domestic Departures. After Security Hold Area, Level 1, near Boarding Gate 5.",
+      "conditions": [
+        "Max stay: 2 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "JFK-jfk-korean-air-lounge-787",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/john-f-kennedy-international/jfk-korean-air-lounge",
+      "retrievedAt": "2026-07-16T07:01:01.770Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - after Security Checkpoint, the lounge is located on the right hand side, across Gate 3. All passengers must hold a boarding pass departing from Terminal 1."
+    },
+    {
+      "recordId": "JFK-jfk10-air-france-lounge-797",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/john-f-kennedy-international/jfk10-air-france-lounge",
+      "retrievedAt": "2026-07-16T07:01:03.018Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - near the Air France Boarding Area by Gate 1."
+    },
+    {
+      "recordId": "JFK-jfk16-lufthansa-business-lounge-794",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/john-f-kennedy-international/jfk16-lufthansa-business-lounge",
+      "retrievedAt": "2026-07-16T07:01:02.940Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control Left hand side after Security"
+    },
+    {
+      "recordId": "JFK-jfk19w-jabbrrbox-799",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/john-f-kennedy-international/jfk19w-jabbrrbox",
+      "retrievedAt": "2026-07-16T07:01:07.656Z",
+      "terminal": "Terminal 8",
+      "location": "Arrivals Before passport control (immigration) Pre-security, near the Qatar Airlines Desk"
+    },
+    {
+      "recordId": "JFK-jfk21-turkish-airlines-lounge-788",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/john-f-kennedy-international/jfk21-turkish-airlines-lounge",
+      "retrievedAt": "2026-07-16T07:01:08.204Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - after TSA Security Checks, the lounge is located between Gates 2 and 3. International flights only."
+    },
+    {
+      "recordId": "JFK-jfk23s-be-relax-spa-783",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/john-f-kennedy-international/jfk23s-be-relax-spa",
+      "retrievedAt": "2026-07-16T07:01:13.443Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control Near Gate 5 International and in transit flights only Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion IMPORTANT NOTE: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting"
+    },
+    {
+      "recordId": "JFK-jfk24w-jabbrrbox-791",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/john-f-kennedy-international/jfk24w-jabbrrbox",
+      "retrievedAt": "2026-07-16T07:01:13.471Z",
+      "terminal": "Terminal 8",
+      "location": "Arrivals Before passport control (immigration) Pre-security, near the Qatar Airlines Desk"
+    },
+    {
+      "recordId": "JFK-jfk25-vip-one-lounge-784",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/john-f-kennedy-international/jfk25-vip-one-lounge",
+      "retrievedAt": "2026-07-16T07:01:16.079Z",
+      "terminal": "Terminal 1",
+      "location": "Landside - Departure Level. The lounge is located behind counters E and F next to the TSA Check Point. International flights only."
+    },
+    {
+      "recordId": "JFK-jfk28s-xwell-790",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/john-f-kennedy-international/jfk28s-xwell",
+      "retrievedAt": "2026-07-16T07:01:18.198Z",
+      "terminal": "Terminal 4",
+      "location": "Airside - near Gate B22. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion."
+    },
+    {
+      "recordId": "JFK-jfk29s-xwell-785",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/john-f-kennedy-international/jfk29s-xwell",
+      "retrievedAt": "2026-07-16T07:01:19.736Z",
+      "terminal": "Terminal 4",
+      "location": "Airside - Main Retail Hall, between Concourse A and B. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion."
+    },
+    {
+      "recordId": "KUL-kul11-sphere-lounge-855",
+      "url": "https://www.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul11-sphere-lounge",
+      "retrievedAt": "2026-07-16T07:01:21.518Z",
+      "location": "Landside - connected to the terminal via Skybridge with a complimentary 24 hour buggy service."
+    },
+    {
+      "recordId": "KUL-kul14d-travellers-bar-and-grill-sama-sama-hotel-865",
+      "url": "https://my.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul14d-travellers-bar-and-grill-sama-sama-hotel",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "16:00 - 01:00 daily",
+      "location": "Kuala Lumpur Intl, KLIA Terminal 1, landside, 2nd Floor of the hotel lobby, connected to the terminal via Skybridge with a complimentary 24 hour buggy service.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to take advantage of unlimited selected tapas and beverage for 3 hours within a 24 hour period.",
+        "A la carte menu available, subject to payment.",
         "No explicit amount or currency is published on the official detail page."
+      ]
+    },
+    {
+      "recordId": "KUL-kul20-travel-club-lounge-861",
+      "url": "https://www.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul20-travel-club-lounge",
+      "retrievedAt": "2026-07-16T07:01:22.455Z",
+      "location": "Airside - International Departures, next to Gate L8."
+    },
+    {
+      "recordId": "KUL-kul21-travel-club-lounge-859",
+      "url": "https://www.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul21-travel-club-lounge",
+      "retrievedAt": "2026-07-16T07:01:24.613Z",
+      "location": "Airside - International Departures. Sector 6, Satellite Building, next to the Sama Sama Hotel."
+    },
+    {
+      "recordId": "KUL-kul37-capsule-transit-sleep-lounge-854",
+      "url": "https://www.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul37-capsule-transit-sleep-lounge",
+      "retrievedAt": "2026-07-16T07:01:25.746Z",
+      "location": "Landside - Level 5, Departure Hall. Capsule Transit is located near to Costa Coffee, near the Domestic Departure Gate. It is also accessible to passengers travelling from KLIA Terminal 2 via the KLIA Express (train) located in the public area. Note: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting."
+    },
+    {
+      "recordId": "KUL-kul38-capsule-transit-landside-866",
+      "url": "https://www.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul38-capsule-transit-landside",
+      "retrievedAt": "2026-07-16T07:01:27.994Z",
+      "location": "Landside - after clearing Immigration, proceed to the Gateway KLIA2 Mall, and take the nearest lift to Level 1. Capsule Transit is also accessible to passengers travelling from Terminal 1 via the KLIA Express (train) located in the public area. Note: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting."
+    },
+    {
+      "recordId": "KUL-kul39-capsule-transit-airside-864",
+      "url": "https://www.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul39-capsule-transit-airside",
+      "retrievedAt": "2026-07-16T07:01:29.440Z",
+      "location": "Airside - International Departure Hall, Satellite Building. After landing in KLIA Terminal 2, you will be guided to the Transit Hall. Capsule Transit is located just before Gate Q. Note: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting."
+    },
+    {
+      "recordId": "KUL-kul40-capsule-transit-max-857",
+      "url": "https://www.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul40-capsule-transit-max",
+      "retrievedAt": "2026-07-16T19:53:40.100Z",
+      "location": "Departures Before security checks Before passport control Level 2M The lounge is located opposite the escalator",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "Children under 5 years admitted free",
+        "Maximum 3 hour stay",
+        "All Cardholders and guests are required to show a Boarding Pass with confirmed same-day travel for access to the lounge",
+        "Cardholders and guests can enjoy a side buffet and choose 1 main from the A la Carte menu",
+        "Complimentary one (1) glass of beer (300ml) per visit per adult",
+        "For conference facilities: Email: max@capsuletransit.com",
+        "Complimentary steam bath facilities",
+        "Max stay: 3 hours",
+        "Max Unlimited guests per cardholder"
       ]
     },
     {
@@ -197,15 +1628,981 @@
       ]
     },
     {
-      "recordId": "KUL-kul14d-travellers-bar-and-grill-sama-sama-hotel-865",
-      "url": "https://my.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul14d-travellers-bar-and-grill-sama-sama-hotel",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "openingHours": "16:00 - 01:00 daily",
-      "location": "Kuala Lumpur Intl, KLIA Terminal 1, landside, 2nd Floor of the hotel lobby, connected to the terminal via Skybridge with a complimentary 24 hour buggy service.",
+      "recordId": "KUL-kul5-plaza-premium-lounge-867",
+      "url": "https://www.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul5-plaza-premium-lounge",
+      "retrievedAt": "2026-07-16T07:01:32.564Z",
+      "location": "Landside - take the travellator next to 'Hometown Hainan Coffee' on the Arrival Hall to Level 2M."
+    },
+    {
+      "recordId": "KUL-kul7-sky-suite-airport-lounge-862",
+      "url": "https://www.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul7-sky-suite-airport-lounge",
+      "retrievedAt": "2026-07-16T19:54:15.147Z",
+      "location": "Airside - International Departures. After Check-in and Immigration, take the Aerotrain to the Satellite A Building. The lounge is located on the Mezzanine Level, next to Gate C5.",
       "conditions": [
-        "Cardholders can use their lounge visit entitlement to take advantage of unlimited selected tapas and beverage for 3 hours within a 24 hour period.",
-        "A la carte menu available, subject to payment.",
+        "Max stay: 3 hours",
+        "Max 4 guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "KUL-kul8-sky-suite-airport-lounge-856",
+      "url": "https://www.prioritypass.com/en-GB/lounges/malaysia/kuala-lumpur-international/kul8-sky-suite-airport-lounge",
+      "retrievedAt": "2026-07-16T19:54:15.266Z",
+      "location": "Landside - Level 3, Departure Hall, next to airline check-in counters (Row S).",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max 4 guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "LGW-lgw13d-pizza-express-912",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/gatwick/lgw13d-pizza-express",
+      "retrievedAt": "2026-07-16T07:04:21.009Z",
+      "location": "Airside - take the lift up one level from the main shopping concourse. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "LGW-lgw15-no1-lounge-gatwick-908",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/gatwick/lgw15-no1-lounge-gatwick",
+      "retrievedAt": "2026-07-16T07:04:20.939Z",
+      "location": "Departures After security checks After passport control Follow signs to 'Airport Lounges' After passing through a set of glass double doors the lounge is located straight ahead"
+    },
+    {
+      "recordId": "LGW-lgw23d-tortilla-lgw-north-905",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/gatwick/lgw23d-tortilla-lgw-north",
+      "retrievedAt": "2026-07-16T07:04:22.401Z",
+      "location": "Airside - Level 1, next to Starbucks Coffee. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "LGW-lgw24d-brewdog-907",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/gatwick/lgw24d-brewdog",
+      "retrievedAt": "2026-07-16T07:04:24.507Z",
+      "location": "Airside - Level 1. BrewDog is located past Tortilla, Shakeshack and Starbucks Coffee. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion. 20 taps of craft beer and an all day menu of BrewDog favourites. There is also a games zone, photobooth and more."
+    },
+    {
+      "recordId": "LGW-lgw25d-juniper-and-co-909",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/gatwick/lgw25d-juniper-and-co",
+      "retrievedAt": "2026-07-16T07:04:24.452Z",
+      "location": "Departures After security checks After passport control After the Duty Free Juniper & Co. is located on the left hand side."
+    },
+    {
+      "recordId": "LGW-lgw26d-the-breakfast-club-913",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/gatwick/lgw26d-the-breakfast-club",
+      "retrievedAt": "2026-07-16T07:04:26.165Z",
+      "location": "Airside - take the escalator located on the left hand side of the airport to Level 1 and The Breakfast Club is located next to Wagamama. Alternatively, take the main staircase to Level 1 and walk past Tortilla, Shakeshack, Starbucks and BrewDog to find The Breakfast Club. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "LHR-lhr14-club-aspire-lounge-921",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/heathrow/lhr14-club-aspire-lounge",
+      "retrievedAt": "2026-07-16T07:01:33.742Z",
+      "terminal": "Terminal 5",
+      "location": "Departures After security checks After passport control To the left of Gate A18"
+    },
+    {
+      "recordId": "LHR-lhr16-my-lounge-925",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/heathrow/lhr16-my-lounge",
+      "retrievedAt": "2026-07-16T07:01:35.928Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - after Security. Follow signs to Gates 1-42 and for 'All Airline Lounges'. Bear left and continue to follow signs for ‘All Airline Lounges’. Turn left and follow signs to Gates 1-22 and 'Airline Lounges B-J', then turn left towards Gate 9. The lounge is signposted as ‘Lounge D’ and is located on the right hand side."
+    },
+    {
+      "recordId": "LHR-lhr25-no1-lounge-heathrow-923",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/heathrow/lhr25-no1-lounge-heathrow",
+      "retrievedAt": "2026-07-16T07:01:35.948Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - after Security, follow the walkway to the left of World Duty Free and follow signs for 'Lounge F' and Gates 13-22. The lounge is located one floor up and is accessible via lifts or stairs."
+    },
+    {
+      "recordId": "LHR-lhr27d-the-globe-pub-and-kitchen-927",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/heathrow/lhr27d-the-globe-pub-and-kitchen",
+      "retrievedAt": "2026-07-16T19:53:42.306Z",
+      "terminal": "Terminal 5",
+      "location": "Next to South Security Gates The Globe is a pub and restaurant that showcases Big Smoke Brew Co’s range of craft beers, small-batch spirits and English pub classics alongside American-inspired dishes",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "Children are not admitted",
+        "For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting",
+        "Cardholders can use their lounge visit entitlement to receive £18 off the bill",
+        "Each £18 deduction represents a single lounge visit within the Cardholder’s existing lounge visit allocation for which the Cardholder will, where applicable, be charged. For example, if a Cardholder signs in 1 Guest, they will receive £36 off their bill, which will be charged as 1 Cardholder visit + 1 Guest visit on their account",
+        "Cardholders who pay for their own visits and/or their guest visits are advised to check if the £18 credit provided per visit represents value prior to accessing the offer",
+        "Priority Pass and its Affiliated Companies shall not be liable should the offer value be less than Cardholder’s lounge visit fee",
+        "The £18 is valid for the purchase of any meal and/or drinks in a single transaction. To be eligible, Cardholders must present a valid Card and Boarding Pass with confirmed same-day travel before placing an order",
+        "The £18 is non-transferable and cannot be exchanged for a cash substitute or refund if the final bill is lower than £18 per person",
+        "The Cardholder is responsible for the remaining balance if total bill exceeds £18 per registered person. Any remaining balance cannot be used towards gratuity",
+        "Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion",
+        "This location is offered as an alternative to a lounge visit and other airport experiences. Using entitlements repeatedly within a single airport trip may result in charges from your benefit provider",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "LHR-lhr32d-evergreen-bar-and-restaurant-920",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/heathrow/lhr32d-evergreen-bar-and-restaurant",
+      "retrievedAt": "2026-07-16T07:01:39.195Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - after Security Checks, Level 1, Upper Departures. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "LHR-lhr33-no-1-lounge-heathrow-t2-928",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/heathrow/lhr33-no-1-lounge-heathrow-t2",
+      "retrievedAt": "2026-07-16T07:01:38.729Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control After the Duty Free Ground Level"
+    },
+    {
+      "recordId": "LHR-lhr34-clubrooms-lhr-terminal-3-additional-fee-applies-926",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/heathrow/lhr34-clubrooms-lhr-terminal-3-additional-fee-applies",
+      "retrievedAt": "2026-07-16T07:01:39.590Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - after Security, follow the walkway to the left of World Duty Free and follow signs for 'Lounge F' and Gates 13-22. The lounge is located one floor up and is accessible via lifts or stairs."
+    },
+    {
+      "recordId": "LIM-lim15d-tgi-fridays-938",
+      "url": "https://my.prioritypass.com/en-GB/lounges/peru/jorge-chavez-international/lim15d-tgi-fridays",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "00:00 - 23:59 daily",
+      "location": "Jorge Chavez International, domestic departures, after security checks and after passport control, after the Duty Free, between Gates A3 and A4.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to receive US$27 off the bill.",
+        "The US$27 is valid for the purchase of any meal and/or drinks.",
+        "Cardholder is responsible for the balance if total final bill exceeds US$27 per person."
+      ]
+    },
+    {
+      "recordId": "LOS-los-the-oasis-lounge-962",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/murtala-muhammed-international/los-the-oasis-lounge",
+      "retrievedAt": "2026-07-16T07:01:42.197Z",
+      "terminal": "International Terminal",
+      "location": "Airside - D-Wing, Departure Level. After Security Checks and Passport Control the lounge is located on the 1st Floor next to the Air France/KLM Lounge."
+    },
+    {
+      "recordId": "LOS-los11s-juvenis-spa-954",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/murtala-muhammed-international/los11s-juvenis-spa",
+      "retrievedAt": "2026-07-16T07:01:41.855Z",
+      "terminal": "International Terminal",
+      "location": "Airside - near Gate D. International and in transit flights. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion. IMPORTANT NOTE: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting."
+    },
+    {
+      "recordId": "LOS-los12-the-atelier-lounge-955",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/murtala-muhammed-international/los12-the-atelier-lounge",
+      "retrievedAt": "2026-07-16T07:01:44.294Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - after Immigration and Security Check Point continue walking straight ahead until you reach the lift or escalator to the 1st Floor. International and in transit flights only."
+    },
+    {
+      "recordId": "LOS-los2-vip-lounge-964",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/murtala-muhammed-international/los2-vip-lounge",
+      "retrievedAt": "2026-07-16T07:01:44.719Z",
+      "terminal": "Domestic Terminal",
+      "location": "Airside - after Security Checks on the 2nd Floor, turn right into the main departure hall. Take the lift or stairs to the 3rd Floor where the lounge is located."
+    },
+    {
+      "recordId": "LOS-los5-skyway-premium-lounge-957",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/murtala-muhammed-international/los5-skyway-premium-lounge",
+      "retrievedAt": "2026-07-16T07:01:47.627Z",
+      "terminal": "International Terminal",
+      "location": "Airside - after Security Screening from 'Entrance D', turn left and proceed 100 metres towards the E-Wing where the lounge is located. Passengers clearing Security at the 'Central Entrance' turn right and then the lounge is located straight ahead. Follow signs."
+    },
+    {
+      "recordId": "LOS-los6-the-gabfol-lounge-960",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/murtala-muhammed-international/los6-the-gabfol-lounge",
+      "retrievedAt": "2026-07-16T07:01:47.383Z",
+      "terminal": "Domestic Terminal",
+      "location": "Airside - Arik Air Wing, after Security Checks and Passport Control. Turn immediately to the left hand side where the lounge is located. Access is only available to domestic passengers departing from the General Aviation Terminal 1."
+    },
+    {
+      "recordId": "LOS-los7-llegada-arrival-lounge-953",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/murtala-muhammed-international/los7-llegada-arrival-lounge",
+      "retrievedAt": "2026-07-16T07:01:49.328Z",
+      "terminal": "International Terminal",
+      "location": "Landside - Wing D, proceed through the Interline Pass and Immigration. The lounge is located opposite the Baggage Hall. International Arrivals only."
+    },
+    {
+      "recordId": "LOS-los8-llegada-arrival-lounge-958",
+      "url": "https://www.prioritypass.com/en-GB/lounges/nigeria/murtala-muhammed-international/los8-llegada-arrival-lounge",
+      "retrievedAt": "2026-07-16T07:01:50.097Z",
+      "terminal": "International Terminal",
+      "location": "Landside - Wing E, proceed through the Interline Pass and Immigration. The lounge is located on the right of the Arrival Hall. International Arrivals only."
+    },
+    {
+      "recordId": "MAD-mad10r-gettsleep-998",
+      "url": "https://my.prioritypass.com/en-GB/lounges/spain/adolfo-suarez-madrid-barajas/mad10r-gettsleep",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "24 hours daily",
+      "location": "Adolfo Suarez Madrid-Barajas, departures, after security checks and after passport control, 1st Floor. GettSleep is located next to the pharmacy and entrance to Duty Free.",
+      "conditions": [
+        "Cardholders can use their lounge visit entitlement to use a capsule for a 1 hour stay or a shower cabin for a 30 minute stay.",
         "No explicit amount or currency is published on the official detail page."
+      ]
+    },
+    {
+      "recordId": "MAD-mad3-plaza-mayor-1003",
+      "url": "https://www.prioritypass.com/en-GB/lounges/spain/adolfo-suarez-madrid-barajas/mad3-plaza-mayor",
+      "retrievedAt": "2026-07-16T07:04:27.520Z",
+      "terminal": "Terminal 4",
+      "location": "Departures After security checks After passport control 1st Floor Adjacent to AENA Exhibition Room"
+    },
+    {
+      "recordId": "MAD-mad5-puerta-del-sol-995",
+      "url": "https://www.prioritypass.com/en-GB/lounges/spain/adolfo-suarez-madrid-barajas/mad5-puerta-del-sol",
+      "retrievedAt": "2026-07-16T07:04:27.881Z",
+      "terminal": "Terminal 3",
+      "location": "Departures After security checks After passport control Gate E69 1st Floor, via stairs"
+    },
+    {
+      "recordId": "MAD-mad6-puerta-de-alcala-997",
+      "url": "https://www.prioritypass.com/en-GB/lounges/spain/adolfo-suarez-madrid-barajas/mad6-puerta-de-alcala",
+      "retrievedAt": "2026-07-16T07:04:28.328Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control Floor 2 Near Gate D60 Domestic departures from Terminal 2 and Terminal 3, Zones C and D only Schengen flights only"
+    },
+    {
+      "recordId": "MAD-mad7d-pannus-1000",
+      "url": "https://www.prioritypass.com/en-GB/lounges/spain/adolfo-suarez-madrid-barajas/mad7d-pannus",
+      "retrievedAt": "2026-07-16T07:04:32.071Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - near Gate E69 (E Zone). Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "MAD-mad8d-olivia-and-bellota-1002",
+      "url": "https://www.prioritypass.com/en-GB/lounges/spain/adolfo-suarez-madrid-barajas/mad8d-olivia-and-bellota",
+      "retrievedAt": "2026-07-16T07:04:32.393Z",
+      "terminal": "Terminal 4",
+      "location": "Airside - near Gate 74K (Gates K). Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "MAD-madc-cibeles-1001",
+      "url": "https://www.prioritypass.com/en-GB/lounges/spain/adolfo-suarez-madrid-barajas/madc-cibeles",
+      "retrievedAt": "2026-07-16T07:04:32.631Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control 2nd Floor Between Gates B26 and B29 Follow signs to Sala VIP"
+    },
+    {
+      "recordId": "MEL-mel11l-the-house-1041",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/melbourne/mel11l-the-house",
+      "retrievedAt": "2026-07-16T07:01:51.891Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control Level 1 Follow signs to Aspire Lounge"
+    },
+    {
+      "recordId": "MEL-mel12d-biggie-smalls-1040",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/melbourne/mel12d-biggie-smalls",
+      "retrievedAt": "2026-07-16T07:01:53.460Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - after Security Checks, turn right and proceed 300 metres through the walkway towards the Virgin Gates. Domestic flights only. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion. Headed up by Shane Delia, Biggie Smalls brings its signature fun-loving, vibrant style to the airport, and delivers customers classic kebabs, falafel and burgers, salads and loaded fries."
+    },
+    {
+      "recordId": "MEL-mel13d-picketts-deli-and-rotisserie-1045",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/melbourne/mel13d-picketts-deli-and-rotisserie",
+      "retrievedAt": "2026-07-16T07:01:55.124Z",
+      "terminal": "Terminal 2",
+      "location": "Landside - next to the Virgin Airlines Check-in desk. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "MEL-mel16d-pope-joan-1042",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/melbourne/mel16d-pope-joan",
+      "retrievedAt": "2026-07-16T07:01:55.731Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control Level 1 Little Lygon is located opposite Security in the main square"
+    },
+    {
+      "recordId": "MEL-mel2d-cafe-sol-1043",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/melbourne/mel2d-cafe-sol",
+      "retrievedAt": "2026-07-16T07:01:56.064Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - after Passport Control and Duty Free, Level 1. Cafe Sol is located on the right hand side at the end of the luxury retail area. International flights only. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "MEL-mel3d-bar-pulpo-by-movida-1039",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/melbourne/mel3d-bar-pulpo-by-movida",
+      "retrievedAt": "2026-07-16T07:01:59.132Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - after Security Checks and Immigration, Level 1 departures, opposite Gate 4. International flights only. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "MEL-mel4d-urban-provodore-1047",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/melbourne/mel4d-urban-provodore",
+      "retrievedAt": "2026-07-16T07:01:59.154Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - after Security Checks and Immigration, Level 1 departures, opposite Gates 10 and 15. International flights only. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "MEL-mel5-rex-lounge-1049",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/melbourne/mel5-rex-lounge",
+      "retrievedAt": "2026-07-16T07:01:59.334Z",
+      "terminal": "Terminal 4",
+      "location": "Airside - Domestic Departures. The lounge is located near Gate 30."
+    },
+    {
+      "recordId": "MEL-mel9d-quikshots-1044",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/melbourne/mel9d-quikshots",
+      "retrievedAt": "2026-07-16T07:02:05.059Z",
+      "terminal": "Terminal 4",
+      "location": "Airside - after Security Checks, turn left and Quikshots is located in the Food Court Area. Domestic flights only. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion. Quikshots perfectly combines a funky industrial style with superfast service with best quality coffee, paired with delicious Croque Monsieur, cake or pizza. Drop in for a quick snack and perfect expresso."
+    },
+    {
+      "recordId": "NAG-nag5-the-airr-lounge-and-bar-1118",
+      "url": "https://www.prioritypass.com/en-GB/lounges/india/dr-babasaheb-ambedkar-international/nag5-the-airr-lounge-and-bar",
+      "retrievedAt": "2026-07-16T19:53:43.828Z",
+      "location": "Airside - Domestic Departures, 1st Floor, near the baby care room.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "NRT-nrt11-9h-nine-hours-narita-airport-1173",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/narita-international/nrt11-9h-nine-hours-narita-airport",
+      "retrievedAt": "2026-07-16T07:04:34.120Z",
+      "terminal": "Terminal 2",
+      "location": "Departures Before security checks Before passport control Cross the connecting corridor from the 2nd Floor to Parking Area P2 of the Multi-story and proceed to the B1 Floor"
+    },
+    {
+      "recordId": "NRT-nrt12-i-a-s-s-superior-lounge-noa-1177",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/narita-international/nrt12-i-a-s-s-superior-lounge-noa",
+      "retrievedAt": "2026-07-16T07:04:34.333Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control Floor 3 Gate 26"
+    },
+    {
+      "recordId": "NRT-nrt13-i-a-s-s-superior-lounge-kocoo-1175",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/narita-international/nrt13-i-a-s-s-superior-lounge-kocoo",
+      "retrievedAt": "2026-07-16T07:04:34.669Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control 4th Floor"
+    },
+    {
+      "recordId": "NRT-nrt14d-botejyu-express-narita-international-airport-1171",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/narita-international/nrt14d-botejyu-express-narita-international-airport",
+      "retrievedAt": "2026-07-16T07:04:37.469Z",
+      "terminal": "Terminal 3",
+      "location": "Departures Before security checks Before passport control 2nd Floor In the food court area"
+    },
+    {
+      "recordId": "NRT-nrt15d-teppanyaki-dotonbori-kurita-narita-international-airport-1172",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/narita-international/nrt15d-teppanyaki-dotonbori-kurita-narita-international-airport",
+      "retrievedAt": "2026-07-16T07:04:37.982Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control 2nd Floor In the food court area"
+    },
+    {
+      "recordId": "NRT-nrt16d-japanese-grill-and-craft-beer-tatsu-1178",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/narita-international/nrt16d-japanese-grill-and-craft-beer-tatsu",
+      "retrievedAt": "2026-07-16T07:04:38.026Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks 3rd Floor In the Duty Free and Restaurant area"
+    },
+    {
+      "recordId": "NRT-nrt17d-meat-dishes-yakisuki-yanma-1170",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/narita-international/nrt17d-meat-dishes-yakisuki-yanma",
+      "retrievedAt": "2026-07-16T07:04:41.008Z",
+      "terminal": "Terminal 1",
+      "location": "Departures Before security checks Before passport control 4th Floor The restaurant is located in the Restaurant and Shop Floor area"
+    },
+    {
+      "recordId": "NRT-tok-executive-lounge-1-1176",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/narita-international/tok-executive-lounge-1",
+      "retrievedAt": "2026-07-16T07:04:41.081Z",
+      "terminal": "Terminal 1",
+      "location": "Arrivals After passport control (immigration)"
+    },
+    {
+      "recordId": "NRT-tyo-executive-lounge-2-1174",
+      "url": "https://www.prioritypass.com/en-GB/lounges/japan/narita-international/tyo-executive-lounge-2",
+      "retrievedAt": "2026-07-16T07:04:41.329Z",
+      "terminal": "Terminal 2",
+      "location": "Landside - Arrival, Departure and Domestic transit only. Enter the main building from the 3rd Floor (Departure Floor) and take the escalator next to 'G' Check-in counter (North Side of building) to the 4th Floor, turn left. Signboard indicates the entrance to the lounge."
+    },
+    {
+      "recordId": "OCC-occ-ayahuasca-vip-cafe-lounge-1189",
+      "url": "https://www.prioritypass.com/en-GB/lounges/ecuador/francisco-de-orellana/occ-ayahuasca-vip-cafe-lounge",
+      "retrievedAt": "2026-07-16T19:53:46.101Z",
+      "location": "Airside - after Security Checks, 1st Floor. The lounge is located next to the coffee shop. Domestic flights only.",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "PEK-pek11s-comfort-zone-1219",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-capital-international/pek11s-comfort-zone",
+      "retrievedAt": "2026-07-16T07:04:46.669Z",
+      "terminal": "Terminal 2",
+      "location": "Landside - before Security Checks, 3rd Floor. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion. IMPORTANT NOTE: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting."
+    },
+    {
+      "recordId": "PEK-pek12s-comfort-zone-1218",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-capital-international/pek12s-comfort-zone",
+      "retrievedAt": "2026-07-16T07:04:48.458Z",
+      "terminal": "Terminal 3",
+      "location": "Landside - before Security Checks, 5th Floor, located in the West Area of the Departure Hall. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion. IMPORTANT NOTE: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting."
+    },
+    {
+      "recordId": "PEK-pek13s-comfort-zone-1220",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-capital-international/pek13s-comfort-zone",
+      "retrievedAt": "2026-07-16T07:04:47.386Z",
+      "terminal": "Terminal 3C",
+      "location": "Airside - Domestic Departures, 3rd Floor, near Boarding Gate C28. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion. Note: For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting."
+    },
+    {
+      "recordId": "PEK-pek14-fortune-wings-lounge-1216",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-capital-international/pek14-fortune-wings-lounge",
+      "retrievedAt": "2026-07-16T07:04:50.618Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control 2nd Floor Near Gate 33"
+    },
+    {
+      "recordId": "PEK-pek15s-comfort-zone-1217",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-capital-international/pek15s-comfort-zone",
+      "retrievedAt": "2026-07-16T07:04:50.703Z",
+      "terminal": "Terminal 3E",
+      "location": "Airside - International Departures. 3rd Floor, near Boarding Gate E26. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion."
+    },
+    {
+      "recordId": "PEK-pek16s-comfort-zone-1223",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-capital-international/pek16s-comfort-zone",
+      "retrievedAt": "2026-07-16T07:04:51.326Z",
+      "terminal": "Terminal 3E",
+      "location": "Airside - International Departures. 2nd Floor, near Boarding Gate E14. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion."
+    },
+    {
+      "recordId": "PEK-pek17s-comfort-zone-1224",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-capital-international/pek17s-comfort-zone",
+      "retrievedAt": "2026-07-16T07:04:53.224Z",
+      "terminal": "Terminal 3C",
+      "location": "Airside - Domestic Departures, 2nd floor, near Boarding Gate C21. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion. For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you.We advise Cardholders to review full Conditions of access below before visiting."
+    },
+    {
+      "recordId": "PEK-pek18-china-eastern-airlines-v2-lounge-1225",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-capital-international/pek18-china-eastern-airlines-v2-lounge",
+      "retrievedAt": "2026-07-16T07:04:53.409Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control Floor 3"
+    },
+    {
+      "recordId": "PEK-pek4-bgs-premier-lounge-1222",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-capital-international/pek4-bgs-premier-lounge",
+      "retrievedAt": "2026-07-16T07:04:53.286Z",
+      "terminal": "Terminal 3E",
+      "location": "Airside - International Departures. The lounge is located near Gate E19."
+    },
+    {
+      "recordId": "PEK-pek5-bgs-premier-lounge-1221",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-capital-international/pek5-bgs-premier-lounge",
+      "retrievedAt": "2026-07-16T07:04:55.576Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - International Departures. The lounge is located next to Gate 5."
+    },
+    {
+      "recordId": "PKX-pkx11-china-southern-airlines-vip-lounge-2-1252",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-daxing-international/pkx11-china-southern-airlines-vip-lounge-2",
+      "retrievedAt": "2026-07-16T07:02:02.782Z",
+      "location": "Airside - Domestic Departures Hall. The lounge is located on the 2nd Floor, near Gate 33, towards the end of Concourse B."
+    },
+    {
+      "recordId": "PKX-pkx12-china-southern-airlines-vip-lounge-3-1248",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-daxing-international/pkx12-china-southern-airlines-vip-lounge-3",
+      "retrievedAt": "2026-07-16T07:02:03.417Z",
+      "location": "Airside - Domestic Departures Hall. The lounge is located on the 3rd Floor, 50 metres to the right after Security Checks."
+    },
+    {
+      "recordId": "PKX-pkx4-chum-vip-lounge-1246",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-daxing-international/pkx4-chum-vip-lounge",
+      "retrievedAt": "2026-07-16T07:02:08.464Z",
+      "location": "Airside - Domestic Departures - after Security Checks, 2nd Floor, the lounge is located on the left hand side, near Gates A100 - A105."
+    },
+    {
+      "recordId": "PKX-pkx5s-comfort-zone-1249",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-daxing-international/pkx5s-comfort-zone",
+      "retrievedAt": "2026-07-16T07:02:08.046Z",
+      "location": "Airside - Domestic Departures. 2nd Floor, near Boarding Gate C54. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion."
+    },
+    {
+      "recordId": "PKX-pkx6-china-eastern-airlines-v3-lounge-1247",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-daxing-international/pkx6-china-eastern-airlines-v3-lounge",
+      "retrievedAt": "2026-07-16T07:02:10.829Z",
+      "location": "Departures After security checks After passport control Take the lift near Boarding Gate C46 to the 3rd Floor The lounge is only accessible when flying with China Eastern Airlines (MU), Shanghai Airlines (FM), China United Airlines (KN) and SkyTeam Alliance Airlines for Domestic Departure passengers only"
+    },
+    {
+      "recordId": "PKX-pkx7-china-eastern-airlines-v5-lounge-1250",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/beijing-daxing-international/pkx7-china-eastern-airlines-v5-lounge",
+      "retrievedAt": "2026-07-16T07:02:14.666Z",
+      "location": "Departures After security checks After passport control 4th Floor The lounge is located on the left hand side The lounge is only accessible when flying with China Eastern Airlines (MU), Shanghai Airlines (FM), China United Airlines (KN) and SkyTeam Alliance Airlines."
+    },
+    {
+      "recordId": "PRG-prg11d-bottega-prosecco-bar-1282",
+      "url": "https://www.prioritypass.com/en-GB/lounges/czech-republic/vaclav-havel-prague/prg11d-bottega-prosecco-bar",
+      "retrievedAt": "2026-07-16T07:04:55.604Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - Pier B, opposite Gate B1. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "PRG-prg12d-bottega-prosecco-restaurant-1288",
+      "url": "https://www.prioritypass.com/en-GB/lounges/czech-republic/vaclav-havel-prague/prg12d-bottega-prosecco-restaurant",
+      "retrievedAt": "2026-07-16T07:04:55.553Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Pier D, next to Gate D4. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "PRG-prg4d-pilsner-urquell-original-restaurant-1287",
+      "url": "https://www.prioritypass.com/en-GB/lounges/czech-republic/vaclav-havel-prague/prg4d-pilsner-urquell-original-restaurant",
+      "retrievedAt": "2026-07-16T07:04:57.558Z",
+      "terminal": "Terminal 2",
+      "location": "Landside - Departure Hall, near the escalators, next to 'Burger King' and above 'Billa' supermarket. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "PRG-prg5d-pilsner-urquell-original-restaurant-1289",
+      "url": "https://www.prioritypass.com/en-GB/lounges/czech-republic/vaclav-havel-prague/prg5d-pilsner-urquell-original-restaurant",
+      "retrievedAt": "2026-07-16T07:04:57.491Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Pier C, near Gate C4. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "PRG-prg6d-pilsner-urquell-original-restaurant-1281",
+      "url": "https://www.prioritypass.com/en-GB/lounges/czech-republic/vaclav-havel-prague/prg6d-pilsner-urquell-original-restaurant",
+      "retrievedAt": "2026-07-16T07:04:57.796Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - Pier A, near Gate A3. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "PRG-prg7d-pilsner-urquell-original-restaurant-1283",
+      "url": "https://www.prioritypass.com/en-GB/lounges/czech-republic/vaclav-havel-prague/prg7d-pilsner-urquell-original-restaurant",
+      "retrievedAt": "2026-07-16T07:04:59.699Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - Pier B, near Gate B7. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "PRG-prg8d-aeroporto-1286",
+      "url": "https://www.prioritypass.com/en-GB/lounges/czech-republic/vaclav-havel-prague/prg8d-aeroporto",
+      "retrievedAt": "2026-07-16T07:04:59.671Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Pier D towards Pier C, near the escalators on the right hand side, near Gates D1 and D2. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "PVG-pvg18-china-eastern-airlines-no-137-lounge-1319",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/shanghai-pudong-international/pvg18-china-eastern-airlines-no-137-lounge",
+      "retrievedAt": "2026-07-16T07:02:14.475Z",
+      "terminal": "Terminal S1",
+      "location": "Departures After security checks After passport control 5th Floor Near Gate 137 The lounge is only accessible when flying with China Eastern Airlines (MU), Shanghai Airlines (FM), China United Airlines (KN) and SkyTeam Alliance Airlines."
+    },
+    {
+      "recordId": "PVG-pvg21-china-southern-first-business-class-gold-silver-elite-plus-lounge-152-1313",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/shanghai-pudong-international/pvg21-china-southern-first-business-class-gold-silver-elite-plus-lounge-152",
+      "retrievedAt": "2026-07-16T07:02:17.097Z",
+      "terminal": "Terminal S2",
+      "location": "Airside - Domestic Departures, 4th Floor, near Boarding Gate 190. Departure passengers only."
+    },
+    {
+      "recordId": "SCL-san2-salones-vip-pacific-club-1372",
+      "url": "https://www.prioritypass.com/en-GB/lounges/chile/arturo-merino-benitez-international/san2-salones-vip-pacific-club",
+      "retrievedAt": "2026-07-16T07:04:59.776Z",
+      "terminal": "Domestic Terminal",
+      "location": "Airside - after passing through Security Checks on the 3rd Level, take the escalator to the 2nd Level. Walk towards Gate B and the lounge is located on the right hand side of Gate B05."
+    },
+    {
+      "recordId": "SCL-san4-the-lounge-1371",
+      "url": "https://www.prioritypass.com/en-GB/lounges/chile/arturo-merino-benitez-international/san4-the-lounge",
+      "retrievedAt": "2026-07-16T07:05:02.046Z",
+      "terminal": "Domestic Terminal",
+      "location": "Airside - after Security Checks and Duty Free Area, turn right and the lounge is located at the end of the hall in front of Gate 20A. Domestic flights only."
+    },
+    {
+      "recordId": "SCL-scl11-salones-vip-pacific-club-1370",
+      "url": "https://www.prioritypass.com/en-GB/lounges/chile/arturo-merino-benitez-international/scl11-salones-vip-pacific-club",
+      "retrievedAt": "2026-07-16T07:05:01.869Z",
+      "terminal": "Domestic Terminal",
+      "location": "Airside - the lounge is located between Boarding Gates A08 - A17. Domestic flights only."
+    },
+    {
+      "recordId": "SCL-scl4-salones-vip-pacific-club-1369",
+      "url": "https://www.prioritypass.com/en-GB/lounges/chile/arturo-merino-benitez-international/scl4-salones-vip-pacific-club",
+      "retrievedAt": "2026-07-16T07:05:03.964Z",
+      "terminal": "Domestic Terminal",
+      "location": "Airside - after Security between Gates 12 and 15. Domestic flights only."
+    },
+    {
+      "recordId": "SCL-scl6-primeclass-condor-1367",
+      "url": "https://www.prioritypass.com/en-GB/lounges/chile/arturo-merino-benitez-international/scl6-primeclass-condor",
+      "retrievedAt": "2026-07-16T07:05:04.174Z",
+      "terminal": "Domestic Terminal",
+      "location": "Airside - the lounge is located on the 3rd Floor, next to Gate B09. Domestic flights only."
+    },
+    {
+      "recordId": "SEN-sen1-skylife-lounge-the-pilot-cafe-1389",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-kingdom/london-southend/sen1-skylife-lounge-the-pilot-cafe",
+      "retrievedAt": "2026-07-16T19:53:50.426Z",
+      "location": "Airside - Ground Floor. Approach the Pilot Cafe front counter and the entrance of the lounge is located on left hand side.",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "SFO-sfo11-golden-gate-lounge-1392",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/san-francisco-international/sfo11-golden-gate-lounge",
+      "retrievedAt": "2026-07-16T07:05:05.215Z",
+      "terminal": "International Terminal A",
+      "location": "Departures After security checks After passport control Take the first left after the TSA checkpoint on Level 4, the lounge is located on the right hand side"
+    },
+    {
+      "recordId": "SFO-sfo12d-san-francisco-giants-clubhouse-1397",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/san-francisco-international/sfo12d-san-francisco-giants-clubhouse",
+      "retrievedAt": "2026-07-16T07:05:05.836Z",
+      "terminal": "Terminal 3",
+      "location": "Departures After security checks After passport control Concourse F Near Gate F13"
+    },
+    {
+      "recordId": "SFO-sfo16d-lark-creek-grill-1396",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/san-francisco-international/sfo16d-lark-creek-grill",
+      "retrievedAt": "2026-07-16T07:05:06.082Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - after Security, proceed straight ahead and the restaurant is located on the right hand side. Domestic flights only. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "SFO-sfo17d-mustards-bar-and-grill-1391",
+      "url": "https://www.prioritypass.com/en-GB/lounges/united-states-of-america/san-francisco-international/sfo17d-mustards-bar-and-grill",
+      "retrievedAt": "2026-07-16T07:05:07.113Z",
+      "terminal": "International Terminal G",
+      "location": "Airside - after Security, near Gate G3. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "SHA-sha12-juneyao-air-v6-lounge-1406",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/shanghai-hongqiao-international/sha12-juneyao-air-v6-lounge",
+      "retrievedAt": "2026-07-16T07:05:08.052Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures. Take the lift opposite Boarding Gate 38 to the 2nd Floor, where the lounge is located."
+    },
+    {
+      "recordId": "SHA-sha13-china-eastern-v01-international-lounge-1408",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/shanghai-hongqiao-international/sha13-china-eastern-v01-international-lounge",
+      "retrievedAt": "2026-07-16T07:05:07.834Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control 4th Floor The lounge is located at the end of the corridor"
+    },
+    {
+      "recordId": "SHA-sha14-china-southern-sky-pearl-club-lounge-v26-1404",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/shanghai-hongqiao-international/sha14-china-southern-sky-pearl-club-lounge-v26",
+      "retrievedAt": "2026-07-16T07:05:08.848Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures, 3rd Floor. The lounge is located near Boarding Gates 50 - 54. Departure passengers only."
+    },
+    {
+      "recordId": "SHA-sha4-vip-lounge-v03-1405",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/shanghai-hongqiao-international/sha4-vip-lounge-v03",
+      "retrievedAt": "2026-07-16T07:05:10.059Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control Building A, take the lift to the 4th Floor and turn right"
+    },
+    {
+      "recordId": "SHA-sha9-avinex-vip-1403",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/shanghai-hongqiao-international/sha9-avinex-vip",
+      "retrievedAt": "2026-07-16T07:05:09.887Z",
+      "terminal": "Terminal 1",
+      "location": "Departures Before security checks Enter Building 'A' through Entrance No. 5 and the lounge is located on the left hand side"
+    },
+    {
+      "recordId": "SIN-sin26d-chutney-mary-indian-fast-food-1419",
+      "url": "https://www.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin26d-chutney-mary-indian-fast-food",
+      "retrievedAt": "2026-07-16T07:02:19.206Z",
+      "terminal": "Terminal 2",
+      "location": "Landside - the restaurant is located before Departure Immigration on Level 3, Viewing Mall South. After collecting your boarding pass, proceed to Level 3 via the escalator next to row 11. Please allow sufficient time to reach the Departure Gate, as when leaving the restaurant, you will need to go through Security/Immigration. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "SIN-sin27d-kaveri-indian-vegetarian-restaurant-1436",
+      "url": "https://www.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin27d-kaveri-indian-vegetarian-restaurant",
+      "retrievedAt": "2026-07-16T19:54:18.147Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control 3rd Level In the food court area",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "All children must be accompanied by an adult",
+        "Cardholders can use their lounge visit entitlement to take advantage of 1 set menu designated by the restaurant in a 24hr period",
+        "A set menu represents a single lounge visit within the Cardholder’s existing lounge visit allocation for which the Cardholder will, where applicable, be charged. E.g. if a Cardholder registers 1 Guest they also will be able to take advantage of 1 set menu designated by the restaurant within a 24hr period and will be charged as 1 Cardholder visit + 1 Guest visit on their account. Only 1 card per visit per Cardholder will be accepted at point of registration",
+        "To be eligible, Cardholders must present a valid Card and Boarding Pass with same-day travel before placing an order",
+        "Items, soft and alcoholic drinks from the À la carte menu not included in the set menu are subject to an additional charge. Cardholders will be given a 10% discount on items, soft and alcoholic drinks from À la carte menu not included in set menu",
+        "Set menus are non-transferable & cannot be exchanged for cash substitute/refund or be used towards gratuity",
+        "Priority Pass and its Affiliates Companies shall not be liable should the offer value be less than Customers lounge visit entitlement. Customers who pay for lounge and guest visits are advised to review programme Conditions of Use prior to accessing the offer",
+        "This location is offered as an alternative to a lounge visit and other airport experiences. Using entitlements repeatedly within a single airport trip may result in charges from your benefit provider",
+        "Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion"
+      ]
+    },
+    {
+      "recordId": "SIN-sin28d-kaveri-express-indian-vegetarian-restaurant-1438",
+      "url": "https://www.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin28d-kaveri-express-indian-vegetarian-restaurant",
+      "retrievedAt": "2026-07-16T19:54:20.996Z",
+      "terminal": "Terminal 3",
+      "location": "Departures After security checks After passport control In the Singapore Food Street food court area 3rd Floor",
+      "conditions": [
+        "No smoking (including vaping)",
+        "Dress code: Smart casual",
+        "All children must be accompanied by an adult",
+        "Cardholders can use their lounge visit entitlement to take advantage of 1 set menu designated by the restaurant in a 24hr period. A set menu represents a single lounge visit within the Cardholder’s existing lounge visit allocation for which the Cardholder will, where applicable, be charged. E.g. if a Cardholder registers 1 Guest they also will be able to take advantage of 1 set menu designated by the restaurant within a 24hr period and will be charged as 1 Cardholder visit + 1 Guest visit on their account",
+        "Only 1 card per visit per Cardholder will be accepted at point of registration",
+        "To be eligible, Cardholders must present a valid Card and Boarding Pass with same-day travel before placing an order",
+        "Items, soft and alcoholic drinks from the À la carte menu not included in the set menu are subject to an additional charge. Cardholders will be given a 10% discount on items, soft and alcoholic drinks from À la carte menu not included in set menu",
+        "Set menus are non-transferable & cannot be exchanged for cash substitute/refund or be used towards gratuity",
+        "Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion",
+        "Priority Pass and its Affiliates Companies shall not be liable should the offer value be less than Customers lounge visit entitlement. Customers who pay for lounge and guest visits are advised to review programme Conditions of Use prior to accessing the offer",
+        "This location is offered as an alternative to a lounge visit and other airport experiences. Using entitlements repeatedly within a single airport trip may result in charges from your benefit provider"
+      ]
+    },
+    {
+      "recordId": "SIN-sin29d-crystal-jade-la-mian-xiao-long-bao-1418",
+      "url": "https://www.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin29d-crystal-jade-la-mian-xiao-long-bao",
+      "retrievedAt": "2026-07-16T07:02:28.774Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control next level Floor, via escalator The restaurant is located before the 'Marhaba' Lounge"
+    },
+    {
+      "recordId": "SIN-sin30d-crystal-jade-go-1437",
+      "url": "https://www.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin30d-crystal-jade-go",
+      "retrievedAt": "2026-07-16T07:02:28.760Z",
+      "terminal": "Terminal 4",
+      "location": "Departures After security checks After passport control Level 2 Departure Transit Area South Unit No. 02-41"
+    },
+    {
+      "recordId": "SIN-sin34d-terrace-1431",
+      "url": "https://www.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin34d-terrace",
+      "retrievedAt": "2026-07-16T19:54:21.459Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks Before passport control Level 3",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "Cardholders can use their lounge visit entitlement to take advantage of 1 set menu in a 24hr period.",
+        "A set menu represents a single lounge visit within the Cardholder’s existing lounge visit allocation for which the Cardholder will, where applicable, be charged. E.g. if a Cardholder registers 1 Guest they also will be able to take advantage of 1 set menu within a 24hr period and will be charged as 1 Cardholder visit + 1 Guest visit on their account.",
+        "Only 1 card per visit per Cardholder will be accepted at point of registration.",
+        "To be eligible, Cardholders must present a valid Card and Boarding Pass with same-day travel before placing an order.",
+        "Items from the À la carte menu not included in the set menu are subject to an additional charge.",
+        "Set menus are non-transferable & cannot be exchanged for cash substitute/refund or be used towards gratuity.",
+        "Priority Pass and its Affiliates Companies shall not be liable should the offer value be less than Customers lounge visit entitlement. Customers who pay for lounge and guest visits are advised to review programme Conditions of Use prior to accessing the offer.",
+        "This location is offered as an alternative to a lounge visit and other airport experiences. Using entitlements repeatedly within a single airport trip may result in charges from your benefit provider.",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "SIN-sin37d-asian-street-kitchen-1422",
+      "url": "https://www.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin37d-asian-street-kitchen",
+      "retrievedAt": "2026-07-16T07:02:34.348Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Level 2, Departure Lounge (Central), behind the Cosmetic and Perfume Duty Free Store. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "SIN-sin38d-the-kitchen-by-wolfgang-puck-1430",
+      "url": "https://www.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin38d-the-kitchen-by-wolfgang-puck",
+      "retrievedAt": "2026-07-16T07:02:34.341Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - Transit South, near Gates 'B', next to Pret A Manger/Hudsons Coffee. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "SIN-sin39d-kaveri-express-indian-vegetarian-1432",
+      "url": "https://www.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin39d-kaveri-express-indian-vegetarian",
+      "retrievedAt": "2026-07-16T07:02:35.624Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control Level 3 In the SG Hawker Food Court (Stall No.2) food court area"
+    },
+    {
+      "recordId": "SIN-sin40d-tiger-den-1425",
+      "url": "https://www.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin40d-tiger-den",
+      "retrievedAt": "2026-07-16T07:02:37.101Z",
+      "terminal": "Terminal 4",
+      "location": "Airside - International Departures. Level 2, Departure Lounge (Central), next to WH Smith. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "SIN-sin42s-natureland-1433",
+      "url": "https://www.prioritypass.com/en-GB/lounges/singapore/singapore-changi-airport/sin42s-natureland",
+      "retrievedAt": "2026-07-16T19:54:23.676Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control Level 3 Take the escalator opposite MCM bag shop up to one level. It is located on the left hand side, opposite Straits Food Village and McDonald’s.",
+      "conditions": [
+        "No smoking (including vaping)",
+        "No dress code",
+        "All children must be accompanied by an adult",
+        "Cardholders can use their lounge visit entitlement to take advantage of a 20 minute Express Head/Back Relief massage session in a 24hr period (a value of SGD$55.23). Treatment represents a single lounge visit within the Cardholder's existing lounge visit allocation for which the Cardholder will, where applicable, be charged. For example, if a Cardholder registers 1 Guest they will be charged as 1 Cardholder visit + 1 Guest visit on their account. Only 1 card per visit per Cardholder will be accepted and at point of registration",
+        "To be eligible, Cardholders must present a valid Card and Boarding Pass with confirmed same-day travel before treatment",
+        "Cardholder is responsible for all additional charges incurred",
+        "Natureland usage is subject to availability. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion",
+        "Priority Pass and its Affiliates Companies shall not be liable should the offer value be less than Customers lounge visit entitlement. Customers who pay for lounge and visits are advised to review programme Conditions of Use prior to accessing the offer",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "SYD-syd10d-bistro-bar-2020-1498",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/sydney-kingsford-smith/syd10d-bistro-bar-2020",
+      "retrievedAt": "2026-07-16T07:05:10.842Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - after Security in the Food Court Area. Domestic flights only. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "SYD-syd11d-lukes-bistro-and-bar-1494",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/sydney-kingsford-smith/syd11d-lukes-bistro-and-bar",
+      "retrievedAt": "2026-07-16T07:05:12.561Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - near Gate 1. Domestic flights only. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion. For Cardholders who pay for individual visits or guest visits, please check this particular offer against your visit fee to ensure it represents value for you. We advise Cardholders to review full Conditions of access below before visiting."
+    },
+    {
+      "recordId": "SYD-syd13-rex-lounge-1495",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/sydney-kingsford-smith/syd13-rex-lounge",
+      "retrievedAt": "2026-07-16T07:05:12.520Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures, near Gate G2."
+    },
+    {
+      "recordId": "SYD-syd17d-the-fat-yak-1493",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/sydney-kingsford-smith/syd17d-the-fat-yak",
+      "retrievedAt": "2026-07-16T07:05:12.699Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - after Security, turn right and take the escalator to the Departures Leve and proceed through the Food Court. The Fat Yak is located on the left hand side near Gate 32. Domestic flights only. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "SYD-syd8d-peroni-bar-1492",
+      "url": "https://www.prioritypass.com/en-GB/lounges/australia/sydney-kingsford-smith/syd8d-peroni-bar",
+      "retrievedAt": "2026-07-16T07:05:14.741Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - Pier C, near Gate 56. International flights only. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion."
+    },
+    {
+      "recordId": "TSN-tsn1-first-class-lounge-no-3-1569",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/tianjin-binhai-international/tsn1-first-class-lounge-no-3",
+      "retrievedAt": "2026-07-16T07:05:14.955Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - International Departures. District D. After Security Checks and Passport Control turn right. The lounge is located between Gates 103 and 104."
+    },
+    {
+      "recordId": "TSN-tsn10-first-class-lounge-no-5-1575",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/tianjin-binhai-international/tsn10-first-class-lounge-no-5",
+      "retrievedAt": "2026-07-16T07:05:17.006Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - International Departures, after Security Checks, 3rd Floor, next to Gate 105."
+    },
+    {
+      "recordId": "TSN-tsn14-first-class-lounge-1567",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/tianjin-binhai-international/tsn14-first-class-lounge",
+      "retrievedAt": "2026-07-16T07:05:16.841Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures. After Security Checks, 3rd Floor, near Gate 117."
+    },
+    {
+      "recordId": "TSN-tsn15s-comfort-zone-1570",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/tianjin-binhai-international/tsn15s-comfort-zone",
+      "retrievedAt": "2026-07-16T07:05:18.397Z",
+      "terminal": "Terminal 2",
+      "location": "Departures Before security checks Before passport control Opposite Gate 8 Floor 1"
+    },
+    {
+      "recordId": "TSN-tsn3-first-class-lounge-no-13-1572",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/tianjin-binhai-international/tsn3-first-class-lounge-no-13",
+      "retrievedAt": "2026-07-16T07:05:18.705Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures. After Security Checks, 3rd Floor, near Gate 206."
+    },
+    {
+      "recordId": "TSN-tsn4-first-class-lounge-no-15-1573",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/tianjin-binhai-international/tsn4-first-class-lounge-no-15",
+      "retrievedAt": "2026-07-16T07:05:19.144Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures. After Security Checks, take the escalator near Gate 206 down one level. The lounge is located next to Gate 261."
+    },
+    {
+      "recordId": "TSN-tsn7-first-class-lounge-no-18-1574",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/tianjin-binhai-international/tsn7-first-class-lounge-no-18",
+      "retrievedAt": "2026-07-16T07:05:20.679Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures. After Security Checks, opposite Gate 223."
+    },
+    {
+      "recordId": "TSN-tsn8-first-class-lounge-no-20-1576",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/tianjin-binhai-international/tsn8-first-class-lounge-no-20",
+      "retrievedAt": "2026-07-16T07:05:21.191Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures. After Security Checks, 3rd Floor, near Gate 216."
+    },
+    {
+      "recordId": "TSN-tsn9-first-class-lounge-no-22-1571",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/tianjin-binhai-international/tsn9-first-class-lounge-no-22",
+      "retrievedAt": "2026-07-16T07:05:22.872Z",
+      "terminal": "Terminal 2",
+      "location": "Airside - Domestic Departures. After Security Checks, opposite Gate 218."
+    },
+    {
+      "recordId": "VCP-vcp12-advantage-vip-lounge-regular-entrance-1618",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/viracopos-campinas-international/vcp12-advantage-vip-lounge-regular-entrance",
+      "retrievedAt": "2026-07-16T07:05:23.381Z",
+      "terminal": "Terminal 1 Domestic",
+      "location": "Airside - 1st Floor, next to the Food Court Area. Domestic and in transit flights only."
+    },
+    {
+      "recordId": "VCP-vcp12f-advantage-vip-lounge-combo-1621",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/viracopos-campinas-international/vcp12f-advantage-vip-lounge-combo",
+      "retrievedAt": "2026-07-16T07:05:23.675Z",
+      "terminal": "Terminal 1 Domestic",
+      "location": "Departures Before security checks Before passport control 1st Floor Next to the National Boarding access"
+    },
+    {
+      "recordId": "VCP-vcp3-ambaar-club-1619",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/viracopos-campinas-international/vcp3-ambaar-club",
+      "retrievedAt": "2026-07-16T07:05:24.703Z",
+      "terminal": "Terminal 1 Domestic",
+      "location": "Airside - 1st Floor, after Passport Control, near the Food Court Area. Domestic and in transit flights only."
+    },
+    {
+      "recordId": "VCP-vcp4-siesta-box-viracopos-1624",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/viracopos-campinas-international/vcp4-siesta-box-viracopos",
+      "retrievedAt": "2026-07-16T19:54:23.705Z",
+      "terminal": "Terminal 1 Domestic",
+      "location": "Airside - 2nd Floor. The Siesta Box is located in the middle of the Connector between the Food Court and Domestic Flight Gates. Domestic flights only.",
+      "conditions": [
+        "Max stay: 3 hours",
+        "Max 1 guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "VCP-vcp5-lounge-azul-1625",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/viracopos-campinas-international/vcp5-lounge-azul",
+      "retrievedAt": "2026-07-16T07:05:25.583Z",
+      "terminal": "Terminal 1 International",
+      "location": "Departures After security checks After passport control 1st Floor, via escalator After Security Control, turn right and proceed to hallway C"
+    },
+    {
+      "recordId": "VCP-vcp7-siesta-box-1623",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/viracopos-campinas-international/vcp7-siesta-box",
+      "retrievedAt": "2026-07-16T19:54:26.002Z",
+      "terminal": "Terminal 1 Domestic",
+      "location": "Airside - Arrivals Area, 2nd Floor. The Siesta Box is located approximately 30 metres from the Azul Linhas Aereas connection desk. Domestic flights only.",
+      "conditions": [
+        "Max stay: 2 hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "VCP-vcp8-the-lounge-viracopos-1620",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/viracopos-campinas-international/vcp8-the-lounge-viracopos",
+      "retrievedAt": "2026-07-16T07:05:28.197Z",
+      "terminal": "Terminal 1 Domestic",
+      "location": "Departures After security checks After passport control 1st Floor, via lift"
+    },
+    {
+      "recordId": "VCP-vcp9g-grid-game-center-1622",
+      "url": "https://www.prioritypass.com/en-GB/lounges/brazil/viracopos-campinas-international/vcp9g-grid-game-center",
+      "retrievedAt": "2026-07-16T07:05:28.389Z",
+      "terminal": "Terminal 1 Domestic",
+      "location": "Departures After security checks After passport control 1st Floor Between Concourses B and C Grid Game Center is located at the end of the corridor leading to Boarding Gates C. Passengers travelling from Gate B can access the location but please allow sufficient time to reach the departure gate"
+    },
+    {
+      "recordId": "VNS-vns1d-take-off-bar-and-lounge-1643",
+      "url": "https://www.prioritypass.com/en-GB/lounges/india/lal-bahadur-shastri/vns1d-take-off-bar-and-lounge",
+      "retrievedAt": "2026-07-16T19:53:55.859Z",
+      "location": "Airside - Domestic Departures, near Gate 2. Please note that the restaurant may exceed their seating limit at certain times of the day & access to the restaurant is at their sole discretion. Take off Bar and Lounge is an ideal place for travellers to relax, freshen up and enjoy a selection of food and beverages.",
+      "conditions": [
+        "Max stay: Unlimited hours",
+        "Max Unlimited guests per cardholder"
+      ]
+    },
+    {
+      "recordId": "VTZ-vtz-the-airr-lounge-and-bar-1645",
+      "url": "https://www.prioritypass.com/en-GB/lounges/india/visakhapatnam/vtz-the-airr-lounge-and-bar",
+      "retrievedAt": "2026-07-16T19:53:58.949Z",
+      "location": "Airside - Domestic Departures. After Security Control, 1st Floor, near the restrooms.",
+      "conditions": [
+        "Max Unlimited guests per cardholder"
       ]
     },
     {
@@ -220,6 +2617,48 @@
       ]
     },
     {
+      "recordId": "XIY-xiy1-simple-business-club-and-vip-lounge-v33-1690",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy1-simple-business-club-and-vip-lounge-v33",
+      "retrievedAt": "2026-07-16T07:05:29.107Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - Domestic Departures. After Security Checks, near Gate 40."
+    },
+    {
+      "recordId": "XIY-xiy16-china-eastern-airlines-no-39-lounge-1682",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy16-china-eastern-airlines-no-39-lounge",
+      "retrievedAt": "2026-07-16T07:05:33.462Z",
+      "terminal": "Terminal 5",
+      "location": "Departures After security checks After passport control 2nd Floor To the right of Gate 149 The lounge is only accessible when flying with China Eastern Airlines (MU), Shanghai Airlines (FM), China United Airlines (KN) and SkyTeam Alliance Airlines for Domestic Departure passengers only"
+    },
+    {
+      "recordId": "XIY-xiy17-vip-lounge-v38-1691",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy17-vip-lounge-v38",
+      "retrievedAt": "2026-07-16T07:05:33.834Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - Domestic Departures. The lounge is located on the 2nd Floor, near the intersection of South Concourse 2."
+    },
+    {
+      "recordId": "XIY-xiy19-china-southern-airlines-vip-lounge-1683",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy19-china-southern-airlines-vip-lounge",
+      "retrievedAt": "2026-07-16T07:05:34.099Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - Domestic Departures. After Security Checks, take the lift to the Lower Floor. The lounge is located near Boarding Gate 40. Departure passengers only."
+    },
+    {
+      "recordId": "XIY-xiy20-international-first-class-lounge-1685",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy20-international-first-class-lounge",
+      "retrievedAt": "2026-07-16T07:05:35.420Z",
+      "terminal": "Terminal 5",
+      "location": "Departures After security checks After passport control 3rd Floor South Wing"
+    },
+    {
+      "recordId": "XIY-xiy3-first-class-lounge-v22-1687",
+      "url": "https://www.prioritypass.com/en-GB/lounges/china/xian-xianyang-international/xiy3-first-class-lounge-v22",
+      "retrievedAt": "2026-07-16T07:05:35.817Z",
+      "terminal": "Terminal 2",
+      "location": "Departures After security checks After passport control Opposite Gate 10"
+    },
+    {
       "recordId": "YBP-ybp-first-class-lounge-02-1704",
       "url": "https://my.prioritypass.com/en-GB/lounges/china/yibin-wuliangye/ybp-first-class-lounge-02",
       "retrievedAt": "2026-07-14T00:00:00.000Z",
@@ -230,6 +2669,13 @@
       ]
     },
     {
+      "recordId": "YNT-ynt3-airlines-lounge-02-1714",
+      "url": "https://my.prioritypass.com/en-GB/lounges/china/yantai-penglai-international/ynt3-airlines-lounge-02",
+      "retrievedAt": "2026-07-14T00:00:00.000Z",
+      "openingHours": "Linked to flight: 06:00 - last flight",
+      "location": "Yantai Penglai International, Terminal 2, domestic departures, after security checks and after passport control, 2nd Floor, Gate 216."
+    },
+    {
       "recordId": "YNT-ynt4-frist-business-class-lounge-06-1713",
       "url": "https://my.prioritypass.com/en-GB/lounges/china/yantai-penglai-international/ynt4-frist-business-class-lounge-06",
       "retrievedAt": "2026-07-14T00:00:00.000Z",
@@ -237,11 +2683,32 @@
       "location": "Yantai Penglai International, Terminal 2, international departures, after security checks and after passport control. Follow signs to the lounge, 3rd Floor International Departures."
     },
     {
-      "recordId": "YNT-ynt3-airlines-lounge-02-1714",
-      "url": "https://my.prioritypass.com/en-GB/lounges/china/yantai-penglai-international/ynt3-airlines-lounge-02",
-      "retrievedAt": "2026-07-14T00:00:00.000Z",
-      "openingHours": "Linked to flight: 06:00 - last flight",
-      "location": "Yantai Penglai International, Terminal 2, domestic departures, after security checks and after passport control, 2nd Floor, Gate 216."
+      "recordId": "YYZ-tor-klm-crown-lounge-1735",
+      "url": "https://www.prioritypass.com/en-GB/lounges/canada/toronto-pearson-international/tor-klm-crown-lounge",
+      "retrievedAt": "2026-07-16T07:05:37.521Z",
+      "terminal": "Terminal 3",
+      "location": "Airside - just above Gate C33 and past the Duty Free shops. The lounge is inside the International Security Checkpoint. The lounge is not accessible to passengers departing on US transborder flights. Terminal 3 international departure flights only."
+    },
+    {
+      "recordId": "YYZ-yyz13s-be-relax-spa-transborder-departures-1739",
+      "url": "https://www.prioritypass.com/en-GB/lounges/canada/toronto-pearson-international/yyz13s-be-relax-spa-transborder-departures",
+      "retrievedAt": "2026-07-16T07:05:37.928Z",
+      "terminal": "Terminal 1",
+      "location": "Airside - Be Relax is located after Security in the Transborder Area, near Gate F54. International and in transit flights only. Please note that the spa may exceed their capacity at certain times of the day & access to the spa is at their sole discretion."
+    },
+    {
+      "recordId": "YYZ-yyz2-plaza-premium-lounge-usa-transborder-1733",
+      "url": "https://www.prioritypass.com/en-GB/lounges/canada/toronto-pearson-international/yyz2-plaza-premium-lounge-usa-transborder",
+      "retrievedAt": "2026-07-16T07:05:39.835Z",
+      "terminal": "Terminal 1",
+      "location": "Departures After security checks After passport control Between Gates F33 and F55 T1 US Departures The lounge is not accessible to passengers departing on Canadian domestic or international flights"
+    },
+    {
+      "recordId": "YYZ-yyz6-plaza-premium-lounge-usa-departures-1740",
+      "url": "https://www.prioritypass.com/en-GB/lounges/canada/toronto-pearson-international/yyz6-plaza-premium-lounge-usa-departures",
+      "retrievedAt": "2026-07-16T07:05:40.032Z",
+      "terminal": "Terminal 3",
+      "location": "Departures After security checks After passport control T Level, via lift"
     }
   ]
 }

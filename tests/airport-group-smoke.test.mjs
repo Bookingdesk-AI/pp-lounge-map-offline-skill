@@ -34,7 +34,7 @@ test('airport group smoke derives expected counts from the canonical catalog', (
   const counts = readCatalogAirportCounts();
 
   assert.equal(counts.get('EWR'), 14);
-  assert.equal(counts.get('SEA'), 23);
+  assert.equal(counts.get('SEA'), 16);
 });
 
 test('package exposes airport group smoke command', () => {

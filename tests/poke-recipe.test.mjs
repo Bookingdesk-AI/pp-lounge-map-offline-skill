@@ -40,6 +40,6 @@ test('poke bootstrap helper prints the canonical MCP add command', async () => {
   assert.match(stdout, new RegExp(POKE_MCP_ENDPOINT.replaceAll('.', '\\.')));
   assert.match(
     stdout,
-    /npx poke@latest mcp add https:\/\/loungeguru\.desk\.travel\/mcp -n "Lounge Guru"/,
+    /npx poke@latest mcp add https:\/\/lounge-guru-mcp\.dev-4ee\.workers\.dev\/mcp -n "Lounge Guru"/,
   );
 });

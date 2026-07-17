@@ -16,6 +16,7 @@ const cloudflareReport = JSON.parse(
 );
 const migrationSql = fs.readFileSync(new URL('../migrations/0001_lounge_guru_catalog.sql', import.meta.url), 'utf8');
 const seedSql = fs.readFileSync(new URL('../migrations/0002_seed_worldwide_coverage_goal.sql', import.meta.url), 'utf8');
+const phase3Sql = fs.readFileSync(new URL('../migrations/0003_raise_phase3_coverage_goal.sql', import.meta.url), 'utf8');
 
 function sourceIdsFromCommand(command) {
   const match = String(command ?? '').match(/--source-ids=([^\s]+)/);
@@ -33,9 +34,9 @@ test('worldwide coverage goal defines the Cloudflare D1 target', () => {
   assert.equal(goal.terminalGoal.requiresPlaywrightSourceRuntime, true);
   assert.equal(goal.terminalGoal.minApprovedRecords, 3000);
   assert.equal(goal.terminalGoal.minNonPriorityRecords, 1300);
-  assert.equal(goal.terminalGoal.minHoursCoverageRatio, 0.97);
-  assert.equal(goal.terminalGoal.minGateCoverageRatio, 0.45);
-  assert.equal(goal.terminalGoal.minPriceCoverageRatio, 0.25);
+  assert.equal(goal.terminalGoal.minHoursCoverageRatio, 0.99);
+  assert.equal(goal.terminalGoal.minGateCoverageRatio, 0.6);
+  assert.equal(goal.terminalGoal.minPriceCoverageRatio, 0.4);
   assert.equal(goal.terminalGoal.maxRecordsWithoutFieldEvidence, 0);
   assert.equal(goal.terminalGoal.maxStaleOpenReviewRecords, 0);
   assert.equal(goal.terminalGoal.minReadyMemberGapCoverageRatio, 1);
@@ -82,9 +83,15 @@ test('D1 seed migration installs the active worldwide coverage goal', () => {
   assert.match(seedSql, /INSERT OR REPLACE INTO coverage_goals/i);
   assert.match(seedSql, /lounge-guru-worldwide-coverage/);
   assert.match(seedSql, /npm run goal:coverage/);
+  assert.match(seedSql, /"minHoursCoverageRatio":0\.99/);
+  assert.match(seedSql, /"minGateCoverageRatio":0\.6/);
+  assert.match(seedSql, /"minPriceCoverageRatio":0\.4/);
+  assert.match(phase3Sql, /UPDATE coverage_goals/i);
+  assert.match(phase3Sql, /'2026-07-16'/);
+  assert.match(phase3Sql, /"minHoursCoverageRatio":0\.99/);
 });
 
-test('coverage validator reports current terminal completion', () => {
+test('coverage validator reports current Phase 3 completion', () => {
   const textOutput = execFileSync(
     process.execPath,
     ['scripts/validate-worldwide-coverage-goal.mjs'],
@@ -137,9 +144,9 @@ test('coverage validator reports current terminal completion', () => {
   assert.match(textOutput, /Terminal goal: passed/);
   assert.doesNotMatch(textOutput, /approved_records_below_3000/);
   assert.doesNotMatch(textOutput, /non_priority_records_below_1300/);
-  assert.doesNotMatch(textOutput, /hours_coverage_below_0\.97/);
-  assert.doesNotMatch(textOutput, /gate_coverage_below_0\.45/);
-  assert.doesNotMatch(textOutput, /price_coverage_below_0\.25/);
+  assert.doesNotMatch(textOutput, /hours_coverage_below_0\.99/);
+  assert.doesNotMatch(textOutput, /gate_coverage_below_0\.6/);
+  assert.doesNotMatch(textOutput, /price_coverage_below_0\.4/);
   assert.equal(summary.goalId, goal.id);
   assert.equal(summary.database.databaseName, 'lounge-guru-catalog');
   assert.ok(summary.totalRecords > 0);
@@ -153,9 +160,9 @@ test('coverage validator reports current terminal completion', () => {
   assert.equal(summary.blockers.includes('approved_records_below_3000'), false);
   assert.ok(summary.approvedRecords >= goal.terminalGoal.minApprovedRecords);
   assert.equal(summary.blockers.includes('non_priority_records_below_1300'), false);
-  assert.equal(summary.blockers.includes('hours_coverage_below_0.97'), false);
-  assert.equal(summary.blockers.includes('gate_coverage_below_0.45'), false);
-  assert.equal(summary.blockers.includes('price_coverage_below_0.25'), false);
+  assert.equal(summary.blockers.includes('hours_coverage_below_0.99'), false);
+  assert.equal(summary.blockers.includes('gate_coverage_below_0.6'), false);
+  assert.equal(summary.blockers.includes('price_coverage_below_0.4'), false);
   assert.equal(summary.gapReport.current.fieldCoverage.hours, coverageGap.current.fieldCoverage.hours);
   assert.equal(summary.gapReport.current.fieldCoverage.gates, coverageGap.current.fieldCoverage.gates);
   assert.equal(summary.gapReport.current.fieldCoverage.prices, coverageGap.current.fieldCoverage.prices);
@@ -201,7 +208,7 @@ test('coverage validator reports current terminal completion', () => {
   assert.equal(summary.gapReport.catalogHash, coverageGap.catalogHash);
 });
 
-test('coverage gap report names terminal blockers and missing source lanes', () => {
+test('coverage gap report confirms no terminal blockers or missing source lanes', () => {
   assert.equal(coverageGap.goalId, goal.id);
   assert.equal(coverageGap.terminalPassed, true);
   assert.equal(coverageGap.blockers.includes('approved_records_below_target'), false);

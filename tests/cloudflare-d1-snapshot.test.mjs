@@ -63,6 +63,9 @@ test('D1 snapshot exporter writes a catalog import SQL file', () => {
   assert.match(sql, /CREATE TABLE IF NOT EXISTS review_queue/);
   assert.match(sql, /CREATE TABLE IF NOT EXISTS lounge_field_coverage/);
   assert.match(sql, /INSERT OR REPLACE INTO coverage_goals/);
+  assert.match(schemaSourcesSql, /"minHoursCoverageRatio":0\.99/);
+  assert.match(schemaSourcesSql, /"minGateCoverageRatio":0\.6/);
+  assert.match(schemaSourcesSql, /"minPriceCoverageRatio":0\.4/);
   assert.doesNotMatch(sql, /licensed-global-baseline/);
   assert.match(sql, /playwright/);
   assert.doesNotMatch(sql, /source_intake_runtime_not_cloudflare/);
@@ -79,6 +82,7 @@ test('D1 snapshot exporter writes a catalog import SQL file', () => {
   assert.match(sql, /INSERT INTO lounge_identity_links/);
   assert.match(sql, /INSERT INTO record_field_evidence/);
   assert.match(sql, /INSERT INTO coverage_validation_runs/);
+  assert.match(validationSql, /'passed'/);
   assert.match(schemaSourcesSql, /CREATE TABLE IF NOT EXISTS source_targets/);
   assert.match(schemaSourcesSql, /CREATE TABLE IF NOT EXISTS airport_authority/);
   assert.match(schemaSourcesSql, /INSERT OR REPLACE INTO source_targets/);

@@ -64,6 +64,85 @@ const SECTION_PATTERNS = [
   },
 ];
 
+const CAPITAL_ONE_POLICY_LOCATIONS = new Map([
+  ['DFW', 'Capital One Lounge'],
+  ['DEN', 'Capital One Lounge'],
+  ['IAD', 'Capital One Lounge'],
+  ['LAS', 'Capital One Lounge'],
+  ['JFK', 'Capital One Lounge'],
+  ['DCA', 'Capital One Landing'],
+  ['LGA', 'Capital One Landing'],
+]);
+
+function guestFee({ amount, label, url }) {
+  return {
+    type: 'guest_fee',
+    label,
+    amount,
+    currency: 'USD',
+    sourceUrl: url,
+  };
+}
+
+export function parseCapitalOneGuestPolicy(
+  html,
+  { url = 'https://capitalonetravel.com/airport-lounges/lounge-access-guide/' } = {},
+) {
+  const text = stripHtml(html);
+  if (!/Capital One Lounges\s*&\s*Landings/i.test(text) || !/Pay-per-visit/i.test(text)) {
+    return null;
+  }
+
+  const match = text.match(
+    /discounted rates of \$([0-9]+) per visit per guest 18 and older,? and \$([0-9]+) per visit per guest 17 and under\. Children under two are free/i,
+  );
+  if (!match) {
+    return null;
+  }
+  const standardRate = text.match(/open to all guests at the standard rate of \$([0-9]+) per guest per visit/i)?.[1];
+
+  return {
+    sourceUrl: url,
+    loungeBrands: ['Capital One Lounge', 'Capital One Landing'],
+    offers: [
+      guestFee({ amount: Number(match[1]), label: 'Adult guest fee (18+)', url }),
+      guestFee({ amount: Number(match[2]), label: 'Child guest fee (ages 2-17)', url }),
+      ...(standardRate
+        ? [
+            {
+              type: 'paid_entry',
+              label: 'Standard visit',
+              amount: Number(standardRate),
+              currency: 'USD',
+              sourceUrl: url,
+            },
+          ]
+        : []),
+    ],
+  };
+}
+
+export function applyCapitalOneGuestPolicy(records, policy) {
+  if (!policy?.offers?.length) {
+    return records;
+  }
+
+  return records.map((record) => {
+    const expectedName = CAPITAL_ONE_POLICY_LOCATIONS.get(record.airportCode);
+    if (!expectedName || clean(record.name) !== expectedName || clean(record.brand) !== expectedName) {
+      return record;
+    }
+
+    return {
+      ...record,
+      prices: policy.offers,
+      accessNotes: clean(
+        `${record.accessNotes} Venture X cardholders may purchase guest visits at the official Capital One Lounge and Landing rates; entry remains subject to eligibility and availability.`,
+      ),
+    };
+  });
+}
+
 function extractSection(text, heading, stop) {
   const start = text.search(new RegExp(heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'));
   if (start < 0) {

@@ -1,7 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { parseAmericanAirlinesClubRecords } from '../scripts/lib/american-airlines-structured.mjs';
+import {
+  parseAdmiralsClubOneDayPass,
+  parseAmericanAirlinesClubRecords,
+} from '../scripts/lib/american-airlines-structured.mjs';
 
 test('American Airlines parser extracts Admirals Club gate, hours, and amenities', () => {
   const records = parseAmericanAirlinesClubRecords(`
@@ -54,4 +57,20 @@ test('American Airlines parser keeps premium lounge records from official pages'
   assert.equal(records[0].terminal, 'Terminal 8');
   assert.equal(records[0].near, 'Concourse B, near gate 14');
   assert.equal(records[0].openHours[0].ClosingHour, '00:30');
+});
+
+test('American Airlines parser extracts the official Admirals Club One-Day Pass', () => {
+  const offer = parseAdmiralsClubOneDayPass(`
+    <h2>One-Day Pass</h2>
+    <p>Buy online and at select locations for $79 or 7,900 AAdvantage miles</p>
+    <p>Domestic and international Admirals Club locations (based on lounge capacity)</p>
+    <p>Excludes clubs that are currently closed</p>
+  `, {
+    url: 'https://www.aa.com/i18n/travel-info/clubs/admirals-club-membership.jsp',
+  });
+
+  assert.equal(offer?.amount, 79);
+  assert.equal(offer?.currencyCode, 'USD');
+  assert.equal(offer?.label, 'USD 79 One-Day Pass');
+  assert.equal(offer?.excludesClosed, true);
 });

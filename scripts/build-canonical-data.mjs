@@ -37,6 +37,7 @@ const priorityPassDetailEvidencePath = path.resolve(projectRoot, 'public', 'data
 const sourceIntakeReportPath = path.resolve(projectRoot, 'public', 'data', 'source-intake-report.json');
 const cloudflareSourceIntakeReportPath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-intake-report.json');
 const sourceRunEvidencePath = path.resolve(projectRoot, 'public', 'data', 'cloudflare-source-run-evidence.json');
+const officialAirlineHoursEvidencePath = path.resolve(projectRoot, 'data', 'official-airline-hours-evidence.json');
 const outputCandidatePath = path.resolve(projectRoot, 'public', 'data', 'non-priority-lounge-candidates.json');
 const outputValidationPath = path.resolve(projectRoot, 'public', 'data', 'non-priority-validation-report.json');
 const outputBrandLogoDir = path.resolve(projectRoot, 'public', 'data', 'brand-logos');
@@ -92,6 +93,10 @@ async function readPriorityPassDetailEvidence() {
   } catch {
     return null;
   }
+}
+
+async function readOfficialAirlineHoursEvidence() {
+  return JSON.parse(await fs.readFile(officialAirlineHoursEvidencePath, 'utf8'));
 }
 
 function mergeTextList(first, second) {
@@ -270,14 +275,48 @@ function mergeSourceIntakeReports(primaryReport, secondaryReport) {
   };
 }
 
+function createCatalogAccessPolicies(report) {
+  return (report?.sources ?? []).flatMap((source) =>
+    (source.structuredApi?.accessPolicies ?? []).map((policy) => ({
+      ...policy,
+      source: {
+        sourceId: source.sourceId,
+        publisher: source.publisher,
+        url: policy.sourceUrl,
+        retrievedAt: source.retrievedAt,
+        fieldCoverage: ['access.accessOffers'],
+        confidence: Number(policy.confidence ?? 0.9),
+        rightsNote: policy.rightsNote,
+      },
+    })),
+  );
+}
+
 function hasText(value) {
   return String(value ?? '').trim() !== '';
+}
+
+function hasSourceFieldCoverage(record, field) {
+  return (record.sources ?? []).some((source) => (source.fieldCoverage ?? []).includes(field));
+}
+
+function hasSourceForAccessOffer(record, offer) {
+  const offerSourceId = String(offer?.sourceId ?? '').trim();
+  const offerUrl = String(offer?.url ?? '').trim();
+  return (record.sources ?? []).some((source) => {
+    if (source.sourceId !== offerSourceId || !(source.fieldCoverage ?? []).includes('access.accessOffers')) {
+      return false;
+    }
+    const sourceUrl = String(source.url ?? '').trim();
+    return !offerUrl || !sourceUrl || sourceUrl === offerUrl;
+  });
 }
 
 function createLoungeFieldCoverageReport(catalog) {
   const rows = catalog.records.map((record) => {
     const primarySource = record.sources[0];
     const accessOffers = Array.isArray(record.accessOffers) ? record.accessOffers : [];
+    const provenAccessOffers = accessOffers.filter((offer) => hasSourceForAccessOffer(record, offer));
     return {
       recordId: record.lounge.id,
       name: record.lounge.name,
@@ -290,9 +329,9 @@ function createLoungeFieldCoverageReport(catalog) {
       hours: record.operations.hours,
       gate: record.location.gate,
       accessOfferLabels: accessOffers.map((offer) => offer.label).filter(Boolean),
-      hasHours: hasText(record.operations.hours),
-      hasGate: hasText(record.location.gate),
-      hasAccessOffer: accessOffers.length > 0,
+      hasHours: hasText(record.operations.hours) && hasSourceFieldCoverage(record, 'operations.hours'),
+      hasGate: hasText(record.location.gate) && hasSourceFieldCoverage(record, 'location.gate'),
+      hasAccessOffer: provenAccessOffers.length > 0,
     };
   });
 
@@ -347,6 +386,7 @@ async function main() {
     approvalPolicy,
     airportAuthority,
     priorityPassDetailEvidence,
+    officialAirlineHoursEvidence,
   ] = await Promise.all([
     readSourceIntakeReport(),
     readCloudflareSourceIntakeReport(),
@@ -354,9 +394,11 @@ async function main() {
     readApprovalPolicy(),
     readAirportAuthority(),
     readPriorityPassDetailEvidence(),
+    readOfficialAirlineHoursEvidence(),
   ]);
   const features = applyPriorityPassDetailEvidence(geoJson.features ?? [], priorityPassDetailEvidence);
   const candidateIntakeReport = mergeSourceIntakeReports(intakeReport, cloudflareSourceIntakeReport);
+  const accessPolicies = createCatalogAccessPolicies(candidateIntakeReport);
   const candidateRecords = createNonPriorityCandidateRecords({
     report: candidateIntakeReport,
     features,
@@ -370,6 +412,8 @@ async function main() {
       features,
       meta,
       additionalRecords: catalogCandidateRecords,
+      accessPolicies,
+      officialAirlineHoursEvidence,
     }),
     features,
     meta,

@@ -1,4 +1,5 @@
 import intakePlan from '../public/data/cloudflare-source-intake-plan.json' with { type: 'json' };
+import { redactSensitiveData } from '../shared/security-redaction.js';
 
 const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
@@ -74,11 +75,12 @@ const COMMON_AIRPORT_CODE_FALSE_POSITIVES = new Set([
 ]);
 
 function jsonResponse(body, init = {}) {
-  return new Response(JSON.stringify(body, null, 2), {
+  return new Response(JSON.stringify(redactSensitiveData(body), null, 2), {
     ...init,
     headers: {
       'content-type': 'application/json; charset=utf-8',
       'cache-control': 'no-store',
+      'x-content-type-options': 'nosniff',
       ...(init.headers ?? {}),
     },
   });
@@ -505,10 +507,20 @@ async function runTaskProbe({
     fetchErrors: attempts.filter((attempt) => attempt.status === 'fetch_error').length,
   };
 
+  const persistedPolicy = redactSensitiveData(policy);
+  const persistedStats = redactSensitiveData(stats);
+  const persistedSourceResult = redactSensitiveData(sourceResult);
+
   await env.LOUNGE_GURU_DB.prepare(
     'INSERT INTO source_runs (id, generated_at, policy_json, stats_json, sources_json) VALUES (?, ?, ?, ?, ?)',
   )
-    .bind(runId, generatedAt, JSON.stringify(policy), JSON.stringify(stats), JSON.stringify([sourceResult]))
+    .bind(
+      runId,
+      generatedAt,
+      JSON.stringify(persistedPolicy),
+      JSON.stringify(persistedStats),
+      JSON.stringify([persistedSourceResult]),
+    )
     .run();
 
   return {

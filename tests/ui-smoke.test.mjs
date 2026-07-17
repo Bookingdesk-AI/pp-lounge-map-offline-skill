@@ -8,7 +8,7 @@ const packageJson = JSON.parse(fs.readFileSync(new URL('../package.json', import
 test('UI smoke parses default live target and selected record', () => {
   const options = parseUiSmokeArgs([], {});
 
-  assert.equal(options.baseUrl, 'https://loungeguru.desk.travel');
+  assert.equal(options.baseUrl, 'https://loungeguru-desk-travel.pages.dev');
   assert.equal(options.selectedId, 'BOS-bos19-chase-sapphire-lounge-by-the-club-357');
   assert.equal(options.expectedLogo, 'chase-sapphire-lounge-reviewed.png');
   assert.equal(options.expectedLogoExplicit, false);
