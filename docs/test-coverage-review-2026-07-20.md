@@ -24,18 +24,18 @@ Date: 2026-07-20
 
 ## Coverage
 
-| Metric | Before | After |
+| Metric | Clean `origin/main` | Merge candidate |
 | --- | ---: | ---: |
-| Tests | 350 | 361 |
-| Line coverage | 64.96% | 70.46% |
-| Branch coverage | 64.08% | 62.56% |
-| Function coverage | 75.35% | 77.15% |
+| Tests | 349 | 360 |
+| Line coverage | — | 70.45% |
+| Branch coverage | — | 62.56% |
+| Function coverage | — | 77.13% |
 
 The branch percentage now includes newly measured MCP server, rate-limit, and deeper canonical-builder paths.
 
 ## Verification
 
-- `npm test` — 361 passed, 0 failed.
+- `npm test` — 360 passed, 0 failed.
 - `npm run lint` — passed.
 - `node --experimental-test-coverage --test tests/**/*.test.mjs` — passed.
 - `git diff --check` — passed.
