@@ -118,6 +118,10 @@ export const CatalogMetaOutputSchema = z.object({
     uniqueAirports: z.number().int().nonnegative(),
     uniqueCountries: z.number().int().nonnegative(),
     uniqueCities: z.number().int().nonnegative(),
+    totalCatalogRecords: z.number().int().nonnegative().optional(),
+    candidateRecords: z.number().int().nonnegative().optional(),
+    nonPriorityRecords: z.number().int().nonnegative().optional(),
+    duplicateSourceRecords: z.number().int().nonnegative().optional(),
     totalSources: z.number().int().nonnegative().optional(),
     reviewQueue: z.number().int().nonnegative().optional(),
     approvedRecords: z.number().int().nonnegative().optional(),
@@ -149,6 +153,14 @@ export const CatalogMetaOutputSchema = z.object({
       averageFreshness: z.number().int().nonnegative(),
       conflictCount: z.number().int().nonnegative(),
       reviewQueue: z.number().int().nonnegative(),
+      approvalPolicy: z
+        .object({
+          mode: z.string(),
+          approvedAt: z.string(),
+          approvedBy: z.string(),
+          reason: z.string(),
+        })
+        .optional(),
     })
     .optional(),
 });

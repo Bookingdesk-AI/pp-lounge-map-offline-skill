@@ -42,6 +42,20 @@ test('offline stdio MCP server exposes the expected tools, resources, and prompt
       tools.tools.map((tool) => tool.name).sort(),
       ['get_catalog_meta', 'get_lounge', 'search_lounges'],
     );
+    const metaTool = tools.tools.find((tool) => tool.name === 'get_catalog_meta');
+    assert.ok(metaTool);
+    for (const field of [
+      'totalCatalogRecords',
+      'candidateRecords',
+      'nonPriorityRecords',
+      'duplicateSourceRecords',
+    ]) {
+      assert.ok(
+        metaTool.outputSchema.properties.stats.properties[field],
+        `Missing advertised offline catalog stat: ${field}`,
+      );
+    }
+    assert.ok(metaTool.outputSchema.properties.quality.properties.approvalPolicy);
 
     const resources = await client.listResources();
     assert.deepEqual(
@@ -74,6 +88,16 @@ test('offline stdio MCP server exposes the expected tools, resources, and prompt
     });
     assert.notEqual(lounge.isError, true);
     assert.equal(lounge.structuredContent.lounge.id, loungeId);
+
+    const catalogMeta = await client.callTool({
+      name: 'get_catalog_meta',
+      arguments: {},
+    });
+    assert.notEqual(catalogMeta.isError, true);
+    assert.ok(catalogMeta.structuredContent.stats.totalCatalogRecords > 0);
+    assert.ok(catalogMeta.structuredContent.stats.nonPriorityRecords > 0);
+    assert.equal(typeof catalogMeta.structuredContent.quality.approvalPolicy.mode, 'string');
+    assert.equal(typeof catalogMeta.structuredContent.quality.approvalPolicy.approvedAt, 'string');
 
     const meta = await client.readResource({
       uri: 'lounge-guru://meta',

@@ -4457,11 +4457,11 @@ function enrichFromOfficialLocationPages(records) {
         clean(evidence.airport.iata).toUpperCase() === clean(record.airport.iata).toUpperCase() &&
         compatibility &&
         sameNameBrandLoungeFamily(record, evidence) &&
-        (shouldPromotePosition(record.location.gate, evidence.location.gate) &&
+        ((shouldPromotePosition(record.location.gate, evidence.location.gate) &&
           officialLocationSources(evidence, 'location.gate').length > 0) ||
           (!hasValue(record.operations.hours) &&
             hasValue(evidence.operations.hours) &&
-            officialLocationSources(evidence, 'operations.hours').length > 0)
+            officialLocationSources(evidence, 'operations.hours').length > 0))
       ) {
         matches.push({ record, evidence, compatibility });
       }
