@@ -29,7 +29,8 @@ See `docs/worldwide-coverage-cloudflare-goal.md` for the Cloudflare D1 worldwide
 
 ## Production MCP endpoints
 
-- Web app: `https://loungeguru-desk-travel.pages.dev`
+- Web app: `https://loungeguru.desk.travel`
+- Pages fallback: `https://loungeguru-desk-travel.pages.dev`
 - Streamable HTTP: `https://lounge-guru-mcp.dev-4ee.workers.dev/mcp`
 - Legacy SSE stream: `https://lounge-guru-mcp.dev-4ee.workers.dev/sse`
 - Legacy SSE message POST: `https://lounge-guru-mcp.dev-4ee.workers.dev/messages`

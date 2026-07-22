@@ -77,6 +77,11 @@ export function parseUiSmokeArgs(args, env = process.env) {
   };
 }
 
+export function isExpectedLogoLoaded(image, expectedLogo) {
+  const src = image?.currentSrc || image?.getAttribute?.('src') || '';
+  return Boolean(expectedLogo && image?.complete && image?.naturalWidth > 0 && src.includes(expectedLogo));
+}
+
 function getExpectedLogoForSelectedRecord(selectedId) {
   try {
     const catalog = JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf8'));
@@ -196,6 +201,7 @@ async function createTarget(port, url) {
 
 function browserExpression({ mobile, expectedLogo }) {
   return `(() => {
+    const isExpectedLogoLoaded = ${isExpectedLogoLoaded.toString()};
     const text = document.body.innerText;
     const root = document.documentElement;
     const uiText = [
@@ -205,8 +211,7 @@ function browserExpression({ mobile, expectedLogo }) {
     ].join('\\n');
     const programMarks = [...document.querySelectorAll('.program-brand-list .brand-mark')];
     const programLogos = [...document.querySelectorAll('.program-brand-list .brand-mark-img')];
-    const brandImgs = [...document.querySelectorAll('.brand-mark-img, .brand-icon-mark-img')]
-      .map((img) => img.getAttribute('src'));
+    const brandImgs = [...document.querySelectorAll('.brand-mark-img, .brand-icon-mark-img')];
     const topbarText = document.querySelector('.topbar')?.innerText ?? '';
     const detailText = document.querySelector('.detail-panel, .mobile-selected-view')?.innerText ?? '';
     return {
@@ -220,7 +225,7 @@ function browserExpression({ mobile, expectedLogo }) {
       horizontalOverflow: root.scrollWidth > root.clientWidth + 1,
       programMarks: programMarks.length,
       programLogos: programLogos.length,
-      expectedLogoShown: brandImgs.some((src) => src?.includes(${JSON.stringify(expectedLogo)})),
+      expectedLogoShown: brandImgs.some((img) => isExpectedLogoLoaded(img, ${JSON.stringify(expectedLogo)})),
       visibleSearch: Boolean(document.querySelector('.search-wrap input, .rail-command-search input')),
     };
   })()`;
@@ -323,7 +328,7 @@ async function runViewport({ port, baseUrl, selectedId, expectedLogo, width, hei
         expression: browserExpression({ mobile, expectedLogo }),
       });
       value = result.result.value;
-      if (value?.detailVisible && value?.visibleSearch) {
+      if (value?.detailVisible && value?.visibleSearch && value?.expectedLogoShown) {
         break;
       }
       await wait(250);

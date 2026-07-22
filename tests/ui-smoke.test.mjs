@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { parseUiSmokeArgs } from '../scripts/smoke-ui.mjs';
+import { isExpectedLogoLoaded, parseUiSmokeArgs } from '../scripts/smoke-ui.mjs';
 
 const packageJson = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 
@@ -39,6 +39,15 @@ test('UI smoke accepts review queue env flag', () => {
   const options = parseUiSmokeArgs([], { LOUNGE_GURU_UI_SMOKE_CHECK_REVIEW_QUEUE: '1' });
 
   assert.equal(options.checkReviewQueue, true);
+});
+
+test('UI smoke only accepts expected logos that finished loading', () => {
+  const expectedLogo = 'cathay.png';
+
+  assert.equal(isExpectedLogoLoaded({ currentSrc: `https://src.example/${expectedLogo}`, complete: true, naturalWidth: 128 }, expectedLogo), true);
+  assert.equal(isExpectedLogoLoaded({ currentSrc: `https://src.example/${expectedLogo}`, complete: false, naturalWidth: 128 }, expectedLogo), false);
+  assert.equal(isExpectedLogoLoaded({ currentSrc: `https://src.example/${expectedLogo}`, complete: true, naturalWidth: 0 }, expectedLogo), false);
+  assert.equal(isExpectedLogoLoaded({ currentSrc: 'https://src.example/other.png', complete: true, naturalWidth: 128 }, expectedLogo), false);
 });
 
 test('UI smoke rejects unsafe or incomplete options', () => {
