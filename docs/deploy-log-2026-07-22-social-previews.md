@@ -7,6 +7,7 @@ Date: 2026-07-22
 - Pointed canonical, Open Graph, and X Card metadata at `https://loungeguru.desk.travel/`.
 - Replaced the stale preview artwork with a real 1200 x 630 Lounge Guru screenshot.
 - Added image type, dimensions, locale, site name, and accessible image descriptions.
+- Published the card at a versioned URL and removed the global same-site resource restriction for social preview renderers.
 - Allowed large search-result image previews with `max-image-preview:large`.
 - Hardened UI smoke checks so a logo passes only after the image finishes loading with nonzero pixels.
 

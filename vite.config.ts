@@ -16,6 +16,7 @@ const publicBuildFiles = [
   'favicon.svg',
   'icon.svg',
   'preview-card.png',
+  'preview-card-20260722.png',
   'preview-card.svg',
   'data/lounge-map.json',
 ];

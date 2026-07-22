@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const indexHtml = fs.readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-const previewCard = fs.readFileSync(new URL('../public/preview-card.png', import.meta.url));
+const publicHeaders = fs.readFileSync(new URL('../public/_headers', import.meta.url), 'utf8');
+const previewCard = fs.readFileSync(new URL('../public/preview-card-20260722.png', import.meta.url));
 
 test('social metadata uses the production domain and complete large-image fields', () => {
   const requiredMarkup = [
@@ -11,12 +12,12 @@ test('social metadata uses the production domain and complete large-image fields
     '<meta property="og:type" content="website" />',
     '<meta property="og:site_name" content="Lounge Guru" />',
     '<meta property="og:url" content="https://loungeguru.desk.travel/" />',
-    '<meta property="og:image" content="https://loungeguru.desk.travel/preview-card.png" />',
+    '<meta property="og:image" content="https://loungeguru.desk.travel/preview-card-20260722.png" />',
     '<meta property="og:image:width" content="1200" />',
     '<meta property="og:image:height" content="630" />',
     '<meta property="og:image:alt"',
     '<meta name="twitter:card" content="summary_large_image" />',
-    '<meta name="twitter:image" content="https://loungeguru.desk.travel/preview-card.png" />',
+    '<meta name="twitter:image" content="https://loungeguru.desk.travel/preview-card-20260722.png" />',
     '<meta name="twitter:image:alt"',
   ];
 
@@ -30,4 +31,8 @@ test('social preview image is a 1200 by 630 PNG', () => {
   assert.deepEqual([...previewCard.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
   assert.equal(previewCard.readUInt32BE(16), 1200);
   assert.equal(previewCard.readUInt32BE(20), 630);
+});
+
+test('social preview image is available to cross-origin preview renderers', () => {
+  assert.match(publicHeaders, /\/preview-card-20260722\.png\n  ! Cross-Origin-Resource-Policy\n  Access-Control-Allow-Origin: \*/);
 });

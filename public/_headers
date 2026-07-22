@@ -22,3 +22,13 @@
 
 /data/brand-logos/*
   Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/preview-card.png
+  ! Cross-Origin-Resource-Policy
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/preview-card-20260722.png
+  ! Cross-Origin-Resource-Policy
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
